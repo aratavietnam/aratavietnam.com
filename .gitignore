@@ -54,3 +54,23 @@ tmp/
 temp/
 *.tmp
 *.temp
+
+# WordPress plugins (exclude from repo)
+plugins/woocommerce/
+plugins/woocommerce-gateway-stripe/
+
+# WordPress uploads
+uploads/
+
+# WP-CLI
+wp-cli.phar
+
+# Theme build artifacts
+themes/*/dist/
+themes/*/node_modules/
+
+# Duplicate theme folders
+themes/*/themes/
+
+# Demo files
+*.html

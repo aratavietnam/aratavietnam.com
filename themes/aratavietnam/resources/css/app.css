@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './fonts.css';
 @import './theme.css';
 @import './utilities.css';
 @import './custom.css' layer(utilities);
@@ -7,8 +8,8 @@
 @source '../../vendor/tailpress/framework/**/**/*.php';
 
 @utility container {
-    margin-inline: auto;
-    padding-inline: 2rem;
+  margin-inline: auto;
+  padding-inline: 2rem;
 }
 
 /*
@@ -20,6 +21,7 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -36,5 +38,10 @@
   /* Add hover effect for links */
   a:hover {
     text-decoration: none !important;
+  }
+
+  html,
+  body {
+    font-family: var(--font-sans);
   }
 }

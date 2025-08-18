@@ -21,7 +21,11 @@ export default defineConfig(({ command }) => {
                     'resources/css/editor-style.css'
                 ],
             },
+            assetsDir: 'assets',
+            copyPublicDir: false,
         },
+        publicDir: false,
+        assetsInclude: ['**/*.woff', '**/*.woff2', '**/*.ttf'],
         plugins: [
             tailwindcss(),
         ],

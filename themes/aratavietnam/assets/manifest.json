@@ -1,0 +1,29 @@
+{
+    "name": "Arata Vietnam",
+    "short_name": "Arata VN",
+    "description": "Nhà phân phối hóa mỹ phẩm hàng đầu Nhật Bản",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#2C7FFF",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "images/favicon.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "images/favicon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable any"
+        }
+    ],
+    "categories": ["business", "shopping", "lifestyle"],
+    "lang": "vi",
+    "dir": "ltr",
+    "scope": "/",
+    "prefer_related_applications": false
+}

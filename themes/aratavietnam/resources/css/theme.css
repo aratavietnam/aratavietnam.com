@@ -1,27 +1,61 @@
 @theme {
-    --breakpoint-xs: 480px;
-    --breakpoint-sm: 600px;
-    --breakpoint-md: 782px;
-    --breakpoint-lg: 960px;
-    --breakpoint-xl: 1280px;
-    --breakpoint-2xl: 1440px;
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 600px;
+  --breakpoint-md: 782px;
+  --breakpoint-lg: 960px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1440px;
 
-    --color-primary: var(--wp--preset--color--primary);
-    --color-secondary: var(--wp--preset--color--secondary);
-    --color-dark: var(--wp--preset--color--dark);
-    --color-light: var(--wp--preset--color--light);
+  /* Brand Colors - Arata Vietnam Logo Colors */
+  --color-primary: var(--wp--preset--color--primary);
+  --color-primary-light: var(--wp--preset--color--primary-light);
+  --color-primary-dark: var(--wp--preset--color--primary-dark);
+  --color-secondary: var(--wp--preset--color--secondary);
+  --color-secondary-light: var(--wp--preset--color--secondary-light);
+  --color-secondary-dark: var(--wp--preset--color--secondary-dark);
+  --color-tertiary: var(--wp--preset--color--tertiary);
+  --color-tertiary-light: var(--wp--preset--color--tertiary-light);
+  --color-tertiary-dark: var(--wp--preset--color--tertiary-dark);
 
-    --text-xs: var(--wp--preset--font-size--xs, 0.75rem);
-    --text-sm: var(--wp--preset--font-size--sm, 0.875rem);
-    --text-base: var(--wp--preset--font-size--base, 1rem);
-    --text-lg: var(--wp--preset--font-size--lg, 1.125rem);
-    --text-xl: var(--wp--preset--font-size--xl, 1.25rem);
-    --text-2xl: var(--wp--preset--font-size--2-xl, 1.5rem);
-    --text-3xl: var(--wp--preset--font-size--3-xl, 1.875rem);
-    --text-4xl: var(--wp--preset--font-size--4-xl, 2.25rem);
-    --text-5xl: var(--wp--preset--font-size--5-xl, 3rem);
-    --text-6xl: var(--wp--preset--font-size--6-xl, 3.75rem);
-    --text-7xl: var(--wp--preset--font-size--7-xl, 4.5rem);
-    --text-8xl: var(--wp--preset--font-size--8-xl, 6rem);
-    --text-9xl: var(--wp--preset--font-size--9-xl, 8rem);
+  /* Semantic Colors */
+  --color-success: var(--wp--preset--color--success);
+  --color-warning: var(--wp--preset--color--warning);
+  --color-error: var(--wp--preset--color--error);
+  --color-info: var(--wp--preset--color--info);
+
+  /* Neutral Colors */
+  --color-dark: var(--wp--preset--color--dark);
+  --color-dark-light: var(--wp--preset--color--dark-light);
+  --color-light: var(--wp--preset--color--light);
+  --color-light-dark: var(--wp--preset--color--light-dark);
+  --color-white: var(--wp--preset--color--white);
+  --color-black: var(--wp--preset--color--black);
+
+  /* Gray Scale */
+  --color-gray-50: var(--wp--preset--color--gray-50);
+  --color-gray-100: var(--wp--preset--color--gray-100);
+  --color-gray-200: var(--wp--preset--color--gray-200);
+  --color-gray-300: var(--wp--preset--color--gray-300);
+  --color-gray-400: var(--wp--preset--color--gray-400);
+  --color-gray-500: var(--wp--preset--color--gray-500);
+  --color-gray-600: var(--wp--preset--color--gray-600);
+  --color-gray-700: var(--wp--preset--color--gray-700);
+  --color-gray-800: var(--wp--preset--color--gray-800);
+  --color-gray-900: var(--wp--preset--color--gray-900);
+
+  --text-xs: var(--wp--preset--font-size--xs, 0.75rem);
+  --text-sm: var(--wp--preset--font-size--sm, 0.875rem);
+  --text-base: var(--wp--preset--font-size--base, 1rem);
+  --text-lg: var(--wp--preset--font-size--lg, 1.125rem);
+  --text-xl: var(--wp--preset--font-size--xl, 1.25rem);
+  --text-2xl: var(--wp--preset--font-size--2-xl, 1.5rem);
+  --text-3xl: var(--wp--preset--font-size--3-xl, 1.875rem);
+  --text-4xl: var(--wp--preset--font-size--4-xl, 2.25rem);
+  --text-5xl: var(--wp--preset--font-size--5-xl, 3rem);
+  --text-6xl: var(--wp--preset--font-size--6-xl, 3.75rem);
+  --text-7xl: var(--wp--preset--font-size--7-xl, 4.5rem);
+  --text-8xl: var(--wp--preset--font-size--8-xl, 6rem);
+  --text-9xl: var(--wp--preset--font-size--9-xl, 8rem);
+
+  --font-sans: "Bahnschrift", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }

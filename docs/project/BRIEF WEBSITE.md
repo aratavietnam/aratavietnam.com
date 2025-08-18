@@ -12,7 +12,6 @@
   - Hiệu ứng: Nhẹ nhàng, sáng tạo, không giật nhanh
   - Phong cách: Dịu nhẹ, tươi sáng
   - Tối ưu: Hình ảnh rõ nét, tốc độ load web nhanh
-- Deadline: 07/08/2025
 
 ### Mục tiêu & phạm vi
 - Mục đích website: Lan tỏa thương hiệu và bán hàng

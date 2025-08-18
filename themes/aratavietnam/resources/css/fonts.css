@@ -1,0 +1,61 @@
+/* Bahnschrift Font Family */
+@font-face {
+    font-family: "Bahnschrift";
+    src: url("../fonts/bahnschrift.woff2") format("woff2"),
+         url("../fonts/bahnschrift.woff") format("woff"),
+         url("../fonts/bahnschrift.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Font weight variations if needed */
+@font-face {
+    font-family: "Bahnschrift";
+    src: url("../fonts/bahnschrift.woff2") format("woff2"),
+         url("../fonts/bahnschrift.woff") format("woff"),
+         url("../fonts/bahnschrift.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bahnschrift";
+    src: url("../fonts/bahnschrift.woff2") format("woff2"),
+         url("../fonts/bahnschrift.woff") format("woff"),
+         url("../fonts/bahnschrift.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bahnschrift";
+    src: url("../fonts/bahnschrift.woff2") format("woff2"),
+         url("../fonts/bahnschrift.woff") format("woff"),
+         url("../fonts/bahnschrift.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bahnschrift";
+    src: url("../fonts/bahnschrift.woff2") format("woff2"),
+         url("../fonts/bahnschrift.woff") format("woff"),
+         url("../fonts/bahnschrift.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bahnschrift";
+    src: url("../fonts/bahnschrift.woff2") format("woff2"),
+         url("../fonts/bahnschrift.woff") format("woff"),
+         url("../fonts/bahnschrift.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
