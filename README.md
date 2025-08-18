@@ -72,35 +72,34 @@ docker-compose exec wp-cli wp core update --allow-root
 docker-compose exec wp-cli wp --help --allow-root
 ```
 
-## Arata Vietnam Theme Development
+## TailPress Theme Development
 
-Theme Arata Vietnam được tự động cài đặt và kích hoạt. Nó nằm tại:
+The TailPress theme is automatically installed and activated. It's located at:
 ```
-./themes/aratavietnam/
+./themes/tailpress/
 ```
 
-### Theme Features
+### TailPress Features
 - Tailwind CSS integration
 - Modern WordPress theme structure
 - Vite build system
 - Component-based architecture
 - Optimized for performance
-- Vietnamese language support
 
 ### Development Workflow
-1. **Theme Development**: Edit files in `./themes/aratavietnam/`
-2. **Asset Building**: Use built-in Vite build system
+1. **Theme Development**: Edit files in `./themes/tailpress/`
+2. **Asset Building**: Use TailPress's built-in build system
 3. **Live Preview**: Changes are reflected immediately in Docker
 
 ## Project Structure
 
 ```
-aratavietnam.com/
+wordpress-template/
 ├── docker-compose.yml          # Docker configuration
 ├── wp-cli-setup.sh            # WordPress setup script
 ├── README.md                  # This file
 ├── themes/                    # WordPress themes directory
-│   └── aratavietnam/          # Arata Vietnam theme
+│   └── tailpress/            # TailPress theme (auto-cloned)
 ├── plugins/                   # WordPress plugins directory
 └── uploads/                   # WordPress uploads directory
 ```

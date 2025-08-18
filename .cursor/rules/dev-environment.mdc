@@ -1,0 +1,11 @@
+# Development Environment (Docker + WP-CLI)
+
+- Services: MySQL 8.0, WordPress (latest), WP-CLI (see [docker-compose.yml](mdc:docker-compose.yml)).
+- Startup:
+  - Run [start.sh](mdc:start.sh) or `docker-compose up -d`; monitor logs via `docker-compose logs -f wp-cli`.
+  - Initial provisioning handled by [wp-cli-setup.sh](mdc:wp-cli-setup.sh): installs WordPress, activates theme, installs dev plugins (Query Monitor, Debug Bar), sets timezone, and creates a Home page.
+- Access:
+  - Site: `http://localhost:8000`
+  - Admin: `http://localhost:8000/wp-admin` (admin/admin123 by default — change for non-local use)
+- Volumes: theme, plugins, uploads are bind-mounted; edits reflect immediately in the container.
+- Common commands and troubleshooting are documented in [README.md](mdc:README.md).

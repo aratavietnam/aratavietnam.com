@@ -27,4 +27,14 @@
   ::file-selector-button {
     border-color: var(--color-zinc-200, currentColor);
   }
+
+  /* Remove underline from all links */
+  a {
+    text-decoration: none;
+  }
+
+  /* Add hover effect for links */
+  a:hover {
+    text-decoration: none;
+  }
 }

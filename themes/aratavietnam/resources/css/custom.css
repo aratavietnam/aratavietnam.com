@@ -44,6 +44,7 @@
 
   :where(a) {
     color: var(--color-primary);
+    text-decoration: none;
   }
 
   :where(li) {
