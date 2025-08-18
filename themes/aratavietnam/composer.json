@@ -1,18 +1,18 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "tailpress/tailpress",
-    "description": "The Tailwind CSS powered WordPress boilerplate theme.",
+    "name": "aratavietnam/aratavietnam-theme",
+    "description": "Custom WordPress theme for Arata Vietnam website built with Tailwind CSS.",
     "type": "project",
     "license": "MIT",
     "authors": [
         {
-            "name": "Jeffrey van Rossum",
-            "email": "jeffrey@vanrossum.dev"
+            "name": "Arata Vietnam Team",
+            "email": "info@aratavietnam.com"
         }
     ],
     "autoload": {
         "psr-4": {
-            "TailPress\\": "src/"
+            "AraVietnam\\": "src/"
         }
     },
     "require": {

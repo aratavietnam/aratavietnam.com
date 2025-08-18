@@ -11,7 +11,7 @@ if ! wp core is-installed --allow-root; then
 	echo "Installing WordPress..."
 	wp core install \
 		--url=http://localhost:8000 \
-		--title="TailPress Development Site" \
+		--title="Arata Vietnam" \
 		--admin_user=admin \
 		--admin_password=admin123 \
 		--admin_email=admin@example.com \
@@ -33,7 +33,7 @@ echo "Password: admin123"
 echo ""
 
 # One-time setup guard
-SETUP_MARKER="tailpress_setup_done"
+SETUP_MARKER="aratavietnam_setup_done"
 SETUP_DONE=$(wp option get "$SETUP_MARKER" --allow-root 2>/dev/null || echo "0")
 
 if [ "$SETUP_DONE" != "1" ]; then
@@ -83,22 +83,9 @@ if [ "$SETUP_DONE" != "1" ]; then
 	echo "Creating theme directory..."
 	mkdir -p /var/www/html/wp-content/themes
 
-	# Install TailPress theme (git if available, else via ZIP)
-	echo "Installing TailPress theme..."
-	if command -v git >/dev/null 2>&1; then
-		cd /var/www/html/wp-content/themes
-		if [ ! -d "tailpress" ]; then
-			git clone https://github.com/tailpress/tailpress.git
-		fi
-		THEME_SOURCE="/var/www/html/wp-content/themes/tailpress"
-		wp theme install "$THEME_SOURCE" --activate --allow-root || true
-	else
-		echo "git not found, installing TailPress from ZIP via WP-CLI..."
-		# Try 5.x branch, then latest release 5.0.2, then main
-		wp theme install https://github.com/tailpress/tailpress/archive/refs/heads/5.x.zip --activate --allow-root || \
-		wp theme install https://github.com/tailpress/tailpress/archive/refs/tags/5.0.2.zip --activate --allow-root || \
-		wp theme install https://github.com/tailpress/tailpress/archive/refs/heads/main.zip --activate --allow-root || true
-	fi
+	# Activate Arata Vietnam theme
+	echo "Activating Arata Vietnam theme..."
+	wp theme activate aratavietnam --allow-root || true
 
 	# Install required plugins for development
 	echo "Installing development plugins..."
@@ -107,7 +94,7 @@ if [ "$SETUP_DONE" != "1" ]; then
 
 	# Configure WordPress for development
 	echo "Configuring WordPress for development..."
-	wp option update blogdescription "TailPress Development Site" --allow-root
+	wp option update blogdescription "Nền tảng chia sẻ kiến thức công nghệ Việt Nam" --allow-root
 	wp option update timezone_string "Asia/Ho_Chi_Minh" --allow-root
 	wp option update date_format "F j, Y" --allow-root
 	wp option update time_format "g:i a" --allow-root
@@ -117,7 +104,7 @@ if [ "$SETUP_DONE" != "1" ]; then
 	wp post create \
 		--post_type=page \
 		--post_title="Home" \
-		--post_content="Welcome to TailPress Development Site" \
+		--post_content="Chào mừng đến với Arata Vietnam - Nền tảng chia sẻ kiến thức công nghệ" \
 		--post_status=publish \
 		--allow-root
 
@@ -143,5 +130,5 @@ echo ""
 echo "Development tools installed:"
 echo "- Query Monitor (for debugging)"
 echo "- Debug Bar (for development)"
-echo "- TailPress theme (ready for development)"
+echo "- Arata Vietnam theme (ready for development)"
 echo ""

@@ -1,6 +1,6 @@
-# WordPress Docker Setup with TailPress Theme
+# Arata Vietnam - WordPress Website
 
-A complete Docker-based WordPress development environment with TailPress theme integration, WP CLI support, and optimized configuration for development.
+Website chính thức của Arata Vietnam - Nền tảng chia sẻ kiến thức và kinh nghiệm về công nghệ, phát triển phần mềm và các xu hướng công nghệ mới nhất tại Việt Nam.
 
 ## Quick Start
 
@@ -10,10 +10,10 @@ A complete Docker-based WordPress development environment with TailPress theme i
 
 ### Installation
 
-1. **Clone or download this project**
+1. **Clone repository**
 ```bash
-git clone <your-repo-url>
-cd wordpress-template
+git clone https://github.com/aratavietnam/aratavietnam.com
+cd aratavietnam.com
 ```
 
 2. **Start the Docker containers**
@@ -42,7 +42,7 @@ docker-compose logs -f wp-cli
 ### Pre-configured Features
 - WordPress installed and configured
 - Default content cleaned up (posts, pages, comments, plugins)
-- TailPress theme installed and activated
+- Arata Vietnam theme installed and activated
 - Development plugins installed (Query Monitor, Debug Bar)
 - Vietnamese timezone configured
 - Sample home page created
@@ -72,34 +72,35 @@ docker-compose exec wp-cli wp core update --allow-root
 docker-compose exec wp-cli wp --help --allow-root
 ```
 
-## TailPress Theme Development
+## Arata Vietnam Theme Development
 
-The TailPress theme is automatically installed and activated. It's located at:
+Theme Arata Vietnam được tự động cài đặt và kích hoạt. Nó nằm tại:
 ```
-./themes/tailpress/
+./themes/aratavietnam/
 ```
 
-### TailPress Features
+### Theme Features
 - Tailwind CSS integration
 - Modern WordPress theme structure
 - Vite build system
 - Component-based architecture
 - Optimized for performance
+- Vietnamese language support
 
 ### Development Workflow
-1. **Theme Development**: Edit files in `./themes/tailpress/`
-2. **Asset Building**: Use TailPress's built-in build system
+1. **Theme Development**: Edit files in `./themes/aratavietnam/`
+2. **Asset Building**: Use built-in Vite build system
 3. **Live Preview**: Changes are reflected immediately in Docker
 
 ## Project Structure
 
 ```
-wordpress-template/
+aratavietnam.com/
 ├── docker-compose.yml          # Docker configuration
 ├── wp-cli-setup.sh            # WordPress setup script
 ├── README.md                  # This file
 ├── themes/                    # WordPress themes directory
-│   └── tailpress/            # TailPress theme (auto-cloned)
+│   └── aratavietnam/          # Arata Vietnam theme
 ├── plugins/                   # WordPress plugins directory
 └── uploads/                   # WordPress uploads directory
 ```

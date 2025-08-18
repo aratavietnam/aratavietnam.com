@@ -1,15 +1,15 @@
-import { defineConfig } from 'vite'
-import tailwindcss from '@tailwindcss/vite'
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
 
 export default defineConfig(({ command }) => {
     const isBuild = command === 'build';
 
     return {
-        base: isBuild ? '/wp-content/themes/tailpress/dist/' : '/',
+        base: isBuild ? '/wp-content/themes/aratavietnam/dist/' : '/',
         server: {
             port: 3000,
             cors: true,
-            origin: 'http://tailpress.test',
+            origin: 'http://aratavietnam.test',
         },
         build: {
             manifest: true,

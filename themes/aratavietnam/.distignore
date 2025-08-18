@@ -9,6 +9,7 @@
 /.nova
 /.vscode
 /.zed
+
 .git
 .github
 phpcs.xml

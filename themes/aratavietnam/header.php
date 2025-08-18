@@ -2,7 +2,7 @@
 /**
  * Theme header template.
  *
- * @package TailPress
+ * @package ArataVietnam
  */
 ?>
 <!DOCTYPE html>
@@ -19,7 +19,7 @@
 <?php wp_body_open(); ?>
 
 <div id="page" class="site">
-	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'tailpress' ); ?></a>
+	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'aratavietnam' ); ?></a>
 
 	<header id="masthead" class="site-header">
 		<div class="container mx-auto px-4">
@@ -44,10 +44,10 @@
 						</p>
 						<?php
 					endif;
-					$tailpress_description = get_bloginfo( 'description', 'display' );
-					if ( $tailpress_description || is_customize_preview() ) :
+					$aratavietnam_description = get_bloginfo( 'description', 'display' );
+					if ( $aratavietnam_description || is_customize_preview() ) :
 						?>
-						<p class="site-description"><?php echo $tailpress_description; ?></p>
+						<p class="site-description"><?php echo $aratavietnam_description; ?></p>
 					<?php endif; ?>
 				</div>
 
@@ -74,21 +74,21 @@
 				<div class="max-w-(--breakpoint-md)">
 					<div class="[&_a]:text-primary">
 						<h1 class="leading-tight text-3xl md:text-5xl font-medium tracking-tight text-balance text-zinc-950">
-							Rapidly build your next WordPress theme with Tailwind CSS
+							Chào mừng đến với Arata Vietnam
 						</h1>
 						<p class="my-6 text-lg md:text-xl text-zinc-600 leading-8">
-							<a href="https://tailpress.io">TailPress</a> is a <a href="https://tailwindcss.com">Tailwind CSS</a> flavoured <a href="https://wordpress.org">WordPress</a>
-							boilerplate theme. It's your go-to starting point for building custom WordPress themes with modern tools and practices.
+							<a href="https://aratavietnam.com">Arata Vietnam</a> - Nền tảng chia sẻ kiến thức và kinh nghiệm về công nghệ,
+							phát triển phần mềm và các xu hướng công nghệ mới nhất tại Việt Nam.
 						</p>
 					</div>
 					<div>
-						<a href="https://tailpress.io" class="inline-flex rounded-full px-4 py-1.5 text-sm font-semibold transition bg-dark text-white hover:bg-dark/90 !no-underline">
-							Documentation
+						<a href="https://aratavietnam.com" class="inline-flex rounded-full px-4 py-1.5 text-sm font-semibold transition bg-dark text-white hover:bg-dark/90 !no-underline">
+							Khám phá ngay
 						</a>
 					</div>
 				</div>
 			</section>
 		<?php endif; ?>
 
-		<?php do_action('tailpress_content_start'); ?>
+		<?php do_action('aratavietnam_content_start'); ?>
 		<main>

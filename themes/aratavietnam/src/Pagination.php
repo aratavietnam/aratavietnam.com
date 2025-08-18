@@ -1,6 +1,6 @@
 <?php
 
-namespace TailPress\Theme;
+namespace ArataVietnam\Theme;
 
 class Pagination
 {

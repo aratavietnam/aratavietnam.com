@@ -1,6 +1,6 @@
 <?php
 
-namespace TailPress\Walkers;
+namespace ArataVietnam\Walkers;
 
 class CommentWalker extends \Walker_Comment
 {

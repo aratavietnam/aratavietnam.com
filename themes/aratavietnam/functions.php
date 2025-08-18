@@ -4,11 +4,14 @@ if (is_file(__DIR__.'/vendor/autoload_packages.php')) {
     require_once __DIR__.'/vendor/autoload_packages.php';
 }
 
-function tailpress(): TailPress\Framework\Theme
+function aratavietnam(): TailPress\Framework\Theme
 {
+    $viteCompiler = new TailPress\Framework\Assets\ViteCompiler;
+    $viteCompiler->handle = 'aratavietnam';
+
     return TailPress\Framework\Theme::instance()
         ->assets(fn($manager) => $manager
-            ->withCompiler(new TailPress\Framework\Assets\ViteCompiler, fn($compiler) => $compiler
+            ->withCompiler($viteCompiler, fn($compiler) => $compiler
                 ->registerAsset('resources/css/app.css')
                 ->registerAsset('resources/js/app.js')
                 ->editorStyleFile('resources/css/editor-style.css')
@@ -16,7 +19,7 @@ function tailpress(): TailPress\Framework\Theme
             ->enqueueAssets()
         )
         ->features(fn($manager) => $manager->add(TailPress\Framework\Features\MenuOptions::class))
-        ->menus(fn($manager) => $manager->add('primary', __( 'Primary Menu', 'tailpress')))
+        ->menus(fn($manager) => $manager->add('primary', __( 'Primary Menu', 'aratavietnam')))
         ->themeSupport(fn($manager) => $manager->add([
             'title-tag',
             'custom-logo',
@@ -34,4 +37,4 @@ function tailpress(): TailPress\Framework\Theme
         ]));
 }
 
-tailpress();
+aratavietnam();
