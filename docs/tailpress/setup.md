@@ -211,7 +211,7 @@ function your_theme(): TailPress\Framework\Theme
 {
     $viteCompiler = new TailPress\Framework\Assets\ViteCompiler;
     $viteCompiler->handle = 'your-theme';
-    
+
     return TailPress\Framework\Theme::instance()
         ->assets(fn($manager) => $manager
             ->withCompiler($viteCompiler, fn($compiler) => $compiler

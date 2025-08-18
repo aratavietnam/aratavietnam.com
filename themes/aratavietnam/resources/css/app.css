@@ -30,11 +30,11 @@
 
   /* Remove underline from all links */
   a {
-    text-decoration: none;
+    text-decoration: none !important;
   }
 
   /* Add hover effect for links */
   a:hover {
-    text-decoration: none;
+    text-decoration: none !important;
   }
 }
