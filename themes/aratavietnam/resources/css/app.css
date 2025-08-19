@@ -338,13 +338,14 @@
 
 
     .entry-content {
-      font-size: 12px;
-      line-height: 1.5;
+      font-size: 14px !important;
+      line-height: 1.6;
     }
 
     .entry-content p {
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
       max-width: 100%;
+      font-size: 14px !important;
     }
 
     .policy-section li {
