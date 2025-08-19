@@ -28,7 +28,7 @@
 }
 body,
 html {
-  font-family: var(--font-primary); /* Use Inter/Source Sans Pro for Vietnamese */
+  font-family: var(--font-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -137,7 +137,7 @@ html {
 
 /* Arata Vietnam Brand Color Utilities */
 
-/* Custom Component Classes */
+
 .btn-primary {
   background-color: var(--color-primary);
   color: var(--color-white);
@@ -210,7 +210,7 @@ html {
   background: linear-gradient(135deg, var(--color-tertiary) 0%, var(--color-primary) 100%);
 }
 
-/* Badge Classes */
+
 .badge-primary {
   background-color: var(--color-primary);
   color: var(--color-white);
@@ -241,7 +241,7 @@ html {
   display: inline-block;
 }
 
-/* Brand Text Colors */
+
 .text-brand {
   color: var(--color-primary);
 }
@@ -254,7 +254,7 @@ html {
   color: var(--color-tertiary);
 }
 
-/* Brand Link Styles */
+
 .link-brand {
   color: var(--color-primary);
   text-decoration: none;
@@ -274,7 +274,7 @@ html {
   background-clip: text;
 }
 
-/* Line Clamp Utility */
+
 .line-clamp-3 {
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -282,7 +282,7 @@ html {
   overflow: hidden;
 }
 
-/* Smooth Animations */
+
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
@@ -321,7 +321,7 @@ html {
   background-color: rgba(245, 94, 37, 0.1);
 }
 
-/* Mobile Menu Toggle */
+
 .menu-toggle {
   border: none;
   background: none;
@@ -329,7 +329,7 @@ html {
   font-size: 1rem;
 }
 
-/* Font Utility Classes */
+
 .font-primary {
   font-family: var(--font-primary) !important;
 }
@@ -369,7 +369,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 400;
 }
 
-/* Button Typography */
+
 .btn-primary,
 .btn-secondary,
 .btn-outline-primary {
@@ -378,13 +378,13 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0.025em;
 }
 
-/* Navigation Typography */
+
 #primary-menu a {
   font-family: var(--font-primary);
   font-weight: 500;
 }
 
-/* Content Typography */
+
 .post-title,
 .entry-title {
   font-family: var(--font-primary);
@@ -465,7 +465,7 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 4px 12px rgba(245, 94, 37, 0.3);
 }
 
-/* Page Links Styling */
+
 .page-links {
   margin-top: 2rem;
   padding: 1rem;
@@ -489,7 +489,7 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--color-primary-dark);
 }
 
-/* Entry Footer */
+
 .entry-footer {
   margin-top: 3rem;
   padding-top: 2rem;
@@ -510,7 +510,7 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 2rem;
   }
 
-  /* Improve readability on mobile */
+
   body {
     font-size: 16px;
     line-height: 1.6;

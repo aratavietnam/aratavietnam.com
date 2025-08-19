@@ -18,16 +18,36 @@
             <?php do_action('aratavietnam_footer'); ?>
 
             <!-- Footer Content -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-12">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
 
-                <!-- Company Information -->
-                <div class="space-y-4">
-                    <!-- Tên công ty -->
-                    <div class="mb-6">
-                        <h3 class="text-xl font-bold text-white mb-2">
+                <!-- Logo + Company Info (Left - tương tự logo header) -->
+                <div class="space-y-6">
+                    <!-- Logo -->
+                    <div class="mb-4">
+                        <?php
+                        $custom_logo_id = get_theme_mod('custom_logo');
+                        $logo_url = get_template_directory_uri() . '/assets/images/logo.png';
+
+                        if ($custom_logo_id) {
+                            echo wp_get_attachment_image($custom_logo_id, 'full', false, array(
+                                'class' => 'h-12 w-auto',
+                                'alt' => get_bloginfo('name'),
+                                'style' => 'filter: brightness(0) invert(1);'
+                            ));
+                        } elseif (file_exists(get_template_directory() . '/assets/images/logo.png')) {
+                            echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr(get_bloginfo('name')) . '" class="h-12 w-auto" style="filter: brightness(0) invert(1);">';
+                        } else {
+                            echo '<div class="text-xl font-bold text-white">' . get_bloginfo('name') . '</div>';
+                        }
+                        ?>
+                    </div>
+
+                    <!-- Company Name -->
+                    <div class="mb-4">
+                        <h3 class="text-lg font-bold text-white mb-2">
                             Công ty TNHH Arata Việt Nam
                         </h3>
-                        <div class="w-16 h-1 rounded-full" style="background: #FFAB14;"></div>
+                        <div class="w-12 h-0.5 rounded-full" style="background: #FFAB14;"></div>
                     </div>
 
                     <div class="space-y-4 text-white/90">

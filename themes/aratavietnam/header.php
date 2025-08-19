@@ -184,22 +184,7 @@
 				);
 				?>
 
-				<!-- Mobile Search Box -->
-				<div class="mt-6 pt-6 border-t border-gray-200">
-					<div class="relative">
-						<input
-							type="search"
-							placeholder="Tìm kiếm sản phẩm..."
-							class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-						>
-						<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-							<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-								<circle cx="11" cy="11" r="8"></circle>
-								<path d="m21 21-4.35-4.35"></path>
-							</svg>
-						</div>
-					</div>
-				</div>
+
 
 				<!-- Mobile Actions -->
 				<div class="flex items-center justify-center space-x-8 mt-6 pt-6 border-t border-gray-200">

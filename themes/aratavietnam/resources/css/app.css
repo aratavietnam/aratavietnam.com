@@ -30,12 +30,12 @@
     border-color: var(--color-zinc-200, currentColor);
   }
 
-  /* Remove underline from all links */
+
   a {
     text-decoration: none !important;
   }
 
-  /* Add hover effect for links */
+
   a:hover {
     text-decoration: none !important;
   }
@@ -45,7 +45,7 @@
     font-family: var(--font-sans);
   }
 
-  /* Main content layout */
+
   .main-content {
     @apply min-h-screen;
     background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);
@@ -66,12 +66,12 @@
   }
 
   .policy-header .lead {
-    @apply text-base leading-relaxed;
+    @apply text-sm leading-relaxed;
     color: #4a5568;
     max-width: 100%;
   }
 
-  /* Content sections */
+
   .entry-content h2 {
     @apply text-xl font-bold mt-8 mb-4 pb-2 border-b;
     color: #0066A6;
@@ -92,7 +92,7 @@
   }
 
   .policy-section li {
-    @apply text-gray-700 leading-relaxed pl-5 relative text-sm;
+    @apply text-gray-700 leading-relaxed pl-5 relative text-xs;
   }
 
   .policy-section li::before {
@@ -106,7 +106,7 @@
     color: #0066A6;
   }
 
-  /* Process steps */
+
   .process-steps {
     @apply space-y-4 mt-6;
   }
@@ -118,15 +118,15 @@
   }
 
   .step h3 {
-    @apply text-base font-semibold mb-2;
+    @apply text-sm font-semibold mb-2;
     color: #0066A6;
   }
 
   .step p {
-    @apply text-gray-700 leading-relaxed text-sm;
+    @apply text-gray-700 leading-relaxed text-xs;
   }
 
-  /* Contact info */
+
   .contact-info {
     @apply bg-white p-6 rounded-lg border shadow-sm mt-6;
     border-color: #e2e8f0;
@@ -137,15 +137,15 @@
   }
 
   .contact-item strong {
-    @apply font-semibold min-w-[70px] text-sm;
+    @apply font-semibold min-w-[70px] text-xs;
     color: #F55E25;
   }
 
   .contact-item a {
-    @apply text-blue-600 hover:text-blue-800 transition-colors duration-200 hover:underline text-sm;
+    @apply text-blue-600 hover:text-blue-800 transition-colors duration-200 hover:underline text-xs;
   }
 
-  /* Policy footer */
+
   .policy-footer {
     @apply mt-16 pt-8 border-t text-center;
     border-color: #e2e8f0;
@@ -156,29 +156,29 @@
     color: #6b7280;
   }
 
-  /* Typography improvements */
+
   .entry-content {
-    @apply text-base leading-relaxed;
+    @apply text-sm leading-relaxed;
     color: #374151;
-    line-height: 1.7;
+    line-height: 1.6;
   }
 
   .entry-content p {
-    @apply mb-4;
+    @apply mb-3;
     text-align: justify;
     hyphens: auto;
   }
 
   .entry-content ol {
-    @apply list-decimal ml-6 space-y-3;
+    @apply list-decimal ml-6 space-y-2;
   }
 
   .entry-content ol li {
-    @apply text-gray-700 leading-relaxed;
+    @apply text-gray-700 leading-relaxed text-sm;
     text-align: justify;
   }
 
-  /* Text balance and readability */
+
   .policy-header .lead {
     text-align: justify;
     hyphens: auto;
@@ -197,7 +197,7 @@
     line-height: 1.6;
   }
 
-  /* Desktop enhancements */
+
   @media (min-width: 1024px) {
     .policy-header {
       @apply p-10;
@@ -205,22 +205,28 @@
 
     .policy-header h1 {
       @apply text-4xl mb-6;
+      line-height: 1.3;
     }
 
     .policy-header .lead {
-      @apply text-lg;
+      @apply text-base;
+      max-width: 800px;
+      margin: 0 auto;
     }
 
     .entry-content h2 {
       @apply text-2xl mt-12 mb-6 pb-3;
+      line-height: 1.4;
     }
 
     .entry-content h3 {
       @apply text-xl mt-8 mb-4;
+      line-height: 1.4;
     }
 
     .policy-section li {
-      @apply text-base pl-6;
+      @apply text-sm pl-6;
+      max-width: none;
     }
 
     .step {
@@ -228,11 +234,13 @@
     }
 
     .step h3 {
-      @apply text-lg mb-3;
+      @apply text-base mb-3;
+      line-height: 1.4;
     }
 
     .step p {
-      @apply text-base;
+      @apply text-sm;
+      max-width: none;
     }
 
     .contact-info {
@@ -262,9 +270,20 @@
     .policy-section ul {
       @apply space-y-3;
     }
+
+
+    .entry-content {
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .entry-content p {
+      margin-bottom: 1.25rem;
+      max-width: 75ch;
+    }
   }
 
-  /* Mobile optimizations */
+
   @media (max-width: 768px) {
     .policy-header {
       @apply p-4;
@@ -272,10 +291,12 @@
 
     .policy-header h1 {
       @apply text-2xl mb-3;
+      line-height: 1.3;
     }
 
     .policy-header .lead {
       @apply text-sm;
+      line-height: 1.5;
     }
 
     .contact-item {
@@ -296,10 +317,32 @@
 
     .entry-content h2 {
       @apply text-lg mt-6 mb-3;
+      line-height: 1.4;
     }
 
     .entry-content h3 {
       @apply text-base mt-4 mb-2;
+      line-height: 1.4;
+    }
+
+
+    .entry-content {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .entry-content p {
+      margin-bottom: 1rem;
+      max-width: 100%;
+    }
+
+    .policy-section li {
+      max-width: 100%;
+      padding-left: 1rem;
+    }
+
+    .step p {
+      max-width: 100%;
     }
   }
 }
