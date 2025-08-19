@@ -87,4 +87,3 @@ Người mua có thể tham khảo các phương thức thanh toán sau đây v�
 Cách 1: Thanh toán trực tiếp (người mua nhận hàng tại địa chỉ người bán)
 Cách 2: Thanh toán sau (COD – giao hàng và thu tiền tận nơi)
 Cách 3: Thanh toán online qua thẻ tín dụng, chuyển khoản
-ti

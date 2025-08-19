@@ -638,6 +638,98 @@ h1, h2, h3, h4, h5, h6 {
   text-align: center;
 }
 
+/* Fix footer grid alignment */
+#colophon .grid.grid-cols-1.lg\\:grid-cols-3 {
+  align-items: start;
+}
+
+/* Ensure consistent spacing for footer sections */
+#colophon .space-y-6 > div:first-child {
+  margin-bottom: 1.5rem;
+}
+
+/* Fix menu alignment in customer service section */
+#colophon .grid.grid-cols-2 {
+  align-items: start;
+}
+
+#colophon .grid.grid-cols-2 nav {
+  align-self: start;
+}
+
+/* Ensure menu items are properly aligned */
+#colophon nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+#colophon nav ul li {
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+#colophon nav ul li:last-child {
+  margin-bottom: 0;
+}
+
+#colophon nav ul li a {
+  text-align: left !important;
+  display: block;
+  justify-content: flex-start !important;
+}
+
+/* Force left alignment for customer service section */
+#colophon .order-3 {
+  text-align: left !important;
+}
+
+#colophon .order-3 h4 {
+  text-align: left !important;
+}
+
+#colophon .order-3 .grid {
+  text-align: left !important;
+}
+
+#colophon .order-3 nav {
+  text-align: left !important;
+}
+
+#colophon .order-3 nav ul {
+  text-align: left !important;
+  justify-content: flex-start !important;
+}
+
+#colophon .order-3 nav ul li {
+  text-align: left !important;
+  justify-content: flex-start !important;
+}
+
+#colophon .order-3 nav ul li a {
+  text-align: left !important;
+  justify-content: flex-start !important;
+}
+
+/* Override any center alignment that might be inherited */
+#colophon .order-3 * {
+  text-align: left !important;
+}
+
+/* Specifically target the grid container in customer service */
+#colophon .order-3 .grid.grid-cols-2 {
+  text-align: left !important;
+  align-items: flex-start !important;
+  justify-items: flex-start !important;
+}
+
+#colophon .order-3 .grid.grid-cols-2 > * {
+  text-align: left !important;
+  align-self: flex-start !important;
+  justify-self: flex-start !important;
+}
+
 @media (max-width: 768px) {
   #colophon .order-1 .text-center p {
     text-align: left;
@@ -652,7 +744,7 @@ h1, h2, h3, h4, h5, h6 {
   right: 20px;
   z-index: 1000;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   align-items: flex-end;
   gap: 12px;
   opacity: 0;
@@ -710,13 +802,16 @@ h1, h2, h3, h4, h5, h6 {
 
 .floating-social-links {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   gap: 8px;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-20px);
+  transform: translateY(50px);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
+  position: absolute;
+  bottom: 70px;
+  right: 0;
 }
 
 .floating-social-links.active {

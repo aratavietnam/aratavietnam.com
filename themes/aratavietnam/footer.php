@@ -21,7 +21,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 mb-12">
 
                 <!-- Company Information (Mobile: Second, Desktop: First) -->
-                <div class="space-y-4 order-2 lg:order-1">
+                <div class="text-left space-y-4 order-2 lg:order-1">
                     <!-- Company Name -->
                     <div class="mb-6">
                         <h3 class="text-xl font-bold text-white mb-2">
@@ -119,15 +119,31 @@
                         $website_url = get_theme_mod('footer_website_url', 'https://aratavietnam.com');
                         $tiktok_url = get_theme_mod('footer_tiktok_url', '');
                         $shopee_url = get_theme_mod('footer_shopee_url', '');
+
+                        // Social media links array
+                        $social_links = array();
+                        if (!empty($facebook_url)) {
+                            $social_links[] = array('url' => $facebook_url, 'icon' => 'facebook', 'label' => 'Facebook');
+                        }
+                        if (!empty($instagram_url)) {
+                            $social_links[] = array('url' => $instagram_url, 'icon' => 'instagram', 'label' => 'Instagram');
+                        }
+                        if (!empty($tiktok_url)) {
+                            $social_links[] = array('url' => $tiktok_url, 'icon' => 'tiktok', 'label' => 'TikTok');
+                        }
+                        if (!empty($shopee_url)) {
+                            $social_links[] = array('url' => $shopee_url, 'icon' => 'shopee', 'label' => 'Shopee');
+                        }
+                        if (!empty($website_url)) {
+                            $social_links[] = array('url' => $website_url, 'icon' => 'globe', 'label' => 'Website');
+                        }
                         ?>
 
                         <?php if ($facebook_url): ?>
                         <!-- Facebook -->
                         <a href="<?php echo esc_url($facebook_url); ?>" target="_blank" rel="noopener noreferrer" class="group" aria-label="Facebook">
                             <div class="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105" style="background: rgba(255, 255, 255, 0.15);">
-                                <svg class="w-5 h-5 text-white transition-transform duration-300 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 3.667h-3.533v7.98H9.101z"/>
-                                </svg>
+                                <span class="text-white transition-transform duration-300 group-hover:scale-110" data-icon="facebook" data-size="20" data-stroke="2"></span>
                             </div>
                         </a>
                         <?php endif; ?>
@@ -181,7 +197,7 @@
                 </div>
 
                 <!-- Customer Service (Mobile: Third, Desktop: Third) -->
-                <div class="space-y-6 order-3 lg:order-3">
+                <div class="text-left space-y-6 order-3 lg:order-3">
                     <div>
                         <h4 class="text-2xl font-bold mb-2 text-white"><?php echo esc_html(get_theme_mod('footer_service_title', 'Dịch vụ khách hàng')); ?></h4>
                         <div class="w-16 h-1 rounded-full mb-6" style="background: #FFAB14;"></div>
@@ -235,9 +251,9 @@
                                 'container' => false,
                                 'fallback_cb' => function() {
                                     echo '<ul class="space-y-2">';
-                                    echo '<li><a href="' . esc_url(home_url('/dich-vu')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 text-sm">Dịch vụ</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/tin-tuc')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 text-sm">Tin tức</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/lien-he')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 text-sm">Liên hệ</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-doi-tra')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 text-sm">Chính sách đổi trả</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-bao-mat')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 text-sm">Chính sách bảo mật</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/dieu-khoan-dich-vu')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 text-sm">Điều khoản dịch vụ</a></li>';
                                     echo '</ul>';
                                 },
                                 'link_before' => '',
