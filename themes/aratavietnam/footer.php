@@ -20,8 +20,8 @@
             <!-- Footer Content -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 mb-12">
 
-                <!-- Company Information -->
-                <div class="space-y-4">
+                <!-- Company Information (Mobile: Second, Desktop: First) -->
+                <div class="space-y-4 order-2 lg:order-1">
                     <!-- Company Name -->
                     <div class="mb-6">
                         <h3 class="text-xl font-bold text-white mb-2">
@@ -81,8 +81,8 @@
                     </div>
                 </div>
 
-                <!-- Logo + Description + Social Media -->
-                <div class="text-center space-y-5">
+                <!-- Logo + Description + Social Media (Mobile: First, Desktop: Middle) -->
+                <div class="text-center space-y-5 order-1 lg:order-2">
                     <!-- Logo -->
                     <div class="mb-5">
                         <?php
@@ -145,8 +145,8 @@
                     </div>
                 </div>
 
-                <!-- Customer Service -->
-                <div class="space-y-6">
+                <!-- Customer Service (Mobile: Third, Desktop: Third) -->
+                <div class="space-y-6 order-3 lg:order-3">
                     <div>
                         <h4 class="text-2xl font-bold mb-2 text-white">Dịch vụ khách hàng</h4>
                         <div class="w-16 h-1 rounded-full mb-6" style="background: #FFAB14;"></div>
