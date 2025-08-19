@@ -4,25 +4,10 @@
 <div class="container mx-auto py-12 px-4">
     <?php if (have_posts()) : ?>
         <?php while (have_posts()) : the_post(); ?>
-            <article id="post-<?php the_ID(); ?>" <?php post_class('max-w-4xl mx-auto'); ?>>
-
-                <!-- Page Header -->
-                <header class="entry-header mb-8">
-                    <h1 class="entry-title text-4xl font-bold text-dark mb-4">
-                        <?php the_title(); ?>
-                    </h1>
-
-                    <?php if (get_edit_post_link()) : ?>
-                        <div class="edit-link mb-4">
-                            <a href="<?php echo esc_url(get_edit_post_link()); ?>" class="text-primary hover:text-primary-dark text-sm">
-                                <?php esc_html_e('Edit this page', 'aratavietnam'); ?>
-                            </a>
-                        </div>
-                    <?php endif; ?>
-                </header>
+            <article id="post-<?php the_ID(); ?>" <?php post_class('max-w-6xl mx-auto'); ?>>
 
                 <!-- Page Content -->
-                <div class="entry-content prose prose-lg max-w-none">
+                <div class="entry-content max-w-none">
                     <?php
                     the_content();
 

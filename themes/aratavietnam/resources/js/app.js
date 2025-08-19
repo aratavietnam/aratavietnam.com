@@ -57,7 +57,8 @@ function initNavigation() {
 
     console.log('Init navigation:', { menuToggle: !!menuToggle, mobileNavigation: !!mobileNavigation })
 
-    if (menuToggle && mobileNavigation) {
+    if (menuToggle && mobileNavigation && !menuToggle.hasAttribute('data-initialized')) {
+        menuToggle.setAttribute('data-initialized', 'true')
         menuToggle.addEventListener('click', function (e) {
             e.preventDefault()
             e.stopPropagation()
