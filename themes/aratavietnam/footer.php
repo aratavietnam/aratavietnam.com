@@ -82,7 +82,7 @@
                 </div>
 
                 <!-- Logo + Description + Social Media (Mobile: First, Desktop: Middle) -->
-                <div class="text-center space-y-5 order-1 lg:order-2">
+<div class="text-left lg:text-center space-y-5 order-1 lg:order-2">
                     <!-- Logo -->
                     <div class="mb-5">
                         <?php
@@ -91,12 +91,12 @@
 
                         if ($custom_logo_id) {
                             echo wp_get_attachment_image($custom_logo_id, 'full', false, array(
-                                'class' => 'h-16 w-auto mx-auto',
+                                'class' => 'h-16 w-auto lg:mx-auto',
                                 'alt' => get_bloginfo('name'),
                                 'style' => 'filter: brightness(0) invert(1);'
                             ));
                         } elseif (file_exists(get_template_directory() . '/assets/images/logo.png')) {
-                            echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr(get_bloginfo('name')) . '" class="h-16 w-auto mx-auto" style="filter: brightness(0) invert(1);">';
+                            echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr(get_bloginfo('name')) . '" class="h-16 w-auto lg:mx-auto" style="filter: brightness(0) invert(1);">';
                         } else {
                             echo '<div class="text-2xl font-bold text-white">' . get_bloginfo('name') . '</div>';
                         }
@@ -105,7 +105,7 @@
 
                     <!-- Company Description -->
                     <div class="mb-5">
-                        <p class="text-white/90 text-sm leading-relaxed max-w-sm mx-auto">
+                        <p class="text-white/90 text-sm leading-relaxed max-w-sm lg:mx-auto">
                             Arata Việt Nam là công ty con của Tập đoàn Arata Nhật Bản.<br>
                             Chúng tôi kinh doanh các sản phẩm Hóa Mỹ Phẩm<br>
                             được nhập khẩu trực tiếp từ Nhật Bản.
@@ -113,7 +113,7 @@
                     </div>
 
                     <!-- Social Media Icons - Facebook, Instagram, Website -->
-                    <div class="flex justify-center space-x-4">
+                    <div class="flex justify-start lg:justify-center space-x-4">
                         <!-- Facebook -->
                         <a href="https://www.facebook.com/aratavietnam" target="_blank" rel="noopener noreferrer" class="group" aria-label="Facebook">
                             <div class="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105" style="background: rgba(255, 255, 255, 0.15);">
