@@ -23,9 +23,9 @@
 
 	<header id="masthead" class="site-header bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
 		<div class="container mx-auto px-4">
-			<div class="flex items-center justify-between py-4">
+			<div class="flex items-center py-4">
 				<!-- Logo bên trái -->
-				<div class="site-branding flex items-center flex-shrink-0">
+				<div class="site-branding flex items-center flex-shrink-0 mr-8">
 					<?php
 					// Display logo
 					$custom_logo_id = get_theme_mod('custom_logo');
@@ -35,7 +35,7 @@
 						// Use custom logo if set
 						echo '<a href="' . esc_url(home_url('/')) . '" class="custom-logo-link flex items-center" rel="home">';
 						echo wp_get_attachment_image($custom_logo_id, 'full', false, array(
-							'class' => 'custom-logo h-8 w-auto max-w-48',
+							'class' => 'custom-logo h-10 w-auto max-w-48',
 							'alt' => get_bloginfo('name'),
 						));
 						echo '</a>';
