@@ -52,53 +52,133 @@ function optimizeVietnameseText() {
 
 // Navigation Menu Toggle
 function initNavigation() {
-    let mainNavigation = document.getElementById('primary-navigation')
-    let mainNavigationToggle = document.querySelector('.menu-toggle')
+    const menuToggle = document.querySelector('.menu-toggle')
+    const mobileNavigation = document.getElementById('primary-navigation')
 
-    if(mainNavigation && mainNavigationToggle) {
-        mainNavigationToggle.addEventListener('click', function (e) {
+    console.log('Init navigation:', { menuToggle: !!menuToggle, mobileNavigation: !!mobileNavigation })
+
+    if (menuToggle && mobileNavigation) {
+        menuToggle.addEventListener('click', function (e) {
             e.preventDefault()
-            mainNavigation.classList.toggle('hidden')
+            e.stopPropagation()
 
-            // Update aria-expanded attribute
-            const isExpanded = !mainNavigation.classList.contains('hidden')
-            mainNavigationToggle.setAttribute('aria-expanded', isExpanded)
+            console.log('Menu toggle clicked')
+
+            // Toggle mobile navigation
+            const isHidden = mobileNavigation.classList.contains('hidden')
+            if (isHidden) {
+                mobileNavigation.classList.remove('hidden')
+                menuToggle.setAttribute('aria-expanded', 'true')
+                console.log('Menu opened')
+            } else {
+                mobileNavigation.classList.add('hidden')
+                menuToggle.setAttribute('aria-expanded', 'false')
+                console.log('Menu closed')
+            }
 
             // Toggle hamburger icon
-            const icon = mainNavigationToggle.querySelector('svg')
+            const icon = menuToggle.querySelector('svg')
             if (icon) {
+                const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true'
                 if (isExpanded) {
                     // Change to X icon
-                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>'
+                    icon.innerHTML = `
+                        <line x1="18" x2="6" y1="6" y2="18" stroke-width="2.5"></line>
+                        <line x1="6" x2="18" y1="6" y2="18" stroke-width="2.5"></line>
+                    `
                 } else {
                     // Change back to hamburger icon
-                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>'
+                    icon.innerHTML = `
+                        <line x1="4" x2="20" y1="6" y2="6" stroke-width="2.5"></line>
+                        <line x1="4" x2="20" y1="12" y2="12" stroke-width="2.5"></line>
+                        <line x1="4" x2="20" y1="18" y2="18" stroke-width="2.5"></line>
+                    `
                 }
             }
         })
+    } else {
+        console.error('Menu toggle or mobile navigation not found')
+    }
+}
 
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!mainNavigation.contains(e.target) && !mainNavigationToggle.contains(e.target)) {
-                mainNavigation.classList.add('hidden')
-                mainNavigationToggle.setAttribute('aria-expanded', 'false')
+function createMobileMenu() {
+    const mobileMenu = document.createElement('div')
+    mobileMenu.id = 'mobile-menu'
+    mobileMenu.className = 'fixed inset-0 z-50 lg:hidden'
+    mobileMenu.style.backgroundColor = 'rgba(0, 0, 0, 0.3)'
 
-                // Reset to hamburger icon
-                const icon = mainNavigationToggle.querySelector('svg')
-                if (icon) {
-                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>'
-                }
-            }
-        })
+    // Get menu items from desktop navigation
+    const desktopNav = document.querySelector('#site-navigation ul')
+    let menuItems = ''
 
-        // Close mobile menu on window resize to desktop
-        window.addEventListener('resize', function() {
-            if (window.innerWidth >= 1024) { // lg breakpoint
-                mainNavigation.classList.add('hidden')
-                mainNavigationToggle.setAttribute('aria-expanded', 'false')
-            }
+    if (desktopNav) {
+        const links = desktopNav.querySelectorAll('a')
+        links.forEach(link => {
+            menuItems += `
+                <li>
+                    <a href="${link.href}" class="block px-6 py-4 text-gray-900 hover:bg-gray-50 border-b border-gray-100 transition-colors">
+                        ${link.textContent}
+                    </a>
+                </li>
+            `
         })
     }
+
+    mobileMenu.innerHTML = `
+        <div class="bg-white w-80 h-full shadow-xl">
+            <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900">Menu</h2>
+                <button class="mobile-menu-close p-2 text-gray-600 hover:text-gray-900">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <line x1="18" x2="6" y1="6" y2="18"></line>
+                        <line x1="6" x2="18" y1="6" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <nav class="py-4">
+                <ul>
+                    ${menuItems}
+                </ul>
+            </nav>
+        </div>
+    `
+
+    // Add close functionality
+    const closeButton = mobileMenu.querySelector('.mobile-menu-close')
+    closeButton.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden')
+        document.querySelector('.menu-toggle').setAttribute('aria-expanded', 'false')
+
+        // Reset hamburger icon
+        const icon = document.querySelector('.menu-toggle svg')
+        if (icon) {
+            icon.innerHTML = `
+                <line x1="4" x2="20" y1="6" y2="6"></line>
+                <line x1="4" x2="20" y1="12" y2="12"></line>
+                <line x1="4" x2="20" y1="18" y2="18"></line>
+            `
+        }
+    })
+
+    // Close when clicking overlay
+    mobileMenu.addEventListener('click', (e) => {
+        if (e.target === mobileMenu) {
+            mobileMenu.classList.add('hidden')
+            document.querySelector('.menu-toggle').setAttribute('aria-expanded', 'false')
+
+            // Reset hamburger icon
+            const icon = document.querySelector('.menu-toggle svg')
+            if (icon) {
+                icon.innerHTML = `
+                    <line x1="4" x2="20" y1="6" y2="6"></line>
+                    <line x1="4" x2="20" y1="12" y2="12"></line>
+                    <line x1="4" x2="20" y1="18" y2="18"></line>
+                `
+            }
+        }
+    })
+
+    return mobileMenu
 }
 
 // Font Performance Monitoring
@@ -165,6 +245,10 @@ function initSearch() {
             if (e.key === 'Escape') {
                 searchResults.classList.add('hidden')
                 this.blur()
+            }
+            if (e.key === 'Enter') {
+                e.preventDefault()
+                createSearchModal()
             }
         })
     }
@@ -262,86 +346,349 @@ function initSearch() {
         }
         return labels[subtype] || 'Nội dung'
     }
+
+    // Mobile search toggle
+    if (mobileSearchToggle) {
+        mobileSearchToggle.addEventListener('click', function() {
+            createSearchModal()
+        })
+    }
+
+    // Desktop search box click to show popup
+    if (searchInput) {
+        searchInput.addEventListener('click', function() {
+            createSearchModal()
+        })
+    }
+
+    function createSearchModal() {
+        // Create search modal overlay
+        const modal = document.createElement('div')
+        modal.className = 'fixed inset-0 z-50 flex items-start justify-center pt-20'
+        modal.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'
+        modal.innerHTML = `
+            <div class="bg-white w-full max-w-2xl mx-4 rounded-lg shadow-xl">
+                <div class="p-6">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="relative flex-1">
+                            <input
+                                type="search"
+                                id="modal-search"
+                                placeholder="Tìm kiếm sản phẩm, bài viết..."
+                                class="w-full pl-12 pr-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                autocomplete="off"
+                            >
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.35-4.35"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <button class="modal-search-close p-2 text-gray-600 hover:text-gray-900">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <line x1="18" x2="6" y1="6" y2="18"></line>
+                                <line x1="6" x2="18" y1="6" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="modal-search-results" class="max-h-96 overflow-y-auto">
+                        <div class="p-8 text-center text-gray-500">
+                            <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                            <p class="text-lg font-medium mb-2">Tìm kiếm nhanh</p>
+                            <p class="text-sm">Nhập từ khóa để tìm kiếm sản phẩm, bài viết...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `
+
+        document.body.appendChild(modal)
+
+        // Initialize modal search functionality
+        const modalSearchInput = modal.querySelector('#modal-search')
+        const modalSearchResults = modal.querySelector('#modal-search-results')
+        const closeButton = modal.querySelector('.modal-search-close')
+        let modalSearchTimeout
+
+        // Focus on input
+        modalSearchInput.focus()
+
+        // Search functionality
+        modalSearchInput.addEventListener('input', function() {
+            const query = this.value.trim()
+
+            clearTimeout(modalSearchTimeout)
+
+            if (query.length < 2) {
+                showModalSearchPlaceholder()
+                return
+            }
+
+            showModalSearchLoading()
+
+            modalSearchTimeout = setTimeout(() => {
+                performModalSearch(query)
+            }, 300)
+        })
+
+        function showModalSearchPlaceholder() {
+            modalSearchResults.innerHTML = `
+                <div class="p-8 text-center text-gray-500">
+                    <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <p class="text-lg font-medium mb-2">Tìm kiếm nhanh</p>
+                    <p class="text-sm">Nhập từ khóa để tìm kiếm sản phẩm, bài viết...</p>
+                </div>
+            `
+        }
+
+        function showModalSearchLoading() {
+            modalSearchResults.innerHTML = `
+                <div class="p-8 text-center text-gray-500">
+                    <div class="animate-spin w-8 h-8 mx-auto mb-4 border-2 border-gray-300 border-t-primary rounded-full"></div>
+                    <p class="text-lg font-medium">Đang tìm kiếm...</p>
+                </div>
+            `
+        }
+
+        function performModalSearch(query) {
+            fetch(`${window.location.origin}/wp-json/wp/v2/search?search=${encodeURIComponent(query)}&per_page=8`)
+                .then(response => response.json())
+                .then(data => {
+                    displayModalSearchResults(data, query)
+                })
+                .catch(error => {
+                    console.error('Search error:', error)
+                    showModalSearchError()
+                })
+        }
+
+        function displayModalSearchResults(results, query) {
+            if (results.length === 0) {
+                modalSearchResults.innerHTML = `
+                    <div class="p-8 text-center text-gray-500">
+                        <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <p class="text-lg font-medium mb-2">Không tìm thấy kết quả</p>
+                        <p class="text-sm">Không có kết quả nào cho "${query}"</p>
+                    </div>
+                `
+            } else {
+                let resultsHTML = '<div class="space-y-2">'
+
+                results.forEach(result => {
+                    resultsHTML += `
+                        <a href="${result.url}" class="block p-4 hover:bg-gray-50 rounded-lg transition-colors duration-200">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-medium text-gray-900 mb-1">${result.title}</h3>
+                                    <p class="text-sm text-gray-600 mb-2 line-clamp-2">${result.excerpt || 'Không có mô tả'}</p>
+                                    <span class="inline-block px-2 py-1 text-xs bg-primary text-white rounded">${getPostTypeLabel(result.subtype)}</span>
+                                </div>
+                            </div>
+                        </a>
+                    `
+                })
+
+                resultsHTML += `
+                    <div class="border-t border-gray-100 pt-4 mt-4">
+                        <a href="/?s=${encodeURIComponent(query)}" class="block text-center py-3 text-primary hover:text-primary-dark font-medium">
+                            Xem tất cả kết quả cho "${query}"
+                        </a>
+                    </div>
+                </div>`
+
+                modalSearchResults.innerHTML = resultsHTML
+            }
+        }
+
+        function showModalSearchError() {
+            modalSearchResults.innerHTML = `
+                <div class="p-8 text-center text-red-500">
+                    <p class="text-lg font-medium">Có lỗi xảy ra</p>
+                    <p class="text-sm">Vui lòng thử lại sau</p>
+                </div>
+            `
+        }
+
+        // Close modal handlers
+        closeButton.addEventListener('click', () => {
+            document.body.removeChild(modal)
+        })
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                document.body.removeChild(modal)
+            }
+        })
+
+        // Escape key to close
+        document.addEventListener('keydown', function escapeHandler(e) {
+            if (e.key === 'Escape') {
+                document.body.removeChild(modal)
+                document.removeEventListener('keydown', escapeHandler)
+            }
+        })
+    }
 }
 
 // Cart functionality
 function initCart() {
     const cartToggle = document.querySelector('.cart-toggle')
-    const cartDropdown = document.getElementById('cart-dropdown')
 
-    if (cartToggle && cartDropdown) {
-        // Show cart dropdown on click
+    if (cartToggle) {
+        // Show cart popup on click
         cartToggle.addEventListener('click', function(e) {
             e.preventDefault()
             e.stopPropagation()
 
-            // Toggle dropdown
-            cartDropdown.classList.toggle('hidden')
+            // Create or show cart popup
+            let cartPopup = document.getElementById('cart-popup')
 
-            // Load cart contents if showing
-            if (!cartDropdown.classList.contains('hidden')) {
-                loadCartContents()
+            if (!cartPopup) {
+                cartPopup = createCartPopup()
+                document.body.appendChild(cartPopup)
             }
-        })
 
-        // Hide cart dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!cartToggle.contains(e.target) && !cartDropdown.contains(e.target)) {
-                cartDropdown.classList.add('hidden')
-            }
-        })
+            // Show popup
+            cartPopup.classList.remove('hidden')
+            cartPopup.style.display = 'block'
 
-        // Prevent dropdown from closing when clicking inside
-        cartDropdown.addEventListener('click', function(e) {
-            e.stopPropagation()
+            // Load cart contents
+            loadCartContents()
         })
     }
 
+    function createCartPopup() {
+        const popup = document.createElement('div')
+        popup.id = 'cart-popup'
+        popup.className = 'fixed inset-0 z-50 lg:hidden'
+        popup.style.backgroundColor = 'rgba(0, 0, 0, 0.3)'
+
+        popup.innerHTML = `
+            <!-- Mobile Cart Popup -->
+            <div class="fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-xl transform transition-transform duration-300 ease-in-out">
+                <!-- Header -->
+                <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-900">Giỏ hàng</h2>
+                    <button class="cart-close p-2 text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Cart Content -->
+                <div id="cart-content" class="flex-1 overflow-y-auto">
+                    <div class="p-4 text-center text-gray-500">
+                        <div class="animate-spin w-6 h-6 mx-auto mb-2 border-2 border-gray-300 border-t-primary rounded-full"></div>
+                        <p class="text-sm">Đang tải giỏ hàng...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Cart Popup -->
+            <div class="hidden lg:block fixed inset-y-0 right-0 w-96 bg-white shadow-xl transform transition-transform duration-300 ease-in-out">
+                <!-- Header -->
+                <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-900">Giỏ hàng</h2>
+                    <button class="cart-close p-2 text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Cart Content -->
+                <div id="cart-content-desktop" class="flex-1 overflow-y-auto">
+                    <div class="p-6 text-center text-gray-500">
+                        <div class="animate-spin w-6 h-6 mx-auto mb-2 border-2 border-gray-300 border-t-primary rounded-full"></div>
+                        <p class="text-sm">Đang tải giỏ hàng...</p>
+                    </div>
+                </div>
+            </div>
+        `
+
+        // Add close event listeners
+        const closeButtons = popup.querySelectorAll('.cart-close')
+        closeButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                popup.classList.add('hidden')
+                popup.style.display = 'none'
+            })
+        })
+
+        // Close when clicking backdrop
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup) {
+                popup.classList.add('hidden')
+                popup.style.display = 'none'
+            }
+        })
+
+        // Close with Escape key
+        document.addEventListener('keydown', function escapeHandler(e) {
+            if (e.key === 'Escape' && !popup.classList.contains('hidden')) {
+                popup.classList.add('hidden')
+                popup.style.display = 'none'
+            }
+        })
+
+        return popup
+    }
+
     function loadCartContents() {
+        const cartContent = document.getElementById('cart-content')
+        const cartContentDesktop = document.getElementById('cart-content-desktop')
+
         // Show loading state
-        cartDropdown.innerHTML = `
-            <div class="p-4 text-center text-gray-500">
+        const loadingHTML = `
+            <div class="p-6 text-center text-gray-500">
                 <div class="animate-spin w-6 h-6 mx-auto mb-2 border-2 border-gray-300 border-t-primary rounded-full"></div>
                 <p class="text-sm">Đang tải giỏ hàng...</p>
             </div>
         `
 
-        // Fetch cart contents via AJAX
-        if (typeof wc_add_to_cart_params !== 'undefined') {
-            fetch(wc_add_to_cart_params.ajax_url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'action=get_cart_contents&nonce=' + (wc_add_to_cart_params.wc_ajax_nonce || '')
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    displayCartContents(data.data)
-                } else {
-                    showCartError()
-                }
-            })
-            .catch(error => {
-                console.error('Cart error:', error)
-                showCartError()
-            })
-        } else {
-            // Fallback: show basic cart info
-            showBasicCart()
-        }
+        if (cartContent) cartContent.innerHTML = loadingHTML
+        if (cartContentDesktop) cartContentDesktop.innerHTML = loadingHTML
+
+        // For now, show empty cart (can be enhanced with WooCommerce AJAX later)
+        setTimeout(() => {
+            displayCartContents(null) // Show empty cart state
+        }, 500)
     }
 
     function displayCartContents(cartData) {
+        const cartContent = document.getElementById('cart-content')
+        const cartContentDesktop = document.getElementById('cart-content-desktop')
+
         if (!cartData || cartData.count === 0) {
-            cartDropdown.innerHTML = `
-                <div class="p-4 text-center text-gray-500">
-                    <span data-icon="cart" data-size="24" data-class="w-6 h-6 mx-auto mb-2 text-gray-300"></span>
-                    <p class="text-sm">Giỏ hàng trống</p>
-                    <a href="/san-pham" class="text-xs text-primary hover:text-primary-dark mt-2 inline-block">Khám phá sản phẩm</a>
+            const emptyHTML = `
+                <div class="p-6 text-center text-gray-500">
+                    <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <circle cx="8" cy="21" r="1"></circle>
+                        <circle cx="19" cy="21" r="1"></circle>
+                        <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57L23 6H6"></path>
+                    </svg>
+                    <p class="text-lg font-medium text-gray-900 mb-2">Giỏ hàng trống</p>
+                    <p class="text-sm text-gray-500 mb-4">Thêm sản phẩm vào giỏ hàng để bắt đầu mua sắm</p>
+                    <a href="/san-pham" class="inline-block bg-primary text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors">
+                        Khám phá sản phẩm
+                    </a>
                 </div>
             `
+            if (cartContent) cartContent.innerHTML = emptyHTML
+            if (cartContentDesktop) cartContentDesktop.innerHTML = emptyHTML
         } else {
             let cartHTML = '<div class="max-h-64 overflow-y-auto">'
 
@@ -369,28 +716,32 @@ function initCart() {
             // Cart footer
             cartHTML += `
                 </div>
-                <div class="p-4 border-t border-gray-100 bg-gray-50">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-sm font-medium text-gray-900">Tổng cộng:</span>
-                        <span class="text-lg font-bold text-primary">${cartData.total || '0₫'}</span>
+                <div class="p-6 border-t border-gray-100 bg-gray-50 sticky bottom-0">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-lg font-medium text-gray-900">Tổng cộng:</span>
+                        <span class="text-xl font-bold text-primary">${cartData.total || '0₫'}</span>
                     </div>
-                    <div class="space-y-2">
-                        <a href="/gio-hang" class="block w-full bg-gray-100 text-gray-900 text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
+                    <div class="space-y-3">
+                        <a href="/gio-hang" class="block w-full bg-gray-100 text-gray-900 text-center py-3 px-4 rounded-lg font-medium hover:bg-gray-200 transition-colors">
                             Xem giỏ hàng
                         </a>
-                        <a href="/thanh-toan" class="block w-full bg-primary text-white text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors">
-                            Thanh toán
+                        <a href="/thanh-toan" class="block w-full bg-primary text-white text-center py-3 px-4 rounded-lg font-medium hover:bg-primary-dark transition-colors">
+                            Thanh toán ngay
                         </a>
                     </div>
                 </div>
             `
 
-            cartDropdown.innerHTML = cartHTML
+            if (cartContent) cartContent.innerHTML = cartHTML
+            if (cartContentDesktop) cartContentDesktop.innerHTML = cartHTML
 
             // Add remove item event listeners
-            cartDropdown.querySelectorAll('.remove-item').forEach(button => {
-                button.addEventListener('click', function() {
-                    removeCartItem(this.dataset.key)
+            const containers = [cartContent, cartContentDesktop].filter(Boolean)
+            containers.forEach(container => {
+                container.querySelectorAll('.remove-item').forEach(button => {
+                    button.addEventListener('click', function() {
+                        removeCartItem(this.dataset.key)
+                    })
                 })
             })
         }
@@ -402,29 +753,46 @@ function initCart() {
     }
 
     function showCartError() {
-        cartDropdown.innerHTML = `
-            <div class="p-4 text-center text-red-500">
-                <p class="text-sm">Có lỗi xảy ra khi tải giỏ hàng.</p>
-                <button onclick="location.reload()" class="text-xs text-primary hover:text-primary-dark mt-2">Thử lại</button>
+        const cartContent = document.getElementById('cart-content')
+        const cartContentDesktop = document.getElementById('cart-content-desktop')
+
+        const errorHTML = `
+            <div class="p-6 text-center text-red-500">
+                <svg class="w-12 h-12 mx-auto mb-4 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"></path>
+                </svg>
+                <p class="text-lg font-medium text-gray-900 mb-2">Có lỗi xảy ra</p>
+                <p class="text-sm text-gray-500 mb-4">Không thể tải giỏ hàng. Vui lòng thử lại.</p>
+                <button onclick="location.reload()" class="bg-primary text-white px-6 py-2 rounded-lg font-medium hover:bg-primary-dark transition-colors">
+                    Thử lại
+                </button>
             </div>
         `
+
+        if (cartContent) cartContent.innerHTML = errorHTML
+        if (cartContentDesktop) cartContentDesktop.innerHTML = errorHTML
     }
 
     function showBasicCart() {
-        cartDropdown.innerHTML = `
-            <div class="p-4 text-center">
-                <span data-icon="cart" data-size="24" data-class="w-6 h-6 mx-auto mb-2 text-gray-400"></span>
-                <p class="text-sm text-gray-600 mb-3">Giỏ hàng</p>
-                <a href="/gio-hang" class="block w-full bg-primary text-white text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors">
+        const cartContent = document.getElementById('cart-content')
+        const cartContentDesktop = document.getElementById('cart-content-desktop')
+
+        const basicHTML = `
+            <div class="p-6 text-center">
+                <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <circle cx="8" cy="21" r="1"></circle>
+                    <circle cx="19" cy="21" r="1"></circle>
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57L23 6H6"></path>
+                </svg>
+                <p class="text-lg font-medium text-gray-900 mb-4">Giỏ hàng</p>
+                <a href="/gio-hang" class="block w-full bg-primary text-white text-center py-3 px-4 rounded-lg font-medium hover:bg-primary-dark transition-colors">
                     Xem giỏ hàng
                 </a>
             </div>
         `
 
-        // Re-initialize icons
-        if (window.ArataIcons) {
-            window.ArataIcons.init()
-        }
+        if (cartContent) cartContent.innerHTML = basicHTML
+        if (cartContentDesktop) cartContentDesktop.innerHTML = basicHTML
     }
 
     function removeCartItem(cartKey) {

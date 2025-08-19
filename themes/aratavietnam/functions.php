@@ -19,7 +19,11 @@ function aratavietnam(): TailPress\Framework\Theme
             ->enqueueAssets()
         )
         ->features(fn($manager) => $manager->add(TailPress\Framework\Features\MenuOptions::class))
-        ->menus(fn($manager) => $manager->add('primary', __( 'Primary Menu', 'aratavietnam')))
+        ->menus(fn($manager) => $manager
+            ->add('primary', __( 'Primary Menu', 'aratavietnam'))
+            ->add('footer-menu-1', __( 'Footer Menu 1', 'aratavietnam'))
+            ->add('footer-menu-2', __( 'Footer Menu 2', 'aratavietnam'))
+        )
         ->themeSupport(fn($manager) => $manager->add([
             'title-tag',
             'custom-logo',

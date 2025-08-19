@@ -110,7 +110,7 @@ Với Tailwind CSS v4, các màu sẽ tự động được generate:
 .brand-gradient {
   background: linear-gradient(135deg, #F55E25 0%, #0066A6 100%);
 }
-```
+```;
 
 ## Implementation
 

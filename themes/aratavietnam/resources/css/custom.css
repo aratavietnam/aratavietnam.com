@@ -1,4 +1,31 @@
 /* Global Font Settings with Vietnamese Support */
+
+/* Desktop Navigation Menu - Force Horizontal Layout */
+#primary-menu {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 1rem !important;
+}
+
+#primary-menu li {
+    display: inline-block !important;
+    margin: 0 !important;
+}
+
+#primary-menu a {
+    display: inline-block !important;
+    padding: 0.5rem 0.6rem !important;
+    text-decoration: none !important;
+    color: #374151 !important;
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    transition: color 0.3s ease !important;
+}
+
+#primary-menu a:hover {
+    color: #0066A6 !important;
+}
 body,
 html {
   font-family: var(--font-primary); /* Use Inter/Source Sans Pro for Vietnamese */

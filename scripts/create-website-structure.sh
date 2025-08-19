@@ -2,7 +2,7 @@
 
 echo "Tạo cấu trúc website Arata Vietnam theo brief..."
 
-# Tạo trang "Về Arata"
+# Create "About Arata" page
 echo "Tạo trang Về Arata..."
 docker-compose run --rm wp-cli wp post create \
     --post_type=page \
@@ -28,7 +28,7 @@ docker-compose run --rm wp-cli wp post create \
     --post_status=publish \
     --allow-root
 
-# Tạo trang "Dịch vụ"
+# Create "Services" page
 echo "Tạo trang Dịch vụ..."
 docker-compose run --rm wp-cli wp post create \
     --post_type=page \
@@ -49,7 +49,7 @@ docker-compose run --rm wp-cli wp post create \
     --post_status=publish \
     --allow-root
 
-# Tạo trang "Tin tức" chính
+# Create main "News" page
 echo "Tạo trang Tin tức..."
 docker-compose run --rm wp-cli wp post create \
     --post_type=page \
@@ -67,7 +67,7 @@ docker-compose run --rm wp-cli wp post create \
     --post_status=publish \
     --allow-root
 
-# Tạo trang con "Chương trình khuyến mãi"
+# Create "Promotions" page
 echo "Tạo trang Chương trình khuyến mãi..."
 docker-compose run --rm wp-cli wp post create \
     --post_type=page \
@@ -88,7 +88,7 @@ docker-compose run --rm wp-cli wp post create \
     --post_status=publish \
     --allow-root
 
-# Tạo trang con "Tuyển dụng"
+# Create "Careers" page
 echo "Tạo trang Tuyển dụng..."
 docker-compose run --rm wp-cli wp post create \
     --post_type=page \
@@ -116,7 +116,7 @@ docker-compose run --rm wp-cli wp post create \
     --post_status=publish \
     --allow-root
 
-# Tạo trang con "Blog"
+# Create "Blog" page
 echo "Tạo trang Blog..."
 docker-compose run --rm wp-cli wp post create \
     --post_type=page \
@@ -135,7 +135,7 @@ docker-compose run --rm wp-cli wp post create \
     --post_status=publish \
     --allow-root
 
-# Tạo trang "Liên hệ"
+# Create "Contact" page
 echo "Tạo trang Liên hệ..."
 docker-compose run --rm wp-cli wp post create \
     --post_type=page \

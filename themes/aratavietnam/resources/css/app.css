@@ -44,4 +44,152 @@
   body {
     font-family: var(--font-sans);
   }
+
+  /* Main content layout */
+  .main-content {
+    @apply min-h-screen;
+    background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);
+  }
+
+  /* Policy pages styling */
+  .policy-header {
+    @apply mb-12 pb-8 border-b-2;
+    border-color: #0066A6;
+    background: linear-gradient(135deg, rgba(0, 102, 166, 0.05) 0%, rgba(255, 171, 20, 0.05) 100%);
+    @apply p-8 rounded-lg;
+  }
+
+  .policy-header h1 {
+    @apply text-4xl font-bold mb-6;
+    color: #0066A6;
+    line-height: 1.2;
+  }
+
+  .policy-header .lead {
+    @apply text-lg leading-relaxed;
+    color: #4a5568;
+    max-width: 800px;
+  }
+
+  /* Content sections */
+  .entry-content h2 {
+    @apply text-2xl font-bold mt-12 mb-6 pb-3 border-b;
+    color: #0066A6;
+    border-color: #e2e8f0;
+  }
+
+  .entry-content h3 {
+    @apply text-xl font-semibold mt-8 mb-4;
+    color: #F55E25;
+  }
+
+  .policy-section {
+    @apply mb-10;
+  }
+
+  .policy-section ul {
+    @apply space-y-3 ml-0 list-none;
+  }
+
+  .policy-section li {
+    @apply text-gray-700 leading-relaxed pl-6 relative;
+  }
+
+  .policy-section li::before {
+    content: "•";
+    @apply absolute left-0 font-bold;
+    color: #FFAB14;
+  }
+
+  .policy-section li strong {
+    @apply font-semibold;
+    color: #0066A6;
+  }
+
+  /* Process steps */
+  .process-steps {
+    @apply space-y-6 mt-8;
+  }
+
+  .step {
+    @apply bg-white p-6 rounded-lg border-l-4 shadow-sm;
+    border-left-color: #FFAB14;
+    border: 1px solid #e2e8f0;
+  }
+
+  .step h3 {
+    @apply text-lg font-semibold mb-3;
+    color: #0066A6;
+  }
+
+  .step p {
+    @apply text-gray-700 leading-relaxed;
+  }
+
+  /* Contact info */
+  .contact-info {
+    @apply bg-white p-8 rounded-lg border shadow-sm mt-8;
+    border-color: #e2e8f0;
+  }
+
+  .contact-item {
+    @apply flex items-start space-x-4 py-3;
+  }
+
+  .contact-item strong {
+    @apply font-semibold min-w-[80px];
+    color: #F55E25;
+  }
+
+  .contact-item a {
+    @apply text-blue-600 hover:text-blue-800 transition-colors duration-200 hover:underline;
+  }
+
+  /* Policy footer */
+  .policy-footer {
+    @apply mt-16 pt-8 border-t text-center;
+    border-color: #e2e8f0;
+  }
+
+  .policy-footer em {
+    @apply text-sm italic;
+    color: #6b7280;
+  }
+
+  /* Typography improvements */
+  .entry-content {
+    @apply text-base leading-relaxed;
+    color: #374151;
+  }
+
+  .entry-content p {
+    @apply mb-4;
+  }
+
+  .entry-content ol {
+    @apply list-decimal ml-6 space-y-2;
+  }
+
+  .entry-content ol li {
+    @apply text-gray-700 leading-relaxed;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .policy-header {
+      @apply p-6;
+    }
+
+    .policy-header h1 {
+      @apply text-3xl;
+    }
+
+    .contact-item {
+      @apply flex-col space-x-0 space-y-2;
+    }
+
+    .contact-item strong {
+      @apply min-w-0;
+    }
+  }
 }
