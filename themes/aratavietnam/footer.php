@@ -139,16 +139,14 @@
                         }
                         ?>
 
-                        <?php if ($facebook_url): ?>
-                        <!-- Facebook -->
-                        <a href="<?php echo esc_url($facebook_url); ?>" target="_blank" rel="noopener noreferrer" class="group" aria-label="Facebook">
+                        <?php foreach ($social_links as $social): ?>
+                        <!-- <?php echo esc_html($social['label']); ?> -->
+                        <a href="<?php echo esc_url($social['url']); ?>" target="_blank" rel="noopener noreferrer" class="group" aria-label="<?php echo esc_attr($social['label']); ?>">
                             <div class="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105" style="background: rgba(255, 255, 255, 0.15);">
-                                <span class="text-white transition-transform duration-300 group-hover:scale-110" data-icon="facebook" data-size="20" data-stroke="2"></span>
+                                <span class="text-white transition-transform duration-300 group-hover:scale-110" data-icon="<?php echo esc_attr($social['icon']); ?>" data-size="20" data-stroke="2"></span>
                             </div>
                         </a>
-                        <?php endif; ?>
-
-                        <?php if ($instagram_url): ?>
+                        <?php endforeach; ?>
                         <!-- Instagram -->
                         <a href="<?php echo esc_url($instagram_url); ?>" target="_blank" rel="noopener noreferrer" class="group" aria-label="Instagram">
                             <div class="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105" style="background: rgba(255, 255, 255, 0.15);">
