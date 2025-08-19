@@ -25,7 +25,7 @@ export default defineConfig(({ command }) => {
             copyPublicDir: false,
         },
         publicDir: false,
-        assetsInclude: ['**/*.woff', '**/*.woff2', '**/*.ttf'],
+        assetsInclude: ['**/*.woff', '**/*.woff2', '**/*.ttf', '**/*.otf'],
         plugins: [
             tailwindcss(),
         ],

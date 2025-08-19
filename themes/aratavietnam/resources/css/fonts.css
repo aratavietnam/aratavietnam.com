@@ -1,4 +1,78 @@
-/* Bahnschrift Font Family */
+/* 1FTV Gasket Font Family - Primary font for Vietnamese */
+@font-face {
+    font-family: "1FTV Gasket";
+    src: url("../fonts/1FTV-Gasket.woff2") format("woff2"),
+         url("../fonts/1FTV-Gasket.woff") format("woff"),
+         url("../fonts/1FTV-Gasket.ttf") format("truetype"),
+         url("../fonts/1FTV-Gasket.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9;
+}
+
+/* 1FTV Gasket Font Weight Variations */
+@font-face {
+    font-family: "1FTV Gasket";
+    src: url("../fonts/1FTV-Gasket.woff2") format("woff2"),
+         url("../fonts/1FTV-Gasket.woff") format("woff"),
+         url("../fonts/1FTV-Gasket.ttf") format("truetype"),
+         url("../fonts/1FTV-Gasket.otf") format("opentype");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9;
+}
+
+@font-face {
+    font-family: "1FTV Gasket";
+    src: url("../fonts/1FTV-Gasket.woff2") format("woff2"),
+         url("../fonts/1FTV-Gasket.woff") format("woff"),
+         url("../fonts/1FTV-Gasket.ttf") format("truetype"),
+         url("../fonts/1FTV-Gasket.otf") format("opentype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9;
+}
+
+@font-face {
+    font-family: "1FTV Gasket";
+    src: url("../fonts/1FTV-Gasket.woff2") format("woff2"),
+         url("../fonts/1FTV-Gasket.woff") format("woff"),
+         url("../fonts/1FTV-Gasket.ttf") format("truetype"),
+         url("../fonts/1FTV-Gasket.otf") format("opentype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9;
+}
+
+@font-face {
+    font-family: "1FTV Gasket";
+    src: url("../fonts/1FTV-Gasket.woff2") format("woff2"),
+         url("../fonts/1FTV-Gasket.woff") format("woff"),
+         url("../fonts/1FTV-Gasket.ttf") format("truetype"),
+         url("../fonts/1FTV-Gasket.otf") format("opentype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9;
+}
+
+/* Vietnamese Font Strategy */
+/* Use Google Fonts that support Vietnamese well */
+
+/* Inter Font - Modern font with excellent Vietnamese support */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Noto Sans Vietnamese - Specifically designed for Vietnamese */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap');
+
+/* Source Sans Pro - Another good Vietnamese font */
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
+
+/* Bahnschrift Font Family - Local fallback */
 @font-face {
     font-family: "Bahnschrift";
     src: url("../fonts/bahnschrift.woff2") format("woff2"),

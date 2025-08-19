@@ -57,5 +57,10 @@
   --text-8xl: var(--wp--preset--font-size--8-xl, 6rem);
   --text-9xl: var(--wp--preset--font-size--9-xl, 8rem);
 
-  --font-sans: "Bahnschrift", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  /* Font stacks optimized for Vietnamese */
+  --font-sans: "Inter", "Source Sans Pro", "Noto Sans", "1FTV Gasket", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-primary: "Inter", "Source Sans Pro", "Noto Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-gasket: "1FTV Gasket", "Inter", "Source Sans Pro", "Noto Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-bahnschrift: "Bahnschrift", "Inter", "Source Sans Pro", "Noto Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-vietnamese: "Inter", "Source Sans Pro", "Noto Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
 }
