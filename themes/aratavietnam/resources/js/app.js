@@ -55,26 +55,20 @@ function initNavigation() {
     const menuToggle = document.querySelector('.menu-toggle')
     const mobileNavigation = document.getElementById('primary-navigation')
 
-    console.log('Init navigation:', { menuToggle: !!menuToggle, mobileNavigation: !!mobileNavigation })
-
     if (menuToggle && mobileNavigation && !menuToggle.hasAttribute('data-initialized')) {
         menuToggle.setAttribute('data-initialized', 'true')
         menuToggle.addEventListener('click', function (e) {
             e.preventDefault()
             e.stopPropagation()
 
-            console.log('Menu toggle clicked')
-
             // Toggle mobile navigation
             const isHidden = mobileNavigation.classList.contains('hidden')
             if (isHidden) {
                 mobileNavigation.classList.remove('hidden')
                 menuToggle.setAttribute('aria-expanded', 'true')
-                console.log('Menu opened')
             } else {
                 mobileNavigation.classList.add('hidden')
                 menuToggle.setAttribute('aria-expanded', 'false')
-                console.log('Menu closed')
             }
 
             // Toggle hamburger icon

@@ -710,6 +710,51 @@ h1, h2, h3, h4, h5, h6 {
 #colophon .order-3 nav ul li a {
   text-align: left !important;
   justify-content: flex-start !important;
+  color: white !important;
+}
+
+#colophon .order-3 nav ul li a:hover {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Force white color for all footer menu links */
+#colophon nav a {
+  color: white !important;
+}
+
+#colophon nav a:hover {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Ensure footer menu items are white */
+#colophon .menu a,
+#colophon .menu-item a,
+#colophon ul li a {
+  color: white !important;
+}
+
+#colophon .menu a:hover,
+#colophon .menu-item a:hover,
+#colophon ul li a:hover {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Force text alignment for company description on mobile */
+@media (max-width: 1023px) {
+  #colophon .order-1 p {
+    text-align: left !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  #colophon .order-1 .mb-5 {
+    text-align: left !important;
+  }
+}
+
+/* Make footer menu links smaller */
+#colophon .order-3 nav ul li a {
+  font-size: 14px !important;
 }
 
 /* Override any center alignment that might be inherited */
