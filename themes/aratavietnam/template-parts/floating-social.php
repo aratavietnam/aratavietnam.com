@@ -94,12 +94,6 @@ if (empty($social_links)) {
 ?>
 
 <div id="floating-social-widget" class="floating-social-widget">
-    <!-- Toggle Button -->
-    <button id="floating-social-toggle" class="floating-social-toggle" aria-label="Mở/Đóng mạng xã hội">
-        <span class="icon-open" data-icon="message-circle" data-size="24" data-stroke="2.5"></span>
-        <span class="icon-close" data-icon="close" data-size="24" data-stroke="2.5"></span>
-    </button>
-
     <!-- Social Links Container -->
     <div id="floating-social-links" class="floating-social-links">
         <?php foreach ($social_links as $index => $link): ?>
@@ -127,4 +121,10 @@ if (empty($social_links)) {
             </a>
         <?php endforeach; ?>
     </div>
+
+    <!-- Toggle Button -->
+    <button id="floating-social-toggle" class="floating-social-toggle" aria-label="Mở/Đóng mạng xã hội">
+        <span class="icon-open" data-icon="message-circle" data-size="24" data-stroke="2.5"></span>
+        <span class="icon-close" data-icon="close" data-size="24" data-stroke="2.5"></span>
+    </button>
 </div>

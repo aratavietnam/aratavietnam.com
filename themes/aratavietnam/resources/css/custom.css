@@ -652,7 +652,7 @@ h1, h2, h3, h4, h5, h6 {
   right: 20px;
   z-index: 1000;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   align-items: flex-end;
   gap: 12px;
   opacity: 0;
@@ -710,11 +710,11 @@ h1, h2, h3, h4, h5, h6 {
 
 .floating-social-links {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   gap: 8px;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(20px);
+  transform: translateY(-20px);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
 }
