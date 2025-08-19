@@ -90,7 +90,10 @@
 								autocomplete="off"
 							>
 							<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-								<span data-icon="search" data-size="16" data-class="w-4 h-4 text-gray-400"></span>
+								<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<circle cx="11" cy="11" r="8"></circle>
+									<path d="m21 21-4.35-4.35"></path>
+								</svg>
 							</div>
 						</div>
 						<!-- Search Results Dropdown -->
@@ -106,19 +109,29 @@
 					<div class="action-icons flex items-center space-x-2">
 						<!-- Mobile Search Toggle -->
 						<button class="search-toggle-mobile md:hidden p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300" aria-label="Tìm kiếm">
-							<span data-icon="search" data-size="20" data-class="w-5 h-5"></span>
+							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<circle cx="11" cy="11" r="8"></circle>
+								<path d="m21 21-4.35-4.35"></path>
+							</svg>
 						</button>
 
 						<!-- Account -->
 						<a href="<?php echo esc_url(wp_login_url()); ?>" class="account-toggle p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300" aria-label="Tài khoản">
-							<span data-icon="user" data-size="20" data-class="w-5 h-5"></span>
+							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+								<circle cx="12" cy="7" r="4"></circle>
+							</svg>
 						</a>
 
 						<!-- Cart (WooCommerce) -->
 						<?php if (class_exists('WooCommerce')) : ?>
 						<div class="cart-container relative">
 							<button class="cart-toggle p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300 relative" aria-label="Giỏ hàng">
-								<span data-icon="cart" data-size="20" data-class="w-5 h-5"></span>
+								<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<circle cx="8" cy="21" r="1"></circle>
+									<circle cx="19" cy="21" r="1"></circle>
+									<path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57L23 6H6"></path>
+								</svg>
 								<?php if (WC()->cart && WC()->cart->get_cart_contents_count() > 0) : ?>
 									<span class="cart-count absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
 										<?php echo WC()->cart->get_cart_contents_count(); ?>
@@ -128,7 +141,11 @@
 							<!-- Cart Dropdown -->
 							<div id="cart-dropdown" class="absolute top-full right-0 mt-1 w-80 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50">
 								<div class="p-4 text-center text-gray-500">
-									<span data-icon="cart" data-size="24" data-class="w-6 h-6 mx-auto mb-2 text-gray-300"></span>
+									<svg class="w-6 h-6 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<circle cx="8" cy="21" r="1"></circle>
+										<circle cx="19" cy="21" r="1"></circle>
+										<path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57L23 6H6"></path>
+									</svg>
 									<p class="text-sm">Giỏ hàng trống</p>
 								</div>
 							</div>
@@ -137,7 +154,11 @@
 
 						<!-- Mobile Menu Toggle -->
 						<button class="menu-toggle lg:hidden p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300 ml-2" aria-controls="primary-menu" aria-expanded="false" aria-label="Menu">
-							<span data-icon="menu" data-size="24" data-class="w-6 h-6"></span>
+							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<line x1="4" x2="20" y1="6" y2="6"></line>
+								<line x1="4" x2="20" y1="12" y2="12"></line>
+								<line x1="4" x2="20" y1="18" y2="18"></line>
+							</svg>
 						</button>
 					</div>
 				</div>

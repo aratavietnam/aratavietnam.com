@@ -118,8 +118,9 @@ export function initializeIcons() {
         });
 
         if (icon) {
-            // Replace placeholder with icon
-            placeholder.parentNode.replaceChild(icon, placeholder);
+            // Clear placeholder content and add icon
+            placeholder.innerHTML = '';
+            placeholder.appendChild(icon);
         }
     });
 }
