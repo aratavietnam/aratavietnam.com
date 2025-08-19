@@ -252,11 +252,11 @@
     }
 
     .contact-item strong {
-      @apply min-w-[80px] text-base;
+      @apply min-w-[80px] text-sm;
     }
 
     .contact-item a {
-      @apply text-base;
+      @apply text-sm;
     }
 
     .process-steps {
@@ -273,12 +273,12 @@
 
 
     .entry-content {
-      font-size: 16px;
-      line-height: 1.7;
+      font-size: 14px;
+      line-height: 1.6;
     }
 
     .entry-content p {
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
       max-width: 75ch;
     }
   }
@@ -327,12 +327,12 @@
 
 
     .entry-content {
-      font-size: 14px;
-      line-height: 1.6;
+      font-size: 12px;
+      line-height: 1.5;
     }
 
     .entry-content p {
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
       max-width: 100%;
     }
 
