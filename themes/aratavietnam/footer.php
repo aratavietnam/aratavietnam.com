@@ -44,10 +44,10 @@
 
                     <!-- Company Name -->
                     <div class="mb-4">
-                        <h3 class="text-lg font-bold text-white mb-2">
+                        <h3 class="text-xl font-bold text-white mb-2">
                             Công ty TNHH Arata Việt Nam
                         </h3>
-                        <div class="w-12 h-0.5 rounded-full" style="background: #FFAB14;"></div>
+                        <div class="w-16 h-1 rounded-full" style="background: #FFAB14;"></div>
                     </div>
 
                     <div class="space-y-4 text-white/90">
@@ -183,9 +183,9 @@
                                 'container' => false,
                                 'fallback_cb' => function() {
                                     echo '<ul class="space-y-2">';
-                                    echo '<li><a href="' . esc_url(home_url('/')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 font-medium">Trang chủ</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/san-pham')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 font-medium">Sản phẩm</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/ve-arata')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 font-medium">Về Arata</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 text-sm">Trang chủ</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/san-pham')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 text-sm">Sản phẩm</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/ve-arata')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 text-sm">Về Arata</a></li>';
                                     echo '</ul>';
                                 },
                                 'link_before' => '',
@@ -199,7 +199,7 @@
                                     }
                                     function start_el(&$output, $item, $depth = 0, $args = null, $id = 0) {
                                         $output .= '<li>';
-                                        $output .= '<a href="' . esc_url($item->url) . '" class="block text-white/90 hover:text-white transition-colors duration-300 font-medium">';
+                                        $output .= '<a href="' . esc_url($item->url) . '" class="block text-white/90 hover:text-white transition-colors duration-300 text-sm">';
                                         $output .= esc_html($item->title);
                                         $output .= '</a>';
                                     }
@@ -220,9 +220,9 @@
                                 'container' => false,
                                 'fallback_cb' => function() {
                                     echo '<ul class="space-y-2">';
-                                    echo '<li><a href="' . esc_url(home_url('/dich-vu')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 font-medium">Dịch vụ</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/tin-tuc')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 font-medium">Tin tức</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/lien-he')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 font-medium">Liên hệ</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/dich-vu')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 text-sm">Dịch vụ</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/tin-tuc')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 text-sm">Tin tức</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/lien-he')) . '" class="block text-white/90 hover:text-white transition-colors duration-300 text-sm">Liên hệ</a></li>';
                                     echo '</ul>';
                                 },
                                 'link_before' => '',
