@@ -105,8 +105,10 @@
 
                     <!-- Company Description -->
                     <div class="mb-5">
-                        <p class="text-white/90 text-sm leading-relaxed max-w-xs mx-auto">
-                            Arata Việt Nam là công ty con của Tập đoàn Arata Nhật Bản. Tại Việt Nam, chúng tôi kinh doanh các sản phẩm Hóa Mỹ Phẩm được nhập khẩu trực tiếp từ Nhật Bản.
+                        <p class="text-white/90 text-sm leading-relaxed max-w-sm mx-auto">
+                            Arata Việt Nam là công ty con của Tập đoàn Arata Nhật Bản.<br>
+                            Chúng tôi kinh doanh các sản phẩm Hóa Mỹ Phẩm<br>
+                            được nhập khẩu trực tiếp từ Nhật Bản.
                         </p>
                     </div>
 
