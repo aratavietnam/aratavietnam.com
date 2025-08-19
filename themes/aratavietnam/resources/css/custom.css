@@ -710,11 +710,11 @@ h1, h2, h3, h4, h5, h6 {
 
 .floating-social-links {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   gap: 8px;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-20px);
+  transform: translateY(20px);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
 }
@@ -739,8 +739,8 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  transform: translateY(100px);
-  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transform: translateY(-100px);
+  animation: slideInDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: var(--delay, 0s);
 }
 
@@ -759,9 +759,9 @@ h1, h2, h3, h4, h5, h6 {
 .floating-social-link::before {
   content: attr(data-tooltip);
   position: absolute;
-  right: 50%;
-  bottom: 60px;
-  transform: translateX(50%);
+  left: 50%;
+  top: 60px;
+  transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.8);
   color: white;
   padding: 6px 12px;
@@ -778,14 +778,14 @@ h1, h2, h3, h4, h5, h6 {
 .floating-social-link::after {
   content: '';
   position: absolute;
-  right: 50%;
-  bottom: 52px;
-  transform: translateX(50%);
+  left: 50%;
+  top: 52px;
+  transform: translateX(-50%);
   width: 0;
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 5px solid rgba(0, 0, 0, 0.8);
+  border-bottom: 5px solid rgba(0, 0, 0, 0.8);
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
@@ -798,9 +798,9 @@ h1, h2, h3, h4, h5, h6 {
   visibility: visible;
 }
 
-@keyframes slideInUp {
+@keyframes slideInDown {
   from {
-    transform: translateY(100px);
+    transform: translateY(-100px);
     opacity: 0;
   }
   to {
