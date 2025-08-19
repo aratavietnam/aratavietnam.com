@@ -42,7 +42,7 @@
 					} elseif (file_exists(get_template_directory() . '/assets/images/logo.png')) {
 						// Use default logo
 						echo '<a href="' . esc_url(home_url('/')) . '" class="custom-logo-link flex items-center" rel="home">';
-						echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr(get_bloginfo('name')) . '" class="custom-logo h-8 w-auto max-w-48">';
+						echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr(get_bloginfo('name')) . '" class="custom-logo h-10 w-auto max-w-48">';
 						echo '</a>';
 					} else {
 						// Fallback to text logo
@@ -63,48 +63,83 @@
 					?>
 				</div>
 
-				<!-- Navigation Menu - Desktop -->
-				<nav id="site-navigation" class="main-navigation hidden lg:block">
+				<!-- Navigation Menu - Desktop (sát logo bên trái) -->
+				<nav id="site-navigation" class="main-navigation hidden lg:flex flex-1">
 					<?php
 					wp_nav_menu(
 						array(
 							'theme_location' => 'primary',
 							'menu_id'        => 'primary-menu',
-							'menu_class'     => 'flex space-x-8 items-center',
+							'menu_class'     => 'flex space-x-6 items-center text-sm font-medium',
 							'container'      => false,
 						)
 					);
 					?>
 				</nav>
 
-				<!-- Bên phải: Tìm kiếm, Tài khoản, Giỏ hàng -->
-				<div class="header-actions flex items-center space-x-2 flex-shrink-0">
-					<!-- Search -->
-					<button class="search-toggle p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300" aria-label="Tìm kiếm">
-						<span data-icon="search" data-size="20" data-class="w-5 h-5"></span>
-					</button>
+				<!-- Search Box & Actions bên phải -->
+				<div class="header-right flex items-center space-x-3 ml-auto">
+					<!-- Search Box -->
+					<div class="search-container hidden md:flex relative">
+						<div class="relative">
+							<input
+								type="search"
+								id="header-search"
+								placeholder="Tìm kiếm sản phẩm..."
+								class="w-64 pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+								autocomplete="off"
+							>
+							<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+								<span data-icon="search" data-size="16" data-class="w-4 h-4 text-gray-400"></span>
+							</div>
+						</div>
+						<!-- Search Results Dropdown -->
+						<div id="search-results" class="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50 max-h-96 overflow-y-auto">
+							<div class="p-4 text-center text-gray-500">
+								<span data-icon="search" data-size="24" data-class="w-6 h-6 mx-auto mb-2 text-gray-300"></span>
+								<p class="text-sm">Nhập từ khóa để tìm kiếm...</p>
+							</div>
+						</div>
+					</div>
 
-					<!-- Account -->
-					<a href="<?php echo esc_url(wp_login_url()); ?>" class="account-toggle p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300" aria-label="Tài khoản">
-						<span data-icon="user" data-size="20" data-class="w-5 h-5"></span>
-					</a>
+					<!-- Action Icons -->
+					<div class="action-icons flex items-center space-x-2">
+						<!-- Mobile Search Toggle -->
+						<button class="search-toggle-mobile md:hidden p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300" aria-label="Tìm kiếm">
+							<span data-icon="search" data-size="20" data-class="w-5 h-5"></span>
+						</button>
 
-					<!-- Cart (WooCommerce) -->
-					<?php if (class_exists('WooCommerce')) : ?>
-					<a href="<?php echo esc_url(wc_get_cart_url()); ?>" class="cart-toggle p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300 relative" aria-label="Giỏ hàng">
-						<span data-icon="cart" data-size="20" data-class="w-5 h-5"></span>
-						<?php if (WC()->cart && WC()->cart->get_cart_contents_count() > 0) : ?>
-							<span class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
-								<?php echo WC()->cart->get_cart_contents_count(); ?>
-							</span>
+						<!-- Account -->
+						<a href="<?php echo esc_url(wp_login_url()); ?>" class="account-toggle p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300" aria-label="Tài khoản">
+							<span data-icon="user" data-size="20" data-class="w-5 h-5"></span>
+						</a>
+
+						<!-- Cart (WooCommerce) -->
+						<?php if (class_exists('WooCommerce')) : ?>
+						<div class="cart-container relative">
+							<button class="cart-toggle p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300 relative" aria-label="Giỏ hàng">
+								<span data-icon="cart" data-size="20" data-class="w-5 h-5"></span>
+								<?php if (WC()->cart && WC()->cart->get_cart_contents_count() > 0) : ?>
+									<span class="cart-count absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+										<?php echo WC()->cart->get_cart_contents_count(); ?>
+									</span>
+								<?php endif; ?>
+							</button>
+							<!-- Cart Dropdown -->
+							<div id="cart-dropdown" class="absolute top-full right-0 mt-1 w-80 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50">
+								<div class="p-4 text-center text-gray-500">
+									<span data-icon="cart" data-size="24" data-class="w-6 h-6 mx-auto mb-2 text-gray-300"></span>
+									<p class="text-sm">Giỏ hàng trống</p>
+								</div>
+							</div>
+						</div>
 						<?php endif; ?>
-					</a>
-					<?php endif; ?>
 
-					<!-- Mobile Menu Toggle -->
-					<button class="menu-toggle lg:hidden p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300 ml-2" aria-controls="primary-menu" aria-expanded="false" aria-label="Menu">
-						<span data-icon="menu" data-size="24" data-class="w-6 h-6"></span>
-					</button>
+						<!-- Mobile Menu Toggle -->
+						<button class="menu-toggle lg:hidden p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300 ml-2" aria-controls="primary-menu" aria-expanded="false" aria-label="Menu">
+							<span data-icon="menu" data-size="24" data-class="w-6 h-6"></span>
+						</button>
+					</div>
 				</div>
 			</div>
 
