@@ -25,7 +25,7 @@
                     <!-- Company Name -->
                     <div class="mb-6">
                         <h3 class="text-xl font-bold text-white mb-2">
-                            Công ty TNHH Arata Việt Nam
+                            <?php echo esc_html(get_theme_mod('footer_company_name', 'Công ty TNHH Arata Việt Nam')); ?>
                         </h3>
                         <div class="w-16 h-1 rounded-full" style="background: #FFAB14;"></div>
                     </div>
@@ -41,9 +41,7 @@
                             <div>
                                 <p class="text-white font-medium mb-1">Địa chỉ</p>
                                 <p class="text-white/80 text-sm leading-relaxed">
-                                    Lầu 2, Tòa nhà The Landmark,<br>
-                                    5B Tôn Đức Thắng, Phường Bến Nghé,<br>
-                                    Quận 1, Thành phố Hồ Chí Minh
+                                    <?php echo nl2br(esc_html(get_theme_mod('footer_company_address', "Lầu 2, Tòa nhà The Landmark,\n5B Tôn Đức Thắng, Phường Bến Nghé,\nQuận 1, Thành phố Hồ Chí Minh"))); ?>
                                 </p>
                             </div>
                         </div>
@@ -57,8 +55,8 @@
                             </div>
                             <div>
                                 <p class="text-white font-medium mb-1">Điện thoại</p>
-                                <a href="tel:0283357100" class="text-white/80 hover:text-white transition-colors duration-300 hover:underline">
-                                    028 3357 100
+                                <a href="tel:<?php echo esc_attr(get_theme_mod('footer_company_phone_link', '0283357100')); ?>" class="text-white/80 hover:text-white transition-colors duration-300 hover:underline">
+                                    <?php echo esc_html(get_theme_mod('footer_company_phone', '028 3357 100')); ?>
                                 </a>
                             </div>
                         </div>
@@ -73,8 +71,8 @@
                             </div>
                             <div>
                                 <p class="text-white font-medium mb-1">Email</p>
-                                <a href="mailto:arata-vietnam@arata-gr.jp" class="text-white/80 hover:text-white transition-colors duration-300 hover:underline break-all">
-                                    arata-vietnam@arata-gr.jp
+                                <a href="mailto:<?php echo esc_attr(get_theme_mod('footer_company_email', 'arata-vietnam@arata-gr.jp')); ?>" class="text-white/80 hover:text-white transition-colors duration-300 hover:underline break-all">
+                                    <?php echo esc_html(get_theme_mod('footer_company_email', 'arata-vietnam@arata-gr.jp')); ?>
                                 </a>
                             </div>
                         </div>
@@ -105,35 +103,71 @@
 
                     <!-- Company Description -->
                     <div class="mb-5">
-                        <p class="text-white/90 text-sm leading-relaxed max-w-sm lg:mx-auto">
-                            Arata Việt Nam là công ty con của Tập đoàn Arata Nhật Bản.<br>
-                            Chúng tôi kinh doanh các sản phẩm Hóa Mỹ Phẩm<br>
-                            được nhập khẩu trực tiếp từ Nhật Bản.
+                        <p class="text-white/90 text-sm leading-relaxed max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl lg:mx-auto text-center lg:text-center">
+                            <?php
+                            $description = get_theme_mod('footer_company_description', "Arata Việt Nam là công ty con của Tập đoàn Arata Nhật Bản.<br>Chúng tôi kinh doanh các sản phẩm Hóa Mỹ Phẩm<br>được nhập khẩu trực tiếp từ Nhật Bản.");
+                            echo $description;
+                            ?>
                         </p>
                     </div>
 
-                    <!-- Social Media Icons - Facebook, Instagram, Website -->
+                    <!-- Social Media Icons -->
                     <div class="flex justify-start lg:justify-center space-x-4">
+                        <?php
+                        $facebook_url = get_theme_mod('footer_facebook_url', 'https://www.facebook.com/aratavietnam');
+                        $instagram_url = get_theme_mod('footer_instagram_url', 'https://www.instagram.com/aratavietnam/');
+                        $website_url = get_theme_mod('footer_website_url', 'https://aratavietnam.com');
+                        $tiktok_url = get_theme_mod('footer_tiktok_url', '');
+                        $shopee_url = get_theme_mod('footer_shopee_url', '');
+                        ?>
+
+                        <?php if ($facebook_url): ?>
                         <!-- Facebook -->
-                        <a href="https://www.facebook.com/aratavietnam" target="_blank" rel="noopener noreferrer" class="group" aria-label="Facebook">
+                        <a href="<?php echo esc_url($facebook_url); ?>" target="_blank" rel="noopener noreferrer" class="group" aria-label="Facebook">
                             <div class="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105" style="background: rgba(255, 255, 255, 0.15);">
                                 <svg class="w-5 h-5 text-white transition-transform duration-300 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 3.667h-3.533v7.98H9.101z"/>
                                 </svg>
                             </div>
                         </a>
+                        <?php endif; ?>
 
+                        <?php if ($instagram_url): ?>
                         <!-- Instagram -->
-                        <a href="https://www.instagram.com/aratavietnam/" target="_blank" rel="noopener noreferrer" class="group" aria-label="Instagram">
+                        <a href="<?php echo esc_url($instagram_url); ?>" target="_blank" rel="noopener noreferrer" class="group" aria-label="Instagram">
                             <div class="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105" style="background: rgba(255, 255, 255, 0.15);">
                                 <svg class="w-5 h-5 text-white transition-transform duration-300 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.1T63c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                                 </svg>
                             </div>
                         </a>
+                        <?php endif; ?>
 
+                        <?php if ($tiktok_url): ?>
+                        <!-- TikTok -->
+                        <a href="<?php echo esc_url($tiktok_url); ?>" target="_blank" rel="noopener noreferrer" class="group" aria-label="TikTok">
+                            <div class="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105" style="background: rgba(255, 255, 255, 0.15);">
+                                <svg class="w-5 h-5 text-white transition-transform duration-300 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-.88-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                                </svg>
+                            </div>
+                        </a>
+                        <?php endif; ?>
+
+                        <?php if ($shopee_url): ?>
+                        <!-- Shopee -->
+                        <a href="<?php echo esc_url($shopee_url); ?>" target="_blank" rel="noopener noreferrer" class="group" aria-label="Shopee">
+                            <div class="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105" style="background: rgba(255, 255, 255, 0.15);">
+                                <svg class="w-5 h-5 text-white transition-transform duration-300 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M18.5 12c0 1.5-1.5 3-3 3s-3-1.5-3-3 1.5-3 3-3 3 1.5 3 3zm-9 0c0 1.5-1.5 3-3 3s-3-1.5-3-3 1.5-3 3-3 3 1.5 3 3zm4.5-9c-5 0-9 4-9 9s4 9 9 9 9-4 9-9-4-9-9-9zm0 16c-3.9 0-7-3.1-7-7s3.1-7 7-7 7 3.1 7 7-3.1 7-7 7z"/>
+                                </svg>
+                            </div>
+                        </a>
+                        <?php endif; ?>
+
+                        <?php if ($website_url): ?>
                         <!-- Website -->
-                        <a href="https://aratavietnam.com" target="_blank" rel="noopener noreferrer" class="group" aria-label="Website">
+                        <a href="<?php echo esc_url($website_url); ?>" target="_blank" rel="noopener noreferrer" class="group" aria-label="Website">
                             <div class="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105" style="background: rgba(255, 255, 255, 0.15);">
                                 <svg class="w-5 h-5 text-white transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                     <circle cx="12" cy="12" r="10"></circle>
@@ -142,13 +176,14 @@
                                 </svg>
                             </div>
                         </a>
+                        <?php endif; ?>
                     </div>
                 </div>
 
                 <!-- Customer Service (Mobile: Third, Desktop: Third) -->
                 <div class="space-y-6 order-3 lg:order-3">
                     <div>
-                        <h4 class="text-2xl font-bold mb-2 text-white">Dịch vụ khách hàng</h4>
+                        <h4 class="text-2xl font-bold mb-2 text-white"><?php echo esc_html(get_theme_mod('footer_service_title', 'Dịch vụ khách hàng')); ?></h4>
                         <div class="w-16 h-1 rounded-full mb-6" style="background: #FFAB14;"></div>
                     </div>
 
@@ -237,13 +272,18 @@
                     <div class="text-sm text-white">
                         &copy; <?php echo esc_html(date_i18n('Y')); ?>
                         <span class="font-bold mx-1" style="color: #FFAB14;"><?php bloginfo('name'); ?></span>
-                        - Tất cả quyền được bảo lưu
+                        - <?php echo esc_html(get_theme_mod('footer_copyright_text', 'Tất cả quyền được bảo lưu')); ?>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
 </div>
+
+<?php
+// Include floating social widget
+get_template_part('template-parts/floating-social');
+?>
 
 <?php wp_footer(); ?>
 </body>

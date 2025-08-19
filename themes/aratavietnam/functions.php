@@ -4,6 +4,9 @@ if (is_file(__DIR__.'/vendor/autoload_packages.php')) {
     require_once __DIR__.'/vendor/autoload_packages.php';
 }
 
+// Include customizer enhancements
+require_once get_template_directory() . '/inc/customizer-footer.php';
+
 function aratavietnam(): TailPress\Framework\Theme
 {
     $viteCompiler = new TailPress\Framework\Assets\ViteCompiler;
@@ -272,6 +275,172 @@ function aratavietnam_custom_logo() {
         echo '<a href="' . esc_url(home_url('/')) . '" class="custom-logo-link" rel="home">' . $logo . '</a>';
     }
 }
+
+/**
+ * Footer Customizer Settings
+ */
+function aratavietnam_footer_customizer($wp_customize) {
+    // Add Footer Section
+    $wp_customize->add_section('aratavietnam_footer_section', array(
+        'title'    => __('Footer Settings', 'aratavietnam'),
+        'priority' => 120,
+    ));
+
+    // Company Information
+    $wp_customize->add_setting('footer_company_name', array(
+        'default'           => 'Công ty TNHH Arata Việt Nam',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('footer_company_name', array(
+        'label'   => __('Company Name', 'aratavietnam'),
+        'section' => 'aratavietnam_footer_section',
+        'type'    => 'text',
+    ));
+
+    // Company Address
+    $wp_customize->add_setting('footer_company_address', array(
+        'default'           => "Lầu 2, Tòa nhà The Landmark,\n5B Tôn Đức Thắng, Phường Bến Nghé,\nQuận 1, Thành phố Hồ Chí Minh",
+        'sanitize_callback' => 'sanitize_textarea_field',
+    ));
+    $wp_customize->add_control('footer_company_address', array(
+        'label'   => __('Company Address', 'aratavietnam'),
+        'section' => 'aratavietnam_footer_section',
+        'type'    => 'textarea',
+    ));
+
+    // Company Phone
+    $wp_customize->add_setting('footer_company_phone', array(
+        'default'           => '028 3357 100',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('footer_company_phone', array(
+        'label'   => __('Company Phone', 'aratavietnam'),
+        'section' => 'aratavietnam_footer_section',
+        'type'    => 'text',
+    ));
+
+    // Company Phone Link (for tel: link)
+    $wp_customize->add_setting('footer_company_phone_link', array(
+        'default'           => '0283357100',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('footer_company_phone_link', array(
+        'label'       => __('Phone Link (no spaces)', 'aratavietnam'),
+        'description' => __('Phone number for tel: link (without spaces)', 'aratavietnam'),
+        'section'     => 'aratavietnam_footer_section',
+        'type'        => 'text',
+    ));
+
+    // Company Email
+    $wp_customize->add_setting('footer_company_email', array(
+        'default'           => 'arata-vietnam@arata-gr.jp',
+        'sanitize_callback' => 'sanitize_email',
+    ));
+    $wp_customize->add_control('footer_company_email', array(
+        'label'   => __('Company Email', 'aratavietnam'),
+        'section' => 'aratavietnam_footer_section',
+        'type'    => 'email',
+    ));
+
+    // Company Description
+    $wp_customize->add_setting('footer_company_description', array(
+        'default'           => "Arata Việt Nam là công ty con của Tập đoàn Arata Nhật Bản.<br>Chúng tôi kinh doanh các sản phẩm Hóa Mỹ Phẩm<br>được nhập khẩu trực tiếp từ Nhật Bản.",
+        'sanitize_callback' => 'wp_kses_post',
+    ));
+    $wp_customize->add_control('footer_company_description', array(
+        'label'   => __('Company Description', 'aratavietnam'),
+        'section' => 'aratavietnam_footer_section',
+        'type'    => 'textarea',
+    ));
+
+    // Social Media Links
+    $wp_customize->add_setting('footer_facebook_url', array(
+        'default'           => 'https://www.facebook.com/aratavietnam',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control('footer_facebook_url', array(
+        'label'   => __('Facebook URL', 'aratavietnam'),
+        'section' => 'aratavietnam_footer_section',
+        'type'    => 'url',
+    ));
+
+    $wp_customize->add_setting('footer_instagram_url', array(
+        'default'           => 'https://www.instagram.com/aratavietnam/',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control('footer_instagram_url', array(
+        'label'   => __('Instagram URL', 'aratavietnam'),
+        'section' => 'aratavietnam_footer_section',
+        'type'    => 'url',
+    ));
+
+    $wp_customize->add_setting('footer_website_url', array(
+        'default'           => 'https://aratavietnam.com',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control('footer_website_url', array(
+        'label'   => __('Website URL', 'aratavietnam'),
+        'section' => 'aratavietnam_footer_section',
+        'type'    => 'url',
+    ));
+
+    // TikTok URL
+    $wp_customize->add_setting('footer_tiktok_url', array(
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control('footer_tiktok_url', array(
+        'label'   => __('TikTok URL', 'aratavietnam'),
+        'section' => 'aratavietnam_footer_section',
+        'type'    => 'url',
+    ));
+
+    // Shopee URL
+    $wp_customize->add_setting('footer_shopee_url', array(
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control('footer_shopee_url', array(
+        'label'   => __('Shopee URL', 'aratavietnam'),
+        'section' => 'aratavietnam_footer_section',
+        'type'    => 'url',
+    ));
+
+    // Customer Service Title
+    $wp_customize->add_setting('footer_service_title', array(
+        'default'           => 'Dịch vụ khách hàng',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('footer_service_title', array(
+        'label'   => __('Customer Service Title', 'aratavietnam'),
+        'section' => 'aratavietnam_footer_section',
+        'type'    => 'text',
+    ));
+
+    // Copyright Text
+    $wp_customize->add_setting('footer_copyright_text', array(
+        'default'           => 'Tất cả quyền được bảo lưu',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('footer_copyright_text', array(
+        'label'   => __('Copyright Text', 'aratavietnam'),
+        'section' => 'aratavietnam_footer_section',
+        'type'    => 'text',
+    ));
+
+    // Floating Social Widget
+    $wp_customize->add_setting('footer_show_floating_social', array(
+        'default'           => true,
+        'sanitize_callback' => 'wp_validate_boolean',
+    ));
+    $wp_customize->add_control('footer_show_floating_social', array(
+        'label'       => __('Show Floating Social Widget', 'aratavietnam'),
+        'description' => __('Display floating social media icons in bottom left corner', 'aratavietnam'),
+        'section'     => 'aratavietnam_footer_section',
+        'type'        => 'checkbox',
+    ));
+}
+add_action('customize_register', 'aratavietnam_footer_customizer');
 
 /**
  * WooCommerce Support

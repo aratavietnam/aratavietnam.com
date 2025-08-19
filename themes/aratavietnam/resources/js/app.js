@@ -833,6 +833,64 @@ function initCart() {
     }
 }
 
+/**
+ * Floating Social Media Widget
+ */
+function initFloatingSocial() {
+    const widget = document.getElementById('floating-social-widget');
+    const toggle = document.getElementById('floating-social-toggle');
+    const links = document.getElementById('floating-social-links');
+
+    if (!widget || !toggle || !links) return;
+
+    // Load saved state
+    const isOpen = localStorage.getItem('floating-social-open') === 'true';
+    if (isOpen) {
+        toggle.classList.add('active');
+        links.classList.add('active');
+    }
+
+    // Toggle functionality
+    toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const isActive = toggle.classList.contains('active');
+
+        if (isActive) {
+            // Close
+            toggle.classList.remove('active');
+            links.classList.remove('active');
+            localStorage.setItem('floating-social-open', 'false');
+        } else {
+            // Open
+            toggle.classList.add('active');
+            links.classList.add('active');
+            localStorage.setItem('floating-social-open', 'true');
+        }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!widget.contains(e.target)) {
+            toggle.classList.remove('active');
+            links.classList.remove('active');
+            localStorage.setItem('floating-social-open', 'false');
+        }
+    });
+
+    // Prevent closing when clicking inside widget
+    widget.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+
+    // Add entrance animation with delay
+    setTimeout(() => {
+        widget.style.opacity = '1';
+        widget.style.transform = 'translateY(0)';
+    }, 1000);
+}
+
 // Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     detectFontLoading();
@@ -840,6 +898,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initNavigation();
     initSearch();
     initCart();
+    initFloatingSocial();
     monitorFontPerformance();
 });
 

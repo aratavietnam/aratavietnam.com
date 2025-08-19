@@ -536,3 +536,321 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 1rem;
   }
 }
+
+/* Customizer Enhancements */
+.customizer-active #colophon {
+  position: relative;
+}
+
+.customizer-active #colophon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px dashed rgba(255, 171, 20, 0.5);
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.customizer-updating {
+  transition: all 0.3s ease;
+  transform: scale(1.01);
+}
+
+/* Footer Customizer Specific Styles */
+#colophon .customizer-highlight {
+  background: rgba(255, 171, 20, 0.1);
+  border-radius: 4px;
+  padding: 2px 4px;
+  transition: all 0.3s ease;
+}
+
+/* Footer Typography Improvements */
+#colophon .text-white\/90.text-sm {
+  word-spacing: 0.05em;
+  letter-spacing: 0.01em;
+  hyphens: none;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  text-align: center;
+}
+
+/* Better text wrapping for Vietnamese */
+#colophon p {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  hyphens: none;
+}
+
+/* Specific styling for company description */
+#colophon .order-1 p {
+  text-align: center;
+  word-spacing: 0.1em;
+  line-height: 1.7;
+}
+
+/* Responsive Footer Improvements */
+@media (max-width: 1024px) {
+  #colophon .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  #colophon .grid {
+    gap: 2rem;
+  }
+
+  /* Better description width on tablet */
+  #colophon .max-w-xs {
+    max-width: 20rem;
+  }
+}
+
+@media (max-width: 640px) {
+  #colophon .py-16 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  #colophon h3 {
+    font-size: 1.25rem;
+  }
+
+  #colophon h4 {
+    font-size: 1.125rem;
+  }
+
+  /* Mobile description adjustments */
+  #colophon .text-center {
+    text-align: left;
+  }
+
+  #colophon .max-w-xs {
+    max-width: 100%;
+  }
+}
+
+/* Specific improvements for company description */
+#colophon .order-1 .text-center p {
+  line-height: 1.6;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  #colophon .order-1 .text-center p {
+    text-align: left;
+    max-width: none;
+  }
+}
+
+/* Floating Social Media Widget */
+.floating-social-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.floating-social-toggle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0066A6 0%, #004d7a 100%);
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 102, 166, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.floating-social-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 102, 166, 0.4);
+  background: linear-gradient(135deg, #0077c2 0%, #005a8b 100%);
+}
+
+.floating-social-toggle:active {
+  transform: translateY(0);
+}
+
+.floating-social-toggle .icon-open,
+.floating-social-toggle .icon-close {
+  position: absolute;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.floating-social-toggle .icon-close {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.floating-social-toggle.active .icon-open {
+  opacity: 0;
+  transform: rotate(-90deg);
+}
+
+.floating-social-toggle.active .icon-close {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.floating-social-links {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-20px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.floating-social-links.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.floating-social-link {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: white;
+  color: var(--link-color, #666);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  transform: translateY(100px);
+  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--delay, 0s);
+}
+
+.floating-social-link:hover {
+  transform: translateY(-2px) scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  background: var(--link-color, #666);
+  color: white;
+}
+
+.floating-social-link:active {
+  transform: translateY(0) scale(1.05);
+}
+
+/* Tooltip */
+.floating-social-link::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  right: 50%;
+  bottom: 60px;
+  transform: translateX(50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  z-index: 1001;
+}
+
+.floating-social-link::after {
+  content: '';
+  position: absolute;
+  right: 50%;
+  bottom: 52px;
+  transform: translateX(50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1001;
+}
+
+.floating-social-link:hover::before,
+.floating-social-link:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .floating-social-widget {
+    bottom: 15px;
+    right: 15px;
+  }
+
+  .floating-social-toggle {
+    width: 50px;
+    height: 50px;
+  }
+
+  .floating-social-link {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* Hide tooltips on mobile */
+  .floating-social-link::before,
+  .floating-social-link::after {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-social-widget {
+    bottom: 10px;
+    right: 10px;
+  }
+
+  .floating-social-toggle {
+    width: 46px;
+    height: 46px;
+  }
+
+  .floating-social-link {
+    width: 40px;
+    height: 40px;
+  }
+
+  .floating-social-link svg {
+    width: 18px;
+    height: 18px;
+  }
+}
