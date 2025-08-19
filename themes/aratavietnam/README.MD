@@ -1,24 +1,24 @@
 # Arata Vietnam WordPress Theme
 
-Custom WordPress theme cho website Arata Vietnam được xây dựng với Tailwind CSS và các công nghệ hiện đại.
+Custom WordPress theme for Arata Vietnam website built with Tailwind CSS and modern technologies.
 
-## Về Theme
+## About Theme
 
-Theme này được phát triển dành riêng cho website Arata Vietnam - nền tảng chia sẻ kiến thức và kinh nghiệm về công nghệ, phát triển phần mềm và các xu hướng công nghệ mới nhất tại Việt Nam.
+This theme is specifically developed for Arata Vietnam website - a platform for sharing knowledge and experience about technology, software development and the latest technology trends in Vietnam.
 
-## Tính năng
+## Features
 
-- **Tailwind CSS 4.0**: Framework CSS hiện đại và linh hoạt
-- **Vite Build System**: Build tool nhanh và hiệu quả
-- **Responsive Design**: Tối ưu cho mọi thiết bị
-- **Vietnamese Language Support**: Hỗ trợ tiếng Việt đầy đủ
-- **Modern WordPress**: Tương thích với WordPress mới nhất
-- **Performance Optimized**: Tối ưu hiệu suất
+- **Tailwind CSS 4.0**: Modern and flexible CSS framework
+- **Vite Build System**: Fast and efficient build tool
+- **Responsive Design**: Optimized for all devices
+- **Vietnamese Language Support**: Full Vietnamese language support
+- **Modern WordPress**: Compatible with latest WordPress
+- **Performance Optimized**: Performance optimized
 
-## Phát triển
+## Development
 
 ```bash
-# Cài đặt dependencies
+# Install dependencies
 npm install
 
 # Development mode
@@ -30,4 +30,4 @@ npm run build
 
 ## License
 
-MIT License. Xem file [LICENSE](/LICENSE) để biết thêm thông tin.
+MIT License. See [LICENSE](/LICENSE) file for more information.

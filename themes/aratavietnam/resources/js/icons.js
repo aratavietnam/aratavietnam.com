@@ -60,7 +60,6 @@ export function createIcon(name, options = {}) {
     const IconComponent = iconRegistry[name];
 
     if (!IconComponent) {
-        console.warn(`Icon "${name}" not found in registry`);
         return null;
     }
 
