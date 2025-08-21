@@ -141,19 +141,19 @@
                     </div>
 
                     <!-- Menu columns -->
-                    <div class="grid grid-cols-1 gap-6">
+                    <div class="grid grid-cols-2 gap-4">
                         <!-- Menu 1 -->
                         <nav>
                             <?php
                             wp_nav_menu(array(
                                 'theme_location' => 'footer-menu-1',
-                                'menu_class' => 'footer-menu-links space-y-1',
+                                'menu_class' => 'footer-menu-links space-y-2',
                                 'container' => false,
                                 'fallback_cb' => function() {
-                                    echo '<ul class="footer-menu-links space-y-1">';
-                                    echo '<li><a href="' . esc_url(home_url('/')) . '">Trang chủ</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/san-pham')) . '">Sản phẩm</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/ve-arata')) . '">Về Arata</a></li>';
+                                    echo '<ul class="footer-menu-links space-y-2">';
+                                    echo '<li><a href="' . esc_url(home_url('/')) . '" style="padding:0!important;margin:0!important;">Trang chủ</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/san-pham')) . '" style="padding:0!important;margin:0!important;">Sản phẩm</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/ve-arata')) . '" style="padding:0!important;margin:0!important;">Về Arata</a></li>';
                                     echo '</ul>';
                                 },
                                 'link_before' => '',
@@ -167,13 +167,13 @@
                             <?php
                             wp_nav_menu(array(
                                 'theme_location' => 'footer-menu-2',
-                                'menu_class' => 'footer-menu-links space-y-1',
+                                'menu_class' => 'footer-menu-links space-y-2',
                                 'container' => false,
                                 'fallback_cb' => function() {
-                                    echo '<ul class="footer-menu-links space-y-1">';
-                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-doi-tra')) . '">Chính sách đổi trả</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-bao-mat')) . '">Chính sách bảo mật</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/dieu-khoan-dich-vu')) . '">Điều khoản dịch vụ</a></li>';
+                                    echo '<ul class="footer-menu-links space-y-2">';
+                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-doi-tra')) . '" style="padding:0!important;margin:0!important;">Chính sách đổi trả</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-bao-mat')) . '" style="padding:0!important;margin:0!important;">Chính sách bảo mật</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/dieu-khoan-dich-vu')) . '" style="padding:0!important;margin:0!important;">Điều khoản dịch vụ</a></li>';
                                     echo '</ul>';
                                 },
                                 'link_before' => '',
@@ -203,5 +203,27 @@ get_template_part('template-parts/floating-social');
 ?>
 
 <?php wp_footer(); ?>
+
+<script>
+// FORCE REMOVE FOOTER PADDING - NUCLEAR OPTION
+document.addEventListener('DOMContentLoaded', function() {
+    // Remove padding from all footer links
+    const footerLinks = document.querySelectorAll('#colophon a, footer a, .site-footer a');
+    footerLinks.forEach(function(link) {
+        link.style.setProperty('padding', '0', 'important');
+        link.style.setProperty('margin', '0', 'important');
+    });
+});
+
+// Also run after a short delay to catch any dynamically loaded content
+setTimeout(function() {
+    const footerLinks = document.querySelectorAll('#colophon a, footer a, .site-footer a');
+    footerLinks.forEach(function(link) {
+        link.style.setProperty('padding', '0', 'important');
+        link.style.setProperty('margin', '0', 'important');
+    });
+}, 1000);
+</script>
+
 </body>
 </html>

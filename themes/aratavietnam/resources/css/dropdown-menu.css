@@ -72,23 +72,32 @@ ul.dropdown-menu:hover {
   z-index: 1001 !important;
 }
 
-/* Top level menu items with proper alignment - Override Tailwind */
-.menu-item > a,
-.menu-item-has-children > a {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 4px !important;
-  padding: 8px 16px !important;
-  color: #374151 !important;
-  text-decoration: none !important;
-  font-weight: 500 !important;
-  transition: all 0.2s ease !important;
-  border-radius: 6px !important;
-  white-space: nowrap !important;
-  line-height: 1.2 !important;
-  vertical-align: middle !important;
-  flex-wrap: nowrap !important;
+/* Simple menu item styling - EXCLUDE FOOTER */
+.menu-item > a:not(#colophon .menu-item > a):not(footer .menu-item > a):not(.site-footer .menu-item > a),
+.menu-item-has-children > a:not(#colophon .menu-item-has-children > a):not(footer .menu-item-has-children > a):not(.site-footer .menu-item-has-children > a) {
+  padding: 8px 16px;
+  color: #374151;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* Footer menu items - NO PADDING */
+#colophon .menu-item > a,
+#colophon .menu-item-has-children > a,
+footer .menu-item > a,
+footer .menu-item-has-children > a,
+.site-footer .menu-item > a,
+.site-footer .menu-item-has-children > a {
+  padding: 0 !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.3s ease;
+  border-radius: 0;
+  white-space: normal;
 }
 
 .menu-item > a:hover,
@@ -96,52 +105,51 @@ ul.dropdown-menu:hover {
   color: #059669 !important;
 }
 
-/* Dropdown arrow styling - ensure proper alignment */
+/* Simple dropdown arrow styling */
 .menu-item svg,
 .menu-item-has-children svg {
-  width: 16px !important;
-  height: 16px !important;
-  transition: transform 0.2s ease !important;
-  flex-shrink: 0 !important;
-  margin-left: 4px !important;
-  margin-right: 0 !important;
-  vertical-align: middle !important;
-  display: inline-flex !important;
-  align-self: center !important;
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
 }
 
 .menu-item:hover svg,
 .menu-item-has-children:hover svg,
 .menu-item.show svg,
 .group:hover svg {
-  transform: rotate(180deg) !important;
+  transform: rotate(180deg);
 }
 
-/* Fix text and icon alignment */
-.menu-item > a span,
-.menu-item-has-children > a span {
-  display: inline-block !important;
-  vertical-align: middle !important;
-  line-height: 1.2 !important;
-  flex-shrink: 0 !important;
-}
+/* Mobile menu dropdown styling */
+@media (max-width: 1023px) {
+  .mobile-navigation .menu-item-has-children > a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    padding: 12px 16px !important;
+  }
 
-/* Ensure flex layout for menu items with dropdowns */
-.menu-item.has-dropdown > a,
-.menu-item-has-children > a,
-.menu-item.group > a {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  flex-direction: row !important;
-  flex-wrap: nowrap !important;
-}
+  .mobile-navigation .menu-item-has-children > a span {
+    flex: 1 !important;
+  }
 
-/* Force flex for specific menu item with dropdown */
-#menu-item-131 > a {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
+  .mobile-navigation .menu-item-has-children > a svg {
+    flex-shrink: 0 !important;
+    margin-left: 8px !important;
+  }
+
+  /* Mobile submenu styling */
+  .mobile-navigation .sub-menu {
+    padding-left: 20px !important;
+    background-color: #f8f9fa !important;
+  }
+
+  .mobile-navigation .sub-menu a {
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+    color: #6b7280 !important;
+  }
 }
 
 /* Dropdown items - vertical layout - Override Tailwind */

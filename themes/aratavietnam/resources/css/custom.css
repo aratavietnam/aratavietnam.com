@@ -1,5 +1,79 @@
 /* Global Font Settings with Vietnamese Support */
 
+/* About Page Floating Images */
+@keyframes float {
+	0%, 100% { transform: translateY(0px) rotate(0deg); }
+	25% { transform: translateY(-15px) rotate(1deg); }
+	50% { transform: translateY(-10px) rotate(0deg); }
+	75% { transform: translateY(-20px) rotate(-1deg); }
+}
+
+@keyframes floatReverse {
+	0%, 100% { transform: translateY(0px) rotate(0deg); }
+	25% { transform: translateY(15px) rotate(-1deg); }
+	50% { transform: translateY(10px) rotate(0deg); }
+	75% { transform: translateY(20px) rotate(1deg); }
+}
+
+@keyframes floatSlow {
+	0%, 100% { transform: translateY(0px) scale(1); }
+	50% { transform: translateY(-25px) scale(1.05); }
+}
+
+.floating-image {
+	animation: float 8s ease-in-out infinite;
+	transition: transform 0.3s ease;
+}
+
+.floating-image:hover {
+	transform: scale(1.1) !important;
+	animation-play-state: paused;
+}
+
+.floating-images-right .floating-image:nth-child(even) {
+	animation: floatReverse 7s ease-in-out infinite;
+}
+
+.floating-images-left .floating-image:nth-child(odd) {
+	animation: floatSlow 9s ease-in-out infinite;
+}
+
+.floating-images-right .floating-image:nth-child(3n) {
+	animation: float 6s ease-in-out infinite;
+}
+
+/* About Page Background Effects */
+.about-bg-pattern {
+	background-image:
+		radial-gradient(circle at 20% 20%, rgba(245, 94, 37, 0.1) 0%, transparent 50%),
+		radial-gradient(circle at 80% 80%, rgba(0, 102, 166, 0.1) 0%, transparent 50%),
+		radial-gradient(circle at 40% 60%, rgba(255, 171, 20, 0.1) 0%, transparent 50%);
+}
+
+/* Social Links Hover Effects */
+.social-link-hover {
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.social-link-hover:hover {
+	transform: translateY(-4px) scale(1.05);
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Content Cards with Glassmorphism */
+.glass-card {
+	background: rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.glass-card:hover {
+	background: rgba(255, 255, 255, 0.15);
+	transform: translateY(-2px);
+	transition: all 0.3s ease;
+}
+
 /* Desktop Navigation Menu - Force Horizontal Layout */
 #primary-menu {
     display: flex !important;
@@ -995,7 +1069,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Footer Menu Links Styling */
+/* Footer Menu Links Styling - Override dropdown-menu.css */
 #colophon .footer-menu-links {
   list-style: none;
   margin: 0;
@@ -1013,42 +1087,20 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration: none !important;
   font-size: 14px !important;
   font-weight: 400 !important;
-  padding: 8px 12px !important;
-  margin: 2px 0 !important;
-  border-radius: 6px !important;
-  transition: all 0.3s ease !important;
+  padding: 4px 0 !important;
+  margin: 0 !important;
+  transition: color 0.3s ease !important;
   background: transparent !important;
   border: none !important;
   text-align: left !important;
-  line-height: 1.4 !important;
-  position: relative !important;
+  line-height: 1.5 !important;
 }
 
 #colophon .footer-menu-links a:hover {
   color: white !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  transform: translateX(4px) !important;
-  padding-left: 16px !important;
 }
 
-#colophon .footer-menu-links a:before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 0;
-  background: #FFAB14;
-  transition: height 0.3s ease;
-  border-radius: 2px;
-}
-
-#colophon .footer-menu-links a:hover:before {
-  height: 60%;
-}
-
-/* Override WordPress menu classes */
+/* Override WordPress menu classes and dropdown-menu.css */
 #colophon .menu,
 #colophon .menu ul,
 #colophon .menu-footer-menu-1-container ul,
@@ -1065,58 +1117,151 @@ h1, h2, h3, h4, h5, h6 {
   display: block !important;
 }
 
+/* High specificity override for footer menu items - Override dropdown-menu.css */
 #colophon .menu a,
-#colophon .menu-item a {
+#colophon .menu-item a,
+#colophon .menu-item > a,
+#colophon .menu-item-has-children > a,
+footer .menu a,
+footer .menu-item a,
+footer .menu-item > a,
+footer .menu-item-has-children > a,
+.site-footer .menu a,
+.site-footer .menu-item a,
+.site-footer .menu-item > a,
+.site-footer .menu-item-has-children > a {
   display: block !important;
   color: rgba(255, 255, 255, 0.9) !important;
   text-decoration: none !important;
   font-size: 14px !important;
   font-weight: 400 !important;
-  padding: 8px 12px !important;
-  margin: 2px 0 !important;
-  border-radius: 6px !important;
-  transition: all 0.3s ease !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  transition: color 0.3s ease !important;
   background: transparent !important;
   border: none !important;
   text-align: left !important;
-  line-height: 1.4 !important;
-  position: relative !important;
+  line-height: 1.5 !important;
+  border-radius: 0 !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  gap: 0 !important;
+  white-space: normal !important;
+  vertical-align: baseline !important;
+  flex-wrap: wrap !important;
 }
 
 #colophon .menu a:hover,
-#colophon .menu-item a:hover {
+#colophon .menu-item a:hover,
+#colophon .menu-item > a:hover,
+#colophon .menu-item-has-children > a:hover,
+footer .menu a:hover,
+footer .menu-item a:hover,
+footer .menu-item > a:hover,
+footer .menu-item-has-children > a:hover,
+.site-footer .menu a:hover,
+.site-footer .menu-item a:hover,
+.site-footer .menu-item > a:hover,
+.site-footer .menu-item-has-children > a:hover {
   color: white !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  transform: translateX(4px) !important;
-  padding-left: 16px !important;
+  padding: 0 !important;
 }
 
-#colophon .menu a:before,
-#colophon .menu-item a:before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 0;
-  background: #FFAB14;
-  transition: height 0.3s ease;
-  border-radius: 2px;
+/* NUCLEAR OPTION - FORCE REMOVE ALL PADDING FROM FOOTER LINKS */
+/* Override dropdown-menu.css line 78: .menu-item > a, .menu-item-has-children > a { padding: 8px 16px; } */
+#colophon a,
+#colophon li a,
+#colophon ul a,
+#colophon nav a,
+#colophon .menu a,
+#colophon .menu li a,
+#colophon .menu-item a,
+#colophon .menu-item > a,
+#colophon .menu-item-has-children > a,
+footer a,
+footer li a,
+footer ul a,
+footer nav a,
+footer .menu a,
+footer .menu li a,
+footer .menu-item a,
+footer .menu-item > a,
+footer .menu-item-has-children > a,
+.site-footer a,
+.site-footer li a,
+.site-footer ul a,
+.site-footer nav a,
+.site-footer .menu a,
+.site-footer .menu li a,
+.site-footer .menu-item a,
+.site-footer .menu-item > a,
+.site-footer .menu-item-has-children > a {
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
-#colophon .menu a:hover:before,
-#colophon .menu-item a:hover:before {
-  height: 60%;
+/* ULTRA HIGH SPECIFICITY - Override dropdown-menu.css completely */
+#colophon nav .menu-item > a,
+#colophon nav .menu-item-has-children > a,
+footer nav .menu-item > a,
+footer nav .menu-item-has-children > a,
+.site-footer nav .menu-item > a,
+.site-footer nav .menu-item-has-children > a,
+#colophon .order-3 .menu-item > a,
+#colophon .order-3 .menu-item-has-children > a {
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  white-space: normal !important;
 }
 
 /* Ensure proper spacing for footer menu sections */
-#colophon .order-3 .grid.grid-cols-1 {
-  gap: 1.5rem !important;
+#colophon .order-3 .grid.grid-cols-2 {
+  gap: 1rem !important;
 }
 
 #colophon .order-3 nav {
   margin-top: 0 !important;
+}
+
+/* ULTIMATE FOOTER PADDING KILLER - HIGHEST PRIORITY */
+#colophon a[href],
+#colophon li a[href],
+#colophon ul li a[href],
+#colophon nav a[href],
+#colophon .menu a[href],
+#colophon .menu li a[href],
+#colophon .menu-item a[href],
+#colophon .menu-item > a[href],
+#colophon .menu-item-has-children > a[href],
+footer a[href],
+footer li a[href],
+footer ul li a[href],
+footer nav a[href],
+footer .menu a[href],
+footer .menu li a[href],
+footer .menu-item a[href],
+footer .menu-item > a[href],
+footer .menu-item-has-children > a[href],
+.site-footer a[href],
+.site-footer li a[href],
+.site-footer ul li a[href],
+.site-footer nav a[href],
+.site-footer .menu a[href],
+.site-footer .menu li a[href],
+.site-footer .menu-item a[href],
+.site-footer .menu-item > a[href],
+.site-footer .menu-item-has-children > a[href] {
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  white-space: normal !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  gap: 0 !important;
+  vertical-align: baseline !important;
+  flex-wrap: wrap !important;
+  display: block !important;
 }
 
 /* Contact Page Simple Styles */
@@ -1142,4 +1287,157 @@ h1, h2, h3, h4, h5, h6 {
   .contact-info-item {
     padding: 0.75rem;
   }
+}
+
+/* ===== PRODUCT PAGE ENHANCEMENTS ===== */
+
+/* Product Collection Cards */
+.product-collection-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-collection-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(245, 94, 37, 0.15);
+}
+
+/* Product Cards */
+.product-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* WooCommerce styling overrides */
+.woocommerce-ordering select {
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    background-color: white;
+    transition: all 0.2s ease;
+}
+
+.woocommerce-ordering select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #F55E25;
+    border-color: transparent;
+}
+
+.woocommerce-result-count {
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* Enhanced pagination */
+.woocommerce-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.woocommerce-pagination .page-numbers {
+    margin: 0 0.25rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    color: #6b7280;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.woocommerce-pagination .page-numbers:hover {
+    background-color: #F55E25;
+    color: white;
+    border-color: #F55E25;
+    transform: translateY(-1px);
+}
+
+.woocommerce-pagination .page-numbers.current {
+    background-color: #F55E25;
+    color: white;
+    border-color: #F55E25;
+}
+
+/* Brand gradient buttons */
+.btn-gradient {
+    background: linear-gradient(135deg, #F55E25 0%, #FFAB14 100%);
+    transition: all 0.3s ease;
+}
+
+.btn-gradient:hover {
+    background: linear-gradient(135deg, #D14A0F 0%, #E6970A 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(245, 94, 37, 0.3);
+}
+
+/* Collection cards animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.product-collection-card {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.product-collection-card:nth-child(1) { animation-delay: 0.1s; }
+.product-collection-card:nth-child(2) { animation-delay: 0.2s; }
+.product-collection-card:nth-child(3) { animation-delay: 0.3s; }
+.product-collection-card:nth-child(4) { animation-delay: 0.4s; }
+.product-collection-card:nth-child(5) { animation-delay: 0.5s; }
+.product-collection-card:nth-child(6) { animation-delay: 0.6s; }
+.product-collection-card:nth-child(7) { animation-delay: 0.7s; }
+.product-collection-card:nth-child(8) { animation-delay: 0.8s; }
+
+/* Product card hover effects */
+.product-card .aspect-square img {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-card:hover .aspect-square img {
+    transform: scale(1.1);
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #F55E25;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

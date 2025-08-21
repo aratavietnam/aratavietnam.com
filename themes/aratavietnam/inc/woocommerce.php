@@ -22,6 +22,7 @@ function aratavietnam_get_cart_contents() {
         wp_die('Security check failed');
     }
 
+
     if (!class_exists('WooCommerce')) {
         wp_send_json_error('WooCommerce not active');
         return;
