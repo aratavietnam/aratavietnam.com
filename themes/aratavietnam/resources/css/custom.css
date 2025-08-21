@@ -994,3 +994,152 @@ h1, h2, h3, h4, h5, h6 {
     height: 18px;
   }
 }
+
+/* Footer Menu Links Styling */
+#colophon .footer-menu-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#colophon .footer-menu-links li {
+  margin: 0;
+  padding: 0;
+}
+
+#colophon .footer-menu-links a {
+  display: block !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  text-decoration: none !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  padding: 8px 12px !important;
+  margin: 2px 0 !important;
+  border-radius: 6px !important;
+  transition: all 0.3s ease !important;
+  background: transparent !important;
+  border: none !important;
+  text-align: left !important;
+  line-height: 1.4 !important;
+  position: relative !important;
+}
+
+#colophon .footer-menu-links a:hover {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  transform: translateX(4px) !important;
+  padding-left: 16px !important;
+}
+
+#colophon .footer-menu-links a:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: #FFAB14;
+  transition: height 0.3s ease;
+  border-radius: 2px;
+}
+
+#colophon .footer-menu-links a:hover:before {
+  height: 60%;
+}
+
+/* Override WordPress menu classes */
+#colophon .menu,
+#colophon .menu ul,
+#colophon .menu-footer-menu-1-container ul,
+#colophon .menu-footer-menu-2-container ul {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#colophon .menu li,
+#colophon .menu-item {
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+}
+
+#colophon .menu a,
+#colophon .menu-item a {
+  display: block !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  text-decoration: none !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  padding: 8px 12px !important;
+  margin: 2px 0 !important;
+  border-radius: 6px !important;
+  transition: all 0.3s ease !important;
+  background: transparent !important;
+  border: none !important;
+  text-align: left !important;
+  line-height: 1.4 !important;
+  position: relative !important;
+}
+
+#colophon .menu a:hover,
+#colophon .menu-item a:hover {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  transform: translateX(4px) !important;
+  padding-left: 16px !important;
+}
+
+#colophon .menu a:before,
+#colophon .menu-item a:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: #FFAB14;
+  transition: height 0.3s ease;
+  border-radius: 2px;
+}
+
+#colophon .menu a:hover:before,
+#colophon .menu-item a:hover:before {
+  height: 60%;
+}
+
+/* Ensure proper spacing for footer menu sections */
+#colophon .order-3 .grid.grid-cols-1 {
+  gap: 1.5rem !important;
+}
+
+#colophon .order-3 nav {
+  margin-top: 0 !important;
+}
+
+/* Contact Page Simple Styles */
+@media (max-width: 768px) {
+  .contact-form-container {
+    padding: 1rem;
+  }
+
+  .contact-form-title {
+    font-size: 1.125rem;
+  }
+
+  .contact-form-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .contact-info-section {
+    padding: 1rem;
+  }
+
+  .contact-info-item {
+    padding: 0.75rem;
+  }
+}

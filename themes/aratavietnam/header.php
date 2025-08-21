@@ -73,6 +73,7 @@
 							'menu_class'     => 'flex flex-row space-x-4 items-center',
 							'container'      => false,
 							'fallback_cb'    => false, // Don't show all pages if no menu assigned
+							'walker'         => new Arata_Dropdown_Walker(),
 						)
 					);
 					?>

@@ -10,6 +10,12 @@ require_once get_template_directory() . '/inc/fonts-vietnamese.php';
 require_once get_template_directory() . '/inc/favicon-pwa.php';
 require_once get_template_directory() . '/inc/logo-branding.php';
 require_once get_template_directory() . '/inc/customizer-footer.php';
+require_once get_template_directory() . '/inc/contact-form.php';
+require_once get_template_directory() . '/inc/contact-meta.php';
+require_once get_template_directory() . '/inc/news-post-types.php';
+require_once get_template_directory() . '/inc/news-meta-fields.php';
+require_once get_template_directory() . '/inc/news-forms.php';
+require_once get_template_directory() . '/inc/class-dropdown-walker.php';
 
 function aratavietnam(): TailPress\Framework\Theme
 {

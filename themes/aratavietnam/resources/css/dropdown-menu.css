@@ -1,0 +1,343 @@
+/* Dropdown Menu Styles */
+
+/* Main navigation container */
+.main-navigation {
+  position: relative;
+}
+
+/* Primary menu container */
+#primary-menu {
+  position: relative;
+  z-index: 100;
+}
+
+/* Menu items with dropdowns */
+.menu-item.has-dropdown {
+  position: relative;
+}
+
+/* Dropdown menu styling - Override existing classes */
+.dropdown-menu,
+ul.dropdown-menu {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  min-width: 180px !important;
+  width: auto !important;
+  background: white !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: translateY(-10px) !important;
+  transition: all 0.3s ease !important;
+  z-index: 1000 !important;
+  margin-top: 8px !important;
+  padding: 8px 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Show dropdown on hover and click - Override Tailwind */
+.menu-item.has-dropdown:hover .dropdown-menu,
+.menu-item.menu-item-has-children:hover .dropdown-menu,
+.menu-item.group:hover .dropdown-menu,
+.menu-item.group:hover ul.dropdown-menu,
+.dropdown-menu.show,
+ul.dropdown-menu.show {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+}
+
+/* Keep dropdown visible when hovering over it */
+.dropdown-menu:hover,
+ul.dropdown-menu:hover {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+}
+
+/* Ensure proper hover area */
+.menu-item.has-dropdown,
+.menu-item.menu-item-has-children,
+.menu-item.group {
+  position: relative !important;
+}
+
+.menu-item.has-dropdown:hover,
+.menu-item.menu-item-has-children:hover,
+.menu-item.group:hover {
+  z-index: 1001 !important;
+}
+
+/* Top level menu items with proper alignment - Override Tailwind */
+.menu-item > a,
+.menu-item-has-children > a {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 4px !important;
+  padding: 8px 16px !important;
+  color: #374151 !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+  border-radius: 6px !important;
+  white-space: nowrap !important;
+  line-height: 1.2 !important;
+  vertical-align: middle !important;
+  flex-wrap: nowrap !important;
+}
+
+.menu-item > a:hover,
+.menu-item-has-children > a:hover {
+  color: #059669 !important;
+}
+
+/* Dropdown arrow styling - ensure proper alignment */
+.menu-item svg,
+.menu-item-has-children svg {
+  width: 16px !important;
+  height: 16px !important;
+  transition: transform 0.2s ease !important;
+  flex-shrink: 0 !important;
+  margin-left: 4px !important;
+  margin-right: 0 !important;
+  vertical-align: middle !important;
+  display: inline-flex !important;
+  align-self: center !important;
+}
+
+.menu-item:hover svg,
+.menu-item-has-children:hover svg,
+.menu-item.show svg,
+.group:hover svg {
+  transform: rotate(180deg) !important;
+}
+
+/* Fix text and icon alignment */
+.menu-item > a span,
+.menu-item-has-children > a span {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  line-height: 1.2 !important;
+  flex-shrink: 0 !important;
+}
+
+/* Ensure flex layout for menu items with dropdowns */
+.menu-item.has-dropdown > a,
+.menu-item-has-children > a,
+.menu-item.group > a {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+}
+
+/* Force flex for specific menu item with dropdown */
+#menu-item-131 > a {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+/* Dropdown items - vertical layout - Override Tailwind */
+.dropdown-item,
+li.dropdown-item {
+  width: 100% !important;
+  border-bottom: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.dropdown-item:not(:last-child),
+li.dropdown-item:not(:last-child) {
+  border-bottom: 1px solid #f3f4f6 !important;
+}
+
+.dropdown-item a,
+li.dropdown-item a {
+  display: block !important;
+  width: 100% !important;
+  padding: 12px 20px !important;
+  color: #374151 !important;
+  text-decoration: none !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  transition: all 0.2s ease !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  line-height: 1.4 !important;
+  box-sizing: border-box !important;
+  background: transparent !important;
+}
+
+.dropdown-item:first-child a,
+li.dropdown-item:first-child a {
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+}
+
+.dropdown-item:last-child a,
+li.dropdown-item:last-child a {
+  border-bottom-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+  border-bottom: none !important;
+}
+
+.dropdown-item a:hover,
+li.dropdown-item a:hover {
+  background-color: #f9fafb !important;
+  color: #059669 !important;
+  transform: none !important;
+  padding-left: 24px !important;
+}
+
+/* Arrow rotation animation */
+.group:hover svg {
+  transform: rotate(180deg);
+}
+
+/* Ensure proper stacking */
+.site-header {
+  position: relative;
+  z-index: 50;
+}
+
+/* Mobile menu adjustments */
+@media (max-width: 1023px) {
+  /* Hide desktop menu */
+  .main-navigation {
+    display: none;
+  }
+
+  /* Mobile menu styles */
+  .mobile-menu-active .dropdown-menu {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    margin-top: 0;
+    padding-left: 16px;
+    background: transparent;
+    max-height: none;
+  }
+
+  .mobile-menu-active .dropdown-item a {
+    padding: 12px 0;
+    margin: 0;
+    border-radius: 0;
+    font-size: 16px;
+    color: #374151;
+  }
+
+  .mobile-menu-active .dropdown-item a:hover {
+    background: transparent;
+    transform: none;
+    color: #059669;
+  }
+
+  /* Mobile dropdown toggle */
+  .mobile-dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    color: #374151;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .mobile-dropdown-toggle:hover {
+    color: #059669;
+  }
+
+  .mobile-dropdown-toggle svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-dropdown-toggle.active svg {
+    transform: rotate(180deg);
+  }
+
+  /* Mobile submenu */
+  .mobile-submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .mobile-submenu.active {
+    max-height: 300px;
+  }
+
+  .mobile-submenu a {
+    display: block;
+    padding: 12px 0 12px 20px;
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 15px;
+    border-left: 2px solid transparent;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-submenu a:hover {
+    color: #059669;
+    border-left-color: #059669;
+  }
+}
+
+/* Smooth transitions for all menu elements */
+.main-navigation a {
+  transition: color 0.2s ease;
+}
+
+/* Focus states for accessibility */
+.menu-item a:focus {
+  outline: 2px solid #059669;
+  outline-offset: 2px;
+}
+
+/* Hover effect for top-level menu items */
+.menu-item > a:hover {
+  color: #059669;
+}
+
+/* Active menu item styling */
+.menu-item.current-menu-item > a,
+.menu-item.current-menu-parent > a {
+  color: #059669;
+  font-weight: 600;
+}
+
+/* Dropdown arrow styling */
+.menu-item svg {
+  transition: transform 0.2s ease;
+}
+
+/* Prevent dropdown from going off-screen */
+.menu-item:last-child .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
+/* Add subtle animation delay for dropdown items */
+.dropdown-item:nth-child(1) a { transition-delay: 0.05s; }
+.dropdown-item:nth-child(2) a { transition-delay: 0.1s; }
+.dropdown-item:nth-child(3) a { transition-delay: 0.15s; }
+.dropdown-item:nth-child(4) a { transition-delay: 0.2s; }
+.dropdown-item:nth-child(5) a { transition-delay: 0.25s; }

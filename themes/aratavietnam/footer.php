@@ -5,7 +5,7 @@
 ?>
 
 <footer id="colophon" class="site-footer" style="background: linear-gradient(135deg, #0066A6 0%, #004d7a 100%);">
-    <div class="container mx-auto px-12 py-12">
+    <div class="container mx-auto px-4 py-12">
         <div>
             <!-- Footer Content -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 mb-12">
@@ -141,19 +141,19 @@
                     </div>
 
                     <!-- Menu columns -->
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 gap-6">
                         <!-- Menu 1 -->
                         <nav>
                             <?php
                             wp_nav_menu(array(
                                 'theme_location' => 'footer-menu-1',
-                                'menu_class' => 'space-y-2',
+                                'menu_class' => 'footer-menu-links space-y-1',
                                 'container' => false,
                                 'fallback_cb' => function() {
-                                    echo '<ul class="space-y-1">';
-                                    echo '<li><a href="' . esc_url(home_url('/')) . '" class="block text-white hover:text-white/80 transition-colors duration-300 text-xs">Trang chủ</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/san-pham')) . '" class="block text-white hover:text-white/80 transition-colors duration-300 text-xs">Sản phẩm</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/ve-arata')) . '" class="block text-white hover:text-white/80 transition-colors duration-300 text-xs">Về Arata</a></li>';
+                                    echo '<ul class="footer-menu-links space-y-1">';
+                                    echo '<li><a href="' . esc_url(home_url('/')) . '">Trang chủ</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/san-pham')) . '">Sản phẩm</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/ve-arata')) . '">Về Arata</a></li>';
                                     echo '</ul>';
                                 },
                                 'link_before' => '',
@@ -167,13 +167,13 @@
                             <?php
                             wp_nav_menu(array(
                                 'theme_location' => 'footer-menu-2',
-                                'menu_class' => 'space-y-2',
+                                'menu_class' => 'footer-menu-links space-y-1',
                                 'container' => false,
                                 'fallback_cb' => function() {
-                                    echo '<ul class="space-y-1">';
-                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-doi-tra')) . '" class="block text-white hover:text-white/80 transition-colors duration-300 text-xs">Chính sách đổi trả</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-bao-mat')) . '" class="block text-white hover:text-white/80 transition-colors duration-300 text-xs">Chính sách bảo mật</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/dieu-khoan-dich-vu')) . '" class="block text-white hover:text-white/80 transition-colors duration-300 text-xs">Điều khoản dịch vụ</a></li>';
+                                    echo '<ul class="footer-menu-links space-y-1">';
+                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-doi-tra')) . '">Chính sách đổi trả</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-bao-mat')) . '">Chính sách bảo mật</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/dieu-khoan-dich-vu')) . '">Điều khoản dịch vụ</a></li>';
                                     echo '</ul>';
                                 },
                                 'link_before' => '',

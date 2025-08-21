@@ -47,29 +47,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
-          
+
       - name: Install dependencies
         run: |
           npm ci
           composer install --no-dev --optimize-autoloader
-          
+
       - name: Build assets
         run: npm run build
-        
+
       - name: Create release ZIP
         run: |
           zip -r theme.zip . -x "node_modules/*" ".git/*" ".github/*"
-          
+
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
         with:
@@ -364,7 +364,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Build and deploy
         run: |
           npm ci
