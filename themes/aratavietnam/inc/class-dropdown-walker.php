@@ -64,26 +64,30 @@ class Arata_Dropdown_Walker extends Walker_Nav_Menu {
         if ($depth === 0) {
             // Top level link styling
             $link_class = 'block px-4 py-2 text-gray-900 hover:text-primary transition-colors duration-200 font-medium';
-            if ($has_children) {
-                $link_class .= ' flex items-center justify-between';
-            }
         } else {
             // Dropdown link styling
             $link_class = 'block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors duration-200 text-sm';
         }
 
         $item_output = isset($args->before) ? $args->before : '';
-        $item_output .= '<a class="' . $link_class . '"' . $attributes .'>';
 
+        // Add responsive inline style for dropdown items
+        $inline_style = '';
         if ($depth === 0 && $has_children) {
-            // For dropdown items, create flex container
-            $item_output .= '<span class="flex-1">' . (isset($args->link_before) ? $args->link_before : '') . apply_filters('the_title', $item->title, $item->ID) . (isset($args->link_after) ? $args->link_after : '') . '</span>';
-            $item_output .= '<svg class="w-4 h-4 flex-shrink-0 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            // Use responsive flex layout that works on both desktop and mobile
+            $inline_style = ' style="display: flex !important; align-items: center !important; justify-content: space-between !important; width: 100% !important;"';
+        }
+
+        $item_output .= '<a class="' . $link_class . '"' . $attributes . $inline_style . '>';
+
+        // Add text content
+        $item_output .= '<span style="flex: 1;">' . (isset($args->link_before) ? $args->link_before : '') . apply_filters('the_title', $item->title, $item->ID) . (isset($args->link_after) ? $args->link_after : '') . '</span>';
+
+        // Add dropdown arrow for parent items (responsive)
+        if ($depth === 0 && $has_children) {
+            $item_output .= '<svg style="width: 16px; height: 16px; transition: transform 0.2s ease; flex-shrink: 0; margin-left: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
             </svg>';
-        } else {
-            // Regular menu items
-            $item_output .= '<span>' . (isset($args->link_before) ? $args->link_before : '') . apply_filters('the_title', $item->title, $item->ID) . (isset($args->link_after) ? $args->link_after : '') . '</span>';
         }
 
         $item_output .= '</a>';
