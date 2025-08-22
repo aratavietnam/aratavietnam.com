@@ -8,12 +8,12 @@
     <div class="container mx-auto px-4 py-12">
         <div>
             <!-- Footer Content -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 mb-12">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 mb-12 lg:items-start">
 
                 <!-- Company Information (Mobile: Second, Desktop: First) -->
                 <div class="text-left space-y-4 order-2 lg:order-1">
                     <!-- Company Name -->
-                    <div class="mb-6">
+                    <div class="mb-3">
                         <h3 class="text-xl font-bold text-white mb-2">
                             <?php echo esc_html(get_theme_mod('footer_company_name', 'Công ty TNHH Arata Việt Nam')); ?>
                         </h3>
@@ -95,7 +95,7 @@
                     </div>
 
                     <!-- Social Media Icons -->
-                    <div class="flex justify-start lg:justify-center space-x-4">
+                    <div class="flex justify-start lg:justify-center gap-8 md:gap-10">
                         <?php
                         $facebook_url = get_theme_mod('footer_facebook_url', 'https://www.facebook.com/aratavietnam');
                         $instagram_url = get_theme_mod('footer_instagram_url', 'https://www.instagram.com/aratavietnam/');
@@ -125,7 +125,7 @@
                         <?php foreach ($social_links as $social): ?>
                         <!-- <?php echo esc_html($social['label']); ?> -->
                         <a href="<?php echo esc_url($social['url']); ?>" target="_blank" rel="noopener noreferrer" class="group" aria-label="<?php echo esc_attr($social['label']); ?>">
-                            <div class="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105" style="background: rgba(255, 255, 255, 0.15);">
+                            <div class="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105" style="background: rgba(255, 255, 255, 0.15);">
                                 <span class="text-white transition-transform duration-300 group-hover:scale-110" data-icon="<?php echo esc_attr($social['icon']); ?>" data-size="20" data-stroke="2"></span>
                             </div>
                         </a>
@@ -151,9 +151,9 @@
                                 'container' => false,
                                 'fallback_cb' => function() {
                                     echo '<ul class="footer-menu-links space-y-2">';
-                                    echo '<li><a href="' . esc_url(home_url('/')) . '" style="padding:0!important;margin:0!important;">Trang chủ</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/san-pham')) . '" style="padding:0!important;margin:0!important;">Sản phẩm</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/ve-arata')) . '" style="padding:0!important;margin:0!important;">Về Arata</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/')) . '">Trang chủ</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/san-pham')) . '">Sản phẩm</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/ve-arata')) . '">Về Arata</a></li>';
                                     echo '</ul>';
                                 },
                                 'link_before' => '',
@@ -171,9 +171,9 @@
                                 'container' => false,
                                 'fallback_cb' => function() {
                                     echo '<ul class="footer-menu-links space-y-2">';
-                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-doi-tra')) . '" style="padding:0!important;margin:0!important;">Chính sách đổi trả</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-bao-mat')) . '" style="padding:0!important;margin:0!important;">Chính sách bảo mật</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/dieu-khoan-dich-vu')) . '" style="padding:0!important;margin:0!important;">Điều khoản dịch vụ</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-doi-tra')) . '">Chính sách đổi trả</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-bao-mat')) . '">Chính sách bảo mật</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/dieu-khoan-dich-vu')) . '">Điều khoản dịch vụ</a></li>';
                                     echo '</ul>';
                                 },
                                 'link_before' => '',
@@ -204,26 +204,7 @@ get_template_part('template-parts/floating-social');
 
 <?php wp_footer(); ?>
 
-<script>
-// FORCE REMOVE FOOTER PADDING - NUCLEAR OPTION
-document.addEventListener('DOMContentLoaded', function() {
-    // Remove padding from all footer links
-    const footerLinks = document.querySelectorAll('#colophon a, footer a, .site-footer a');
-    footerLinks.forEach(function(link) {
-        link.style.setProperty('padding', '0', 'important');
-        link.style.setProperty('margin', '0', 'important');
-    });
-});
 
-// Also run after a short delay to catch any dynamically loaded content
-setTimeout(function() {
-    const footerLinks = document.querySelectorAll('#colophon a, footer a, .site-footer a');
-    footerLinks.forEach(function(link) {
-        link.style.setProperty('padding', '0', 'important');
-        link.style.setProperty('margin', '0', 'important');
-    });
-}, 1000);
-</script>
 
 </body>
 </html>

@@ -274,10 +274,23 @@
     const submitText = submitBtn.querySelector('.arata-submit-text');
     const loadingSpinner = submitBtn.querySelector('.arata-loading-spinner');
 
-    // Validate all fields
+    // Validate all fields first
     let isValid = true;
-    form.querySelectorAll('input[required], textarea[required]').forEach(function (field) {
-      if (!validateField(field)) {
+    const requiredFields = ['name', 'email', 'message'];
+    const optionalFields = ['phone'];
+
+    // Validate required fields
+    requiredFields.forEach(function(fieldName) {
+      const field = form.querySelector(`[name="${fieldName}"]`);
+      if (field && !validateField(field)) {
+        isValid = false;
+      }
+    });
+
+    // Validate optional fields if they have values
+    optionalFields.forEach(function(fieldName) {
+      const field = form.querySelector(`[name="${fieldName}"]`);
+      if (field && field.value.trim() && !validateField(field)) {
         isValid = false;
       }
     });
@@ -292,6 +305,115 @@
       return;
     }
 
+    // Show confirmation dialog before submission
+    showConfirmationDialog(form, function() {
+      // User confirmed, proceed with submission
+      submitForm(form, submitBtn, submitText, loadingSpinner);
+    });
+  }
+
+  // Show confirmation dialog
+  function showConfirmationDialog(form, onConfirm) {
+    const name = form.querySelector('[name="name"]').value;
+    const email = form.querySelector('[name="email"]').value;
+    const phone = form.querySelector('[name="phone"]').value;
+    const subject = form.querySelector('[name="subject"]').value;
+    const message = form.querySelector('[name="message"]').value;
+
+    const confirmationHTML = `
+      <div id="arata-confirmation-dialog" class="arata-confirmation-overlay">
+        <div class="arata-confirmation-container">
+          <div class="arata-confirmation-header">
+            <h3 class="arata-confirmation-title">Xác nhận thông tin liên hệ</h3>
+          </div>
+
+          <div class="arata-confirmation-body">
+            <p class="arata-confirmation-description">Vui lòng kiểm tra lại thông tin trước khi gửi:</p>
+
+            <div class="arata-confirmation-details">
+              <div class="arata-detail-item">
+                <span class="arata-detail-label">Họ và tên:</span>
+                <span class="arata-detail-value">${escapeHtml(name)}</span>
+              </div>
+              <div class="arata-detail-item">
+                <span class="arata-detail-label">Email:</span>
+                <span class="arata-detail-value">${escapeHtml(email)}</span>
+              </div>
+              ${phone ? `
+                <div class="arata-detail-item">
+                  <span class="arata-detail-label">Số điện thoại:</span>
+                  <span class="arata-detail-value">${escapeHtml(phone)}</span>
+                </div>
+              ` : ''}
+              ${subject ? `
+                <div class="arata-detail-item">
+                  <span class="arata-detail-label">Chủ đề:</span>
+                  <span class="arata-detail-value">${escapeHtml(subject)}</span>
+                </div>
+              ` : ''}
+              <div class="arata-detail-item">
+                <span class="arata-detail-label">Nội dung:</span>
+                <span class="arata-detail-value arata-message-preview">${escapeHtml(message.substring(0, 100))}${message.length > 100 ? '...' : ''}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="arata-confirmation-actions">
+            <button type="button" class="arata-btn-cancel">Hủy</button>
+            <button type="button" class="arata-btn-confirm">Xác nhận gửi</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', confirmationHTML);
+
+    const dialog = document.getElementById('arata-confirmation-dialog');
+    const cancelBtn = dialog.querySelector('.arata-btn-cancel');
+    const confirmBtn = dialog.querySelector('.arata-btn-confirm');
+
+    // Show dialog
+    dialog.style.display = 'flex';
+    confirmBtn.focus();
+
+    // Handle cancel
+    cancelBtn.addEventListener('click', function() {
+      closeConfirmationDialog();
+    });
+
+    // Handle confirm
+    confirmBtn.addEventListener('click', function() {
+      closeConfirmationDialog();
+      onConfirm();
+    });
+
+    // Close on overlay click
+    dialog.addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeConfirmationDialog();
+      }
+    });
+
+    // Close on escape key
+    const escapeHandler = function(e) {
+      if (e.key === 'Escape') {
+        closeConfirmationDialog();
+        document.removeEventListener('keydown', escapeHandler);
+      }
+    };
+    document.addEventListener('keydown', escapeHandler);
+  }
+
+  // Close confirmation dialog
+  function closeConfirmationDialog() {
+    const dialog = document.getElementById('arata-confirmation-dialog');
+    if (dialog) {
+      dialog.remove();
+    }
+  }
+
+  // Submit form after confirmation
+  function submitForm(form, submitBtn, submitText, loadingSpinner) {
     // Show loading state
     submitBtn.disabled = true;
     submitText.textContent = 'Đang gửi...';
@@ -310,9 +432,9 @@
         if (data.success) {
           showSuccessMessage(data.data.message);
           resetForm();
-          setTimeout(closePopup, 2000);
+          setTimeout(closePopup, 3000);
         } else {
-          showErrorMessage(data.data.message);
+          showErrorMessage(data.data.message || 'Có lỗi xảy ra. Vui lòng thử lại.');
         }
       })
       .catch(error => {
@@ -323,6 +445,18 @@
         submitText.textContent = 'Gửi liên hệ';
         loadingSpinner.style.display = 'none';
       });
+  }
+
+  // Escape HTML to prevent XSS
+  function escapeHtml(text) {
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
   }
 
   // Show success message

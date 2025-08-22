@@ -352,9 +352,200 @@ body.arata-popup-open {
   }
 }
 
+/* Confirmation Dialog Styles */
+.arata-confirmation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.arata-confirmation-overlay[style*="display: flex"] {
+  opacity: 1;
+}
+
+.arata-confirmation-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.arata-confirmation-overlay[style*="display: flex"] .arata-confirmation-container {
+  transform: scale(1);
+}
+
+.arata-confirmation-header {
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.arata-confirmation-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  text-align: center;
+}
+
+.arata-confirmation-body {
+  padding: 1.5rem;
+}
+
+.arata-confirmation-description {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.arata-confirmation-details {
+  background-color: #f9fafb;
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+}
+
+.arata-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e5e7eb;
+  gap: 1rem;
+}
+
+.arata-detail-item:last-child {
+  border-bottom: none;
+}
+
+.arata-detail-label {
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  min-width: 100px;
+}
+
+.arata-detail-value {
+  color: #1f2937;
+  font-size: 0.875rem;
+  text-align: right;
+  word-break: break-word;
+}
+
+.arata-message-preview {
+  max-width: 250px;
+  line-height: 1.4;
+}
+
+.arata-confirmation-actions {
+  padding: 1rem 1.5rem 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.arata-btn-cancel,
+.arata-btn-confirm {
+  padding: 0.625rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid;
+  min-width: 100px;
+}
+
+.arata-btn-cancel {
+  background-color: white;
+  color: #6b7280;
+  border-color: #d1d5db;
+}
+
+.arata-btn-cancel:hover {
+  background-color: #f9fafb;
+  color: #374151;
+  border-color: #9ca3af;
+}
+
+.arata-btn-confirm {
+  background-color: #F55E25;
+  color: white;
+  border-color: #F55E25;
+}
+
+.arata-btn-confirm:hover {
+  background-color: #D14A0F;
+  border-color: #D14A0F;
+}
+
+.arata-btn-confirm:focus,
+.arata-btn-cancel:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(245, 94, 37, 0.1);
+}
+
+/* Responsive Confirmation Dialog */
+@media (max-width: 640px) {
+  .arata-confirmation-container {
+    margin: 1rem;
+    max-width: calc(100vw - 2rem);
+  }
+
+  .arata-confirmation-header,
+  .arata-confirmation-body,
+  .arata-confirmation-actions {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .arata-detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .arata-detail-value {
+    text-align: left;
+  }
+
+  .arata-message-preview {
+    max-width: 100%;
+  }
+
+  .arata-confirmation-actions {
+    flex-direction: column;
+  }
+
+  .arata-btn-cancel,
+  .arata-btn-confirm {
+    width: 100%;
+  }
+}
+
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-  .arata-popup-container {
+  .arata-popup-container,
+  .arata-confirmation-container {
     animation: none;
   }
 
@@ -364,7 +555,9 @@ body.arata-popup-open {
 
   .arata-form-input,
   .arata-form-textarea,
-  .arata-submit-btn {
+  .arata-submit-btn,
+  .arata-btn-cancel,
+  .arata-btn-confirm {
     transition: none;
   }
 }
