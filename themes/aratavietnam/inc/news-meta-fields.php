@@ -30,7 +30,7 @@ add_action('add_meta_boxes', function() {
             foreach ($fields as $key => $label) {
                 $value = get_post_meta($post->ID, $key, true);
                 echo '<tr><th><label for="' . esc_attr($key) . '">' . esc_html($label) . '</label></th><td>';
-                
+
                 if ($key === 'arata_promotion_type') {
                     $options = [
                         'percentage' => 'Giảm theo phần trăm',
@@ -87,7 +87,7 @@ add_action('add_meta_boxes', function() {
             foreach ($fields as $key => $label) {
                 $value = get_post_meta($post->ID, $key, true);
                 echo '<tr><th><label for="' . esc_attr($key) . '">' . esc_html($label) . '</label></th><td>';
-                
+
                 if ($key === 'arata_job_type') {
                     $options = [
                         'full_time' => 'Toàn thời gian',
@@ -198,48 +198,45 @@ add_action('save_post_job_posting', function($post_id) {
 /**
  * Add meta boxes for News pages
  */
-add_action('add_meta_boxes', function() {
-    add_meta_box(
-        'arata_news_meta',
-        __('Cài đặt trang Tin tức', 'aratavietnam'),
-        function($post) {
-            $template = get_post_meta($post->ID, '_wp_page_template', true);
-            $news_templates = [
-                'page-templates/news.php',
-                'page-templates/promotions.php', 
-                'page-templates/careers.php',
-                'page-templates/blog.php'
-            ];
-            
-            if (!in_array($template, $news_templates)) {
-                echo '<p>' . esc_html__('Gán template Tin tức để sử dụng các cài đặt này.', 'aratavietnam') . '</p>';
-                return;
-            }
+add_action('add_meta_boxes_page', function($post) {
+    $news_templates = [
+        'page-templates/news.php',
+        'page-templates/promotions.php',
+        'page-templates/careers.php',
+        'page-templates/blog.php'
+    ];
+    $template = get_post_meta($post->ID, '_wp_page_template', true);
 
-            $fields = [
-                'arata_news_subtitle' => __('Phụ đề Hero', 'aratavietnam'),
-                'arata_news_intro' => __('Mô tả ngắn', 'aratavietnam'),
-                'arata_news_featured_text' => __('Văn bản nổi bật', 'aratavietnam'),
-            ];
+    if (in_array($template, $news_templates)) {
+        add_meta_box(
+            'arata_news_meta',
+            __('Cài đặt trang Tin tức', 'aratavietnam'),
+            function($post) {
+                $fields = [
+                    'arata_news_subtitle' => __('Phụ đề Hero', 'aratavietnam'),
+                    'arata_news_intro' => __('Mô tả ngắn', 'aratavietnam'),
+                    'arata_news_featured_text' => __('Văn bản nổi bật', 'aratavietnam'),
+                ];
 
-            wp_nonce_field('arata_news_meta_save', 'arata_news_meta_nonce');
-            echo '<table class="form-table">';
-            foreach ($fields as $key => $label) {
-                $value = get_post_meta($post->ID, $key, true);
-                echo '<tr><th><label for="' . esc_attr($key) . '">' . esc_html($label) . '</label></th><td>';
-                if ($key === 'arata_news_intro') {
-                    echo '<textarea id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" rows="3" class="large-text">' . esc_textarea($value) . '</textarea>';
-                } else {
-                    echo '<input type="text" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" class="regular-text" value="' . esc_attr($value) . '" />';
+                wp_nonce_field('arata_news_meta_save', 'arata_news_meta_nonce');
+                echo '<table class="form-table">';
+                foreach ($fields as $key => $label) {
+                    $value = get_post_meta($post->ID, $key, true);
+                    echo '<tr><th><label for="' . esc_attr($key) . '">' . esc_html($label) . '</label></th><td>';
+                    if ($key === 'arata_news_intro') {
+                        echo '<textarea id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" rows="3" class="large-text">' . esc_textarea($value) . '</textarea>';
+                    } else {
+                        echo '<input type="text" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" class="regular-text" value="' . esc_attr($value) . '" />';
+                    }
+                    echo '</td></tr>';
                 }
-                echo '</td></tr>';
-            }
-            echo '</table>';
-        },
-        'page',
-        'normal',
-        'default'
-    );
+                echo '</table>';
+            },
+            'page',
+            'normal',
+            'default'
+        );
+    }
 });
 
 /**

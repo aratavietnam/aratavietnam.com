@@ -5,46 +5,44 @@
 
 if (!defined('ABSPATH')) { exit; }
 
-// Add meta box only on Contact Page template
-add_action('add_meta_boxes', function() {
-	add_meta_box(
-		'arata_contact_meta',
-		__('Contact Page Settings', 'aratavietnam'),
-		function($post) {
-			$fields = [
-				'arata_contact_intro' => __('Intro (short description)', 'aratavietnam'),
-				'arata_contact_address' => __('Address', 'aratavietnam'),
-				'arata_contact_phone' => __('Phone', 'aratavietnam'),
-				'arata_contact_email' => __('Email', 'aratavietnam'),
-				'arata_contact_hours' => __('Working hours', 'aratavietnam'),
-				'arata_contact_map' => __('Map embed URL (iframe src)', 'aratavietnam'),
-				'arata_contact_subtitle' => __('Hero subtitle', 'aratavietnam'),
-			];
+// Add meta box only when the 'Contact Page' template is selected
+add_action('add_meta_boxes_page', function($post) {
+    $template = get_post_meta($post->ID, '_wp_page_template', true);
 
-			$template = get_post_meta($post->ID, '_wp_page_template', true);
-			if ($template !== 'page-templates/contact.php') {
-				echo '<p>' . esc_html__('Assign the "Contact Page" template to this page to use these settings.', 'aratavietnam') . '</p>';
-				return;
-			}
+    if ($template === 'page-templates/contact.php') {
+        add_meta_box(
+            'arata_contact_meta',
+            __('Contact Page Settings', 'aratavietnam'),
+            function($post) {
+                $fields = [
+                    'arata_contact_intro'     => __('Intro (short description)', 'aratavietnam'),
+                    'arata_contact_address'   => __('Address', 'aratavietnam'),
+                    'arata_contact_phone'     => __('Phone', 'aratavietnam'),
+                    'arata_contact_email'     => __('Email', 'aratavietnam'),
+                    'arata_contact_hours'     => __('Working hours', 'aratavietnam'),
+                    'arata_contact_map'       => __('Map embed URL (iframe src)', 'aratavietnam'),
+                    'arata_contact_subtitle'  => __('Hero subtitle', 'aratavietnam'),
+                ];
 
-			wp_nonce_field('arata_contact_meta_save', 'arata_contact_meta_nonce');
-			echo '<table class="form-table">';
-			foreach ($fields as $key => $label) {
-				$value = get_post_meta($post->ID, $key, true);
-				echo '<tr><th><label for="' . esc_attr($key) . '">' . esc_html($label) . '</label></th><td>';
-				if ($key === 'arata_contact_intro' || $key === 'arata_contact_address' || $key === 'arata_contact_hours') {
-					echo '<textarea id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" rows="3" class="large-text">' . esc_textarea($value) . '</textarea>';
-				} else {
-					echo '<input type="text" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" class="regular-text" value="' . esc_attr($value) . '" />';
-				}
-				echo '</td></tr>';
-			}
-			echo '</table>';
-		},
-		'page',
-		'normal',
-		'default'
-	);
+                wp_nonce_field('arata_contact_meta_save', 'arata_contact_meta_nonce');
+                echo '<table class="form-table">';
+                foreach ($fields as $key => $label) {
+                    $value = get_post_meta($post->ID, $key, true);
+                    echo '<tr><th><label for="' . esc_attr($key) . '">' . esc_html($label) . '</label></th><td>';
+                    if (in_array($key, ['arata_contact_intro', 'arata_contact_address', 'arata_contact_hours'])) {
+                        echo '<textarea id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" rows="3" class="large-text">' . esc_textarea($value) . '</textarea>';
+                    } else {
+                        echo '<input type="text" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" class="regular-text" value="' . esc_attr($value) . '" />';
+                    }
+                    echo '</td></tr>';
+                }
+                echo '</table>';
+            },
+            'page',
+            'normal',
+            'default'
+        );
+    }
 });
 
 // Save meta
