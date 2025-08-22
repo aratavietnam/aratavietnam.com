@@ -294,26 +294,17 @@ function initSearch() {
     const apiUrl = window.arataThemeData?.searchApiUrl || `${window.location.origin}/wp-json/aratavietnam/v1/search`;
     const searchUrl = `${apiUrl}?search=${encodeURIComponent(query)}&per_page=5`;
 
-    console.log('Header search URL:', searchUrl); // Debug log
-
     fetch(searchUrl)
-      .then(response => {
-        console.log('Header search response:', response); // Debug log
-        return response.json();
-      })
+      .then(response => response.json())
       .then(data => {
-        console.log('Header search data received:', data); // Debug log
         displaySearchResults(data, query)
       })
       .catch(error => {
-        console.error('Header search error:', error); // Debug log
         showSearchError()
       })
   }
 
   function displaySearchResults(results, query) {
-    console.log('Header search results:', results); // Debug log
-
     if (results.length === 0) {
       searchResults.innerHTML = `
                 <div class="p-4 text-center text-gray-500">
@@ -325,8 +316,6 @@ function initSearch() {
       let resultsHTML = '<div class="py-2">'
 
       results.forEach(result => {
-        console.log('Processing header result:', result); // Debug log
-
         // Ensure we have image data
         const imageUrl = result.featured_image_thumbnail || result.featured_image || getPlaceholderImage();
         const typeLabel = result.type_label || result.type || 'Nội dung';
@@ -353,7 +342,6 @@ function initSearch() {
                         </div>
                     </a>`;
 
-        console.log('Generated header HTML for result:', resultHTML); // Debug log
         resultsHTML += resultHTML;
       })
 
@@ -503,20 +491,20 @@ function initSearch() {
     }
 
     function performModalSearch(query) {
-      fetch(`${window.location.origin}/wp-json/aratavietnam/v1/search?search=${encodeURIComponent(query)}&per_page=8`)
+      const apiUrl = window.arataThemeData?.searchApiUrl || `${window.location.origin}/wp-json/aratavietnam/v1/search`;
+      const searchUrl = `${apiUrl}?search=${encodeURIComponent(query)}&per_page=8`;
+
+      fetch(searchUrl)
         .then(response => response.json())
         .then(data => {
           displayModalSearchResults(data, query)
         })
         .catch(error => {
-          // Handle search error silently
           showModalSearchError()
         })
     }
 
     function displayModalSearchResults(results, query) {
-      console.log('Search results:', results); // Debug log
-
       if (results.length === 0) {
         modalSearchResults.innerHTML = `
                     <div class="p-8 text-center text-gray-500">
@@ -532,8 +520,6 @@ function initSearch() {
         let resultsHTML = '<div class="space-y-2">'
 
         results.forEach(result => {
-          console.log('Processing modal result:', result); // Debug log
-
           // Ensure we have image data
           const imageUrl = result.featured_image_thumbnail || result.featured_image || getPlaceholderImage();
           const typeLabel = result.type_label || result.type || 'Nội dung';
@@ -560,7 +546,6 @@ function initSearch() {
                             </div>
                         </a>`;
 
-          console.log('Generated HTML for result:', resultHTML); // Debug log
           resultsHTML += resultHTML;
         })
 
@@ -772,18 +757,18 @@ function initCart() {
           if (data.success) {
             displayCartContents(data.data)
           } else {
-            console.error('Cart load error:', data.data)
+            showCartError()
             displayCartContents(null) // Show empty cart on error
           }
         })
         .catch(error => {
-          console.error('Cart AJAX error:', error)
+          showCartError()
           displayCartContents(null) // Show empty cart on error
         })
     } else {
       // Fallback: try to get cart data from WordPress REST API or show empty
       setTimeout(() => {
-        displayCartContents(null) // Show empty cart state
+        showBasicCart() // Show empty cart state
       }, 500)
     }
   }
@@ -1160,6 +1145,182 @@ function initMobileSubmenuToggle() {
 
 
 
+/**
+ * Contact Form Confirmation Dialog
+ */
+function initContactFormConfirmation() {
+  const form = document.getElementById('contact-form');
+  if (!form) return;
+
+  // Add confirmation dialog function
+  function showConfirmationDialog(formData) {
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const phone = formData.get('phone');
+    const subject = formData.get('subject');
+    const message = formData.get('message');
+
+    // Hide the form
+    form.style.display = 'none';
+
+    const confirmationHTML = `
+      <div id="arata-confirmation-dialog" class="arata-confirmation-overlay" style="display: flex;">
+        <div class="arata-confirmation-container">
+          <div class="arata-confirmation-header">
+            <h3 class="arata-confirmation-title">Xác nhận thông tin liên hệ</h3>
+          </div>
+
+          <div class="arata-confirmation-body">
+            <p class="arata-confirmation-description">Vui lòng kiểm tra lại thông tin trước khi gửi:</p>
+
+            <div class="arata-confirmation-details">
+              <div class="arata-detail-item">
+                <span class="arata-detail-label">Họ và tên:</span>
+                <span class="arata-detail-value">${name}</span>
+              </div>
+              <div class="arata-detail-item">
+                <span class="arata-detail-label">Email:</span>
+                <span class="arata-detail-value">${email}</span>
+              </div>
+              ${phone ? `
+                <div class="arata-detail-item">
+                  <span class="arata-detail-label">Số điện thoại:</span>
+                  <span class="arata-detail-value">${phone}</span>
+                </div>
+              ` : ''}
+              ${subject ? `
+                <div class="arata-detail-item">
+                  <span class="arata-detail-label">Chủ đề:</span>
+                  <span class="arata-detail-value">${subject}</span>
+                </div>
+              ` : ''}
+              <div class="arata-detail-item">
+                <span class="arata-detail-label">Nội dung:</span>
+                <span class="arata-detail-value arata-message-preview">${message.substring(0, 100)}${message.length > 100 ? '...' : ''}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="arata-confirmation-actions">
+            <button type="button" class="arata-btn-cancel">Hủy</button>
+            <button type="button" class="arata-btn-confirm">Xác nhận gửi</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', confirmationHTML);
+
+    const dialog = document.getElementById('arata-confirmation-dialog');
+    const cancelBtn = dialog.querySelector('.arata-btn-cancel');
+    const confirmBtn = dialog.querySelector('.arata-btn-confirm');
+
+    // Handle cancel
+    cancelBtn.addEventListener('click', function () {
+      closeConfirmationDialog();
+    });
+
+    // Handle confirm
+    confirmBtn.addEventListener('click', function () {
+      closeConfirmationDialog();
+      submitForm(formData);
+    });
+
+    // Close on overlay click
+    dialog.addEventListener('click', function (e) {
+      if (e.target === this) {
+        closeConfirmationDialog();
+      }
+    });
+
+    // Close on escape key
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        closeConfirmationDialog();
+      }
+    });
+  }
+
+  function closeConfirmationDialog() {
+    const dialog = document.getElementById('arata-confirmation-dialog');
+    if (dialog) {
+      dialog.remove();
+    }
+    // Show the form again
+    form.style.display = 'block';
+  }
+
+  function submitForm(formData) {
+    // Submit the original form instead of creating a new one
+    form.submit();
+  }
+
+  // Form validation and submission
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    // Clear previous errors
+    const errorElements = form.querySelectorAll('.text-red-600');
+    errorElements.forEach(el => el.classList.add('hidden'));
+
+    // Get form data
+    const formData = new FormData(form);
+    let hasErrors = false;
+
+    // Validate required fields
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const message = formData.get('message');
+
+    if (!name.trim()) {
+      showError('name', 'Vui lòng nhập họ và tên');
+      hasErrors = true;
+    }
+
+    if (!email.trim()) {
+      showError('email', 'Vui lòng nhập email');
+      hasErrors = true;
+    } else if (!isValidEmail(email)) {
+      showError('email', 'Email không hợp lệ');
+      hasErrors = true;
+    }
+
+    if (!message.trim()) {
+      showError('message', 'Vui lòng nhập nội dung');
+      hasErrors = true;
+    }
+
+    if (hasErrors) {
+      const firstError = form.querySelector('.border-red-500');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstError.focus();
+      }
+      return;
+    }
+
+    // Show confirmation dialog
+    showConfirmationDialog(formData);
+  });
+
+  // Helper functions for validation
+  function showError(fieldId, message) {
+    const field = form.querySelector(`#${fieldId}`);
+    const errorElement = form.querySelector(`#${fieldId}-error`);
+
+    if (field && errorElement) {
+      field.classList.add('border-red-500');
+      errorElement.textContent = message;
+      errorElement.classList.remove('hidden');
+    }
+  }
+
+  function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+}
+
 // Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', function () {
   detectFontLoading();
@@ -1171,8 +1332,7 @@ document.addEventListener('DOMContentLoaded', function () {
   initCart();
   initFloatingSocial();
   monitorFontPerformance();
-
-
+  initContactFormConfirmation();
 });
 
 // Initialize navigation when window loads (fallback)

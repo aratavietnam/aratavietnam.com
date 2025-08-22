@@ -16,10 +16,10 @@
   function getPopupHTML(settings) {
     // Define width classes for Tailwind
     const widthClasses = {
-        sm: 'max-w-sm',
-        md: 'max-w-2xl',
-        lg: 'max-w-4xl',
-        xl: 'max-w-6xl'
+      sm: 'max-w-sm',
+      md: 'max-w-2xl',
+      lg: 'max-w-4xl',
+      xl: 'max-w-6xl'
     };
 
     return `
@@ -157,27 +157,32 @@
     if (!popup) return;
     popup.style.display = 'flex';
     setTimeout(() => {
-        popup.classList.remove('opacity-0');
-        popup.querySelector('.transform').classList.remove('scale-95');
+      popup.classList.remove('opacity-0');
+      popup.querySelector('.transform').classList.remove('scale-95');
     }, 10);
     document.body.classList.add('overflow-hidden');
     const firstInput = popup.querySelector('input[name="name"]');
     if (firstInput) {
-        firstInput.focus();
+      firstInput.focus();
     }
   }
 
-  // Close popup
+  // Close popup function
   function closePopup() {
     const popup = document.getElementById('arata-contact-popup');
-    if (!popup) return;
-    popup.classList.add('opacity-0');
-    popup.querySelector('.transform').classList.add('scale-95');
-    setTimeout(() => {
-        popup.style.display = 'none';
-        document.body.classList.remove('overflow-hidden');
-        resetForm();
-    }, 300);
+    if (popup) {
+      popup.style.display = 'none';
+      // Remove any existing confirmation dialogs
+      const confirmDialog = document.getElementById('arata-confirmation-dialog');
+      if (confirmDialog) {
+        confirmDialog.remove();
+      }
+      // Reset form
+      const form = popup.querySelector('#arata-popup-form');
+      if (form) {
+        form.reset();
+      }
+    }
   }
 
   // Reset form
@@ -285,28 +290,36 @@
   // Handle form submission
   function handleFormSubmission(e) {
     e.preventDefault();
+
     const form = this;
     const submitBtn = form.querySelector('button[type="submit"]');
-    if (!submitBtn || submitBtn.disabled) return;
+    if (!submitBtn || submitBtn.disabled) {
+      return;
+    }
 
     let isValid = true;
+    const errors = [];
+
     form.querySelectorAll('[required]').forEach(field => {
-        if (!validateField(field)) {
-            isValid = false;
-        }
+      if (!validateField(field)) {
+        isValid = false;
+        errors.push(`${field.name}: ${field.value}`);
+      }
     });
 
     if (!isValid) {
-        const firstError = form.querySelector('.border-red-500');
-        if (firstError) {
-            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            firstError.focus();
-        }
-        return;
+      const firstError = form.querySelector('.border-red-500');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstError.focus();
+      }
+      return;
     }
 
     showConfirmationDialog(form, () => {
-        submitForm(form);
+      const submitText = form.querySelector('.submit-text');
+      const loadingSpinner = form.querySelector('.loading-spinner');
+      submitForm(form, submitBtn, submitText, loadingSpinner);
     });
   }
 
@@ -375,25 +388,25 @@
     confirmBtn.focus();
 
     // Handle cancel
-    cancelBtn.addEventListener('click', function() {
+    cancelBtn.addEventListener('click', function () {
       closeConfirmationDialog();
     });
 
     // Handle confirm
-    confirmBtn.addEventListener('click', function() {
+    confirmBtn.addEventListener('click', function () {
       closeConfirmationDialog();
       onConfirm();
     });
 
     // Close on overlay click
-    dialog.addEventListener('click', function(e) {
+    dialog.addEventListener('click', function (e) {
       if (e.target === this) {
         closeConfirmationDialog();
       }
     });
 
     // Close on escape key
-    const escapeHandler = function(e) {
+    const escapeHandler = function (e) {
       if (e.key === 'Escape') {
         closeConfirmationDialog();
         document.removeEventListener('keydown', escapeHandler);
@@ -425,10 +438,27 @@
     // Clear any previous alerts before proceeding
     clearAlerts();
 
+    // Get submit button and elements if not provided
+    if (!submitBtn) {
+      submitBtn = form.querySelector('button[type="submit"]');
+    }
+    if (!submitText) {
+      submitText = form.querySelector('.submit-text');
+    }
+    if (!loadingSpinner) {
+      loadingSpinner = form.querySelector('.loading-spinner');
+    }
+
     // Show loading state
-    submitBtn.disabled = true;
-    if(submitText) submitText.textContent = 'Đang gửi...';
-    if(loadingSpinner) loadingSpinner.classList.remove('hidden');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+    }
+    if (submitText) {
+      submitText.textContent = 'Đang gửi...';
+    }
+    if (loadingSpinner) {
+      loadingSpinner.classList.remove('hidden');
+    }
 
     // Prepare form data
     const formData = new FormData(form);
@@ -440,24 +470,35 @@
     })
       .then(response => response.json())
       .then(data => {
+        // Reset button state first
+        if (submitBtn) {
+          submitBtn.disabled = false;
+        }
+        if (submitText) {
+          submitText.textContent = 'Gửi liên hệ';
+        }
+        if (loadingSpinner) {
+          loadingSpinner.classList.add('hidden');
+        }
+
         if (data.success) {
           showSuccessMessage(data.data.message);
-          // No need to reset button here, as the form is replaced
         } else {
           showErrorMessage(data.data.message || 'Có lỗi xảy ra. Vui lòng thử lại.');
-          // Reset button on failure
-          submitBtn.disabled = false;
-          if(submitText) submitText.textContent = 'Gửi liên hệ';
-          if(loadingSpinner) loadingSpinner.classList.add('hidden');
         }
       })
       .catch(error => {
-        console.error('Contact form error:', error);
-        showErrorMessage('Có lỗi xảy ra khi gửi form. Vui lòng thử lại.');
-        // Reset button on failure
-        submitBtn.disabled = false;
-        if(submitText) submitText.textContent = 'Gửi liên hệ';
-        if(loadingSpinner) loadingSpinner.classList.add('hidden');
+        // Reset button state on error
+        if (submitBtn) {
+          submitBtn.disabled = false;
+        }
+        if (submitText) {
+          submitText.textContent = 'Gửi liên hệ';
+        }
+        if (loadingSpinner) {
+          loadingSpinner.classList.add('hidden');
+        }
+        showErrorMessage('Có lỗi xảy ra. Vui lòng thử lại.');
       });
   }
 
@@ -470,28 +511,52 @@
       '"': '&quot;',
       "'": '&#039;'
     };
-    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    return text.replace(/[&<>"']/g, function (m) { return map[m]; });
   }
 
   // Show success message
   function showSuccessMessage(message) {
     const popup = document.getElementById('arata-contact-popup');
-    const body = popup.querySelector('.arata-popup-body');
+    if (!popup) {
+      return;
+    }
+
+    // Try multiple selectors to find the popup body
+    let body = popup.querySelector('.arata-popup-body');
+    if (!body) {
+      body = popup.querySelector('.p-4.lg\\:p-6');
+    }
+    if (!body) {
+      body = popup.querySelector('form').parentElement;
+    }
+
+    if (!body) {
+      return;
+    }
 
     body.innerHTML = `
-            <div class="arata-success-message">
-                <svg class="arata-success-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="arata-success-message text-center py-8">
+                <svg class="arata-success-icon w-16 h-16 mx-auto text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <p>${message}</p>
+                <p class="text-lg font-semibold text-gray-900 mb-2">Thành công!</p>
+                <p class="text-gray-600">${message}</p>
             </div>
         `;
+
+    // Auto close popup after 2 seconds
+    setTimeout(() => {
+      closePopup();
+    }, 2000);
   }
 
   // Show error message
   function showErrorMessage(message) {
     const popup = document.getElementById('arata-contact-popup');
+    if (!popup) return;
+
     const body = popup.querySelector('.arata-popup-body');
+    if (!body) return;
 
     const errorAlert = document.createElement('div');
     errorAlert.className = 'arata-error-alert';
@@ -502,7 +567,12 @@
         <p>${message}</p>
     `;
 
-    body.insertBefore(errorAlert, body.firstChild);
+    // Safe insert - check if firstChild exists
+    if (body.firstChild) {
+      body.insertBefore(errorAlert, body.firstChild);
+    } else {
+      body.appendChild(errorAlert);
+    }
   }
 
   // Initialize when document is ready
@@ -511,5 +581,4 @@
       initContactPopup();
     }
   });
-
 })();

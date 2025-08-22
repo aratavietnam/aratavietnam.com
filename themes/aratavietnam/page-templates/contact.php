@@ -156,7 +156,7 @@ get_template_part('template-parts/hero');
 						<div class="mb-4 text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg p-3"><?php _e('Có lỗi xảy ra. Vui lòng kiểm tra và thử lại.', 'aratavietnam'); ?></div>
 					<?php endif; ?>
 
-					<form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="space-y-4">
+					<form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="space-y-4" id="contact-form">
 						<input type="hidden" name="action" value="arata_contact_submit" />
 						<?php wp_nonce_field('arata_contact_submit', 'arata_contact_nonce'); ?>
 						<!-- Honeypot -->
@@ -167,9 +167,7 @@ get_template_part('template-parts/hero');
 								<label for="name" class="block text-sm font-medium text-gray-700 mb-1"><?php _e('Họ và tên', 'aratavietnam'); ?> *</label>
 								<div class="relative">
 									<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-										<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-										</svg>
+										<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
 									</span>
 									<input id="name" name="name" type="text" required placeholder="Nhập họ và tên của bạn" class="block w-full rounded-lg border border-gray-300 pl-10 pr-3 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
 								</div>
@@ -180,9 +178,7 @@ get_template_part('template-parts/hero');
 								<label for="email" class="block text-sm font-medium text-gray-700 mb-1"><?php _e('Email', 'aratavietnam'); ?> *</label>
 								<div class="relative">
 									<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-										<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-										</svg>
+										<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
 									</span>
 									<input id="email" name="email" type="email" required placeholder="example@email.com" class="block w-full rounded-lg border border-gray-300 pl-10 pr-3 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
 								</div>
@@ -193,9 +189,7 @@ get_template_part('template-parts/hero');
 								<label for="phone" class="block text-sm font-medium text-gray-700 mb-1"><?php _e('Số điện thoại', 'aratavietnam'); ?></label>
 								<div class="relative">
 									<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-										<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-										</svg>
+										<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
 									</span>
 									<input id="phone" name="phone" type="tel" placeholder="0123 456 789" class="block w-full rounded-lg border border-gray-300 pl-10 pr-3 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
 								</div>
@@ -206,9 +200,7 @@ get_template_part('template-parts/hero');
 								<label for="subject" class="block text-sm font-medium text-gray-700 mb-1"><?php _e('Chủ đề', 'aratavietnam'); ?></label>
 								<div class="relative">
 									<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-										<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-										</svg>
+										<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
 									</span>
 									<input id="subject" name="subject" type="text" placeholder="Chủ đề liên hệ" class="block w-full rounded-lg border border-gray-300 pl-10 pr-3 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
 								</div>
@@ -241,145 +233,13 @@ get_template_part('template-parts/hero');
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    const submitBtn = document.getElementById('submit-btn');
-    const submitText = document.querySelector('.submit-text');
-    const loadingSpinner = document.querySelector('.loading-spinner');
+    const form = document.getElementById('contact-form');
+    if (!form) return;
 
-    // Validation functions
-    function validateName(name) {
-        return name.trim().length >= 2;
-    }
-
-    function validateEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
-    function validatePhone(phone) {
-        if (!phone.trim()) return true; // Optional field
-        const phoneRegex = /^[0-9\s\-\+\(\)]{10,15}$/;
-        return phoneRegex.test(phone.replace(/\s/g, ''));
-    }
-
-    function validateMessage(message) {
-        return message.trim().length >= 10;
-    }
-
-    function showError(fieldId, message) {
-        const field = document.getElementById(fieldId);
-        const errorDiv = document.getElementById(fieldId + '-error');
-
-        field.classList.add('border-red-500', 'focus:ring-red-500');
-        field.classList.remove('border-gray-300', 'focus:ring-primary');
-
-        if (errorDiv) {
-            errorDiv.textContent = message;
-            errorDiv.classList.remove('hidden');
-        }
-    }
-
-    function hideError(fieldId) {
-        const field = document.getElementById(fieldId);
-        const errorDiv = document.getElementById(fieldId + '-error');
-
-        field.classList.remove('border-red-500', 'focus:ring-red-500');
-        field.classList.add('border-gray-300', 'focus:ring-primary');
-
-        if (errorDiv) {
-            errorDiv.classList.add('hidden');
-        }
-    }
-
-    // Real-time validation
-    document.getElementById('name').addEventListener('blur', function() {
-        if (!validateName(this.value)) {
-            showError('name', 'Họ tên phải có ít nhất 2 ký tự');
-        } else {
-            hideError('name');
-        }
-    });
-
-    document.getElementById('email').addEventListener('blur', function() {
-        if (!validateEmail(this.value)) {
-            showError('email', 'Vui lòng nhập email hợp lệ');
-        } else {
-            hideError('email');
-        }
-    });
-
-    document.getElementById('phone').addEventListener('blur', function() {
-        if (!validatePhone(this.value)) {
-            showError('phone', 'Số điện thoại không hợp lệ');
-        } else {
-            hideError('phone');
-        }
-    });
-
-    document.getElementById('message').addEventListener('blur', function() {
-        if (!validateMessage(this.value)) {
-            showError('message', 'Nội dung phải có ít nhất 10 ký tự');
-        } else {
-            hideError('message');
-        }
-    });
-
-    // Form submission
+    // Basic form validation (simplified)
     form.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const phone = document.getElementById('phone').value;
-        const message = document.getElementById('message').value;
-
-        let isValid = true;
-
-        // Validate all fields
-        if (!validateName(name)) {
-            showError('name', 'Vui lòng nhập họ và tên');
-            isValid = false;
-        } else {
-            hideError('name');
-        }
-
-        if (!validateEmail(email)) {
-            showError('email', 'Vui lòng nhập email hợp lệ');
-            isValid = false;
-        } else {
-            hideError('email');
-        }
-
-        if (!validatePhone(phone)) {
-            showError('phone', 'Số điện thoại không hợp lệ');
-            isValid = false;
-        } else {
-            hideError('phone');
-        }
-
-        if (!validateMessage(message)) {
-            showError('message', 'Vui lòng nhập nội dung tin nhắn');
-            isValid = false;
-        } else {
-            hideError('message');
-        }
-
-        if (isValid) {
-            // Show loading state
-            submitBtn.disabled = true;
-            submitText.textContent = 'Đang gửi...';
-            loadingSpinner.classList.remove('hidden');
-
-            // Submit form
-            this.submit();
-        } else {
-            // Scroll to first error
-            const firstError = document.querySelector('.border-red-500');
-            if (firstError) {
-                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                firstError.focus();
-            }
-        }
+        // Let the main app.js handle the form submission
+        // This is just a fallback
     });
 });
 </script>

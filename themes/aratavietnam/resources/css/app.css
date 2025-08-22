@@ -621,3 +621,121 @@
   @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors duration-200;
   min-height: 100px;
 }
+
+/* Cart: normalize item spacing */
+.cart-items-list>div {
+  /* each cart item wrapper */
+  @apply p-5;
+}
+
+/* Themed primary button */
+.arata-btn {
+  @apply bg-primary text-white rounded-md px-4 py-3 text-center font-semibold transition-colors duration-200;
+}
+
+.arata-btn:hover {
+  @apply bg-primary-dark;
+}
+
+/* Checkout form styling */
+.woocommerce-checkout .form-row label {
+  @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+.woocommerce-checkout .form-row input,
+.woocommerce-checkout .form-row select,
+.woocommerce-checkout .form-row textarea {
+  @apply w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+}
+
+.woocommerce-checkout .form-row input:focus,
+.woocommerce-checkout .form-row select:focus,
+.woocommerce-checkout .form-row textarea:focus {
+  @apply border-primary;
+}
+
+.woocommerce-checkout .form-row .required {
+  @apply text-red-500;
+}
+
+/* Order review table styling */
+.woocommerce-checkout-review-order-table {
+  @apply w-full border-collapse;
+}
+
+.woocommerce-checkout-review-order-table th,
+.woocommerce-checkout-review-order-table td {
+  @apply px-3 py-2 text-left border-b border-gray-100;
+}
+
+.woocommerce-checkout-review-order-table th {
+  @apply font-medium text-gray-700;
+}
+
+.woocommerce-checkout-review-order-table td {
+  @apply text-gray-900;
+}
+
+/* Payment methods styling */
+.woocommerce-checkout-payment {
+  @apply mt-4;
+}
+
+.woocommerce-checkout-payment ul {
+  @apply space-y-2;
+}
+
+.woocommerce-checkout-payment li {
+  @apply flex items-center space-x-2;
+}
+
+.woocommerce-checkout-payment input[type="radio"] {
+  @apply text-primary focus:ring-primary;
+}
+
+/* Place order button */
+.woocommerce-checkout #place_order {
+  @apply bg-primary text-white rounded-md px-4 py-3 text-center font-semibold transition-colors duration-200 w-full;
+}
+
+.woocommerce-checkout #place_order:hover {
+  @apply bg-primary-dark;
+}
+
+/* WooCommerce notifications styling */
+.woocommerce-info,
+.woocommerce-message,
+.woocommerce-error {
+  @apply bg-gray-50 border border-gray-200 rounded-md px-4 py-3 mb-4 text-sm;
+  border-left: none !important;
+}
+
+.woocommerce-info {
+  @apply bg-blue-50 border-blue-200 text-blue-800;
+}
+
+.woocommerce-message {
+  @apply bg-green-50 border-green-200 text-green-800;
+}
+
+.woocommerce-error {
+  @apply bg-red-50 border-red-200 text-red-800;
+}
+
+.woocommerce-info a,
+.woocommerce-message a,
+.woocommerce-error a {
+  @apply underline font-medium;
+}
+
+.woocommerce-info a {
+  @apply text-blue-600 hover:text-blue-800;
+}
+
+.woocommerce-message a {
+  @apply text-green-600 hover:text-green-800;
+}
+
+.woocommerce-error a {
+  @apply text-red-600 hover:text-red-800;
+}

@@ -11,14 +11,13 @@ document.addEventListener('DOMContentLoaded', function () {
   const authDataElement = document.getElementById('arata-auth-data');
 
   if (!authDataElement) {
-    console.error('Auth data script element (#arata-auth-data) not found. Auth popup will not work.');
     return;
   }
 
-  const arataAuth = JSON.parse(authDataElement.textContent);
-
-  if (!arataAuth) {
-    console.error('Could not parse auth data from script element. Auth popup will not work.');
+  let arataAuth;
+  try {
+    arataAuth = JSON.parse(authDataElement.textContent);
+  } catch (e) {
     return;
   }
 
@@ -26,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // --- Popup HTML Templates ---
   const popupTemplates = {
-    login: function() {
+    login: function () {
       return `
         <div id="arata-auth-popup" class="fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0" style="display: none;">
           <div class="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] flex flex-col transform transition-transform duration-300 scale-95">
@@ -82,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
       `;
     },
 
-    register: function() {
+    register: function () {
       return `
         <div id="arata-auth-popup" class="fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0" style="display: none;">
           <div class="bg-white rounded-lg shadow-xl w-full max-w-lg max-h-[90vh] flex flex-col transform transition-transform duration-300 scale-95">
@@ -156,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
       `;
     },
 
-    forgot: function() {
+    forgot: function () {
       return `
         <div id="arata-auth-popup" class="fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0" style="display: none;">
           <div class="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] flex flex-col transform transition-transform duration-300 scale-95">
@@ -201,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Bind account button to show login popup
   function bindAccountButton() {
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
       const accountButton = e.target.closest('.account-toggle');
       if (accountButton) {
         e.preventDefault();
@@ -320,19 +319,24 @@ document.addEventListener('DOMContentLoaded', function () {
     e.preventDefault();
 
     const form = e.target;
-    const submitBtn = form.querySelector('.arata-submit-btn');
-    const submitText = submitBtn.querySelector('.arata-submit-text');
-    const loadingSpinner = submitBtn.querySelector('.arata-loading-spinner');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const submitText = submitBtn ? submitBtn.querySelector('.submit-text') : null;
+    const loadingSpinner = submitBtn ? submitBtn.querySelector('.loading-spinner') : null;
+
+    if (!submitBtn) {
+      showErrorMessage(form, 'Không tìm thấy nút gửi. Vui lòng tải lại trang.');
+      return;
+    }
 
     if (!validateForm(form, type)) {
       return;
     }
 
     // Show loading state
-    submitBtn.disabled = true;
-    const originalButtonText = submitText.textContent;
-    submitText.textContent = 'Đang xử lý...';
-    loadingSpinner.classList.remove('hidden');
+    if (submitBtn) submitBtn.disabled = true;
+    const originalButtonText = submitText ? submitText.textContent : 'Gửi';
+    if (submitText) submitText.textContent = 'Đang xử lý...';
+    if (loadingSpinner) loadingSpinner.classList.remove('hidden');
 
     clearFormErrors(form);
 
@@ -342,31 +346,30 @@ document.addEventListener('DOMContentLoaded', function () {
       method: 'POST',
       body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        showSuccessMessage(data.data.message || 'Thao tác thành công!');
-        setTimeout(() => {
-          if (data.data.redirect) {
-            window.location.href = data.data.redirect;
-          } else {
-            window.location.reload();
-          }
-        }, 1500);
-      } else {
-        showErrorMessage(form, data.data.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.');
-        submitBtn.disabled = false;
-        submitText.textContent = originalButtonText;
-        loadingSpinner.classList.add('hidden');
-      }
-    })
-    .catch(error => {
-      console.error('Auth AJAX Error:', error);
-      showErrorMessage(form, 'Lỗi kết nối. Vui lòng kiểm tra lại đường truyền.');
-      submitBtn.disabled = false;
-      submitText.textContent = originalButtonText;
-      loadingSpinner.classList.add('hidden');
-    });
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          showSuccessMessage(data.data.message || 'Thao tác thành công!');
+          setTimeout(() => {
+            if (data.data.redirect) {
+              window.location.href = data.data.redirect;
+            } else {
+              window.location.reload();
+            }
+          }, 1500);
+        } else {
+          showErrorMessage(form, data.data.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.');
+          if (submitBtn) submitBtn.disabled = false;
+          if (submitText) submitText.textContent = originalButtonText;
+          if (loadingSpinner) loadingSpinner.classList.add('hidden');
+        }
+      })
+      .catch(error => {
+        showErrorMessage(form, 'Có lỗi xảy ra. Vui lòng thử lại.');
+        if (submitBtn) submitBtn.disabled = false;
+        if (submitText) submitText.textContent = originalButtonText;
+        if (loadingSpinner) loadingSpinner.classList.add('hidden');
+      });
   }
 
   // Reset submit button

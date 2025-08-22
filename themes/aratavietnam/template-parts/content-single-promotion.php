@@ -1,95 +1,123 @@
 <?php
 /**
- * Template part for displaying single promotions
+ * Template part for displaying promotion cards in lists
  *
  * @package ArataVietnam
  */
 
-// Get all meta fields
+// Get promotion meta fields
 $type = get_post_meta(get_the_ID(), 'arata_promotion_type', true);
 $discount = get_post_meta(get_the_ID(), 'arata_promotion_discount', true);
 $code = get_post_meta(get_the_ID(), 'arata_promotion_code', true);
 $start_date = get_post_meta(get_the_ID(), 'arata_promotion_start_date', true);
 $end_date = get_post_meta(get_the_ID(), 'arata_promotion_end_date', true);
-$conditions = get_post_meta(get_the_ID(), 'arata_promotion_conditions', true);
-$products = get_post_meta(get_the_ID(), 'arata_promotion_products', true);
 
-// Labels for meta fields
-$type_labels = ['percentage' => 'Giảm theo phần trăm', 'fixed' => 'Giảm số tiền cố định', 'buy_get' => 'Mua X tặng Y', 'free_shipping' => 'Miễn phí vận chuyển', 'bundle' => 'Combo sản phẩm'];
+// Labels for promotion types
+$type_labels = [
+    'percentage' => 'Giảm %',
+    'fixed' => 'Giảm tiền',
+    'buy_get' => 'Mua tặng',
+    'free_shipping' => 'Miễn phí ship',
+    'bundle' => 'Combo'
+];
+
+// Calculate days remaining
+$days_remaining = 0;
+if ($end_date) {
+    $end_timestamp = strtotime($end_date);
+    $current_timestamp = current_time('timestamp');
+    $days_remaining = max(0, ceil(($end_timestamp - $current_timestamp) / DAY_IN_SECONDS));
+}
 ?>
 
-<div class="grid grid-cols-1 lg:grid-cols-3 lg:gap-x-12">
-    <!-- Main Content -->
-    <div class="lg:col-span-2">
-        <article id="post-<?php the_ID(); ?>" <?php post_class('bg-white p-6 md:p-8 rounded-lg shadow-sm'); ?>>
-            <?php if (has_post_thumbnail()) : ?>
-                <div class="mb-6 rounded-lg overflow-hidden">
-                    <?php the_post_thumbnail('large', ['class' => 'w-full h-full object-cover']); ?>
-                </div>
-            <?php endif; ?>
-
-            <header class="entry-header mb-8">
-                <?php if ($type && isset($type_labels[$type])): ?>
-                    <div class="mb-4">
-                        <span class="text-sm font-medium text-primary uppercase"><?php echo esc_html($type_labels[$type]); ?></span>
-                    </div>
-                <?php endif; ?>
-                <?php the_title('<h1 class="text-3xl lg:text-5xl font-bold text-gray-900 tracking-tight leading-tight mb-4">', '</h1>'); ?>
-                <?php if ($start_date && $end_date): ?>
-                    <div class="flex items-center text-sm text-gray-500">
-                        <span data-icon="calendar" data-size="16" class="mr-2"></span>
-                        <span>Thời gian áp dụng: <?php echo date('d/m/Y', strtotime($start_date)); ?> - <?php echo date('d/m/Y', strtotime($end_date)); ?></span>
-                    </div>
-                <?php endif; ?>
-            </header>
-
-            <div class="entry-content prose prose-lg max-w-none text-gray-800 leading-relaxed border-t border-gray-200 pt-8">
-                <?php the_content(); ?>
-
-                <?php if ($conditions) : ?>
-                    <h3 class="font-bold text-xl mt-8 mb-4">Điều kiện áp dụng</h3>
-                    <div class="prose-sm text-gray-700 p-4 bg-yellow-50 border border-yellow-200 rounded-lg"><?php echo wpautop(esc_html($conditions)); ?></div>
-                <?php endif; ?>
-
-                <?php if ($products) : ?>
-                    <h3 class="font-bold text-xl mt-8 mb-4">Sản phẩm áp dụng</h3>
-                    <div class="prose-sm text-gray-700 p-4 bg-blue-50 border border-blue-200 rounded-lg"><?php echo wpautop(esc_html($products)); ?></div>
-                <?php endif; ?>
-            </div>
-        </article>
-    </div>
-
-    <!-- Sidebar -->
-    <aside class="lg:col-span-1 mt-12 lg:mt-0">
-        <div class="sticky top-24">
-            <!-- Promotion Summary -->
-            <div class="bg-white p-6 rounded-lg shadow-sm">
-                <h3 class="text-xl font-bold text-gray-900 mb-4">Thông tin khuyến mãi</h3>
-                <ul class="space-y-3 text-sm">
-                    <?php if ($discount): ?>
-                        <li class="flex items-center"><span data-icon="percent" class="mr-3 text-gray-400"></span><strong>Mức ưu đãi:</strong><span class="ml-auto text-right font-bold text-primary text-lg"><?php echo esc_html($discount); ?></span></li>
-                    <?php endif; ?>
-                    <?php if ($type && isset($type_labels[$type])) : ?>
-                        <li class="flex items-center"><span data-icon="tag" class="mr-3 text-gray-400"></span><strong>Loại KM:</strong><span class="ml-auto text-right"><?php echo esc_html($type_labels[$type]); ?></span></li>
-                    <?php endif; ?>
-                    <?php if ($start_date && $end_date): ?>
-                        <li class="flex items-center"><span data-icon="calendar" class="mr-3 text-gray-400"></span><strong>Thời gian:</strong><span class="ml-auto text-right"><?php echo date('d/m/Y', strtotime($start_date)); ?> - <?php echo date('d/m/Y', strtotime($end_date)); ?></span></li>
-                    <?php endif; ?>
-                </ul>
-
-                <?php if ($code): ?>
-                    <div class="mt-6 text-center">
-                        <p class="text-sm text-gray-600 mb-2">Sử dụng mã sau để nhận ưu đãi:</p>
-                        <div class="p-3 bg-primary/10 rounded-lg border-2 border-dashed border-primary/50">
-                            <code class="text-primary text-2xl font-bold tracking-widest"><?php echo esc_html($code); ?></code>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <div class="mt-6">
-                    <a href="<?php echo esc_url(home_url('/san-pham')); ?>" class="w-full inline-block text-center bg-primary text-white py-3 rounded-lg hover:bg-primary-dark transition-colors font-medium">Mua sắm ngay</a>
-                </div>
+<article class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 hover:border-primary">
+    <!-- Promotion Image -->
+    <?php if (has_post_thumbnail()) : ?>
+        <div class="aspect-video overflow-hidden">
+            <a href="<?php the_permalink(); ?>">
+                <?php the_post_thumbnail('medium', ['class' => 'w-full h-full object-cover hover:scale-105 transition-transform duration-300']); ?>
+            </a>
+        </div>
+    <?php else : ?>
+        <div class="aspect-video bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
+            <div class="text-center">
+                <span data-icon="megaphone" data-size="32" class="text-gray-400 mb-2"></span>
+                <p class="text-gray-500 text-sm">Khuyến mãi</p>
             </div>
         </div>
-    </aside>
-</div>
+    <?php endif; ?>
+
+    <!-- Promotion Content -->
+    <div class="p-4">
+        <!-- Promotion Type Badge -->
+        <?php if ($type && isset($type_labels[$type])): ?>
+            <div class="mb-3">
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
+                    <?php echo esc_html($type_labels[$type]); ?>
+                </span>
+            </div>
+        <?php endif; ?>
+
+        <!-- Title -->
+        <h3 class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">
+            <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
+                <?php the_title(); ?>
+            </a>
+        </h3>
+
+        <!-- Discount Info -->
+        <?php if ($discount): ?>
+            <div class="mb-3">
+                <span class="text-2xl font-bold text-primary"><?php echo esc_html($discount); ?></span>
+                <?php if ($type === 'percentage'): ?>
+                    <span class="text-sm text-gray-600 ml-1">giảm giá</span>
+                <?php elseif ($type === 'fixed'): ?>
+                    <span class="text-sm text-gray-600 ml-1">VNĐ</span>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Promotion Code -->
+        <?php if ($code): ?>
+            <div class="mb-3 p-2 bg-gray-50 rounded-lg border border-gray-200">
+                <p class="text-xs text-gray-600 mb-1">Mã khuyến mãi:</p>
+                <code class="text-sm font-mono font-bold text-primary"><?php echo esc_html($code); ?></code>
+            </div>
+        <?php endif; ?>
+
+        <!-- Date Range -->
+        <?php if ($start_date && $end_date): ?>
+            <div class="flex items-center text-xs text-gray-500 mb-3">
+                <span data-icon="calendar" data-size="14" class="mr-1"></span>
+                <span><?php echo date('d/m/Y', strtotime($start_date)); ?> - <?php echo date('d/m/Y', strtotime($end_date)); ?></span>
+            </div>
+        <?php endif; ?>
+
+        <!-- Days Remaining -->
+        <?php if ($days_remaining > 0): ?>
+            <div class="mb-3">
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <?php echo $days_remaining <= 3 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'; ?>">
+                    <span data-icon="clock" data-size="12" class="mr-1"></span>
+                    Còn <?php echo $days_remaining; ?> ngày
+                </span>
+            </div>
+        <?php endif; ?>
+
+        <!-- Excerpt -->
+        <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+            <?php
+            $excerpt = get_the_excerpt();
+            if (empty($excerpt)) {
+                $excerpt = wp_trim_words(get_the_content(), 15);
+            }
+            echo esc_html($excerpt);
+            ?>
+        </p>
+
+        <!-- Read More Link -->
+        <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm">
+            Xem chi tiết
+            <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
+        </a>
+    </div>
+</article>

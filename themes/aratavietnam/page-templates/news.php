@@ -101,63 +101,11 @@ get_template_part('template-parts/hero');
                     endif;
                     ?>
                 </div>
-                        <div class="mt-8 text-center">
-                                                    <a href="<?php echo home_url('/khuyen-mai'); ?>" class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors duration-300">
-                            Xem tất cả khuyến mãi
-                            <span data-icon="arrow-right" data-size="18" class="ml-2"></span>
-                        </a>
-                        </div>
-                    </div>
-
-                    <!-- Newsletter Signup -->
-                    <div>
-                        <div class="bg-primary/5 rounded-lg p-6 border border-primary/20">
-                            <h3 class="text-2xl font-bold text-gray-900 mb-4">Đăng ký nhận thông báo</h3>
-                            <p class="text-gray-600 mb-6">Nhận thông tin về các chương trình khuyến mãi và ưu đãi đặc biệt từ Arata Vietnam.</p>
-
-                            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="space-y-4">
-                                <input type="hidden" name="action" value="arata_newsletter_submit" />
-                                <?php wp_nonce_field('arata_newsletter_submit', 'arata_newsletter_nonce'); ?>
-
-                                <div>
-                                    <label for="newsletter_name" class="block text-sm font-medium text-gray-700 mb-1">Họ và tên *</label>
-                                    <input id="newsletter_name" name="name" type="text" required class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
-                                </div>
-
-                                <div>
-                                    <label for="newsletter_email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
-                                    <input id="newsletter_email" name="email" type="email" required class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
-                                </div>
-
-                                <div>
-                                    <label for="newsletter_phone" class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
-                                    <input id="newsletter_phone" name="phone" type="tel" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Sở thích sản phẩm</label>
-                                    <div class="space-y-2">
-                                        <label class="flex items-center">
-                                            <input type="checkbox" name="interests[]" value="skincare" class="rounded border-gray-300 text-primary focus:ring-primary" />
-                                            <span class="ml-2 text-sm text-gray-700">Chăm sóc da</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="checkbox" name="interests[]" value="haircare" class="rounded border-gray-300 text-primary focus:ring-primary" />
-                                            <span class="ml-2 text-sm text-gray-700">Chăm sóc tóc</span>
-                                        </label>
-                                        <label class="flex items-center">
-                                            <input type="checkbox" name="interests[]" value="bodycare" class="rounded border-gray-300 text-primary focus:ring-primary" />
-                                            <span class="ml-2 text-sm text-gray-700">Chăm sóc cơ thể</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-dark transition-colors duration-300 font-medium">
-                                    Đăng ký ngay
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+                <div class="mt-8 text-center">
+                    <a href="<?php echo home_url('/khuyen-mai'); ?>" class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors duration-300">
+                        Xem tất cả khuyến mãi
+                        <span data-icon="arrow-right" data-size="18" class="ml-2"></span>
+                    </a>
                 </div>
             </div>
 
@@ -254,35 +202,54 @@ get_template_part('template-parts/hero');
                             if ($blog_posts->have_posts()) :
                                 while ($blog_posts->have_posts()) : $blog_posts->the_post();
                                     ?>
-                                    <article class="bg-white rounded-lg overflow-hidden border border-gray-200 hover:border-primary transition-colors duration-300">
+                                    <article class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
                                         <?php if (has_post_thumbnail()): ?>
                                             <div class="aspect-video overflow-hidden">
                                                 <a href="<?php the_permalink(); ?>">
                                                     <?php the_post_thumbnail('medium', ['class' => 'w-full h-full object-cover hover:scale-105 transition-transform duration-300']); ?>
                                                 </a>
                                             </div>
+                                        <?php else: ?>
+                                            <div class="aspect-video bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
+                                                <div class="text-center">
+                                                    <span data-icon="file-text" data-size="32" class="text-gray-400 mb-2"></span>
+                                                    <p class="text-gray-500 text-sm">Arata Vietnam</p>
+                                                </div>
+                                            </div>
                                         <?php endif; ?>
 
                                         <div class="p-4">
-                                            <div class="flex items-center text-xs text-gray-500 mb-2">
-                                                <span data-icon="calendar" data-size="12" class="mr-1"></span>
+                                            <!-- Meta info -->
+                                            <div class="flex items-center text-xs text-gray-500 mb-3">
+                                                <span data-icon="calendar" data-size="14" class="mr-1"></span>
                                                 <?php echo get_the_date('d/m/Y'); ?>
                                                 <span class="mx-2">•</span>
-                                                <span data-icon="user" data-size="12" class="mr-1"></span>
+                                                <span data-icon="user" data-size="14" class="mr-1"></span>
                                                 <?php the_author(); ?>
                                             </div>
 
-                                            <h4 class="text-base font-semibold text-gray-900 mb-2 line-clamp-2">
+                                            <!-- Title -->
+                                            <h4 class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">
                                                 <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
                                                     <?php the_title(); ?>
                                                 </a>
                                             </h4>
 
-                                            <p class="text-gray-600 text-sm mb-3 line-clamp-3"><?php echo wp_trim_words(get_the_excerpt(), 15); ?></p>
+                                            <!-- Meta Description (Excerpt) -->
+                                            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                                                <?php
+                                                $excerpt = get_the_excerpt();
+                                                if (empty($excerpt)) {
+                                                    $excerpt = wp_trim_words(get_the_content(), 20);
+                                                }
+                                                echo esc_html($excerpt);
+                                                ?>
+                                            </p>
 
-                                            <a href="<?php the_permalink(); ?>" class="text-primary hover:text-primary-dark font-medium text-sm">
+                                            <!-- Read more link -->
+                                            <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm">
                                                 Đọc tiếp
-                                                <span data-icon="arrow-right" data-size="12" class="ml-1"></span>
+                                                <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
                                             </a>
                                         </div>
                                     </article>
@@ -290,50 +257,80 @@ get_template_part('template-parts/hero');
                                 endwhile;
                                 wp_reset_postdata();
                             else:
-                                echo '<div class="col-span-2 text-center text-gray-600">Chưa có bài viết nào.</div>';
+                                ?>
+                                <div class="col-span-2 text-center py-12">
+                                    <div class="text-gray-400 mb-4">
+                                        <span data-icon="file-text" data-size="48"></span>
+                                    </div>
+                                    <h3 class="text-lg font-medium text-gray-900 mb-2">Chưa có bài viết nào</h3>
+                                    <p class="text-gray-600">Hãy quay lại sau để đọc những bài viết mới nhất từ Arata Vietnam.</p>
+                                </div>
+                                <?php
                             endif;
                             ?>
                         </div>
                     </div>
 
                     <!-- Sidebar (1/3 width) -->
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-6">Bài viết khác</h3>
-                        <div class="space-y-4">
-                            <?php
-                            $sidebar_posts = new WP_Query([
-                                'post_type' => 'post',
-                                'posts_per_page' => 8,
-                                'post_status' => 'publish',
-                                'offset' => 6 // Skip the first 6 posts shown in main area
-                            ]);
+                    <div class="lg:col-span-1">
+                        <div class="bg-white rounded-xl p-6 sticky top-8 shadow-sm">
+                            <h3 class="text-xl font-bold text-gray-900 mb-6 pb-3 border-b border-gray-200">
+                                Bài viết được đọc nhiều nhất
+                            </h3>
 
-                            if ($sidebar_posts->have_posts()) :
-                                while ($sidebar_posts->have_posts()) : $sidebar_posts->the_post();
-                                    ?>
-                                    <div class="border-b border-gray-200 pb-3">
-                                        <h5 class="text-sm font-medium text-gray-900 mb-1 line-clamp-2">
-                                            <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
-                                                <?php the_title(); ?>
+                            <div class="space-y-4">
+                                <?php
+                                $sidebar_posts = new WP_Query([
+                                    'post_type' => 'post',
+                                    'posts_per_page' => 5,
+                                    'post_status' => 'publish',
+                                    'meta_key' => 'post_views_count',
+                                    'orderby' => 'meta_value_num',
+                                    'order' => 'DESC',
+                                    'date_query' => [
+                                        ['after' => '1 month ago']
+                                    ]
+                                ]);
+
+                                if ($sidebar_posts->have_posts()) :
+                                    while ($sidebar_posts->have_posts()) : $sidebar_posts->the_post();
+                                        ?>
+                                        <div class="border-b border-gray-100/80 pb-3 mb-3 last:border-b-0 last:pb-0 last:mb-0">
+                                            <a href="<?php the_permalink(); ?>" class="flex items-start space-x-4 group">
+                                                <?php if (has_post_thumbnail()): ?>
+                                                    <div class="flex-shrink-0 w-20 h-16">
+                                                        <?php the_post_thumbnail('thumbnail', ['class' => 'w-full h-full object-cover rounded-md group-hover:opacity-90 transition-opacity']); ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <div class="flex-1">
+                                                    <h4 class="text-sm font-semibold text-gray-900 mb-1 line-clamp-2 leading-relaxed group-hover:text-primary transition-colors">
+                                                        <?php the_title(); ?>
+                                                    </h4>
+                                                    <div class="flex items-center text-xs text-gray-500">
+                                                        <span data-icon="calendar" data-size="12" class="mr-1"></span>
+                                                        <?php echo get_the_date('d/m/Y'); ?>
+                                                    </div>
+                                                </div>
                                             </a>
-                                        </h5>
-                                        <div class="text-xs text-gray-500">
-                                            <span data-icon="calendar" data-size="10" class="mr-1"></span>
-                                            <?php echo get_the_date('d/m/Y'); ?>
                                         </div>
-                                    </div>
+                                        <?php
+                                    endwhile;
+                                    wp_reset_postdata();
+                                else:
+                                    ?>
+                                    <p class="text-gray-600 text-sm">Không có bài viết khác.</p>
                                     <?php
-                                endwhile;
-                                wp_reset_postdata();
-                            endif;
-                            ?>
-                        </div>
+                                endif;
+                                ?>
+                            </div>
 
-                        <div class="mt-6">
-                            <a href="<?php echo home_url('/blog'); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm">
-                                Xem tất cả bài viết
-                                <span data-icon="arrow-right" data-size="14" class="ml-1"></span>
-                            </a>
+                            <!-- View all posts link -->
+                            <div class="mt-6 pt-4 border-t border-gray-200">
+                                <a href="<?php echo home_url('/blog'); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm">
+                                    Xem tất cả bài viết
+                                    <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -383,6 +380,10 @@ get_template_part('template-parts/hero');
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+.sticky {
+    position: sticky;
 }
 
 /* Icon alignment fixes */
