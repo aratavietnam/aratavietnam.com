@@ -18,6 +18,13 @@ get_template_part('template-parts/hero');
 ?>
 
 <main id="site-content" class="bg-white">
+    <?php
+    // Only show the Page Content section if the page has content in the editor.
+    if (have_posts()) {
+        the_post(); // Set up the post data
+        if (trim(get_the_content())) { // Check if there is actual content, not just whitespace
+            rewind_posts(); // Rewind the loop so it can run again below
+    ?>
     <!-- Page Content -->
     <div class="container mx-auto px-4 py-10">
         <div class="max-w-4xl mx-auto">
@@ -32,6 +39,10 @@ get_template_part('template-parts/hero');
             </article>
         </div>
     </div>
+    <?php
+        }
+    }
+    ?>
 
     <!-- News Sections -->
     <div class="bg-gray-50 py-16">

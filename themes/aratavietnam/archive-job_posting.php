@@ -16,17 +16,19 @@ get_template_part('template-parts/hero');
 ?>
 
 <main id="site-content" class="bg-white">
+    <?php
+    $archive_description = get_the_archive_description();
+    if ($archive_description) :
+    ?>
     <!-- Page Content -->
     <div class="container mx-auto px-4 py-10">
         <div class="max-w-4xl mx-auto">
             <div class="prose max-w-none mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">Vị trí tuyển dụng</h2>
-                <p class="text-gray-600 text-lg">
-                    Gia nhập đội ngũ Arata Vietnam và phát triển sự nghiệp trong lĩnh vực hóa mỹ phẩm hàng đầu.
-                </p>
+                <?php echo $archive_description; ?>
             </div>
         </div>
     </div>
+    <?php endif; ?>
 
     <!-- Careers Section -->
     <div class="bg-gray-50 py-16">
