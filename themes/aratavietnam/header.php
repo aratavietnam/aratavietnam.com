@@ -112,12 +112,34 @@
 						</button>
 
 						<!-- Account -->
-						<a href="<?php echo esc_url(wp_login_url()); ?>" class="account-toggle p-2 text-gray-800 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300" aria-label="Tài khoản">
-							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-								<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-								<circle cx="12" cy="7" r="4"></circle>
-							</svg>
-						</a>
+						<?php if (is_user_logged_in()) : ?>
+							<div class="relative group">
+								<button class="account-toggle p-2 text-gray-800 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300" aria-label="Tài khoản">
+									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+										<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+										<circle cx="12" cy="7" r="4"></circle>
+									</svg>
+								</button>
+								<!-- User Dropdown -->
+								<div class="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+									<div class="p-3 border-b border-gray-100">
+										<p class="text-sm font-medium text-gray-900"><?php echo wp_get_current_user()->display_name; ?></p>
+										<p class="text-xs text-gray-500"><?php echo wp_get_current_user()->user_email; ?></p>
+									</div>
+									<div class="py-1">
+										<a href="<?php echo esc_url(get_edit_user_link()); ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Thông tin cá nhân</a>
+										<a href="<?php echo esc_url(wp_logout_url(home_url())); ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Đăng xuất</a>
+									</div>
+								</div>
+							</div>
+						<?php else : ?>
+							<button class="account-toggle p-2 text-gray-800 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300" aria-label="Đăng nhập">
+								<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+									<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+									<circle cx="12" cy="7" r="4"></circle>
+								</svg>
+							</button>
+						<?php endif; ?>
 
 						<!-- Cart (WooCommerce) -->
 						<?php if (class_exists('WooCommerce')) : ?>
@@ -187,7 +209,7 @@
 								// Add toggle button if item has children
 								if ($has_children) {
 									$output .= '<button class="mobile-submenu-toggle p-2 mr-2 text-gray-500 hover:text-primary rounded-md">';
-									$output .= '<svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>';
+									$output .= '<svg class="dropdown-arrow w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>';
 									$output .= '</button>';
 								}
 
@@ -205,13 +227,23 @@
 
 				<!-- Mobile Actions -->
 				<div class="flex items-center justify-center space-x-8 mt-6 pt-6 border-t border-gray-200">
-					<a href="<?php echo esc_url(wp_login_url()); ?>" class="flex flex-col items-center space-y-1 text-gray-600 hover:text-primary transition-colors duration-200">
-						<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-							<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-							<circle cx="12" cy="7" r="4"></circle>
-						</svg>
-						<span class="text-xs font-medium">Tài khoản</span>
-					</a>
+					<?php if (is_user_logged_in()) : ?>
+						<a href="<?php echo esc_url(get_edit_user_link()); ?>" class="flex flex-col items-center space-y-1 text-gray-600 hover:text-primary transition-colors duration-200">
+							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+								<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+								<circle cx="12" cy="7" r="4"></circle>
+							</svg>
+							<span class="text-xs font-medium">Tài khoản</span>
+						</a>
+					<?php else : ?>
+						<button class="account-toggle flex flex-col items-center space-y-1 text-gray-600 hover:text-primary transition-colors duration-200">
+							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+								<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+								<circle cx="12" cy="7" r="4"></circle>
+							</svg>
+							<span class="text-xs font-medium">Đăng nhập</span>
+						</button>
+					<?php endif; ?>
 
 					<?php if (class_exists('WooCommerce')) : ?>
 					<a href="<?php echo esc_url(wc_get_cart_url()); ?>" class="flex flex-col items-center space-y-1 text-gray-600 hover:text-primary transition-colors duration-200 relative">

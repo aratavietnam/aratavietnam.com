@@ -6,8 +6,12 @@
 @import './dropdown-menu.css';
 @import './contact-popup.css';
 
+
+@source '../../**/*.php';
 @source '../../vendor/tailpress/framework/**/*.php';
-@source '../../vendor/tailpress/framework/**/**/*.php';
+@source './**/*.php';
+@source './*.php';
+@source '../resources/js/**/*.js';
 
 @utility container {
   margin-inline: auto;
@@ -370,9 +374,250 @@
 }
 
 .mobile-navigation .sub-menu:not(.hidden) {
-  max-height: 1000px; /* Set a large enough max-height to show all items */
+  max-height: 1000px;
+  /* Set a large enough max-height to show all items */
 }
 
 .mobile-submenu-toggle svg {
   transition: transform 0.3s ease-in-out;
+}
+
+/* WooCommerce Cart Page Styles */
+.woocommerce-cart-form .product-quantity .quantity .input-text {
+  @apply w-16 text-center border-gray-300 rounded-md;
+}
+
+.cart-collaterals .cart_totals {
+  @apply bg-white rounded-lg shadow-md p-6;
+}
+
+.cart-collaterals .cart_totals h2 {
+  @apply text-2xl font-semibold mb-4 text-gray-800;
+}
+
+.cart-collaterals .cart_totals table {
+  @apply w-full;
+}
+
+.cart-collaterals .cart_totals th,
+.cart-collaterals .cart_totals td {
+  @apply py-2 border-b border-gray-200;
+}
+
+.cart-collaterals .cart_totals .order-total th,
+.cart-collaterals .cart_totals .order-total td {
+  @apply text-lg font-bold;
+}
+
+.cart-collaterals .wc-proceed-to-checkout a.checkout-button {
+  @apply block w-full text-center bg-primary text-white py-3 rounded-md mt-4 hover:bg-primary-dark;
+}
+
+/* WooCommerce Cart & Checkout Custom Styles */
+
+/* Form Fields Styling */
+.woocommerce form .form-row input.input-text,
+.woocommerce form .form-row textarea,
+.woocommerce form .form-row select {
+  @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors duration-200;
+}
+
+.woocommerce form .form-row label {
+  @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+.woocommerce form .form-row .required {
+  @apply text-red-500;
+}
+
+/* Quantity Input Styling */
+.woocommerce .quantity input[type="number"] {
+  @apply w-20 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center;
+}
+
+/* Button Styling */
+.woocommerce button.button,
+.woocommerce input.button,
+.woocommerce #respond input#submit {
+  @apply bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 inline-flex items-center justify-center;
+}
+
+.woocommerce button.button.alt,
+.woocommerce input.button.alt,
+.woocommerce #respond input#submit.alt {
+  @apply bg-primary hover:bg-primary-dark;
+}
+
+/* Payment Methods Styling */
+.woocommerce-checkout-payment {
+  @apply space-y-3;
+}
+
+.woocommerce-checkout-payment ul {
+  @apply space-y-2;
+}
+
+.woocommerce-checkout-payment ul li {
+  @apply bg-gray-50 rounded-lg p-3 border border-gray-200;
+}
+
+.woocommerce-checkout-payment ul li label {
+  @apply flex items-center space-x-2 cursor-pointer;
+}
+
+.woocommerce-checkout-payment ul li input[type="radio"] {
+  @apply text-primary focus:ring-primary;
+}
+
+/* Order Review Table */
+.woocommerce-checkout-review-order-table {
+  @apply w-full border-collapse;
+}
+
+.woocommerce-checkout-review-order-table th,
+.woocommerce-checkout-review-order-table td {
+  @apply px-4 py-3 text-left border-b border-gray-200;
+}
+
+.woocommerce-checkout-review-order-table th {
+  @apply font-semibold text-gray-900 bg-gray-50;
+}
+
+.woocommerce-checkout-review-order-table td {
+  @apply text-gray-700;
+}
+
+/* Cart Totals */
+.woocommerce-cart-totals {
+  @apply space-y-3;
+}
+
+.woocommerce-cart-totals .cart-subtotal,
+.woocommerce-cart-totals .order-total {
+  @apply flex justify-between items-center py-2;
+}
+
+.woocommerce-cart-totals .order-total {
+  @apply border-t border-gray-200 pt-4 font-bold text-lg;
+}
+
+/* Empty Cart Styling */
+.woocommerce-cart-is-empty {
+  @apply text-center py-16;
+}
+
+.woocommerce-cart-is-empty .woocommerce-info {
+  @apply bg-blue-50 border border-blue-200 text-blue-800 px-6 py-4 rounded-lg mb-8;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .woocommerce form .form-row {
+    @apply mb-4;
+  }
+
+  .woocommerce-checkout-review-order-table {
+    @apply text-sm;
+  }
+
+  .woocommerce-checkout-review-order-table th,
+  .woocommerce-checkout-review-order-table td {
+    @apply px-2 py-2;
+  }
+}
+
+/* Loading States */
+.woocommerce .blockUI.blockOverlay {
+  @apply bg-white/75;
+}
+
+.woocommerce .blockUI.blockMsg {
+  @apply bg-primary text-white px-6 py-3 rounded-lg shadow-lg;
+}
+
+/* Success/Error Messages */
+.woocommerce-message,
+.woocommerce-info,
+.woocommerce-error {
+  @apply p-4 rounded-lg mb-6 border-l-4;
+}
+
+.woocommerce-message {
+  @apply bg-green-50 border-green-400 text-green-800;
+}
+
+.woocommerce-info {
+  @apply bg-blue-50 border-blue-400 text-blue-800;
+}
+
+.woocommerce-error {
+  @apply bg-red-50 border-red-400 text-red-800;
+}
+
+/* Cart Item Styling */
+.woocommerce-cart-form .cart_item {
+  @apply border-b border-gray-200 last:border-b-0;
+}
+
+.woocommerce-cart-form .product-thumbnail img {
+  @apply rounded-lg border border-gray-200;
+}
+
+/* Checkout Progress */
+.woocommerce-checkout .woocommerce-checkout-review-order {
+  @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+}
+
+/* Form Validation */
+.woocommerce form .form-row.woocommerce-invalid label {
+  @apply text-red-600;
+}
+
+.woocommerce form .form-row.woocommerce-invalid input,
+.woocommerce form .form-row.woocommerce-invalid select,
+.woocommerce form .form-row.woocommerce-invalid textarea {
+  @apply border-red-300 focus:ring-red-500 focus:border-red-500;
+}
+
+.woocommerce form .form-row.woocommerce-validated input,
+.woocommerce form .form-row.woocommerce-validated select,
+.woocommerce form .form-row.woocommerce-validated textarea {
+  @apply border-green-300 focus:ring-green-500 focus:border-green-500;
+}
+
+/* Place Order Button */
+.woocommerce #place_order {
+  @apply w-full bg-primary hover:bg-primary-dark text-white py-4 px-6 rounded-lg font-bold text-lg transition-colors duration-200;
+}
+
+/* Coupon Form */
+.woocommerce .checkout_coupon {
+  @apply bg-gray-50 p-6 rounded-lg border border-gray-200 mb-6;
+}
+
+.woocommerce .checkout_coupon .form-row {
+  @apply mb-4;
+}
+
+/* Shipping Methods */
+.woocommerce-shipping-methods {
+  @apply space-y-2;
+}
+
+.woocommerce-shipping-methods li {
+  @apply flex items-center space-x-2;
+}
+
+.woocommerce-shipping-methods input[type="radio"] {
+  @apply text-primary focus:ring-primary;
+}
+
+/* Order Notes */
+.woocommerce-additional-fields {
+  @apply mt-8;
+}
+
+.woocommerce-additional-fields textarea {
+  @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors duration-200;
+  min-height: 100px;
 }

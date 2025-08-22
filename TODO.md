@@ -10,7 +10,7 @@
 - Remove all emoji icons from project
 - Add WordPress migration plugins
 - Update theme files with modern structure
-- Implement Vietnamese font support
+- Implement Vietnamese font support 
 - Refactor functions.php into modular files
 - Clean up debug code and comments
 
@@ -18,5 +18,9 @@
 - Contact page with form functionality
 - News/Blog section structure
 - Product catalog structure
-- Footer social media icons
+- Footer social media iconsrm
 - Template parts optimization
+
+
+xử lý cho tôi trang chi tiết bài viết theo phong cách và đẹp hơn
+UPDATE all nội dung tin tức các trang

@@ -37,3 +37,48 @@
 @utility aligncenter {
     margin: 0.5rem auto !important;
 }
+
+/* Icon alignment utilities */
+.icon-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-text svg,
+.icon-text img {
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+/* News page icon fixes */
+[data-icon] {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.news-tab-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem;
+}
+
+.news-tab-btn [data-icon] {
+  flex-shrink: 0;
+}
+
+/* Fix icon alignment in flex containers */
+.flex.items-center [data-icon],
+.inline-flex.items-center [data-icon] {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Ensure icons don't break text flow */
+[data-icon] + * {
+  display: inline;
+}

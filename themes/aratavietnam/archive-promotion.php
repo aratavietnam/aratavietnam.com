@@ -41,11 +41,9 @@ get_template_part('template-parts/hero');
     if ($archive_description) :
     ?>
     <!-- Page Content -->
-    <div class="container mx-auto px-4 py-10">
-        <div class="max-w-4xl mx-auto">
-            <div class="prose max-w-none mb-12">
-                <?php echo $archive_description; ?>
-            </div>
+    <div class="container mx-auto px-4 py-12">
+        <div class="prose max-w-none mb-12">
+            <?php echo $archive_description; ?>
         </div>
     </div>
     <?php endif; ?>
@@ -86,69 +84,60 @@ get_template_part('template-parts/hero');
                             'bundle' => 'Combo sản phẩm'
                         ];
                         ?>
-                        <div class="bg-white rounded-lg p-6 border border-gray-200 hover:border-primary transition-colors duration-300">
-                            <div class="flex items-start justify-between mb-4">
-                                <h3 class="text-xl font-semibold text-gray-900 flex-1">
-                                    <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
-                                        <?php the_title(); ?>
+                        <div class="bg-white rounded-lg border border-gray-200 hover:border-primary transition-colors duration-300 flex flex-col md:flex-row overflow-hidden">
+                            <!-- Image Column -->
+                            <div class="md:w-1/3 lg:w-2/5 flex-shrink-0">
+                                <?php if (has_post_thumbnail()) : ?>
+                                    <a href="<?php the_permalink(); ?>" class="block h-full aspect-video md:aspect-auto">
+                                        <?php the_post_thumbnail('medium_large', ['class' => 'w-full h-full object-cover']); ?>
                                     </a>
-                                </h3>
-                                <?php if ($discount): ?>
-                                    <span class="bg-primary text-white px-4 py-2 rounded-full text-sm font-bold ml-4">
-                                        <?php echo esc_html($discount); ?>
-                                    </span>
+                                <?php else : ?>
+                                    <div class="h-full bg-gray-100 flex items-center justify-center aspect-video md:aspect-auto">
+                                        <span data-icon="gift" data-size="32" class="text-gray-400"></span>
+                                    </div>
                                 <?php endif; ?>
                             </div>
 
-                            <?php if ($type && isset($type_labels[$type])): ?>
-                                <div class="mb-3">
-                                    <span class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
-                                        <?php echo esc_html($type_labels[$type]); ?>
-                                    </span>
+                            <!-- Content Column -->
+                            <div class="p-6 flex-grow flex flex-col">
+                                <div class="flex items-start justify-between mb-4">
+                                    <h3 class="text-xl font-semibold text-gray-900 flex-1">
+                                        <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
+                                            <?php the_title(); ?>
+                                        </a>
+                                    </h3>
+                                    <?php if ($discount): ?>
+                                        <span class="bg-primary text-white px-4 py-2 rounded-full text-sm font-bold ml-4 flex-shrink-0">
+                                            <?php echo esc_html($discount); ?>
+                                        </span>
+                                    <?php endif; ?>
                                 </div>
-                            <?php endif; ?>
 
-                            <?php if ($code): ?>
-                                <div class="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-300">
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-sm text-gray-600">Mã khuyến mãi:</span>
-                                        <code class="bg-primary text-white px-3 py-1 rounded font-mono text-sm font-bold"><?php echo esc_html($code); ?></code>
+                                <?php if ($type && isset($type_labels[$type])): ?>
+                                    <div class="mb-3">
+                                        <span class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
+                                            <?php echo esc_html($type_labels[$type]); ?>
+                                        </span>
                                     </div>
-                                </div>
-                            <?php endif; ?>
+                                <?php endif; ?>
 
-                            <div class="space-y-3 mb-6">
+                                <div class="prose text-sm text-gray-600 mb-6 flex-grow">
+                                    <?php the_excerpt(); ?>
+                                </div>
+
                                 <?php if ($start_date && $end_date): ?>
-                                    <div class="flex items-center text-sm text-gray-600">
+                                    <div class="flex items-center text-sm text-gray-600 mb-4">
                                         <span data-icon="calendar" data-size="16" class="text-gray-400 mr-2"></span>
-                                        Từ <?php echo date('d/m/Y', strtotime($start_date)); ?> đến <?php echo date('d/m/Y', strtotime($end_date)); ?>
+                                        <strong>Thời gian:</strong>&nbsp;<span>Từ <?php echo date('d/m/Y', strtotime($start_date)); ?> đến <?php echo date('d/m/Y', strtotime($end_date)); ?></span>
                                     </div>
                                 <?php endif; ?>
 
-                                <?php if ($products): ?>
-                                    <div class="flex items-start text-sm text-gray-600">
-                                        <span data-icon="package" data-size="16" class="text-gray-400 mr-2 mt-0.5"></span>
-                                        <span class="flex-1"><?php echo esc_html($products); ?></span>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-
-                            <div class="prose text-sm text-gray-600 mb-6">
-                                <?php the_excerpt(); ?>
-                            </div>
-
-                            <?php if ($conditions): ?>
-                                <div class="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                                    <h4 class="font-semibold text-yellow-800 mb-2">Điều kiện áp dụng:</h4>
-                                    <p class="text-sm text-yellow-700"><?php echo esc_html($conditions); ?></p>
+                                <div class="pt-4 border-t border-gray-200 mt-auto">
+                                    <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm">
+                                        Xem chi tiết
+                                        <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
+                                    </a>
                                 </div>
-                            <?php endif; ?>
-
-                            <div class="pt-4 border-t border-gray-200">
-                                <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm">
-                                    Xem chi tiết
-                                    <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
-                                </a>
                             </div>
                         </div>
                     <?php endwhile;
@@ -190,7 +179,7 @@ get_template_part('template-parts/hero');
         <div class="container mx-auto px-4">
             <div class="max-w-2xl mx-auto text-center">
                 <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span data-icon="bell" data-size="32" class="text-primary"></span>
+                    <span data-icon="mail" data-size="32" class="text-primary"></span>
                 </div>
                 <h3 class="text-2xl font-bold text-gray-900 mb-4">Đăng ký nhận thông báo khuyến mãi</h3>
                 <p class="text-gray-600 mb-8">

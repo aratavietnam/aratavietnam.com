@@ -105,19 +105,40 @@ footer .menu-item-has-children > a,
   color: #059669 !important;
 }
 
+/* The overly broad '.group:hover svg' rule was removed to prevent unintended icon rotations. More specific selectors are now used for menu arrows. */
+
 /* Simple dropdown arrow styling */
-.menu-item svg,
-.menu-item-has-children svg {
+.dropdown-arrow {
   width: 16px;
   height: 16px;
   transition: transform 0.2s ease;
 }
 
-.menu-item:hover svg,
-.menu-item-has-children:hover svg,
-.menu-item.show svg,
-.group:hover svg {
+/* Only rotate arrows within the main navigation on hover */
+#site-navigation .menu-item:hover .dropdown-arrow {
   transform: rotate(180deg);
+}
+
+/* Mobile menu arrow rotation */
+.mobile-submenu-toggle.active svg {
+    transform: rotate(180deg);
+}
+
+/* Simple dropdown arrow styling */
+.dropdown-arrow {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+/* Only rotate arrows within the main navigation on hover */
+#site-navigation .menu-item:hover .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+/* Mobile menu arrow rotation */
+.mobile-submenu-toggle.active svg {
+    transform: rotate(180deg);
 }
 
 /* Mobile menu dropdown styling */
@@ -206,10 +227,7 @@ li.dropdown-item a:hover {
   padding-left: 24px !important;
 }
 
-/* Arrow rotation animation */
-.group:hover svg {
-  transform: rotate(180deg);
-}
+
 
 /* Ensure proper stacking */
 .site-header {

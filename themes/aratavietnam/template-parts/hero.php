@@ -1,6 +1,6 @@
 <?php
 /**
- * Reusable Hero section
+ * Compact Hero section - Optimized for smaller, elegant appearance
  */
 
 if (!defined('ABSPATH')) { exit; }
@@ -10,24 +10,28 @@ $hero_title = get_query_var('subtitle');
 $hero_description = get_query_var('description');
 ?>
 
-<section class="relative bg-gradient-to-br from-primary/5 via-white to-secondary/5 border-b border-gray-200">
-    <div class="absolute inset-0 bg-gradient-to-r from-primary/3 to-transparent"></div>
-    <div class="relative container mx-auto px-4 py-16 sm:py-20">
-        <div class="max-w-4xl">
-            <div class="flex items-center mb-4">
-                <div class="w-12 h-1 bg-primary rounded-full mr-4"></div>
-                <span class="text-primary font-medium text-sm uppercase tracking-wider"><?php echo esc_html($page_title); ?></span>
+<section class="relative bg-gradient-to-r from-primary/3 via-white to-secondary/3 border-b border-gray-100">
+    <div class="absolute inset-0 bg-white/80 backdrop-blur-sm"></div>
+    <div class="relative container mx-auto px-4 py-8 sm:py-12">
+        <div class="max-w-3xl mx-auto text-center">
+            <!-- Compact title indicator -->
+            <div class="inline-flex items-center mb-3">
+                <div class="w-8 h-0.5 bg-primary rounded-full mr-3"></div>
+                <span class="text-primary font-medium text-xs uppercase tracking-widest"><?php echo esc_html($page_title); ?></span>
+                <div class="w-8 h-0.5 bg-primary rounded-full ml-3"></div>
             </div>
 
-            <h1 class="text-4xl sm:text-6xl font-bold text-gray-900 leading-tight mb-6">
+            <!-- Smaller, more elegant title -->
+            <h1 class="text-2xl sm:text-4xl font-bold text-gray-900 leading-tight mb-4">
                 <?php echo esc_html($hero_title); ?>
             </h1>
 
             <?php if (!empty($hero_description)) : ?>
-                <p class="text-xl text-gray-600 leading-relaxed max-w-2xl">
+                <!-- Compact description -->
+                <p class="text-base sm:text-lg text-gray-600 leading-relaxed max-w-xl mx-auto">
                     <?php echo wp_kses_post($hero_description); ?>
                 </p>
             <?php endif; ?>
-		</div>
-	</div>
+        </div>
+    </div>
 </section>

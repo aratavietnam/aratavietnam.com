@@ -11,7 +11,7 @@ get_header();
     <!-- Hero Section -->
     <section class="relative bg-black text-white">
         <div class="container mx-auto px-4 py-20 sm:py-32">
-            <div class="max-w-4xl mx-auto text-center">
+            <div class="text-center">
                 <h1 class="text-4xl sm:text-6xl font-bold mb-6 leading-tight">
                     <?php echo esc_html( get_bloginfo( 'name' ) ); ?>
                 </h1>
@@ -50,7 +50,7 @@ get_header();
             <?php if ( $featured_query->have_posts() ) : ?>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <?php while ( $featured_query->have_posts() ) : $featured_query->the_post(); ?>
-                        <article class="group bg-white border border-gray-200 hover:border-gray-400 transition-all duration-300 rounded-xl overflow-hidden">
+                        <article class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-transform duration-300 transform hover:-translate-y-1 border border-gray-100">
                             <div class="relative overflow-hidden">
                                 <?php if ( has_post_thumbnail() ) : ?>
                                     <?php the_post_thumbnail( 'medium_large', [ 'class' => 'w-full h-48 object-cover' ] ); ?>

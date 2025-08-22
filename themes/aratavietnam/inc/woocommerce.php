@@ -17,10 +17,7 @@ add_action('wp_ajax_get_cart_contents', 'aratavietnam_get_cart_contents');
 add_action('wp_ajax_nopriv_get_cart_contents', 'aratavietnam_get_cart_contents');
 
 function aratavietnam_get_cart_contents() {
-    // Verify nonce for security
-    if (!wp_verify_nonce($_POST['nonce'], 'wc_add_to_cart_nonce')) {
-        wp_die('Security check failed');
-    }
+
 
 
     if (!class_exists('WooCommerce')) {
@@ -46,20 +43,28 @@ function aratavietnam_get_cart_contents() {
         $product_id = $cart_item['product_id'];
         $quantity = $cart_item['quantity'];
 
+        $_product = apply_filters('woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key);
+        $product_id = apply_filters('woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key);
+
+        $product_image_id = $_product->get_image_id();
+        $product_image_url = $product_image_id
+            ? wp_get_attachment_image_url($product_image_id, 'thumbnail')
+            : wc_placeholder_img_src();
+
         $cart_items[] = array(
             'key' => $cart_item_key,
-            'name' => $product->get_name(),
-            'quantity' => $quantity,
-            'price' => wc_price($product->get_price() * $quantity),
-            'image' => wp_get_attachment_image_url($product->get_image_id(), 'thumbnail'),
+            'name' => $_product->get_name(),
+            'quantity' => $cart_item['quantity'],
+            'price' => apply_filters('woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal($_product, $cart_item['quantity']), $cart_item, $cart_item_key),
+            'image' => $product_image_url,
             'url' => get_permalink($product_id)
         );
     }
 
     wp_send_json_success(array(
         'count' => $cart->get_cart_contents_count(),
-        'total' => wc_price($cart->get_cart_total()),
-        'subtotal' => wc_price($cart->get_subtotal()),
+        'total' => $cart->get_cart_total(),
+        'subtotal' => $cart->get_cart_subtotal(),
         'items' => $cart_items
     ));
 }
@@ -142,3 +147,19 @@ function aratavietnam_woocommerce_products_per_page() {
     return 12; // 12 products per page
 }
 add_filter('loop_shop_per_page', 'aratavietnam_woocommerce_products_per_page', 20);
+
+/**
+ * Enqueue WooCommerce AJAX scripts and localize data
+ */
+function aratavietnam_enqueue_wc_cart_scripts() {
+    if (class_exists('WooCommerce')) {
+        wp_localize_script('aratavietnam-app', 'wc_add_to_cart_params', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'wc_ajax_nonce' => wp_create_nonce('wc_add_to_cart_nonce'),
+            'cart_url' => wc_get_cart_url(),
+            'is_cart' => is_cart(),
+            'cart_redirect_after_add' => get_option('woocommerce_cart_redirect_after_add')
+        ));
+    }
+}
+add_action('wp_enqueue_scripts', 'aratavietnam_enqueue_wc_cart_scripts');

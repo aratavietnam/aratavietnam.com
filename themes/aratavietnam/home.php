@@ -8,21 +8,34 @@ get_header();
 ?>
 
 <main id="site-content" class="min-h-screen bg-white">
-    <!-- Hero Section -->
-    <section class="relative bg-black text-white">
-        <div class="container mx-auto px-4 py-20 sm:py-32">
-            <div class="max-w-4xl mx-auto text-center">
-                <h1 class="text-4xl sm:text-6xl font-bold mb-6 leading-tight">
+    <!-- Compact Hero Section -->
+    <section class="relative bg-gradient-to-br from-primary via-secondary to-tertiary text-white">
+        <div class="absolute inset-0 bg-black/20"></div>
+        <div class="relative container mx-auto px-4 py-12 sm:py-16">
+            <div class="text-center">
+                <!-- Elegant brand indicator -->
+                <div class="inline-flex items-center mb-4">
+                    <div class="w-6 h-0.5 bg-white/60 rounded-full mr-3"></div>
+                    <span class="text-white/80 font-medium text-xs uppercase tracking-widest">Arata Vietnam</span>
+                    <div class="w-6 h-0.5 bg-white/60 rounded-full ml-3"></div>
+                </div>
+
+                <!-- Compact title -->
+                <h1 class="text-3xl sm:text-5xl font-bold mb-4 leading-tight">
                     <?php echo esc_html( get_bloginfo( 'name' ) ); ?>
                 </h1>
-                <p class="text-xl sm:text-2xl mb-8 text-gray-300 leading-relaxed">
+
+                <!-- Smaller description -->
+                <p class="text-lg sm:text-xl mb-6 text-white/90 leading-relaxed max-w-2xl mx-auto">
                     <?php echo esc_html( get_bloginfo( 'description' ) ); ?>
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="#posts" class="inline-flex items-center px-8 py-4 bg-white text-black font-semibold hover:bg-gray-100 transition-all duration-300 rounded-lg no-underline">
+
+                <!-- Compact buttons -->
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <a href="#posts" class="inline-flex items-center px-6 py-3 bg-white text-primary font-semibold hover:bg-gray-100 transition-all duration-300 rounded-lg no-underline text-sm">
                         Khám phá ngay
                     </a>
-                    <a href="<?php echo esc_url( home_url( '/wp-admin' ) ); ?>" class="inline-flex items-center px-8 py-4 border border-white text-white hover:bg-white hover:text-black transition-all duration-300 rounded-lg no-underline">
+                    <a href="<?php echo esc_url( home_url( '/wp-admin' ) ); ?>" class="inline-flex items-center px-6 py-3 border border-white/30 text-white hover:bg-white hover:text-primary transition-all duration-300 rounded-lg no-underline text-sm">
                         Quản trị
                     </a>
                 </div>

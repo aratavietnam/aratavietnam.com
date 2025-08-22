@@ -41,18 +41,16 @@ get_template_part('template-parts/hero');
             rewind_posts(); // Rewind the loop so it can run again below
     ?>
     <!-- Page Content -->
-    <div class="container mx-auto px-4 py-10">
-        <div class="max-w-4xl mx-auto">
-            <article id="post-<?php the_ID(); ?>" <?php post_class('prose max-w-none mb-12'); ?>>
-                <div class="entry-content">
-                    <?php
-                    while (have_posts()) : the_post();
-                        the_content();
-                    endwhile;
-                    ?>
-                </div>
-            </article>
-        </div>
+    <div class="container mx-auto px-4 py-12">
+        <article id="post-<?php the_ID(); ?>" <?php post_class('prose max-w-none mb-12'); ?>>
+            <div class="entry-content">
+                <?php
+                while (have_posts()) : the_post();
+                    the_content();
+                endwhile;
+                ?>
+            </div>
+        </article>
     </div>
     <?php
         }
@@ -91,7 +89,7 @@ get_template_part('template-parts/hero');
                         if ($blog_posts->have_posts()) :
                             while ($blog_posts->have_posts()) : $blog_posts->the_post();
                                 ?>
-                                <article class="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-300">
+                                <article class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
                                     <?php if (has_post_thumbnail()): ?>
                                         <div class="aspect-video overflow-hidden">
                                             <a href="<?php the_permalink(); ?>">
@@ -101,7 +99,7 @@ get_template_part('template-parts/hero');
                                     <?php else: ?>
                                         <div class="aspect-video bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
                                             <div class="text-center">
-                                                <span data-icon="image" data-size="32" class="text-gray-400 mb-2"></span>
+                                                <span data-icon="file-text" data-size="32" class="text-gray-400 mb-2"></span>
                                                 <p class="text-gray-500 text-sm">Arata Vietnam</p>
                                             </div>
                                         </div>
@@ -194,39 +192,45 @@ get_template_part('template-parts/hero');
 
                 <!-- Right Side: Vertical Sidebar (titles only) -->
                 <div class="lg:col-span-1">
-                    <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200 sticky top-8">
+                    <div class="bg-white rounded-xl p-6 sticky top-8 shadow-sm">
                         <h3 class="text-xl font-bold text-gray-900 mb-6 pb-3 border-b border-gray-200">
-                            Bài viết khác
+                            Bài viết được đọc nhiều nhất
                         </h3>
 
                         <div class="space-y-4">
                             <?php
                             $sidebar_posts = new WP_Query([
                                 'post_type' => 'post',
-                                'posts_per_page' => 10,
+                                'posts_per_page' => 5,
                                 'post_status' => 'publish',
-                                'offset' => 6, // Skip the first 6 posts shown in main area
-                                'meta_query' => [
-                                    [
-                                        'key' => '_thumbnail_id',
-                                        'compare' => 'EXISTS'
-                                    ]
+                                'meta_key' => 'post_views_count',
+                                'orderby' => 'meta_value_num',
+                                'order' => 'DESC',
+                                'date_query' => [
+                                    ['after' => '1 month ago']
                                 ]
                             ]);
 
                             if ($sidebar_posts->have_posts()) :
                                 while ($sidebar_posts->have_posts()) : $sidebar_posts->the_post();
                                     ?>
-                                    <div class="border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">
-                                        <h4 class="text-sm font-medium text-gray-900 mb-2 line-clamp-2 leading-relaxed">
-                                            <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
-                                                <?php the_title(); ?>
-                                            </a>
-                                        </h4>
-                                        <div class="flex items-center text-xs text-gray-500">
-                                            <span data-icon="calendar" data-size="12" class="mr-1"></span>
-                                            <?php echo get_the_date('d/m/Y'); ?>
-                                        </div>
+                                    <div class="border-b border-gray-100/80 pb-3 mb-3 last:border-b-0 last:pb-0 last:mb-0">
+                                        <a href="<?php the_permalink(); ?>" class="flex items-start space-x-4 group">
+                                            <?php if (has_post_thumbnail()): ?>
+                                                <div class="flex-shrink-0 w-20 h-16">
+                                                    <?php the_post_thumbnail('thumbnail', ['class' => 'w-full h-full object-cover rounded-md group-hover:opacity-90 transition-opacity']); ?>
+                                                </div>
+                                            <?php endif; ?>
+                                            <div class="flex-1">
+                                                <h4 class="text-sm font-semibold text-gray-900 mb-1 line-clamp-2 leading-relaxed group-hover:text-primary transition-colors">
+                                                    <?php the_title(); ?>
+                                                </h4>
+                                                <div class="flex items-center text-xs text-gray-500">
+                                                    <span data-icon="calendar" data-size="12" class="mr-1"></span>
+                                                    <?php echo get_the_date('d/m/Y'); ?>
+                                                </div>
+                                            </div>
+                                        </a>
                                     </div>
                                     <?php
                                 endwhile;

@@ -92,13 +92,16 @@ function arata_handle_job_application() {
     $name = isset($_POST['name']) ? sanitize_text_field(wp_unslash($_POST['name'])) : '';
     $email = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
     $phone = isset($_POST['phone']) ? sanitize_text_field(wp_unslash($_POST['phone'])) : '';
-    $position = isset($_POST['position']) ? sanitize_text_field(wp_unslash($_POST['position'])) : '';
+    $job_id = isset($_POST['job_id']) ? absint($_POST['job_id']) : 0;
     $cover_letter = isset($_POST['cover_letter']) ? wp_kses_post(wp_unslash($_POST['cover_letter'])) : '';
 
-    if (empty($name) || empty($email) || empty($phone) || empty($position)) {
+    if (empty($name) || empty($email) || empty($phone) || empty($job_id)) {
         wp_safe_redirect(add_query_arg('job_application', 'error', $referer));
         exit;
     }
+
+    // Get position from job posting
+    $position = get_the_title($job_id);
 
     $post_id = wp_insert_post([
         'post_type' => 'job_application',

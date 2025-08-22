@@ -19,67 +19,48 @@ get_template_part('template-parts/hero');
 
 <main id="site-content" class="bg-white">
 	<!-- Product Categories Section -->
-	<section class="py-12 bg-blue-50">
+	<section class="py-12 bg-light">
 		<div class="container mx-auto px-4">
 			<div class="text-center mb-8">
-				<h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-4">BỘ SẢN PHẨM</h2>
+				<h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">BỘ SẢN PHẨM</h2>
 				<p class="text-gray-600 max-w-2xl mx-auto">Khám phá 8 bộ sản phẩm chất lượng cao từ Arata Nhật Bản</p>
 			</div>
 
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+			<div class="max-w-md mx-auto">
 				<?php
-				// Get product categories
 				$product_categories = get_terms(array(
-					'taxonomy' => 'product_cat',
+					'taxonomy'   => 'product_cat',
 					'hide_empty' => false,
-					'parent' => 0,
-					'number' => 8
+					'parent'     => 0,
+					'number'     => 8
 				));
 
 				if (!empty($product_categories) && !is_wp_error($product_categories)) :
-					foreach ($product_categories as $category) :
-						$thumbnail_id = get_term_meta($category->term_id, 'thumbnail_id', true);
-						$image_url = $thumbnail_id ? wp_get_attachment_url($thumbnail_id) : wc_placeholder_img_src();
 				?>
-					<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-						<div class="aspect-square overflow-hidden">
-							<img src="<?php echo esc_url($image_url); ?>"
-								 alt="<?php echo esc_attr($category->name); ?>"
-								 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
-						</div>
-						<div class="p-4">
-							<h3 class="text-lg font-semibold text-gray-900 mb-2"><?php echo esc_html($category->name); ?></h3>
-							<p class="text-sm text-gray-600 mb-3"><?php echo esc_html($category->description); ?></p>
-							<a href="<?php echo esc_url(get_term_link($category)); ?>"
-							   class="inline-flex items-center text-orange-500 hover:text-orange-600 font-medium">
-								Xem sản phẩm
-								<svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-								</svg>
-							</a>
-						</div>
-					</div>
-				<?php
-					endforeach;
-				else :
-				?>
-					<div class="col-span-full text-center py-8">
-						<p class="text-gray-500">Chưa có danh mục sản phẩm nào.</p>
-					</div>
+					<select id="category-select" onchange="if (this.value) window.location.href=this.value" class="block w-full p-3 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary">
+						<option value="">Chọn một bộ sản phẩm</option>
+						<?php foreach ($product_categories as $category) : ?>
+							<option value="<?php echo esc_url(get_term_link($category)); ?>">
+								<?php echo esc_html($category->name); ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+				<?php else : ?>
+					<p class="text-center text-gray-500">Chưa có danh mục sản phẩm nào.</p>
 				<?php endif; ?>
 			</div>
 		</div>
 	</section>
 
 	<!-- Featured Products Section -->
-	<section class="py-12 bg-blue-600">
+	<section class="py-12 bg-secondary">
 		<div class="container mx-auto px-4">
 			<div class="text-center mb-8">
-				<h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-4">SẢN PHẨM NỔI BẬT</h2>
+				<h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">SẢN PHẨM NỔI BẬT</h2>
 				<p class="text-white max-w-2xl mx-auto">Những sản phẩm được yêu thích nhất từ Arata</p>
 			</div>
 
-			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
 				<?php
 				// Get featured products (4x2 grid = 8 products)
 				$featured_args = array(
@@ -138,27 +119,54 @@ get_template_part('template-parts/hero');
 	<section class="py-12 bg-white">
 		<div class="container mx-auto px-4">
 			<div class="text-center mb-8">
-				<h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-4">TẤT CẢ SẢN PHẨM</h2>
+				<h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">TẤT CẢ SẢN PHẨM</h2>
 				<p class="text-gray-600 max-w-2xl mx-auto">Toàn bộ sản phẩm chất lượng cao từ Arata Nhật Bản</p>
 			</div>
 
-			<!-- Product Filter -->
-			<div class="flex flex-wrap justify-center gap-4 mb-8">
-				<button class="filter-btn active bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600 transition-colors" data-filter="*">
-					Tất cả
+			<!-- Product Categories Carousel -->
+			<div class="relative mb-8">
+				<div class="overflow-hidden">
+					<div class="flex space-x-6 pb-4" id="categories-carousel">
+						<?php
+						if (!empty($product_categories) && !is_wp_error($product_categories)) :
+							foreach ($product_categories as $category) :
+								$thumbnail_id = get_term_meta($category->term_id, 'thumbnail_id', true);
+								$category_link = get_term_link($category);
+						?>
+							<div class="flex-shrink-0 w-64">
+								<a href="<?php echo esc_url($category_link); ?>" class="block bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+									<div class="aspect-square overflow-hidden">
+										<?php if ($thumbnail_id) : ?>
+											<?php echo wp_get_attachment_image($thumbnail_id, 'medium', false, array('class' => 'w-full h-full object-cover hover:scale-105 transition-transform duration-300')); ?>
+										<?php else : ?>
+											<div class="w-full h-full bg-gradient-to-br from-primary-light to-secondary-light flex items-center justify-center">
+												<span class="text-primary font-semibold text-lg"><?php echo esc_html($category->name); ?></span>
+											</div>
+										<?php endif; ?>
+									</div>
+									<div class="p-4 text-center">
+										<h3 class="font-semibold text-gray-800 mb-1"><?php echo esc_html($category->name); ?></h3>
+										<p class="text-sm text-gray-500"><?php echo esc_html($category->count); ?> sản phẩm</p>
+									</div>
+								</a>
+							</div>
+						<?php
+							endforeach;
+						endif; ?>
+					</div>
+				</div>
+
+				<!-- Carousel Navigation -->
+				<button class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white rounded-full p-2 shadow-md hover:shadow-lg transition-shadow duration-300 z-10" id="carousel-prev-btn">
+					<svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+					</svg>
 				</button>
-				<?php
-				if (!empty($product_categories) && !is_wp_error($product_categories)) :
-					foreach (array_slice($product_categories, 0, 5) as $category) :
-				?>
-					<button class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-full hover:bg-orange-500 hover:text-white transition-colors"
-							data-filter=".cat-<?php echo esc_attr($category->slug); ?>">
-						<?php echo esc_html($category->name); ?>
-					</button>
-				<?php
-					endforeach;
-				endif;
-				?>
+				<button class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white rounded-full p-2 shadow-md hover:shadow-lg transition-shadow duration-300 z-10" id="carousel-next-btn">
+					<svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+					</svg>
+				</button>
 			</div>
 
 			<!-- Products Grid -->
@@ -221,13 +229,13 @@ get_template_part('template-parts/hero');
 
 						<div class="p-4">
 							<h3 class="text-sm font-semibold text-gray-900 mb-2 line-clamp-2 h-10">
-								<a href="<?php the_permalink(); ?>" class="hover:text-orange-500 transition-colors">
+								<a href="<?php the_permalink(); ?>" class="hover:text-primary-dark transition-colors">
 									<?php the_title(); ?>
 								</a>
 							</h3>
 
 							<div class="flex items-center justify-between mb-2">
-								<div class="text-orange-500 font-bold text-sm">
+								<div class="text-primary font-bold text-sm">
 									<?php echo $product->get_price_html(); ?>
 								</div>
 
@@ -240,7 +248,7 @@ get_template_part('template-parts/hero');
 							</div>
 
 							<?php if ($product->is_in_stock()) : ?>
-								<button class="w-full bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded text-sm transition-colors duration-200 add-to-cart-btn"
+								<button class="w-full bg-primary hover:bg-primary-dark text-white px-3 py-2 rounded text-sm transition-colors duration-200 add-to-cart-btn"
 										data-product-id="<?php echo esc_attr($product->get_id()); ?>">
 									<?php echo esc_html__('Thêm vào giỏ', 'aratavietnam'); ?>
 								</button>
@@ -477,3 +485,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 });
 </script>
+
+
+<?php get_footer(); ?>

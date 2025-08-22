@@ -85,7 +85,7 @@ class Arata_Dropdown_Walker extends Walker_Nav_Menu {
 
         // Add dropdown arrow for parent items (responsive)
         if ($depth === 0 && $has_children) {
-            $item_output .= '<svg style="width: 16px; height: 16px; transition: transform 0.2s ease; flex-shrink: 0; margin-left: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            $item_output .= '<svg class="dropdown-arrow" style="width: 16px; height: 16px; transition: transform 0.2s ease; flex-shrink: 0; margin-left: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
             </svg>';
         }

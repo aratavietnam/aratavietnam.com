@@ -20,17 +20,15 @@ get_template_part('template-parts/hero');
 <main id="site-content" class="bg-white">
     <!-- Page Content -->
     <div class="container mx-auto px-4 py-10">
-        <div class="max-w-4xl mx-auto">
-            <article id="post-<?php the_ID(); ?>" <?php post_class('prose max-w-none mb-12'); ?>>
-                <div class="entry-content">
-                    <?php
-                    while (have_posts()) : the_post();
-                        the_content();
-                    endwhile;
-                    ?>
-                </div>
-            </article>
-        </div>
+        <article id="post-<?php the_ID(); ?>" <?php post_class('prose max-w-none mb-12'); ?>>
+            <div class="entry-content">
+                <?php
+                while (have_posts()) : the_post();
+                    the_content();
+                endwhile;
+                ?>
+            </div>
+        </article>
     </div>
 
     <!-- Promotions Section -->

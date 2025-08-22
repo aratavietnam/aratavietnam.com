@@ -4,6 +4,24 @@ import './icons.js';
 // Import Contact Popup
 import './contact-popup.js';
 
+// Import Auth Popup
+import './auth-popup.js';
+
+// Helper function to get theme directory URI
+function getThemeDirectoryUri() {
+  // Try to get from WordPress localized data, fallback to relative path
+  if (window.arataThemeData && window.arataThemeData.themeUri) {
+    return window.arataThemeData.themeUri;
+  }
+  // Fallback to relative path
+  return '/wp-content/themes/aratavietnam';
+}
+
+// Helper function to get placeholder image
+function getPlaceholderImage() {
+  return getThemeDirectoryUri() + '/assets/images/placeholder.jpg';
+}
+
 // Font Loading Detection for Google Fonts
 function detectFontLoading() {
   // Check if Font Loading API is supported
@@ -272,18 +290,30 @@ function initSearch() {
   }
 
   function performSearch(query) {
-    // AJAX search request to WordPress
-    fetch(`${window.location.origin}/wp-json/wp/v2/search?search=${encodeURIComponent(query)}&per_page=5`)
-      .then(response => response.json())
+    // Use custom search endpoint with featured images
+    const apiUrl = window.arataThemeData?.searchApiUrl || `${window.location.origin}/wp-json/aratavietnam/v1/search`;
+    const searchUrl = `${apiUrl}?search=${encodeURIComponent(query)}&per_page=5`;
+
+    console.log('Header search URL:', searchUrl); // Debug log
+
+    fetch(searchUrl)
+      .then(response => {
+        console.log('Header search response:', response); // Debug log
+        return response.json();
+      })
       .then(data => {
+        console.log('Header search data received:', data); // Debug log
         displaySearchResults(data, query)
       })
       .catch(error => {
+        console.error('Header search error:', error); // Debug log
         showSearchError()
       })
   }
 
   function displaySearchResults(results, query) {
+    console.log('Header search results:', results); // Debug log
+
     if (results.length === 0) {
       searchResults.innerHTML = `
                 <div class="p-4 text-center text-gray-500">
@@ -295,17 +325,36 @@ function initSearch() {
       let resultsHTML = '<div class="py-2">'
 
       results.forEach(result => {
-        resultsHTML += `
-                    <a href="${result.url}" class="block px-4 py-3 hover:bg-gray-50 transition-colors duration-200">
+        console.log('Processing header result:', result); // Debug log
+
+        // Ensure we have image data
+        const imageUrl = result.featured_image_thumbnail || result.featured_image || getPlaceholderImage();
+        const typeLabel = result.type_label || result.type || 'Nội dung';
+        const excerpt = result.excerpt || 'Không có mô tả';
+        const date = result.date || '';
+
+        const resultHTML = `
+                    <a href="${result.url}" class="search-results-item block px-4 py-3 hover:bg-gray-50 transition-colors duration-200">
                         <div class="flex items-start space-x-3">
-                            <div class="flex-1">
+                            <div class="flex-shrink-0">
+                                <img src="${imageUrl}"
+                                     alt="${result.title}"
+                                     class="search-results-image w-12 h-12 object-cover rounded-lg"
+                                     onerror="this.src='${getPlaceholderImage()}'">
+                            </div>
+                            <div class="flex-1 min-w-0">
                                 <h4 class="text-sm font-medium text-gray-900 line-clamp-1">${result.title}</h4>
-                                <p class="text-xs text-gray-500 mt-1 line-clamp-2">${result.excerpt || 'Không có mô tả'}</p>
-                                <span class="text-xs text-primary mt-1 inline-block">${getPostTypeLabel(result.subtype)}</span>
+                                <p class="text-xs text-gray-500 mt-1 line-clamp-2">${excerpt}</p>
+                                <div class="search-result-meta mt-1">
+                                    <span class="search-result-type text-primary">${typeLabel}</span>
+                                    ${date ? `<span class="separator">•</span><span>${date}</span>` : ''}
+                                </div>
                             </div>
                         </div>
-                    </a>
-                `
+                    </a>`;
+
+        console.log('Generated header HTML for result:', resultHTML); // Debug log
+        resultsHTML += resultHTML;
       })
 
       resultsHTML += `
@@ -454,7 +503,7 @@ function initSearch() {
     }
 
     function performModalSearch(query) {
-      fetch(`${window.location.origin}/wp-json/wp/v2/search?search=${encodeURIComponent(query)}&per_page=8`)
+      fetch(`${window.location.origin}/wp-json/aratavietnam/v1/search?search=${encodeURIComponent(query)}&per_page=8`)
         .then(response => response.json())
         .then(data => {
           displayModalSearchResults(data, query)
@@ -466,6 +515,8 @@ function initSearch() {
     }
 
     function displayModalSearchResults(results, query) {
+      console.log('Search results:', results); // Debug log
+
       if (results.length === 0) {
         modalSearchResults.innerHTML = `
                     <div class="p-8 text-center text-gray-500">
@@ -481,17 +532,36 @@ function initSearch() {
         let resultsHTML = '<div class="space-y-2">'
 
         results.forEach(result => {
-          resultsHTML += `
-                        <a href="${result.url}" class="block p-4 hover:bg-gray-50 rounded-lg transition-colors duration-200">
+          console.log('Processing modal result:', result); // Debug log
+
+          // Ensure we have image data
+          const imageUrl = result.featured_image_thumbnail || result.featured_image || getPlaceholderImage();
+          const typeLabel = result.type_label || result.type || 'Nội dung';
+          const excerpt = result.excerpt || 'Không có mô tả';
+          const date = result.date || '';
+
+          const resultHTML = `
+                        <a href="${result.url}" class="search-results-item block p-4 hover:bg-gray-50 rounded-lg transition-colors duration-200">
                             <div class="flex items-start space-x-4">
-                                <div class="flex-1">
+                                <div class="flex-shrink-0">
+                                    <img src="${imageUrl}"
+                                         alt="${result.title}"
+                                         class="search-results-image w-16 h-16 object-cover rounded-lg"
+                                         onerror="this.src='${getPlaceholderImage()}'">
+                                </div>
+                                <div class="flex-1 min-w-0">
                                     <h3 class="text-lg font-medium text-gray-900 mb-1">${result.title}</h3>
-                                    <p class="text-sm text-gray-600 mb-2 line-clamp-2">${result.excerpt || 'Không có mô tả'}</p>
-                                    <span class="inline-block px-2 py-1 text-xs bg-primary text-white rounded">${getPostTypeLabel(result.subtype)}</span>
+                                    <p class="text-sm text-gray-600 mb-2 line-clamp-2">${excerpt}</p>
+                                    <div class="search-result-meta">
+                                        <span class="search-result-type inline-block px-2 py-1 text-xs bg-primary text-white rounded">${typeLabel}</span>
+                                        ${date ? `<span class="separator">•</span><span>${date}</span>` : ''}
+                                    </div>
                                 </div>
                             </div>
-                        </a>
-                    `
+                        </a>`;
+
+          console.log('Generated HTML for result:', resultHTML); // Debug log
+          resultsHTML += resultHTML;
         })
 
         resultsHTML += `
@@ -554,9 +624,20 @@ function initCart() {
         document.body.appendChild(cartPopup)
       }
 
-      // Show popup
+      // Show popup with smooth animation
       cartPopup.classList.remove('hidden')
       cartPopup.style.display = 'block'
+
+      // Force reflow before starting animation
+      void cartPopup.offsetWidth
+
+      // Fade in backdrop
+      cartPopup.classList.remove('opacity-0')
+
+      // Slide in panels from right
+      cartPopup.querySelectorAll('.cart-panel').forEach(panel => {
+        panel.classList.remove('translate-x-full')
+      })
 
       // Load cart contents
       loadCartContents()
@@ -566,12 +647,12 @@ function initCart() {
   function createCartPopup() {
     const popup = document.createElement('div')
     popup.id = 'cart-popup'
-    popup.className = 'fixed inset-0 z-50 lg:hidden'
+    popup.className = 'fixed inset-0 z-50 lg:hidden opacity-0 transition-opacity duration-300'
     popup.style.backgroundColor = 'rgba(0, 0, 0, 0.3)'
 
     popup.innerHTML = `
             <!-- Mobile Cart Popup -->
-            <div class="fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-xl transform transition-transform duration-300 ease-in-out">
+            <div class="fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-xl transform transition-transform duration-300 ease-in-out translate-x-full cart-panel">
                 <!-- Header -->
                 <div class="flex items-center justify-between p-4 border-b border-gray-200">
                     <h2 class="text-lg font-semibold text-gray-900">Giỏ hàng</h2>
@@ -592,7 +673,7 @@ function initCart() {
             </div>
 
             <!-- Desktop Cart Popup -->
-            <div class="hidden lg:block fixed inset-y-0 right-0 w-96 bg-white shadow-xl transform transition-transform duration-300 ease-in-out">
+            <div class="hidden lg:block fixed inset-y-0 right-0 w-96 bg-white shadow-xl transform transition-transform duration-300 ease-in-out translate-x-full cart-panel">
                 <!-- Header -->
                 <div class="flex items-center justify-between p-6 border-b border-gray-200">
                     <h2 class="text-xl font-semibold text-gray-900">Giỏ hàng</h2>
@@ -613,30 +694,47 @@ function initCart() {
             </div>
         `
 
+    // Helper to close with animation
+    function closePopupWithAnimation() {
+      // Fade out backdrop
+      popup.classList.add('opacity-0')
+      // Slide out panels to right
+      popup.querySelectorAll('.cart-panel').forEach(panel => {
+        panel.classList.add('translate-x-full')
+      })
+
+      // After transitions end, hide
+      const onTransitionEnd = (e) => {
+        if (e.target === popup) {
+          popup.classList.add('hidden')
+          popup.style.display = 'none'
+          popup.removeEventListener('transitionend', onTransitionEnd)
+        }
+      }
+      popup.addEventListener('transitionend', onTransitionEnd)
+    }
+
     // Add close event listeners
     const closeButtons = popup.querySelectorAll('.cart-close')
     closeButtons.forEach(button => {
       button.addEventListener('click', (e) => {
         e.preventDefault()
         e.stopPropagation()
-        popup.classList.add('hidden')
-        popup.style.display = 'none'
+        closePopupWithAnimation()
       })
     })
 
     // Close when clicking backdrop
     popup.addEventListener('click', (e) => {
       if (e.target === popup) {
-        popup.classList.add('hidden')
-        popup.style.display = 'none'
+        closePopupWithAnimation()
       }
     })
 
     // Close with Escape key
     document.addEventListener('keydown', function escapeHandler(e) {
       if (e.key === 'Escape' && !popup.classList.contains('hidden')) {
-        popup.classList.add('hidden')
-        popup.style.display = 'none'
+        closePopupWithAnimation()
       }
     })
 
@@ -658,10 +756,36 @@ function initCart() {
     if (cartContent) cartContent.innerHTML = loadingHTML
     if (cartContentDesktop) cartContentDesktop.innerHTML = loadingHTML
 
-    // For now, show empty cart (can be enhanced with WooCommerce AJAX later)
-    setTimeout(() => {
-      displayCartContents(null) // Show empty cart state
-    }, 500)
+    // Check if WooCommerce AJAX is available
+    if (typeof wc_add_to_cart_params !== 'undefined' && wc_add_to_cart_params.ajax_url) {
+      // Make AJAX request to get cart contents
+      const formData = new FormData()
+      formData.append('action', 'get_cart_contents')
+      formData.append('nonce', wc_add_to_cart_params.wc_ajax_nonce || '')
+
+      fetch(wc_add_to_cart_params.ajax_url, {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            displayCartContents(data.data)
+          } else {
+            console.error('Cart load error:', data.data)
+            displayCartContents(null) // Show empty cart on error
+          }
+        })
+        .catch(error => {
+          console.error('Cart AJAX error:', error)
+          displayCartContents(null) // Show empty cart on error
+        })
+    } else {
+      // Fallback: try to get cart data from WordPress REST API or show empty
+      setTimeout(() => {
+        displayCartContents(null) // Show empty cart state
+      }, 500)
+    }
   }
 
   function displayCartContents(cartData) {
@@ -693,11 +817,13 @@ function initCart() {
         cartData.items.forEach(item => {
           cartHTML += `
                         <div class="flex items-center space-x-3 p-3 border-b border-gray-100">
-                            <img src="${item.image || '/wp-content/themes/aratavietnam/assets/images/placeholder.jpg'}"
-                                 alt="${item.name}"
-                                 class="w-12 h-12 object-cover rounded">
+                            <a href="${item.url}" class="flex-shrink-0">
+                                <img src="${item.image || '/wp-content/themes/aratavietnam/assets/images/placeholder.jpg'}"
+                                     alt="${item.name}"
+                                     class="w-12 h-12 object-cover rounded">
+                            </a>
                             <div class="flex-1 min-w-0">
-                                <h4 class="text-sm font-medium text-gray-900 truncate">${item.name}</h4>
+                                <a href="${item.url}" class="text-sm font-medium text-gray-900 truncate hover:text-primary">${item.name}</a>
                                 <p class="text-xs text-gray-500">Số lượng: ${item.quantity}</p>
                                 <p class="text-sm font-medium text-primary">${item.price}</p>
                             </div>
@@ -1038,7 +1164,7 @@ function initMobileSubmenuToggle() {
 document.addEventListener('DOMContentLoaded', function () {
   detectFontLoading();
   optimizeVietnameseText();
-  	initNavigation();
+  initNavigation();
   initMobileSubmenuToggle();
   initDropdownMenu();
   initSearch();

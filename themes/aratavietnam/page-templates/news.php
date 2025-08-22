@@ -26,7 +26,7 @@ get_template_part('template-parts/hero');
             rewind_posts(); // Rewind the loop so it can run again below
     ?>
     <!-- Page Content -->
-    <div class="container mx-auto px-4 py-10">
+    <div class="container mx-auto px-4 py-12">
         <div class="max-w-4xl mx-auto">
             <article id="post-<?php the_ID(); ?>" <?php post_class('prose max-w-none mb-12'); ?>>
                 <div class="entry-content">
@@ -75,66 +75,32 @@ get_template_part('template-parts/hero');
 
             <!-- Promotions Section -->
             <div id="promotions-section" class="news-section active">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                    <!-- Promotions List -->
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-6">Chương trình khuyến mãi</h3>
-                        <div class="space-y-6">
-                            <?php
-                            $promotions = new WP_Query([
-                                'post_type' => 'promotion',
-                                'posts_per_page' => 4,
-                                'post_status' => 'publish',
-                                'meta_query' => [
-                                    [
-                                        'key' => 'arata_promotion_end_date',
-                                        'value' => date('Y-m-d'),
-                                        'compare' => '>=',
-                                        'type' => 'DATE'
-                                    ]
-                                ]
-                            ]);
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <?php
+                    $promotions = new WP_Query([
+                        'post_type' => 'promotion',
+                        'posts_per_page' => 3,
+                        'post_status' => 'publish',
+                        'meta_query' => [
+                            [
+                                'key' => 'arata_promotion_end_date',
+                                'value' => date('Y-m-d'),
+                                'compare' => '>=',
+                                'type' => 'DATE'
+                            ]
+                        ]
+                    ]);
 
-                            if ($promotions->have_posts()) :
-                                while ($promotions->have_posts()) : $promotions->the_post();
-                                    $discount = get_post_meta(get_the_ID(), 'arata_promotion_discount', true);
-                                    $end_date = get_post_meta(get_the_ID(), 'arata_promotion_end_date', true);
-                                    ?>
-                                    <div class="bg-white rounded-lg p-6 border border-gray-200 hover:border-primary transition-colors duration-300">
-                                        <div class="flex items-start justify-between mb-4">
-                                            <h4 class="text-lg font-semibold text-gray-900 flex-1">
-                                                <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
-                                                    <?php the_title(); ?>
-                                                </a>
-                                            </h4>
-                                            <?php if ($discount): ?>
-                                                <span class="bg-primary text-white px-3 py-1 rounded-full text-sm font-medium ml-4">
-                                                    <?php echo esc_html($discount); ?>
-                                                </span>
-                                            <?php endif; ?>
-                                        </div>
-                                        <p class="text-gray-600 text-sm mb-4"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
-                                        <div class="flex items-center justify-between text-sm">
-                                            <?php if ($end_date): ?>
-                                                <span class="text-red-600 font-medium">
-                                                    <span data-icon="clock" data-size="14" class="mr-1"></span>
-                                                    Đến <?php echo date('d/m/Y', strtotime($end_date)); ?>
-                                                </span>
-                                            <?php endif; ?>
-                                            <a href="<?php the_permalink(); ?>" class="text-primary hover:text-primary-dark font-medium">
-                                                Xem chi tiết
-                                                <span data-icon="arrow-right" data-size="14" class="ml-1"></span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <?php
-                                endwhile;
-                                wp_reset_postdata();
-                            else:
-                                echo '<p class="text-gray-600">Hiện tại chưa có chương trình khuyến mãi nào.</p>';
-                            endif;
-                            ?>
-                        </div>
+                    if ($promotions->have_posts()) :
+                        while ($promotions->have_posts()) : $promotions->the_post();
+                            get_template_part('template-parts/content-single-promotion');
+                        endwhile;
+                        wp_reset_postdata();
+                    else:
+                        echo '<div class="col-span-3 text-center text-gray-600">' . __('Hiện tại chưa có chương trình khuyến mãi nào.', 'aratavietnam') . '</div>';
+                    endif;
+                    ?>
+                </div>
                         <div class="mt-8 text-center">
                                                     <a href="<?php echo home_url('/khuyen-mai'); ?>" class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors duration-300">
                             Xem tất cả khuyến mãi
@@ -381,6 +347,9 @@ get_template_part('template-parts/hero');
     background: white;
     color: #6B7280;
     border: 1px solid #E5E7EB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .news-tab-btn.active {
@@ -414,6 +383,21 @@ get_template_part('template-parts/hero');
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+/* Icon alignment fixes */
+[data-icon] {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+}
+
+.flex.items-center [data-icon] {
+    flex-shrink: 0;
+}
+
+.inline-flex.items-center [data-icon] {
+    flex-shrink: 0;
 }
 
 /* Simple hover effects */

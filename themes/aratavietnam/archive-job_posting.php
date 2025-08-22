@@ -40,11 +40,9 @@ get_template_part('template-parts/hero');
     if ($archive_description) :
     ?>
     <!-- Page Content -->
-    <div class="container mx-auto px-4 py-10">
-        <div class="max-w-4xl mx-auto">
-            <div class="prose max-w-none mb-12">
-                <?php echo $archive_description; ?>
-            </div>
+    <div class="container mx-auto px-4 py-12">
+        <div class="prose max-w-none mb-12">
+            <?php echo $archive_description; ?>
         </div>
     </div>
     <?php endif; ?>
@@ -98,74 +96,86 @@ get_template_part('template-parts/hero');
                             'director' => 'Giám đốc'
                         ];
                         ?>
-                        <div class="bg-white rounded-lg p-6 border border-gray-200 hover:border-secondary transition-colors duration-300">
-                            <div class="mb-4">
-                                <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                                    <a href="<?php the_permalink(); ?>" class="hover:text-secondary transition-colors">
-                                        <?php the_title(); ?>
-                                    </a>
-                                </h3>
-                                <?php if ($department): ?>
-                                    <p class="text-secondary font-medium text-sm mb-1"><?php echo esc_html($department); ?></p>
-                                <?php endif; ?>
-                            </div>
-
-                            <div class="space-y-3 mb-6">
-                                <?php if ($location): ?>
-                                    <div class="flex items-center text-sm text-gray-600">
-                                        <span data-icon="map-pin" data-size="16" class="text-gray-400 mr-2"></span>
-                                        <?php echo esc_html($location); ?>
-                                    </div>
-                                <?php endif; ?>
-
-                                <?php if ($type && isset($type_labels[$type])): ?>
-                                    <div class="flex items-center text-sm text-gray-600">
-                                        <span data-icon="clock" data-size="16" class="text-gray-400 mr-2"></span>
-                                        <?php echo esc_html($type_labels[$type]); ?>
-                                    </div>
-                                <?php endif; ?>
-
-                                <?php if ($level && isset($level_labels[$level])): ?>
-                                    <div class="flex items-center text-sm text-gray-600">
-                                        <span data-icon="user" data-size="16" class="text-gray-400 mr-2"></span>
-                                        <?php echo esc_html($level_labels[$level]); ?>
-                                    </div>
-                                <?php endif; ?>
-
-                                <?php if ($salary): ?>
-                                    <div class="flex items-center text-sm text-gray-600">
-                                        <span data-icon="dollar-sign" data-size="16" class="text-gray-400 mr-2"></span>
-                                        <?php echo esc_html($salary); ?>
-                                    </div>
-                                <?php endif; ?>
-
-                                <?php if ($deadline): ?>
-                                    <div class="flex items-center text-sm text-gray-600">
-                                        <span data-icon="calendar" data-size="16" class="text-gray-400 mr-2"></span>
-                                        Hạn nộp: <?php echo date('d/m/Y', strtotime($deadline)); ?>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-
-                            <?php if ($requirements): ?>
-                                <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                                    <h4 class="font-semibold text-blue-800 mb-2 text-sm">Yêu cầu:</h4>
-                                    <p class="text-xs text-blue-700 line-clamp-3"><?php echo esc_html($requirements); ?></p>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php if ($benefits): ?>
-                                <div class="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                                    <h4 class="font-semibold text-green-800 mb-2 text-sm">Quyền lợi:</h4>
-                                    <p class="text-xs text-green-700 line-clamp-3"><?php echo esc_html($benefits); ?></p>
-                                </div>
-                            <?php endif; ?>
-
-                            <div class="pt-4 border-t border-gray-200">
-                                <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-secondary hover:text-secondary-dark font-medium text-sm">
-                                    Xem chi tiết
-                                    <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
+                        <div class="bg-white rounded-lg border border-gray-200 hover:border-secondary transition-colors duration-300 flex flex-col">
+                            <?php if (has_post_thumbnail()) : ?>
+                                <a href="<?php the_permalink(); ?>" class="block aspect-video">
+                                    <?php the_post_thumbnail('medium', ['class' => 'w-full h-full object-cover']); ?>
                                 </a>
+                            <?php else : ?>
+                                <div class="aspect-video bg-gray-100 flex items-center justify-center">
+                                    <span data-icon="briefcase" data-size="32" class="text-gray-400"></span>
+                                </div>
+                            <?php endif; ?>
+
+                            <div class="p-6 flex-grow flex flex-col">
+                                <div class="mb-4">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                                        <a href="<?php the_permalink(); ?>" class="hover:text-secondary transition-colors">
+                                            <?php the_title(); ?>
+                                        </a>
+                                    </h3>
+                                    <?php if ($department): ?>
+                                        <p class="text-secondary font-medium text-sm mb-1"><?php echo esc_html($department); ?></p>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="space-y-3 mb-6">
+                                    <?php if ($location): ?>
+                                        <div class="flex items-center text-sm text-gray-600">
+                                            <span data-icon="map-pin" data-size="16" class="text-gray-400 mr-2"></span>
+                                            <?php echo esc_html($location); ?>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if ($type && isset($type_labels[$type])): ?>
+                                        <div class="flex items-center text-sm text-gray-600">
+                                            <span data-icon="clock" data-size="16" class="text-gray-400 mr-2"></span>
+                                            <?php echo esc_html($type_labels[$type]); ?>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if ($level && isset($level_labels[$level])): ?>
+                                        <div class="flex items-center text-sm text-gray-600">
+                                            <span data-icon="user" data-size="16" class="text-gray-400 mr-2"></span>
+                                            <?php echo esc_html($level_labels[$level]); ?>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if ($salary): ?>
+                                        <div class="flex items-center text-sm text-gray-600">
+                                            <span data-icon="dollar-sign" data-size="16" class="text-gray-400 mr-2"></span>
+                                            <?php echo esc_html($salary); ?>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if ($deadline): ?>
+                                        <div class="flex items-center text-sm text-gray-600">
+                                            <span data-icon="calendar" data-size="16" class="text-gray-400 mr-2"></span>
+                                            Hạn nộp: <?php echo date('d/m/Y', strtotime($deadline)); ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <?php if ($requirements): ?>
+                                    <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                        <h4 class="font-semibold text-blue-800 mb-2 text-sm">Yêu cầu:</h4>
+                                        <p class="text-xs text-blue-700 line-clamp-3"><?php echo esc_html($requirements); ?></p>
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if ($benefits): ?>
+                                    <div class="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                                        <h4 class="font-semibold text-green-800 mb-2 text-sm">Quyền lợi:</h4>
+                                        <p class="text-xs text-green-700 line-clamp-3"><?php echo esc_html($benefits); ?></p>
+                                    </div>
+                                <?php endif; ?>
+
+                                <div class="pt-4 border-t border-gray-200 mt-auto">
+                                    <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-secondary hover:text-secondary-dark font-medium text-sm">
+                                        Xem chi tiết
+                                        <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     <?php endwhile;
@@ -207,7 +217,7 @@ get_template_part('template-parts/hero');
         <div class="container mx-auto px-4">
             <div class="max-w-2xl mx-auto text-center">
                 <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span data-icon="bell" data-size="32" class="text-primary"></span>
+                    <span data-icon="megaphone" data-size="32" class="text-primary"></span>
                 </div>
                 <h3 class="text-2xl font-bold text-gray-900 mb-4">Đăng ký nhận thông báo tuyển dụng</h3>
                 <p class="text-gray-600 mb-8">

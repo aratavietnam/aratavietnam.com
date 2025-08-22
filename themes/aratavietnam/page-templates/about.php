@@ -45,7 +45,7 @@ get_template_part('template-parts/hero');
 				</div>
 
 				<!-- Main Content -->
-				<div class="lg:col-span-8">
+				<div class="lg:col-span-10">
 					<article id="post-<?php the_ID(); ?>" <?php post_class('prose prose-lg max-w-none text-white'); ?>>
 						<div class="entry-content">
 							<?php
