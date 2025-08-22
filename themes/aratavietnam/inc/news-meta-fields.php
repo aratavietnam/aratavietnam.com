@@ -196,25 +196,40 @@ add_action('save_post_job_posting', function($post_id) {
 });
 
 /**
- * Add meta boxes for News pages
+ * Add meta boxes for News pages and related templates.
+ * This function creates a unique meta box for each specific page template.
  */
 add_action('add_meta_boxes_page', function($post) {
-    $news_templates = [
-        'page-templates/news.php',
-        'page-templates/promotions.php',
-        'page-templates/careers.php',
-        'page-templates/blog.php'
-    ];
     $template = get_post_meta($post->ID, '_wp_page_template', true);
 
-    if (in_array($template, $news_templates)) {
+    $template_settings = [
+        'page-templates/news.php' => [
+            'id'    => 'arata_news_meta',
+            'title' => __('Cài đặt trang Tin tức', 'aratavietnam'),
+        ],
+        'page-templates/promotions.php' => [
+            'id'    => 'arata_promotions_meta',
+            'title' => __('Cài đặt trang Khuyến mãi', 'aratavietnam'),
+        ],
+        'page-templates/careers.php' => [
+            'id'    => 'arata_careers_meta',
+            'title' => __('Cài đặt trang Tuyển dụng', 'aratavietnam'),
+        ],
+        'page-templates/blog.php' => [
+            'id'    => 'arata_blog_meta',
+            'title' => __('Cài đặt trang Blog', 'aratavietnam'),
+        ],
+    ];
+
+    if (isset($template_settings[$template])) {
+        $settings = $template_settings[$template];
         add_meta_box(
-            'arata_news_meta',
-            __('Cài đặt trang Tin tức', 'aratavietnam'),
+            $settings['id'],
+            $settings['title'],
             function($post) {
                 $fields = [
-                    'arata_news_subtitle' => __('Phụ đề Hero', 'aratavietnam'),
-                    'arata_news_intro' => __('Mô tả ngắn', 'aratavietnam'),
+                    'arata_news_subtitle'      => __('Phụ đề Hero', 'aratavietnam'),
+                    'arata_news_intro'         => __('Mô tả ngắn', 'aratavietnam'),
                     'arata_news_featured_text' => __('Văn bản nổi bật', 'aratavietnam'),
                 ];
 
@@ -243,6 +258,17 @@ add_action('add_meta_boxes_page', function($post) {
  * Save meta for News pages
  */
 add_action('save_post_page', function($post_id) {
+    // --- DEBUGGING START ---
+    $template = get_post_meta($post_id, '_wp_page_template', true);
+    if ($template === 'page-templates/news.php') {
+        update_option('debug_news_post_data', print_r($_POST, true));
+    }
+    // --- DEBUGGING END ---
+    // --- DEBUGGING START ---
+    if (isset($_POST['arata_news_subtitle'])) {
+        update_option('debug_news_subtitle', sanitize_text_field($_POST['arata_news_subtitle']));
+    }
+    // --- DEBUGGING END ---
     if (!isset($_POST['arata_news_meta_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['arata_news_meta_nonce']), 'arata_news_meta_save')) {
         return;
     }
