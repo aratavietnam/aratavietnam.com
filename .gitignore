@@ -55,9 +55,28 @@ temp/
 *.tmp
 *.temp
 
+# Development tools
+.playwright-mcp/
+
 # WordPress plugins (exclude from repo)
 plugins/woocommerce/
 plugins/woocommerce-gateway-stripe/
+plugins/advanced-custom-fields/
+plugins/all-in-one-wp-migration/
+plugins/all-in-one-wp-migration-unlimited-extension/
+plugins/classic-editor/
+plugins/debug-bar/
+plugins/duplicate-page/
+plugins/ewww-image-optimizer/
+plugins/litespeed-cache/
+plugins/query-monitor/
+plugins/seo-by-rank-math/
+plugins/stops-core-theme-and-plugin-updates/
+plugins/tinymce-advanced/
+plugins/wp-mail-smtp-pro/
+
+# Keep custom plugins (exclude from ignore)
+!plugins/arata-allow-uploads/
 
 # WordPress uploads
 uploads/
