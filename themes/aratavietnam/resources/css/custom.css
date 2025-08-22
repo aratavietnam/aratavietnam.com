@@ -2,30 +2,31 @@
 
 /* Desktop Navigation Menu - Force Horizontal Layout */
 #primary-menu {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: 1rem !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 1rem !important;
 }
 
 #primary-menu li {
-    display: inline-block !important;
-    margin: 0 !important;
+  display: inline-block !important;
+  margin: 0 !important;
 }
 
 #primary-menu a {
-    display: inline-block !important;
-    padding: 0.5rem 0.6rem !important;
-    text-decoration: none !important;
-    color: #374151 !important;
-    font-weight: 500 !important;
-    font-size: 0.9rem !important;
-    transition: color 0.3s ease !important;
+  display: inline-block !important;
+  padding: 0.5rem 0.6rem !important;
+  text-decoration: none !important;
+  color: #374151 !important;
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+  transition: color 0.3s ease !important;
 }
 
 #primary-menu a:hover {
-    color: #0066A6 !important;
+  color: #0066A6 !important;
 }
+
 body,
 html {
   font-family: var(--font-primary);
@@ -56,10 +57,8 @@ html {
   line-height: var(--text-lg--line-height);
   font-family: var(--font-primary);
 
-  :where(
-      .entry-content > *:not(li),
-      .block-editor-block-list__layout > *:not(li)
-    ) {
+  :where(.entry-content > *:not(li),
+    .block-editor-block-list__layout > *:not(li)) {
     margin-top: --spacing(6);
     margin-bottom: --spacing(6);
   }
@@ -288,9 +287,12 @@ html {
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: .5;
   }
@@ -351,7 +353,12 @@ html {
 }
 
 /* Typography Improvements for Vietnamese */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-primary);
   font-weight: 600;
   letter-spacing: -0.025em;
@@ -499,6 +506,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Responsive Design Helpers */
 @media (max-width: 768px) {
+
   .btn-primary,
   .btn-secondary,
   .btn-outline-primary {
@@ -516,7 +524,12 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.6;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     line-height: 1.3;
   }
 
@@ -644,7 +657,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Ensure consistent spacing for footer sections */
-#colophon .space-y-6 > div:first-child {
+#colophon .space-y-6>div:first-child {
   margin-bottom: 1.5rem;
 }
 
@@ -769,7 +782,7 @@ h1, h2, h3, h4, h5, h6 {
   justify-items: flex-start !important;
 }
 
-#colophon .order-3 .grid.grid-cols-2 > * {
+#colophon .order-3 .grid.grid-cols-2>* {
   text-align: left !important;
   align-self: flex-start !important;
   justify-self: flex-start !important;
@@ -943,6 +956,7 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateY(-100px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -1003,8 +1017,32 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #colophon .footer-menu-links li {
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Override Tailwind CSS spacing classes */
+#colophon .footer-menu-links.space-y-1>li+li {
+  margin-top: 0 !important;
+}
+
+#colophon .footer-menu-links.space-y-1>li {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Force override all spacing */
+#colophon .footer-menu-links li {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#colophon .footer-menu-links li:first-child {
+  margin-top: 0 !important;
+}
+
+#colophon .footer-menu-links li:last-child {
+  margin-bottom: 0 !important;
 }
 
 #colophon .footer-menu-links a {
@@ -1022,6 +1060,7 @@ h1, h2, h3, h4, h5, h6 {
   text-align: left !important;
   line-height: 1.5 !important;
   position: static !important;
+  padding-left: 0 !important;
 }
 
 #colophon .footer-menu-links a:hover {
@@ -1029,20 +1068,38 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #colophon .footer-menu-links a:before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 0;
-  background: #FFAB14;
-  transition: height 0.3s ease;
-  border-radius: 2px;
+  display: none !important;
 }
 
 #colophon .footer-menu-links a:hover:before {
-  height: 60%;
+  display: none !important;
+}
+
+/* Force remove all spacing from Tailwind CSS classes */
+#colophon .space-y-1>*+* {
+  margin-top: 0 !important;
+}
+
+#colophon .space-y-1>* {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Override any remaining spacing */
+#colophon .footer-menu-links.space-y-1>*+* {
+  margin-top: 0 !important;
+}
+
+#colophon .footer-menu-links.space-y-1>* {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Additional force override */
+#colophon .space-y-1 li,
+#colophon .space-y-1 .menu-item {
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* Override WordPress menu classes */
@@ -1055,11 +1112,78 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0 !important;
 }
 
+/* Override all possible spacing combinations */
+#colophon .space-y-1,
+#colophon .space-y-2,
+#colophon .space-y-3,
+#colophon .space-y-4,
+#colophon .space-y-5,
+#colophon .space-y-6 {
+  margin: 0 !important;
+}
+
+#colophon .space-y-1>*,
+#colophon .space-y-2>*,
+#colophon .space-y-3>*,
+#colophon .space-y-4>*,
+#colophon .space-y-5>*,
+#colophon .space-y-6>* {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+#colophon .space-y-1>*+*,
+#colophon .space-y-2>*+*,
+#colophon .space-y-3>*+*,
+#colophon .space-y-4>*+*,
+#colophon .space-y-5>*+*,
+#colophon .space-y-6>*+* {
+  margin-top: 0 !important;
+}
+
+/* Force override all space-y classes */
+#colophon [class*="space-y"]>* {
+  margin: 0 !important;
+}
+
+#colophon [class*="space-y"]>*+* {
+  margin-top: 0 !important;
+}
+
 #colophon .menu li,
 #colophon .menu-item {
   margin: 0 !important;
   padding: 0 !important;
   display: block !important;
+}
+
+/* Override all possible spacing for menu items */
+#colophon .menu li+li,
+#colophon .menu-item+.menu-item {
+  margin-top: 0 !important;
+}
+
+/* Force override all menu spacing */
+#colophon .menu li,
+#colophon .menu-item {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#colophon .menu li:first-child,
+#colophon .menu-item:first-child {
+  margin-top: 0 !important;
+}
+
+#colophon .menu li:last-child,
+#colophon .menu-item:last-child {
+  margin-bottom: 0 !important;
+}
+
+#colophon .menu li,
+#colophon .menu-item {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 #colophon .menu a,
@@ -1069,43 +1193,176 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration: none !important;
   font-size: 14px !important;
   font-weight: 400 !important;
-  padding: 8px 12px !important;
-  margin: 2px 0 !important;
-  border-radius: 6px !important;
-  transition: all 0.3s ease !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  transition: color 0.3s ease !important;
   background: transparent !important;
   border: none !important;
   text-align: left !important;
   line-height: 1.4 !important;
-  position: relative !important;
+  position: static !important;
 }
 
 #colophon .menu a:hover,
 #colophon .menu-item a:hover {
   color: white !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  transform: translateX(4px) !important;
-  padding-left: 16px !important;
+  background: transparent !important;
+  transform: none !important;
+  padding-left: 0 !important;
 }
 
 #colophon .menu a:before,
 #colophon .menu-item a:before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 0;
-  background: #FFAB14;
-  transition: height 0.3s ease;
-  border-radius: 2px;
+  display: none !important;
 }
 
-#colophon .menu a:hover:before,
-#colophon .menu-item a:hover:before {
-  height: 60%;
+/* Final override for any remaining spacing */
+#colophon * {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
+
+/* Override browser defaults completely */
+#colophon .footer-menu-links,
+#colophon .footer-menu-links ul,
+#colophon .footer-menu-links li,
+#colophon .footer-menu-links a,
+#colophon .menu,
+#colophon .menu ul,
+#colophon .menu li,
+#colophon .menu a,
+#colophon .menu-item,
+#colophon .menu-item a {
+  /* Reset all spacing */
+  margin: 0 !important;
+  padding: 0 !important;
+
+  /* Reset line-height and height */
+  line-height: 1 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+
+  /* Reset positioning */
+  position: static !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+
+  /* Reset display and box model */
+  display: block !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+
+  /* Reset text properties */
+  vertical-align: baseline !important;
+  text-decoration: none !important;
+  outline: none !important;
+  border: none !important;
+  background: none !important;
+
+  /* Force remove any remaining spacing */
+  font-size: 14px !important;
+  letter-spacing: normal !important;
+  word-spacing: normal !important;
+  white-space: normal !important;
+}
+
+#colophon .footer-menu-links *,
+#colophon .menu *,
+#colophon .menu-item * {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Nuclear option - override everything */
+#colophon .footer-menu-links,
+#colophon .footer-menu-links ul,
+#colophon .footer-menu-links li,
+#colophon .footer-menu-links a,
+#colophon .menu,
+#colophon .menu ul,
+#colophon .menu li,
+#colophon .menu a,
+#colophon .menu-item,
+#colophon .menu-item a {
+  margin: 0 !important;
+  padding: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  line-height: 1 !important;
+  font-size: 14px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  vertical-align: baseline !important;
+  display: block !important;
+  box-sizing: border-box !important;
+}
+
+/* Override any Tailwind spacing */
+#colophon [class*="space-y"] {
+  margin: 0 !important;
+}
+
+#colophon [class*="space-y"]>* {
+  margin: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Force remove all possible spacing sources */
+#colophon .footer-menu-links,
+#colophon .footer-menu-links ul,
+#colophon .footer-menu-links li,
+#colophon .footer-menu-links a {
+  line-height: 1 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  vertical-align: baseline !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  position: static !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+}
+
+/* Override any remaining spacing */
+#colophon .footer-menu-links li {
+  display: list-item !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  height: auto !important;
+}
+
+#colophon .footer-menu-links a {
+  display: inline-block !important;
+  line-height: 1 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  vertical-align: baseline !important;
+  text-decoration: none !important;
+  outline: none !important;
+  border: none !important;
+  background: none !important;
+}
+
 
 /* Ensure proper spacing for footer menu sections */
 #colophon .order-3 .grid.grid-cols-1 {

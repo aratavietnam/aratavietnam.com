@@ -12,10 +12,41 @@ require_once get_template_directory() . '/inc/logo-branding.php';
 require_once get_template_directory() . '/inc/customizer-footer.php';
 require_once get_template_directory() . '/inc/contact-form.php';
 require_once get_template_directory() . '/inc/contact-meta.php';
+require_once get_template_directory() . '/inc/contact-config.php';
 require_once get_template_directory() . '/inc/news-post-types.php';
 require_once get_template_directory() . '/inc/news-meta-fields.php';
 require_once get_template_directory() . '/inc/news-forms.php';
 require_once get_template_directory() . '/inc/class-dropdown-walker.php';
+
+// Register custom page templates
+function aratavietnam_register_page_templates($templates) {
+    $templates['page-templates/news.php'] = 'News Page';
+    $templates['page-templates/promotions.php'] = 'Promotions Page';
+    $templates['page-templates/careers.php'] = 'Careers Page';
+    $templates['page-templates/blog.php'] = 'Blog Page';
+    $templates['page-templates/contact.php'] = 'Contact Page';
+    return $templates;
+}
+add_filter('theme_page_templates', 'aratavietnam_register_page_templates');
+
+// Force WordPress to recognize custom templates
+function aratavietnam_force_template_recognition($template) {
+    global $post;
+
+    if (is_page() && $post) {
+        $template_name = get_post_meta($post->ID, '_wp_page_template', true);
+
+        if ($template_name && $template_name !== 'default') {
+            $template_path = get_template_directory() . '/' . $template_name;
+            if (file_exists($template_path)) {
+                return $template_path;
+            }
+        }
+    }
+
+    return $template;
+}
+add_filter('template_include', 'aratavietnam_force_template_recognition', 99);
 
 function aratavietnam(): TailPress\Framework\Theme
 {

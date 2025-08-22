@@ -1,0 +1,62 @@
+# Arata Vietnam Brand Guidelines
+
+## Company Overview
+- **Company**: Arata Vietnam - Subsidiary of Arata Japan Group
+- **Business**: Japanese cosmetics distribution in Vietnam
+- **Target Audience**: Retailers and consumers
+- **Website Purpose**: Brand promotion and e-commerce
+
+## Brand Colors
+### Primary Colors
+- **Primary (Orange)**: `#F55E25` - Main brand color
+- **Secondary (Blue)**: `#0066A6` - Secondary brand color
+- **Tertiary (Yellow-Orange)**: `#FFAB14` - Accent color
+
+### Color Usage
+- **Primary**: Buttons, links, highlights, CTAs
+- **Secondary**: Headers, navigation, secondary buttons
+- **Tertiary**: Badges, notifications, highlights
+
+## Typography
+- **Primary Font**: Bahnschrift Font
+- **Fallback**: Similar sans-serif fonts
+- **Vietnamese Support**: Custom font loading in [themes/aratavietnam/inc/fonts-vietnamese.php](mdc:themes/aratavietnam/inc/fonts-vietnamese.php)
+
+## Design Principles
+- **Layout**: Minimalist, easy to read
+- **Effects**: Gentle, creative, no rapid movements
+- **Style**: Soft, bright, fresh
+- **Optimization**: Sharp images, fast loading speed
+
+## Website Structure
+### Header
+- Logo on the left
+- Right side: Search, customer account, shopping cart
+
+### Homepage Sections
+1. **Banner**: 3 images/videos with horizontal movement
+2. **Featured Products**: 4 products x 2 rows, blue background
+3. **All Products**: 5 product sets, white background
+4. **About Arata**: Company images + information, blue background
+5. **Partners**: Partner logos, 2 rows, white background
+
+### Footer
+- Blue background, white text
+- Left: Company information
+- Center: Social icons + Arata logo
+- Right: Navigation links
+
+## Content Guidelines
+- **Language**: Vietnamese (primary), English (secondary)
+- **Tone**: Professional, trustworthy, approachable
+- **Focus**: Product display and user experience
+- **Call-to-Action**: Clear, prominent, orange-colored
+
+## Implementation
+- **CSS Variables**: Defined in [themes/aratavietnam/resources/css/theme.css](mdc:themes/aratavietnam/resources/css/theme.css)
+- **Tailwind Integration**: Automatic color classes
+- **WordPress Theme**: Configured in [themes/aratavietnam/theme.json](mdc:themes/aratavietnam/theme.json)
+description:
+globs:
+alwaysApply: false
+---

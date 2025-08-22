@@ -1,0 +1,69 @@
+# Automation Scripts
+
+## Overview
+Collection of shell scripts for WordPress setup, maintenance, and content management.
+
+## Core Scripts
+- **Website Setup**: [scripts/create-website-structure.sh](mdc:scripts/create-website-structure.sh) - Create pages and structure
+- **News System**: [scripts/create-news-content.sh](mdc:scripts/create-news-content.sh) - News content creation
+- **Menu Setup**: [scripts/setup-news-menu.sh](mdc:scripts/setup-news-menu.sh) - Navigation menu configuration
+- **WooCommerce**: [scripts/setup-woocommerce.sh](mdc:scripts/setup-woocommerce.sh) - E-commerce setup
+
+## Content Management
+### News System
+- **Content Creation**: [scripts/create-news-content.sh](mdc:scripts/create-news-content.sh) - Generate news articles
+- **Menu Configuration**: [scripts/setup-news-menu.sh](mdc:scripts/setup-news-menu.sh) - News navigation
+- **URL Fixes**: [scripts/fix-news-url.sh](mdc:scripts/fix-news-url.sh) - URL optimization
+- **Submenu Setup**: [scripts/create-news-submenu.sh](mdc:scripts/create-news-submenu.sh) - Submenu structure
+
+### Page Management
+- **Simple Pages**: [scripts/create-pages-simple.sh](mdc:scripts/create-pages-simple.sh) - Basic page creation
+- **Policy Pages**: [scripts/update-policy-pages.sh](mdc:scripts/update-policy-pages.sh) - Legal content updates
+- **Menu Fixes**: [scripts/fix-menu-completely.sh](mdc:scripts/fix-menu-completely.sh) - Menu structure fixes
+
+## System Maintenance
+### Docker Management
+- **Permissions Fix**: [scripts/docker-fix-permissions.sh](mdc:scripts/docker-fix-permissions.sh) - Fix file permissions
+- **Alternative Fix**: [scripts/fix-docker-permissions.sh](mdc:scripts/fix-docker-permissions.sh) - Alternative permission fix
+
+### WordPress Management
+- **Menu Configuration**: [scripts/fix-menu-according-to-docs.sh](mdc:scripts/fix-menu-according-to-docs.sh) - Menu alignment
+- **URL Optimization**: [scripts/fix-news-page-url.sh](mdc:scripts/fix-news-page-url.sh) - URL structure fixes
+
+## Usage Examples
+```bash
+# Create website structure
+./scripts/create-website-structure.sh
+
+# Setup news system
+./scripts/create-news-content.sh
+./scripts/setup-news-menu.sh
+
+# Fix permissions
+./scripts/docker-fix-permissions.sh
+
+# Setup WooCommerce
+./scripts/setup-woocommerce.sh
+```
+
+## Content Structure
+### News Categories
+1. **Chương trình khuyến mãi** - Promotional programs
+2. **Tuyển dụng** - Recruitment
+3. **Blog** - General blog posts
+
+### Page Types
+- **Static Pages**: About, Contact, Policies
+- **Dynamic Content**: News, Products, Blog
+- **Legal Pages**: Privacy Policy, Terms of Service, Return Policy
+
+## Script Features
+- **Error Handling**: Proper error checking and reporting
+- **Logging**: Detailed execution logs
+- **Idempotent**: Safe to run multiple times
+- **Docker Integration**: Works within Docker environment
+- **WP CLI Integration**: Uses WordPress command-line interface
+description:
+globs:
+alwaysApply: false
+---

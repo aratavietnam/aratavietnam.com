@@ -1,6 +1,7 @@
 <?php
 /**
  * Template Name: Blog Page
+ * Template Post Type: page
  * Description: Blog page with horizontal layout (6 posts, 2 rows) on left and vertical sidebar on right
  */
 
@@ -50,7 +51,7 @@ get_template_part('template-parts/hero');
 
             <!-- Main Blog Layout: Left (6 posts horizontal) + Right (sidebar vertical) -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                
+
                 <!-- Left Side: 6 Posts in Horizontal Layout (2 rows x 3 columns) -->
                 <div class="lg:col-span-2">
                     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -79,7 +80,7 @@ get_template_part('template-parts/hero');
                                             </div>
                                         </div>
                                     <?php endif; ?>
-                                    
+
                                     <div class="p-4">
                                         <!-- Meta info -->
                                         <div class="flex items-center text-xs text-gray-500 mb-3">
@@ -89,17 +90,17 @@ get_template_part('template-parts/hero');
                                             <span data-icon="user" data-size="14" class="mr-1"></span>
                                             <?php the_author(); ?>
                                         </div>
-                                        
+
                                         <!-- Title -->
                                         <h3 class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">
                                             <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
                                                 <?php the_title(); ?>
                                             </a>
                                         </h3>
-                                        
+
                                         <!-- Meta Description (Excerpt) -->
                                         <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-                                            <?php 
+                                            <?php
                                             $excerpt = get_the_excerpt();
                                             if (empty($excerpt)) {
                                                 $excerpt = wp_trim_words(get_the_content(), 20);
@@ -107,7 +108,7 @@ get_template_part('template-parts/hero');
                                             echo esc_html($excerpt);
                                             ?>
                                         </p>
-                                        
+
                                         <!-- Read more link -->
                                         <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm">
                                             Đọc tiếp
@@ -139,21 +140,21 @@ get_template_part('template-parts/hero');
                                 <?php
                                 $current_page = max(1, get_query_var('paged'));
                                 $total_pages = $blog_posts->max_num_pages;
-                                
+
                                 // Previous button
                                 if ($current_page > 1): ?>
                                     <a href="<?php echo get_pagenum_link($current_page - 1); ?>" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
                                         Trước
                                     </a>
                                 <?php endif;
-                                
+
                                 // Page numbers
                                 for ($i = 1; $i <= $total_pages; $i++): ?>
                                     <a href="<?php echo get_pagenum_link($i); ?>" class="px-4 py-2 text-sm font-medium <?php echo ($i == $current_page) ? 'text-white bg-primary border-primary' : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50'; ?> border rounded-lg">
                                         <?php echo $i; ?>
                                     </a>
                                 <?php endfor;
-                                
+
                                 // Next button
                                 if ($current_page < $total_pages): ?>
                                     <a href="<?php echo get_pagenum_link($current_page + 1); ?>" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
@@ -171,7 +172,7 @@ get_template_part('template-parts/hero');
                         <h3 class="text-xl font-bold text-gray-900 mb-6 pb-3 border-b border-gray-200">
                             Bài viết khác
                         </h3>
-                        
+
                         <div class="space-y-4">
                             <?php
                             $sidebar_posts = new WP_Query([
@@ -211,7 +212,7 @@ get_template_part('template-parts/hero');
                             endif;
                             ?>
                         </div>
-                        
+
                         <!-- View all posts link -->
                         <div class="mt-6 pt-4 border-t border-gray-200">
                             <a href="<?php echo home_url('/blog'); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm">

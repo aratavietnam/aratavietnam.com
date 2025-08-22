@@ -1,6 +1,7 @@
 <?php
 /**
  * Template Name: News Page
+ * Template Post Type: page
  * Description: Main news page with 3 sections: Promotions, Careers, Blog
  */
 
@@ -43,19 +44,19 @@ get_template_part('template-parts/hero');
                     <div class="w-12 h-1 bg-primary rounded-full ml-4"></div>
                 </div>
                 <h2 class="text-3xl font-bold text-gray-900 mb-6">Cập nhật từ Arata Vietnam</h2>
-                
+
                 <!-- Tab Navigation -->
                 <div class="flex flex-wrap justify-center gap-4 mb-8">
                     <button class="news-tab-btn active px-6 py-3 rounded-lg font-medium transition-all duration-300" data-tab="promotions">
-                        <span data-icon="megaphone" data-size="20" class="mr-2"></span>
+                        <span data-icon="megaphone" data-size="18" class="mr-2"></span>
                         Khuyến mãi
                     </button>
                     <button class="news-tab-btn px-6 py-3 rounded-lg font-medium transition-all duration-300" data-tab="careers">
-                        <span data-icon="briefcase" data-size="20" class="mr-2"></span>
+                        <span data-icon="user" data-size="18" class="mr-2"></span>
                         Tuyển dụng
                     </button>
                     <button class="news-tab-btn px-6 py-3 rounded-lg font-medium transition-all duration-300" data-tab="blog">
-                        <span data-icon="newspaper" data-size="20" class="mr-2"></span>
+                        <span data-icon="file-text" data-size="18" class="mr-2"></span>
                         Blog
                     </button>
                 </div>
@@ -88,7 +89,7 @@ get_template_part('template-parts/hero');
                                     $discount = get_post_meta(get_the_ID(), 'arata_promotion_discount', true);
                                     $end_date = get_post_meta(get_the_ID(), 'arata_promotion_end_date', true);
                                     ?>
-                                    <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-300">
+                                    <div class="bg-white rounded-lg p-6 border border-gray-200 hover:border-primary transition-colors duration-300">
                                         <div class="flex items-start justify-between mb-4">
                                             <h4 class="text-lg font-semibold text-gray-900 flex-1">
                                                 <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
@@ -105,12 +106,13 @@ get_template_part('template-parts/hero');
                                         <div class="flex items-center justify-between text-sm">
                                             <?php if ($end_date): ?>
                                                 <span class="text-red-600 font-medium">
-                                                    <span data-icon="clock" data-size="16" class="mr-1"></span>
+                                                    <span data-icon="clock" data-size="14" class="mr-1"></span>
                                                     Đến <?php echo date('d/m/Y', strtotime($end_date)); ?>
                                                 </span>
                                             <?php endif; ?>
                                             <a href="<?php the_permalink(); ?>" class="text-primary hover:text-primary-dark font-medium">
-                                                Xem chi tiết →
+                                                Xem chi tiết
+                                                <span data-icon="arrow-right" data-size="14" class="ml-1"></span>
                                             </a>
                                         </div>
                                     </div>
@@ -123,38 +125,38 @@ get_template_part('template-parts/hero');
                             ?>
                         </div>
                         <div class="mt-8 text-center">
-                            <a href="<?php echo home_url('/khuyen-mai'); ?>" class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors duration-300">
-                                Xem tất cả khuyến mãi
-                                <span data-icon="arrow-right" data-size="20" class="ml-2"></span>
-                            </a>
+                                                    <a href="<?php echo home_url('/khuyen-mai'); ?>" class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors duration-300">
+                            Xem tất cả khuyến mãi
+                            <span data-icon="arrow-right" data-size="18" class="ml-2"></span>
+                        </a>
                         </div>
                     </div>
 
                     <!-- Newsletter Signup -->
                     <div>
-                        <div class="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-lg p-6">
+                        <div class="bg-primary/5 rounded-lg p-6 border border-primary/20">
                             <h3 class="text-2xl font-bold text-gray-900 mb-4">Đăng ký nhận thông báo</h3>
                             <p class="text-gray-600 mb-6">Nhận thông tin về các chương trình khuyến mãi và ưu đãi đặc biệt từ Arata Vietnam.</p>
-                            
+
                             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="space-y-4">
                                 <input type="hidden" name="action" value="arata_newsletter_submit" />
                                 <?php wp_nonce_field('arata_newsletter_submit', 'arata_newsletter_nonce'); ?>
-                                
+
                                 <div>
                                     <label for="newsletter_name" class="block text-sm font-medium text-gray-700 mb-1">Họ và tên *</label>
                                     <input id="newsletter_name" name="name" type="text" required class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
                                 </div>
-                                
+
                                 <div>
                                     <label for="newsletter_email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
                                     <input id="newsletter_email" name="email" type="email" required class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
                                 </div>
-                                
+
                                 <div>
                                     <label for="newsletter_phone" class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
                                     <input id="newsletter_phone" name="phone" type="tel" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
                                 </div>
-                                
+
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Sở thích sản phẩm</label>
                                     <div class="space-y-2">
@@ -172,7 +174,7 @@ get_template_part('template-parts/hero');
                                         </label>
                                     </div>
                                 </div>
-                                
+
                                 <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-dark transition-colors duration-300 font-medium">
                                     Đăng ký ngay
                                 </button>
@@ -206,39 +208,39 @@ get_template_part('template-parts/hero');
                             $location = get_post_meta(get_the_ID(), 'arata_job_location', true);
                             $deadline = get_post_meta(get_the_ID(), 'arata_job_deadline', true);
                             ?>
-                            <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-300">
+                            <div class="bg-white rounded-lg p-6 border border-gray-200 hover:border-secondary transition-colors duration-300">
                                 <h4 class="text-lg font-semibold text-gray-900 mb-3">
                                     <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
                                         <?php the_title(); ?>
                                     </a>
                                 </h4>
-                                
+
                                 <div class="space-y-2 mb-4 text-sm text-gray-600">
                                     <?php if ($department): ?>
                                         <div class="flex items-center">
-                                            <span data-icon="building" data-size="16" class="mr-2"></span>
+                                            <span data-icon="building" data-size="14" class="mr-2"></span>
                                             <?php echo esc_html($department); ?>
                                         </div>
                                     <?php endif; ?>
                                     <?php if ($location): ?>
                                         <div class="flex items-center">
-                                            <span data-icon="map-pin" data-size="16" class="mr-2"></span>
+                                            <span data-icon="map-pin" data-size="14" class="mr-2"></span>
                                             <?php echo esc_html($location); ?>
                                         </div>
                                     <?php endif; ?>
                                     <?php if ($deadline): ?>
                                         <div class="flex items-center text-red-600">
-                                            <span data-icon="calendar" data-size="16" class="mr-2"></span>
+                                            <span data-icon="calendar" data-size="14" class="mr-2"></span>
                                             Hạn: <?php echo date('d/m/Y', strtotime($deadline)); ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
-                                
+
                                 <p class="text-gray-600 text-sm mb-4"><?php echo wp_trim_words(get_the_excerpt(), 15); ?></p>
-                                
+
                                 <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm">
                                     Xem chi tiết & Ứng tuyển
-                                    <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
+                                    <span data-icon="arrow-right" data-size="14" class="ml-1"></span>
                                 </a>
                             </div>
                             <?php
@@ -249,11 +251,11 @@ get_template_part('template-parts/hero');
                     endif;
                     ?>
                 </div>
-                
+
                 <div class="mt-8 text-center">
                     <a href="<?php echo home_url('/tuyen-dung'); ?>" class="inline-flex items-center px-6 py-3 bg-secondary text-white rounded-lg hover:bg-secondary-dark transition-colors duration-300">
                         Xem tất cả vị trí tuyển dụng
-                        <span data-icon="arrow-right" data-size="20" class="ml-2"></span>
+                        <span data-icon="arrow-right" data-size="18" class="ml-2"></span>
                     </a>
                 </div>
             </div>
@@ -275,7 +277,7 @@ get_template_part('template-parts/hero');
                             if ($blog_posts->have_posts()) :
                                 while ($blog_posts->have_posts()) : $blog_posts->the_post();
                                     ?>
-                                    <article class="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-300">
+                                    <article class="bg-white rounded-lg overflow-hidden border border-gray-200 hover:border-primary transition-colors duration-300">
                                         <?php if (has_post_thumbnail()): ?>
                                             <div class="aspect-video overflow-hidden">
                                                 <a href="<?php the_permalink(); ?>">
@@ -283,26 +285,27 @@ get_template_part('template-parts/hero');
                                                 </a>
                                             </div>
                                         <?php endif; ?>
-                                        
+
                                         <div class="p-4">
                                             <div class="flex items-center text-xs text-gray-500 mb-2">
-                                                <span data-icon="calendar" data-size="14" class="mr-1"></span>
+                                                <span data-icon="calendar" data-size="12" class="mr-1"></span>
                                                 <?php echo get_the_date('d/m/Y'); ?>
                                                 <span class="mx-2">•</span>
-                                                <span data-icon="user" data-size="14" class="mr-1"></span>
+                                                <span data-icon="user" data-size="12" class="mr-1"></span>
                                                 <?php the_author(); ?>
                                             </div>
-                                            
+
                                             <h4 class="text-base font-semibold text-gray-900 mb-2 line-clamp-2">
                                                 <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
                                                     <?php the_title(); ?>
                                                 </a>
                                             </h4>
-                                            
+
                                             <p class="text-gray-600 text-sm mb-3 line-clamp-3"><?php echo wp_trim_words(get_the_excerpt(), 15); ?></p>
-                                            
+
                                             <a href="<?php the_permalink(); ?>" class="text-primary hover:text-primary-dark font-medium text-sm">
-                                                Đọc tiếp →
+                                                Đọc tiếp
+                                                <span data-icon="arrow-right" data-size="12" class="ml-1"></span>
                                             </a>
                                         </div>
                                     </article>
@@ -338,7 +341,7 @@ get_template_part('template-parts/hero');
                                             </a>
                                         </h5>
                                         <div class="text-xs text-gray-500">
-                                            <span data-icon="calendar" data-size="12" class="mr-1"></span>
+                                            <span data-icon="calendar" data-size="10" class="mr-1"></span>
                                             <?php echo get_the_date('d/m/Y'); ?>
                                         </div>
                                     </div>
@@ -348,11 +351,11 @@ get_template_part('template-parts/hero');
                             endif;
                             ?>
                         </div>
-                        
+
                         <div class="mt-6">
                             <a href="<?php echo home_url('/blog'); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm">
                                 Xem tất cả bài viết
-                                <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
+                                <span data-icon="arrow-right" data-size="14" class="ml-1"></span>
                             </a>
                         </div>
                     </div>
@@ -401,21 +404,30 @@ get_template_part('template-parts/hero');
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+/* Simple hover effects */
+.news-card:hover {
+    border-color: #F55E25;
+}
+
+.career-card:hover {
+    border-color: #0066A6;
+}
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const tabButtons = document.querySelectorAll('.news-tab-btn');
     const sections = document.querySelectorAll('.news-section');
-    
+
     tabButtons.forEach(button => {
         button.addEventListener('click', function() {
             const targetTab = this.getAttribute('data-tab');
-            
+
             // Remove active class from all buttons and sections
             tabButtons.forEach(btn => btn.classList.remove('active'));
             sections.forEach(section => section.classList.remove('active'));
-            
+
             // Add active class to clicked button and corresponding section
             this.classList.add('active');
             document.getElementById(targetTab + '-section').classList.add('active');

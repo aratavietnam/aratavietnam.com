@@ -1,0 +1,73 @@
+# WooCommerce Integration
+
+## Overview
+E-commerce functionality for Arata Vietnam cosmetics distribution with WooCommerce integration.
+
+## Core Files
+- **WooCommerce Setup**: [themes/aratavietnam/inc/woocommerce.php](mdc:themes/aratavietnam/inc/woocommerce.php) - WooCommerce integration
+- **Product Templates**: [themes/aratavietnam/single-product.php](mdc:themes/aratavietnam/single-product.php) - Single product page
+- **Product Archive**: [themes/aratavietnam/archive-product.php](mdc:themes/aratavietnam/archive-product.php) - Product listing
+- **Setup Script**: [scripts/setup-woocommerce.sh](mdc:scripts/setup-woocommerce.sh) - WooCommerce configuration
+
+## Product Structure
+### Categories
+- **8 Main Collections**: Dropdown navigation
+- **Subcategories**: Product groupings within collections
+- **Featured Products**: Highlighted on homepage
+
+### Product Display
+- **Homepage**: 4 featured products (2x2 grid)
+- **All Products**: 5 product sets with horizontal scroll
+- **Product Pages**: Detailed product information
+- **Product Gallery**: Zoom, lightbox, slider support
+
+## Payment Methods
+- **COD**: Cash on delivery
+- **Bank Transfer**: Direct bank transfer
+- **Credit Card**: Online payment via Stripe
+- **Reference**: [plugins/woocommerce-gateway-stripe/](mdc:plugins/woocommerce-gateway-stripe/)
+
+## Shipping & Returns
+### Shipping Policy
+- **Direct Delivery**: Customer pickup at seller location
+- **COD Delivery**: Cash on delivery service
+- **Online Payment**: Credit card, bank transfer
+
+### Return Policy
+- **Time Limit**: 48h notification, 14 days return
+- **Conditions**: Wrong items, missing items, damaged packaging
+- **Location**: Office/store or postal service
+
+## Customer Management
+- **Account System**: Customer registration and login
+- **Order History**: Track previous purchases
+- **Wishlist**: Save favorite products
+- **Reviews**: Product ratings and reviews
+
+## Admin Features
+- **Product Management**: Add, edit, categorize products
+- **Order Management**: Process orders, update status
+- **Inventory**: Stock management
+- **Reports**: Sales analytics and reports
+
+## Theme Integration
+- **Custom Styling**: Brand-consistent product pages
+- **Responsive Design**: Mobile-optimized shopping experience
+- **Performance**: Optimized for fast loading
+- **SEO**: Product page optimization
+
+## Development Commands
+```bash
+# Setup WooCommerce
+docker-compose exec wp-cli wp plugin install woocommerce --activate --allow-root
+
+# Import products
+docker-compose exec wp-cli wp import products.xml --authors=create --allow-root
+
+# Configure payment gateway
+docker-compose exec wp-cli wp option update woocommerce_stripe_settings --allow-root
+```
+description:
+globs:
+alwaysApply: false
+---

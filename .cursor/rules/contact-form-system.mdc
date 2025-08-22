@@ -1,0 +1,59 @@
+# Contact Form System
+
+## Overview
+Complete contact form system with admin management, validation, and email notifications.
+
+## Core Files
+- **Template**: [themes/aratavietnam/page-templates/contact.php](mdc:themes/aratavietnam/page-templates/contact.php) - Contact page template
+- **Form Handler**: [themes/aratavietnam/inc/contact-form.php](mdc:themes/aratavietnam/inc/contact-form.php) - Form processing and admin
+- **Meta Fields**: [themes/aratavietnam/inc/contact-meta.php](mdc:themes/aratavietnam/inc/contact-meta.php) - Editable contact info
+
+## Form Fields
+- **Họ và tên** (required) - Minimum 2 characters
+- **Email** (required) - Valid email format
+- **Số điện thoại** (optional) - Vietnamese phone format
+- **Chủ đề** (optional) - Subject line
+- **Nội dung** (required) - Minimum 10 characters
+
+## Validation Rules
+```javascript
+// Client-side validation
+- Name: min 2 characters
+- Email: valid email format
+- Phone: optional, Vietnamese format
+- Message: min 10 characters
+```
+
+## Security Features
+- **Nonce Verification**: CSRF protection
+- **Honeypot Field**: Spam prevention
+- **Input Sanitization**: Data cleaning
+- **Server-side Validation**: Double-check client validation
+
+## Admin Interface
+- **Custom Post Type**: `contact_submission`
+- **Admin Columns**: Name, Email, Phone, Date
+- **Detail View**: Full submission details
+- **Email Notifications**: Automatic admin alerts
+
+## Database Structure
+```sql
+wp_posts (contact_submission)
+├── post_title: "Contact from [Name] ([Email])"
+└── wp_postmeta:
+    ├── arata_name: Contact name
+    ├── arata_email: Contact email
+    ├── arata_phone: Contact phone
+    ├── arata_subject: Subject line
+    └── arata_message: Message content
+```
+
+## Usage
+1. Create page with "Contact Page" template
+2. Configure contact info in page meta fields
+3. Form automatically handles submissions
+4. View submissions in WordPress admin under "Liên hệ"
+description:
+globs:
+alwaysApply: false
+---

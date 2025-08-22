@@ -1,6 +1,7 @@
 <?php
 /**
  * Template Name: Promotions Page
+ * Template Post Type: page
  * Description: Promotions page with newsletter signup form
  */
 
@@ -78,7 +79,7 @@ get_template_part('template-parts/hero');
                                 $end_date = get_post_meta(get_the_ID(), 'arata_promotion_end_date', true);
                                 $type = get_post_meta(get_the_ID(), 'arata_promotion_type', true);
                                 ?>
-                                <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-300">
+                                <div class="bg-white rounded-lg p-6 border border-gray-200 hover:border-primary transition-colors duration-300">
                                     <div class="flex items-start justify-between mb-4">
                                         <h4 class="text-xl font-semibold text-gray-900 flex-1">
                                             <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
@@ -86,25 +87,25 @@ get_template_part('template-parts/hero');
                                             </a>
                                         </h4>
                                         <?php if ($discount): ?>
-                                            <span class="bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-full text-sm font-bold ml-4 shadow-lg">
+                                            <span class="bg-primary text-white px-4 py-2 rounded-full text-sm font-bold ml-4">
                                                 <?php echo esc_html($discount); ?>
                                             </span>
                                         <?php endif; ?>
                                     </div>
-                                    
+
                                     <?php if ($code): ?>
-                                        <div class="mb-4 p-3 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                                        <div class="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-300">
                                             <div class="flex items-center justify-between">
                                                 <span class="text-sm text-gray-600">Mã khuyến mãi:</span>
                                                 <code class="bg-primary text-white px-3 py-1 rounded font-mono text-sm font-bold"><?php echo esc_html($code); ?></code>
                                             </div>
                                         </div>
                                     <?php endif; ?>
-                                    
+
                                     <div class="prose prose-sm max-w-none mb-4">
                                         <?php echo wp_trim_words(get_the_content(), 30); ?>
                                     </div>
-                                    
+
                                     <div class="flex items-center justify-between text-sm">
                                         <div class="flex items-center space-x-4">
                                             <?php if ($start_date): ?>
@@ -153,7 +154,7 @@ get_template_part('template-parts/hero');
                             <h3 class="text-2xl font-bold text-gray-900 mb-2">Đăng ký nhận thông báo</h3>
                             <p class="text-gray-600">Nhận thông tin về các chương trình khuyến mãi và ưu đãi đặc biệt từ Arata Vietnam.</p>
                         </div>
-                        
+
                         <?php
                         // Display success/error messages
                         if (isset($_GET['newsletter'])) {
@@ -173,32 +174,32 @@ get_template_part('template-parts/hero');
                             }
                         }
                         ?>
-                        
+
                         <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="space-y-4">
                             <input type="hidden" name="action" value="arata_newsletter_submit" />
                             <?php wp_nonce_field('arata_newsletter_submit', 'arata_newsletter_nonce'); ?>
-                            
+
                             <div>
                                 <label for="newsletter_name" class="block text-sm font-medium text-gray-700 mb-2">Họ và tên *</label>
-                                <input id="newsletter_name" name="name" type="text" required 
-                                       class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" 
+                                <input id="newsletter_name" name="name" type="text" required
+                                       class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
                                        placeholder="Nhập họ và tên của bạn" />
                             </div>
-                            
+
                             <div>
                                 <label for="newsletter_email" class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
-                                <input id="newsletter_email" name="email" type="email" required 
-                                       class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" 
+                                <input id="newsletter_email" name="email" type="email" required
+                                       class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
                                        placeholder="Nhập địa chỉ email của bạn" />
                             </div>
-                            
+
                             <div>
                                 <label for="newsletter_phone" class="block text-sm font-medium text-gray-700 mb-2">Số điện thoại</label>
-                                <input id="newsletter_phone" name="phone" type="tel" 
-                                       class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" 
+                                <input id="newsletter_phone" name="phone" type="tel"
+                                       class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
                                        placeholder="Nhập số điện thoại (tùy chọn)" />
                             </div>
-                            
+
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-3">Sở thích sản phẩm</label>
                                 <div class="space-y-3">
@@ -220,7 +221,7 @@ get_template_part('template-parts/hero');
                                     </label>
                                 </div>
                             </div>
-                            
+
                             <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary text-white py-4 rounded-lg hover:from-primary-dark hover:to-secondary-dark transition-all duration-300 font-medium text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                                 <span class="flex items-center justify-center">
                                     <span data-icon="send" data-size="20" class="mr-2"></span>
@@ -228,10 +229,10 @@ get_template_part('template-parts/hero');
                                 </span>
                             </button>
                         </form>
-                        
+
                         <p class="text-xs text-gray-500 text-center mt-4">
-                            Bằng cách đăng ký, bạn đồng ý với 
-                            <a href="<?php echo home_url('/chinh-sach-bao-mat'); ?>" class="text-primary hover:underline">Chính sách bảo mật</a> 
+                            Bằng cách đăng ký, bạn đồng ý với
+                            <a href="<?php echo home_url('/chinh-sach-bao-mat'); ?>" class="text-primary hover:underline">Chính sách bảo mật</a>
                             của chúng tôi.
                         </p>
                     </div>

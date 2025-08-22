@@ -1,6 +1,7 @@
 <?php
 /**
  * Template Name: Contact Page
+ * Template Post Type: page
  * Description: Simple, modern contact page with editable content and submissions storage.
  */
 

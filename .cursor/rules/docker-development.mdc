@@ -1,0 +1,68 @@
+# Docker Development Environment
+
+## Services Configuration
+- **WordPress**: Latest version on port 8000
+- **MySQL 8.0**: Database server
+- **WP CLI**: Command-line WordPress management
+
+## Key Files
+- **Docker Compose**: [docker-compose.yml](mdc:docker-compose.yml) - Service orchestration
+- **Setup Script**: [wp-cli-setup.sh](mdc:wp-cli-setup.sh) - WordPress initialization
+- **Start Script**: [start.sh](mdc:start.sh) - Quick start helper
+
+## Environment Variables
+```yaml
+# Database
+MYSQL_ROOT_PASSWORD: rootpassword
+MYSQL_DATABASE: wordpress
+MYSQL_USER: wordpress
+MYSQL_PASSWORD: wordpress_password
+
+# WordPress
+WORDPRESS_DB_HOST: db:3306
+WORDPRESS_DEBUG: 1
+WP_HOME: http://localhost:8000
+WP_SITEURL: http://localhost:8000
+```
+
+## Development Commands
+```bash
+# Start services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f wp-cli
+
+# Access WordPress container
+docker-compose exec wordpress bash
+
+# WP CLI commands
+docker-compose exec wp-cli wp --help --allow-root
+
+# Stop services
+docker-compose down
+
+# Remove everything (including data)
+docker-compose down -v
+```
+
+## Volume Mappings
+- **WordPress Data**: `wordpress_data:/var/www/html`
+- **Themes**: `./themes:/var/www/html/wp-content/themes`
+- **Plugins**: `./plugins:/var/www/html/wp-content/plugins`
+- **Uploads**: `./uploads:/var/www/html/wp-content/uploads`
+
+## WordPress Admin Access
+- **URL**: http://localhost:8000/wp-admin
+- **Username**: admin
+- **Password**: admin123
+
+## Troubleshooting
+- **Port conflicts**: Change port in docker-compose.yml
+- **Database issues**: Restart db service
+- **Permissions**: Use [scripts/docker-fix-permissions.sh](mdc:scripts/docker-fix-permissions.sh)
+- **WP CLI issues**: Re-run setup script
+description:
+globs:
+alwaysApply: false
+---

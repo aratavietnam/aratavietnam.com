@@ -1,0 +1,370 @@
+/**
+ * Contact Popup Styles
+ *
+ * @package ArataVietnam
+ */
+
+/* Popup Overlay */
+.arata-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.arata-popup-overlay[style*="display: flex"] {
+  opacity: 1;
+}
+
+/* Popup Container */
+.arata-popup-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.arata-popup-overlay[style*="display: flex"] .arata-popup-container {
+  transform: scale(1);
+}
+
+/* Popup Width Variants */
+.arata-popup-sm {
+  width: 400px;
+}
+
+.arata-popup-md {
+  width: 600px;
+}
+
+.arata-popup-lg {
+  width: 800px;
+}
+
+.arata-popup-xl {
+  width: 1000px;
+}
+
+/* Popup Header */
+.arata-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1.5rem 0;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1.5rem;
+}
+
+.arata-popup-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.arata-popup-close {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arata-popup-close:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+/* Popup Body */
+.arata-popup-body {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.arata-popup-description {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+/* Form Grid */
+.arata-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 640px) {
+  .arata-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Form Groups */
+.arata-form-group {
+  margin-bottom: 1rem;
+}
+
+.arata-form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+/* Input Wrapper */
+.arata-input-wrapper {
+  position: relative;
+}
+
+.arata-input-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1rem;
+  height: 1rem;
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+/* Form Inputs */
+.arata-form-input,
+.arata-form-textarea {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #1f2937;
+  background-color: white;
+  transition: all 0.2s ease;
+}
+
+.arata-form-input {
+  padding-left: 2.5rem;
+}
+
+.arata-form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.arata-form-input:focus,
+.arata-form-textarea:focus {
+  outline: none;
+  border-color: #F55E25;
+  box-shadow: 0 0 0 3px rgba(245, 94, 37, 0.1);
+}
+
+.arata-form-input::placeholder,
+.arata-form-textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* Error States */
+.arata-input-error {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.arata-error-message {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: none;
+}
+
+/* Form Actions */
+.arata-form-actions {
+  margin-top: 1.5rem;
+  text-align: right;
+}
+
+.arata-submit-btn {
+  background-color: #F55E25;
+  color: white;
+  border: none;
+  padding: 0.625rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.arata-submit-btn:hover:not(:disabled) {
+  background-color: #D14A0F;
+}
+
+.arata-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Loading Spinner */
+.arata-loading-spinner {
+  width: 1rem;
+  height: 1rem;
+  animation: arata-spin 1s linear infinite;
+  display: none;
+}
+
+/* Success Message */
+.arata-success-message {
+  text-align: center;
+  padding: 2rem;
+  color: #059669;
+}
+
+.arata-success-icon {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 1rem;
+  color: #059669;
+}
+
+.arata-success-message p {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Error Alert */
+.arata-error-alert {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #dc2626;
+}
+
+.arata-error-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.arata-error-alert p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+/* Body Scroll Lock */
+body.arata-popup-open {
+  overflow: hidden;
+}
+
+/* Animations */
+@keyframes arata-popup-slide-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes arata-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .arata-popup-container {
+    margin: 1rem;
+    max-width: calc(100vw - 2rem);
+  }
+
+  .arata-popup-header {
+    padding: 1rem 1rem 0;
+  }
+
+  .arata-popup-body {
+    padding: 0 1rem 1rem;
+  }
+
+  .arata-popup-title {
+    font-size: 1.125rem;
+  }
+}
+
+/* Focus Management */
+.arata-popup-overlay:focus {
+  outline: none;
+}
+
+.arata-popup-container:focus {
+  outline: none;
+}
+
+/* Accessibility */
+.arata-popup-overlay[aria-hidden="true"] {
+  display: none;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .arata-popup-overlay {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  .arata-popup-container {
+    border: 2px solid #000;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .arata-popup-container {
+    animation: none;
+  }
+
+  .arata-loading-spinner {
+    animation: none;
+  }
+
+  .arata-form-input,
+  .arata-form-textarea,
+  .arata-submit-btn {
+    transition: none;
+  }
+}

@@ -141,7 +141,7 @@
                     </div>
 
                     <!-- Menu columns -->
-                    <div class="grid grid-cols-1 gap-6">
+                    <div class="grid grid-cols-2 gap-6">
                         <!-- Menu 1 -->
                         <nav>
                             <?php
@@ -171,9 +171,9 @@
                                 'container' => false,
                                 'fallback_cb' => function() {
                                     echo '<ul class="footer-menu-links space-y-1">';
-                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-doi-tra')) . '" style="padding:0!important;margin:0!important;border-radius:0!important;background:transparent!important;border:none!important;box-shadow:none!important;transform:none!important;">Chính sách đổi trả</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-bao-mat')) . '" style="padding:0!important;margin:0!important;border-radius:0!important;background:transparent!important;border:none!important;box-shadow:none!important;transform:none!important;">Chính sách bảo mật</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/dieu-khoan-dich-vu')) . '" style="padding:0!important;margin:0!important;border-radius:0!important;background:transparent!important;border:none!important;box-shadow:none!important;transform:none!important;">Điều khoản dịch vụ</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-doi-tra')) . '">Chính sách đổi trả</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-bao-mat')) . '">Chính sách bảo mật</a></li>';
+                                    echo '<li><a href="' . esc_url(home_url('/dieu-khoan-dich-vu')) . '">Điều khoản dịch vụ</a></li>';
                                     echo '</ul>';
                                 },
                                 'link_before' => '',

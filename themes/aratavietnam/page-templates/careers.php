@@ -1,6 +1,7 @@
 <?php
 /**
  * Template Name: Careers Page
+ * Template Post Type: page
  * Description: Careers page with job listings and application form
  */
 
@@ -78,7 +79,7 @@ get_template_part('template-parts/hero');
                         $level = get_post_meta(get_the_ID(), 'arata_job_level', true);
                         $salary = get_post_meta(get_the_ID(), 'arata_job_salary', true);
                         $deadline = get_post_meta(get_the_ID(), 'arata_job_deadline', true);
-                        
+
                         $type_labels = [
                             'full_time' => 'Toàn thời gian',
                             'part_time' => 'Bán thời gian',
@@ -86,7 +87,7 @@ get_template_part('template-parts/hero');
                             'internship' => 'Thực tập',
                             'freelance' => 'Freelance'
                         ];
-                        
+
                         $level_labels = [
                             'intern' => 'Thực tập sinh',
                             'fresher' => 'Nhân viên mới',
@@ -97,7 +98,7 @@ get_template_part('template-parts/hero');
                             'director' => 'Giám đốc'
                         ];
                         ?>
-                        <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-300">
+                        <div class="bg-white rounded-lg p-6 border border-gray-200 hover:border-secondary transition-colors duration-300">
                             <div class="flex items-start justify-between mb-4">
                                 <h3 class="text-xl font-semibold text-gray-900 flex-1">
                                     <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
@@ -110,7 +111,7 @@ get_template_part('template-parts/hero');
                                     </span>
                                 <?php endif; ?>
                             </div>
-                            
+
                             <div class="space-y-3 mb-4 text-sm text-gray-600">
                                 <?php if ($department): ?>
                                     <div class="flex items-center">
@@ -119,7 +120,7 @@ get_template_part('template-parts/hero');
                                         <span class="ml-1"><?php echo esc_html($department); ?></span>
                                     </div>
                                 <?php endif; ?>
-                                
+
                                 <?php if ($location): ?>
                                     <div class="flex items-center">
                                         <span data-icon="map-pin" data-size="16" class="mr-2 text-gray-400"></span>
@@ -127,7 +128,7 @@ get_template_part('template-parts/hero');
                                         <span class="ml-1"><?php echo esc_html($location); ?></span>
                                     </div>
                                 <?php endif; ?>
-                                
+
                                 <?php if ($level): ?>
                                     <div class="flex items-center">
                                         <span data-icon="trending-up" data-size="16" class="mr-2 text-gray-400"></span>
@@ -135,7 +136,7 @@ get_template_part('template-parts/hero');
                                         <span class="ml-1"><?php echo esc_html($level_labels[$level] ?? $level); ?></span>
                                     </div>
                                 <?php endif; ?>
-                                
+
                                 <?php if ($salary): ?>
                                     <div class="flex items-center">
                                         <span data-icon="dollar-sign" data-size="16" class="mr-2 text-gray-400"></span>
@@ -143,7 +144,7 @@ get_template_part('template-parts/hero');
                                         <span class="ml-1"><?php echo esc_html($salary); ?></span>
                                     </div>
                                 <?php endif; ?>
-                                
+
                                 <?php if ($deadline): ?>
                                     <div class="flex items-center text-red-600">
                                         <span data-icon="calendar" data-size="16" class="mr-2"></span>
@@ -152,9 +153,9 @@ get_template_part('template-parts/hero');
                                     </div>
                                 <?php endif; ?>
                             </div>
-                            
+
                             <p class="text-gray-600 text-sm mb-4 line-clamp-3"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
-                            
+
                             <div class="flex items-center justify-between">
                                 <a href="<?php the_permalink(); ?>" class="text-primary hover:text-primary-dark font-medium text-sm">
                                     Xem chi tiết →
@@ -225,39 +226,39 @@ get_template_part('template-parts/hero');
                     <span data-icon="x" data-size="24"></span>
                 </button>
             </div>
-            
+
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" enctype="multipart/form-data" class="space-y-4">
                 <input type="hidden" name="action" value="arata_job_application_submit" />
                 <?php wp_nonce_field('arata_job_application_submit', 'arata_job_application_nonce'); ?>
                 <input type="hidden" id="applicationPosition" name="position" value="" />
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="applicant_name" class="block text-sm font-medium text-gray-700 mb-1">Họ và tên *</label>
                         <input id="applicant_name" name="name" type="text" required class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
                     </div>
-                    
+
                     <div>
                         <label for="applicant_email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
                         <input id="applicant_email" name="email" type="email" required class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
                     </div>
                 </div>
-                
+
                 <div>
                     <label for="applicant_phone" class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại *</label>
                     <input id="applicant_phone" name="phone" type="tel" required class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
                 </div>
-                
+
                 <div>
                     <label for="applicant_cv" class="block text-sm font-medium text-gray-700 mb-1">CV (PDF, DOC, DOCX) *</label>
                     <input id="applicant_cv" name="cv" type="file" accept=".pdf,.doc,.docx" required class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
                 </div>
-                
+
                 <div>
                     <label for="applicant_cover_letter" class="block text-sm font-medium text-gray-700 mb-1">Thư xin việc</label>
                     <textarea id="applicant_cover_letter" name="cover_letter" rows="4" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Chia sẻ về bản thân và lý do bạn muốn gia nhập Arata Vietnam..."></textarea>
                 </div>
-                
+
                 <div class="flex items-center justify-end space-x-4 pt-4">
                     <button type="button" onclick="closeApplicationModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800">
                         Hủy

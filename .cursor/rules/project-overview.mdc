@@ -1,0 +1,54 @@
+# Arata Vietnam WordPress Project Overview
+
+## Project Type
+WordPress-based E-commerce website for Arata Vietnam (Japanese cosmetics distributor in Vietnam)
+
+## Key Technologies
+- **WordPress**: Latest version with WooCommerce
+- **TailPress Framework**: Modern WordPress theme framework
+- **Tailwind CSS v4**: Utility-first CSS framework
+- **Vite**: Modern build system
+- **Docker**: Containerized development environment
+- **PHP 8.0+**: Modern PHP features
+
+## Brand Colors
+- **Primary (Orange)**: `#F55E25` - Main brand color
+- **Secondary (Blue)**: `#0066A6` - Secondary brand color
+- **Tertiary (Yellow-Orange)**: `#FFAB14` - Accent color
+
+## Project Structure
+- **Root**: [docker-compose.yml](mdc:docker-compose.yml) - Docker orchestration
+- **Theme**: [themes/aratavietnam/](mdc:themes/aratavietnam/) - Custom TailPress theme
+- **Plugins**: [plugins/](mdc:plugins/) - WordPress plugins directory
+- **Scripts**: [scripts/](mdc:scripts/) - Automation and setup scripts
+- **Docs**: [docs/](mdc:docs/) - Project documentation and briefs
+
+## Key Files
+- **Theme Entry**: [themes/aratavietnam/functions.php](mdc:themes/aratavietnam/functions.php)
+- **Build Config**: [themes/aratavietnam/vite.config.mjs](mdc:themes/aratavietnam/vite.config.mjs)
+- **Package Config**: [themes/aratavietnam/package.json](mdc:themes/aratavietnam/package.json)
+- **Setup Script**: [wp-cli-setup.sh](mdc:wp-cli-setup.sh)
+
+## Development Commands
+```bash
+# Start development environment
+docker-compose up -d
+
+# Theme development
+cd themes/aratavietnam
+npm run dev    # Vite development server
+npm run build  # Production build
+
+# WordPress CLI
+docker-compose exec wp-cli wp --help --allow-root
+```
+
+## Design Requirements
+- **Font**: Bahnschrift Font (or similar)
+- **Style**: Minimalist, gentle, bright
+- **Effects**: Soft, creative, no rapid movements
+- **Optimization**: Sharp images, fast loading
+description:
+globs:
+alwaysApply: false
+---

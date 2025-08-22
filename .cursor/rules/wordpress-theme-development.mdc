@@ -1,0 +1,41 @@
+# WordPress Theme Development with TailPress
+
+## Theme Structure
+- **Entry Point**: [themes/aratavietnam/functions.php](mdc:themes/aratavietnam/functions.php) - Main theme configuration
+- **Template Files**: Standard WordPress template hierarchy
+- **Assets**: [themes/aratavietnam/resources/](mdc:themes/aratavietnam/resources/) - Source files
+- **Build Output**: [themes/aratavietnam/dist/](mdc:themes/aratavietnam/dist/) - Compiled assets
+
+## TailPress Framework
+- **Theme Instance**: Use `aratavietnam()` function for configuration
+- **Asset Management**: Vite integration with Tailwind CSS
+- **Component System**: Modular structure in [themes/aratavietnam/inc/](mdc:themes/aratavietnam/inc/)
+- **Template Parts**: Reusable components in [themes/aratavietnam/template-parts/](mdc:themes/aratavietnam/template-parts/)
+
+## Key Components
+- **WooCommerce**: [themes/aratavietnam/inc/woocommerce.php](mdc:themes/aratavietnam/inc/woocommerce.php)
+- **Contact Form**: [themes/aratavietnam/inc/contact-form.php](mdc:themes/aratavietnam/inc/contact-form.php)
+- **News System**: [themes/aratavietnam/inc/news-post-types.php](mdc:themes/aratavietnam/inc/news-post-types.php)
+- **Vietnamese Fonts**: [themes/aratavietnam/inc/fonts-vietnamese.php](mdc:themes/aratavietnam/inc/fonts-vietnamese.php)
+
+## CSS Architecture
+- **Main Styles**: [themes/aratavietnam/resources/css/app.css](mdc:themes/aratavietnam/resources/css/app.css)
+- **Custom Styles**: [themes/aratavietnam/resources/css/custom.css](mdc:themes/aratavietnam/resources/css/custom.css)
+- **Theme Variables**: [themes/aratavietnam/resources/css/theme.css](mdc:themes/aratavietnam/resources/css/theme.css)
+- **Tailwind Config**: Automatic integration with brand colors
+
+## Development Workflow
+1. Edit files in `resources/` directory
+2. Use `npm run dev` for hot reload
+3. Use `npm run build` for production
+4. Assets automatically compiled to `dist/`
+
+## WordPress Integration
+- **Custom Post Types**: Contact submissions, News articles
+- **Meta Fields**: Editable content for pages
+- **Admin Interface**: Custom admin panels
+- **Security**: Nonce verification, input sanitization
+description:
+globs:
+alwaysApply: false
+---
