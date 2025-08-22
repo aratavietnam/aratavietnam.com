@@ -9,18 +9,28 @@ get_header();
 
 // Hero
 $hero_title = 'Tuyển dụng';
-// Find the Careers settings page to get the hero subtitle
-    $careers_page = get_pages(['meta_key' => '_wp_page_template', 'meta_value' => 'page-templates/careers.php', 'number' => 1]);
-    $hero_subtitle = 'Cơ hội nghề nghiệp tại Arata Vietnam'; // Default value
-    if (!empty($careers_page)) {
-        $careers_page_id = $careers_page[0]->ID;
-        $saved_subtitle = get_post_meta($careers_page_id, 'arata_news_subtitle', true);
-        if (!empty($saved_subtitle)) {
-            $hero_subtitle = $saved_subtitle;
-        }
+$hero_subtitle = 'Cơ hội nghề nghiệp tại Arata Vietnam'; // Default subtitle
+$hero_description = ''; // Default description
+
+// Find the Careers settings page to get the hero settings
+$careers_page = get_pages(['meta_key' => '_wp_page_template', 'meta_value' => 'page-templates/careers.php', 'number' => 1]);
+if (!empty($careers_page)) {
+    $careers_page_id = $careers_page[0]->ID;
+
+    $saved_subtitle = get_post_meta($careers_page_id, 'arata_news_subtitle', true);
+    if (!empty($saved_subtitle)) {
+        $hero_subtitle = $saved_subtitle;
     }
+
+    $saved_description = get_post_meta($careers_page_id, 'arata_news_intro', true);
+    if (!empty($saved_description)) {
+        $hero_description = $saved_description;
+    }
+}
+
 set_query_var('title', $hero_title);
 set_query_var('subtitle', $hero_subtitle);
+set_query_var('description', $hero_description);
 get_template_part('template-parts/hero');
 ?>
 
