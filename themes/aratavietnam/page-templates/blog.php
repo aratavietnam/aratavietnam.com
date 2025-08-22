@@ -11,7 +11,22 @@ get_header();
 
 // Hero
 $hero_title = get_the_title();
-$hero_subtitle = get_post_meta(get_the_ID(), 'arata_news_subtitle', true) ?: 'Chia sẻ kiến thức và kinh nghiệm';
+// Try to get subtitle from the current page first
+$hero_subtitle = get_post_meta(get_the_ID(), 'arata_news_subtitle', true);
+
+// If empty, fall back to the main News page setting
+if (empty($hero_subtitle)) {
+    $news_page = get_pages(['meta_key' => '_wp_page_template', 'meta_value' => 'page-templates/news.php']);
+    if (!empty($news_page)) {
+        $news_page_id = $news_page[0]->ID;
+        $hero_subtitle = get_post_meta($news_page_id, 'arata_news_subtitle', true);
+    }
+}
+
+// Fallback to a default value if still not found
+if (empty($hero_subtitle)) {
+    $hero_subtitle = 'Chia sẻ kiến thức và kinh nghiệm';
+}
 set_query_var('title', $hero_title);
 set_query_var('subtitle', $hero_subtitle);
 get_template_part('template-parts/hero');

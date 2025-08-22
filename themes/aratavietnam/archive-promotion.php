@@ -9,7 +9,16 @@ get_header();
 
 // Hero
 $hero_title = 'Khuyến mãi';
-$hero_subtitle = 'Ưu đãi đặc biệt từ Arata Vietnam';
+// Find the main News page to get the hero subtitle setting
+$news_page = get_pages(['meta_key' => '_wp_page_template', 'meta_value' => 'page-templates/news.php']);
+$hero_subtitle = 'Ưu đãi đặc biệt từ Arata Vietnam'; // Default value
+if (!empty($news_page)) {
+    $news_page_id = $news_page[0]->ID;
+    $saved_subtitle = get_post_meta($news_page_id, 'arata_news_subtitle', true);
+    if (!empty($saved_subtitle)) {
+        $hero_subtitle = $saved_subtitle;
+    }
+}
 set_query_var('title', $hero_title);
 set_query_var('subtitle', $hero_subtitle);
 get_template_part('template-parts/hero');
