@@ -9,7 +9,6 @@
 
   // Check if required data is available
   if (typeof arataContactPopup === 'undefined') {
-    console.error('arataContactPopup data not found');
     return;
   }
 
@@ -105,7 +104,6 @@
   // Initialize popup
   function initContactPopup() {
     const settings = arataContactPopup.settings;
-    console.log('Initializing contact popup with settings:', settings);
 
     // Add popup HTML to body
     document.body.insertAdjacentHTML('beforeend', getPopupHTML(settings));
@@ -121,15 +119,14 @@
     const form = document.getElementById('arata-popup-form');
 
     // Open popup when clicking contact menu items
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
       const target = e.target.closest('a');
       if (!target) return;
 
       const href = target.getAttribute('href') || '';
       const isContactLink = href.includes('contact') || href.includes('lien-he') || target.getAttribute('data-contact-popup') === 'true';
-      
+
       if (isContactLink && arataContactPopup.settings.enabled) {
-        console.log('Contact link clicked, opening popup...');
         e.preventDefault();
         e.stopPropagation();
         openPopup();
@@ -155,7 +152,7 @@
     form.addEventListener('submit', handleFormSubmission);
 
     // Real-time validation
-    form.querySelectorAll('input, textarea').forEach(function(field) {
+    form.querySelectorAll('input, textarea').forEach(function (field) {
       field.addEventListener('blur', function () {
         validateField(field);
       });
@@ -168,7 +165,6 @@
     popup.style.display = 'flex';
     document.body.classList.add('arata-popup-open');
     popup.querySelector('input:first-of-type').focus();
-    console.log('Popup opened');
   }
 
   // Close popup
@@ -177,18 +173,17 @@
     popup.style.display = 'none';
     document.body.classList.remove('arata-popup-open');
     resetForm();
-    console.log('Popup closed');
   }
 
   // Reset form
   function resetForm() {
     const form = document.getElementById('arata-popup-form');
     form.reset();
-    form.querySelectorAll('.arata-error-message').forEach(function(error) {
+    form.querySelectorAll('.arata-error-message').forEach(function (error) {
       error.textContent = '';
       error.style.display = 'none';
     });
-    form.querySelectorAll('.arata-form-input, .arata-form-textarea').forEach(function(field) {
+    form.querySelectorAll('.arata-form-input, .arata-form-textarea').forEach(function (field) {
       field.classList.remove('arata-input-error');
     });
     const submitBtn = form.querySelector('.arata-submit-btn');
@@ -281,7 +276,7 @@
 
     // Validate all fields
     let isValid = true;
-    form.querySelectorAll('input[required], textarea[required]').forEach(function(field) {
+    form.querySelectorAll('input[required], textarea[required]').forEach(function (field) {
       if (!validateField(field)) {
         isValid = false;
       }
@@ -310,25 +305,24 @@
       method: 'POST',
       body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        showSuccessMessage(data.data.message);
-        resetForm();
-        setTimeout(closePopup, 2000);
-      } else {
-        showErrorMessage(data.data.message);
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      showErrorMessage('Có lỗi xảy ra. Vui lòng thử lại.');
-    })
-    .finally(() => {
-      submitBtn.disabled = false;
-      submitText.textContent = 'Gửi liên hệ';
-      loadingSpinner.style.display = 'none';
-    });
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          showSuccessMessage(data.data.message);
+          resetForm();
+          setTimeout(closePopup, 2000);
+        } else {
+          showErrorMessage(data.data.message);
+        }
+      })
+      .catch(error => {
+        showErrorMessage('Có lỗi xảy ra. Vui lòng thử lại.');
+      })
+      .finally(() => {
+        submitBtn.disabled = false;
+        submitText.textContent = 'Gửi liên hệ';
+        loadingSpinner.style.display = 'none';
+      });
   }
 
   // Show success message
@@ -359,20 +353,14 @@
         </svg>
         <p>${message}</p>
     `;
-    
+
     body.insertBefore(errorAlert, body.firstChild);
   }
 
   // Initialize when document is ready
   document.addEventListener('DOMContentLoaded', function () {
-    console.log('Contact popup script loaded');
-    console.log('arataContactPopup:', typeof arataContactPopup !== 'undefined' ? arataContactPopup : 'undefined');
-
     if (typeof arataContactPopup !== 'undefined' && arataContactPopup.settings.enabled) {
-      console.log('Initializing contact popup...');
       initContactPopup();
-    } else {
-      console.log('Contact popup not enabled or not configured');
     }
   });
 

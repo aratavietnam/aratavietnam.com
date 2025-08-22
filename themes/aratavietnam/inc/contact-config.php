@@ -157,7 +157,6 @@ function arata_sanitize_select($input, $setting) {
  */
 function arata_get_contact_popup_mode() {
     $mode = get_theme_mod('arata_contact_popup_mode', false);
-    error_log('Contact popup mode check: ' . ($mode ? 'true' : 'false'));
     return $mode;
 }
 
@@ -189,39 +188,8 @@ function arata_enqueue_contact_popup_assets() {
         'nonce' => wp_create_nonce('arata_contact_popup_nonce'),
         'settings' => $settings,
     ));
-
-    // Add debug info
-    error_log('Contact popup settings: ' . print_r($settings, true));
-    error_log('Script handle: aratavietnam');
 }
 add_action('wp_enqueue_scripts', 'arata_enqueue_contact_popup_assets');
-add_action('wp_footer', 'arata_enqueue_contact_popup_assets_fallback');
-
-/**
- * Fallback method to ensure script data is available
- */
-function arata_enqueue_contact_popup_assets_fallback() {
-    if (!wp_script_is('aratavietnam', 'enqueued')) {
-        return;
-    }
-
-    $settings = arata_get_contact_popup_settings();
-
-    // Add script data directly in footer if wp_localize_script didn't work
-    ?>
-    <script>
-    if (typeof arataContactPopup === 'undefined') {
-        console.log('Creating arataContactPopup fallback...');
-        window.arataContactPopup = <?php echo json_encode(array(
-            'ajaxUrl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('arata_contact_popup_nonce'),
-            'settings' => $settings,
-        )); ?>;
-        console.log('arataContactPopup fallback created:', window.arataContactPopup);
-    }
-    </script>
-    <?php
-}
 
 /**
  * Modify contact menu links to trigger popup when enabled
@@ -234,7 +202,7 @@ function arata_modify_contact_menu_links($items, $args) {
             '<a$1 data-contact-popup="true">',
             $items
         );
-        
+
         // Also handle Vietnamese variations
         $items = preg_replace(
             '/<a([^>]*href=[^>]*(?:lien-he|liên-hệ|contact)[^>]*[^>]*)>/i',
@@ -260,38 +228,34 @@ function arata_add_contact_popup_script() {
         document.addEventListener('click', function(e) {
             const target = e.target.closest('a');
             if (!target) return;
-            
+
             const href = target.getAttribute('href') || '';
-            const isContactLink = href.includes('contact') || 
-                                 href.includes('lien-he') || 
+            const isContactLink = href.includes('contact') ||
+                                 href.includes('lien-he') ||
                                  href.includes('liên-hệ') ||
                                  target.getAttribute('data-contact-popup') === 'true';
-            
+
             if (isContactLink) {
-                console.log('Contact link clicked:', href);
                 e.preventDefault();
                 e.stopPropagation();
-                
+
                 // Check if popup is available and enabled
                 if (typeof arataContactPopup !== 'undefined' && arataContactPopup.settings.enabled) {
-                    console.log('Opening contact popup...');
                     // Try to call the popup function
                     if (typeof initContactPopup === 'function') {
                         initContactPopup();
                     } else if (typeof openPopup === 'function') {
                         openPopup();
                     } else {
-                        console.log('Popup functions not found, checking for popup element...');
+                        // Fallback: check for popup element
                         const popup = document.getElementById('arata-contact-popup');
                         if (popup) {
                             popup.style.display = 'flex';
                             document.body.classList.add('arata-popup-open');
-                        } else {
-                            console.error('Contact popup element not found');
                         }
                     }
                 } else {
-                    console.log('Contact popup not enabled, navigating to contact page');
+                    // Fallback to contact page
                     window.location.href = href;
                 }
             }
@@ -303,39 +267,27 @@ function arata_add_contact_popup_script() {
 add_action('wp_footer', 'arata_add_contact_popup_script');
 
 /**
- * Remove the old debug script and replace with cleaner version
+ * Create fallback arataContactPopup object directly in PHP
+ * This ensures the popup works even if Vite build fails
  */
-function arata_add_contact_popup_debug() {
+function arata_create_fallback_contact_popup_object() {
     if (!arata_get_contact_popup_mode()) {
         return;
     }
+
+    $settings = arata_get_contact_popup_settings();
     ?>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('=== CONTACT POPUP DEBUG ===');
-        console.log('arataContactPopup:', typeof arataContactPopup !== 'undefined' ? arataContactPopup : 'undefined');
-        if (typeof arataContactPopup !== 'undefined') {
-            console.log('Settings:', arataContactPopup.settings);
-            console.log('Enabled:', arataContactPopup.settings.enabled);
-            console.log('AJAX URL:', arataContactPopup.ajaxUrl);
-            console.log('Nonce:', arataContactPopup.nonce);
-        }
-        
-        // Check for popup element
-        const popup = document.getElementById('arata-contact-popup');
-        console.log('Popup element found:', !!popup);
-        
-        // Check for contact links
-        const contactLinks = document.querySelectorAll('a[href*="contact"], a[href*="lien-he"], a[href*="liên-hệ"]');
-        console.log('Contact links found:', contactLinks.length);
-        contactLinks.forEach((link, index) => {
-            console.log(`Contact link ${index + 1}:`, link.href, 'data-contact-popup:', link.getAttribute('data-contact-popup'));
-        });
-    });
+    // Create fallback arataContactPopup object
+    window.arataContactPopup = {
+        ajaxUrl: '<?php echo admin_url('admin-ajax.php'); ?>',
+        nonce: '<?php echo wp_create_nonce('arata_contact_popup_nonce'); ?>',
+        settings: <?php echo json_encode($settings); ?>
+    };
     </script>
     <?php
 }
-add_action('wp_footer', 'arata_add_contact_popup_debug');
+add_action('wp_head', 'arata_create_fallback_contact_popup_object');
 
 /**
  * AJAX handler for popup form submission
@@ -391,40 +343,3 @@ function arata_handle_popup_contact_submission() {
 }
 add_action('wp_ajax_arata_popup_contact_submit', 'arata_handle_popup_contact_submission');
 add_action('wp_ajax_nopriv_arata_popup_contact_submit', 'arata_handle_popup_contact_submission');
-
-/**
- * Add test button for popup (only in development)
- */
-function arata_add_contact_popup_test_button() {
-    if (!arata_get_contact_popup_mode()) {
-        return;
-    }
-    ?>
-    <div style="position: fixed; top: 100px; right: 20px; z-index: 10000; background: #f55e25; color: white; padding: 10px; border-radius: 5px; font-size: 12px;">
-        <button onclick="testContactPopup()" style="background: white; color: #f55e25; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-bottom: 5px; width: 100%;">Test Popup</button>
-        <div>Popup: <?php echo arata_get_contact_popup_mode() ? 'ON' : 'OFF'; ?></div>
-        <div>Settings: <?php echo json_encode(arata_get_contact_popup_settings()); ?></div>
-    </div>
-    <script>
-    function testContactPopup() {
-        console.log('Testing contact popup...');
-        if (typeof arataContactPopup !== 'undefined') {
-            console.log('arataContactPopup found:', arataContactPopup);
-            if (arataContactPopup.settings.enabled) {
-                if (typeof initContactPopup === 'function') {
-                    console.log('Calling initContactPopup...');
-                    initContactPopup();
-                } else {
-                    console.log('initContactPopup function not found');
-                }
-            } else {
-                console.log('Popup not enabled');
-            }
-        } else {
-            console.log('arataContactPopup not found');
-        }
-    }
-    </script>
-    <?php
-}
-add_action('wp_footer', 'arata_add_contact_popup_test_button');

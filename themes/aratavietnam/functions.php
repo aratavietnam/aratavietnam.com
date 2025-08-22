@@ -17,6 +17,7 @@ require_once get_template_directory() . '/inc/news-post-types.php';
 require_once get_template_directory() . '/inc/news-meta-fields.php';
 require_once get_template_directory() . '/inc/news-forms.php';
 require_once get_template_directory() . '/inc/class-dropdown-walker.php';
+require_once get_template_directory() . '/inc/about-meta.php';
 
 // Register custom page templates
 function aratavietnam_register_page_templates($templates) {

@@ -46,13 +46,18 @@ get_template_part('template-parts/hero');
                 <?php
                 if (have_posts()) :
                     while (have_posts()) : the_post();
+                        // Lấy meta fields từ news-meta-fields.php
                         $department = get_post_meta(get_the_ID(), 'arata_job_department', true);
                         $location = get_post_meta(get_the_ID(), 'arata_job_location', true);
                         $type = get_post_meta(get_the_ID(), 'arata_job_type', true);
                         $level = get_post_meta(get_the_ID(), 'arata_job_level', true);
                         $salary = get_post_meta(get_the_ID(), 'arata_job_salary', true);
                         $deadline = get_post_meta(get_the_ID(), 'arata_job_deadline', true);
+                        $requirements = get_post_meta(get_the_ID(), 'arata_job_requirements', true);
+                        $benefits = get_post_meta(get_the_ID(), 'arata_job_benefits', true);
+                        $contact = get_post_meta(get_the_ID(), 'arata_job_contact', true);
 
+                        // Định nghĩa label cho loại hình công việc
                         $type_labels = [
                             'full_time' => 'Toàn thời gian',
                             'part_time' => 'Bán thời gian',
@@ -61,6 +66,7 @@ get_template_part('template-parts/hero');
                             'freelance' => 'Freelance'
                         ];
 
+                        // Định nghĩa label cho cấp bậc
                         $level_labels = [
                             'intern' => 'Thực tập sinh',
                             'fresher' => 'Nhân viên mới',
@@ -119,6 +125,20 @@ get_template_part('template-parts/hero');
                                     </div>
                                 <?php endif; ?>
                             </div>
+
+                            <?php if ($requirements): ?>
+                                <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                    <h4 class="font-semibold text-blue-800 mb-2 text-sm">Yêu cầu:</h4>
+                                    <p class="text-xs text-blue-700 line-clamp-3"><?php echo esc_html($requirements); ?></p>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if ($benefits): ?>
+                                <div class="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                                    <h4 class="font-semibold text-green-800 mb-2 text-sm">Quyền lợi:</h4>
+                                    <p class="text-xs text-green-700 line-clamp-3"><?php echo esc_html($benefits); ?></p>
+                                </div>
+                            <?php endif; ?>
 
                             <div class="pt-4 border-t border-gray-200">
                                 <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-secondary hover:text-secondary-dark font-medium text-sm">

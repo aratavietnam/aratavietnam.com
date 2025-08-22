@@ -46,11 +46,23 @@ get_template_part('template-parts/hero');
                 <?php
                 if (have_posts()) :
                     while (have_posts()) : the_post();
+                        // Lấy meta fields từ news-meta-fields.php
+                        $type = get_post_meta(get_the_ID(), 'arata_promotion_type', true);
                         $discount = get_post_meta(get_the_ID(), 'arata_promotion_discount', true);
                         $code = get_post_meta(get_the_ID(), 'arata_promotion_code', true);
                         $start_date = get_post_meta(get_the_ID(), 'arata_promotion_start_date', true);
                         $end_date = get_post_meta(get_the_ID(), 'arata_promotion_end_date', true);
-                        $type = get_post_meta(get_the_ID(), 'arata_promotion_type', true);
+                        $conditions = get_post_meta(get_the_ID(), 'arata_promotion_conditions', true);
+                        $products = get_post_meta(get_the_ID(), 'arata_promotion_products', true);
+
+                        // Định nghĩa label cho loại khuyến mãi
+                        $type_labels = [
+                            'percentage' => 'Giảm theo phần trăm',
+                            'fixed' => 'Giảm số tiền cố định',
+                            'buy_get' => 'Mua X tặng Y',
+                            'free_shipping' => 'Miễn phí vận chuyển',
+                            'bundle' => 'Combo sản phẩm'
+                        ];
                         ?>
                         <div class="bg-white rounded-lg p-6 border border-gray-200 hover:border-primary transition-colors duration-300">
                             <div class="flex items-start justify-between mb-4">
@@ -65,6 +77,14 @@ get_template_part('template-parts/hero');
                                     </span>
                                 <?php endif; ?>
                             </div>
+
+                            <?php if ($type && isset($type_labels[$type])): ?>
+                                <div class="mb-3">
+                                    <span class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
+                                        <?php echo esc_html($type_labels[$type]); ?>
+                                    </span>
+                                </div>
+                            <?php endif; ?>
 
                             <?php if ($code): ?>
                                 <div class="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-300">
@@ -83,10 +103,10 @@ get_template_part('template-parts/hero');
                                     </div>
                                 <?php endif; ?>
 
-                                <?php if ($type): ?>
-                                    <div class="flex items-center text-sm text-gray-600">
-                                        <span data-icon="tag" data-size="16" class="text-gray-400 mr-2"></span>
-                                        <?php echo esc_html($type); ?>
+                                <?php if ($products): ?>
+                                    <div class="flex items-start text-sm text-gray-600">
+                                        <span data-icon="package" data-size="16" class="text-gray-400 mr-2 mt-0.5"></span>
+                                        <span class="flex-1"><?php echo esc_html($products); ?></span>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -94,6 +114,13 @@ get_template_part('template-parts/hero');
                             <div class="prose text-sm text-gray-600 mb-6">
                                 <?php the_excerpt(); ?>
                             </div>
+
+                            <?php if ($conditions): ?>
+                                <div class="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                    <h4 class="font-semibold text-yellow-800 mb-2">Điều kiện áp dụng:</h4>
+                                    <p class="text-sm text-yellow-700"><?php echo esc_html($conditions); ?></p>
+                                </div>
+                            <?php endif; ?>
 
                             <div class="pt-4 border-t border-gray-200">
                                 <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm">

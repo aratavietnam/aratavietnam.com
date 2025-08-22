@@ -94,8 +94,6 @@ function initNavigation() {
         }
       }
     })
-  } else {
-    console.error('Menu toggle or mobile navigation not found')
   }
 }
 
@@ -462,7 +460,7 @@ function initSearch() {
           displayModalSearchResults(data, query)
         })
         .catch(error => {
-          console.error('Search error:', error)
+          // Handle search error silently
           showModalSearchError()
         })
     }
@@ -812,7 +810,7 @@ function initCart() {
           }
         })
         .catch(error => {
-          console.error('Remove item error:', error)
+          // Handle remove item error silently
         })
     }
   }
@@ -999,20 +997,15 @@ function initDropdownMenu() {
   });
 
   // Debug: Log dropdown elements
-  console.log('Dropdown menu initialized. Found', dropdownItems.length, 'dropdown items');
+
   dropdownItems.forEach(function (item, index) {
     const dropdown = item.querySelector('.dropdown-menu');
-    console.log('Dropdown', index + 1, ':', {
-      item: item,
-      dropdown: dropdown,
-      hasDropdown: !!dropdown
-    });
+
   });
 }
 
 // Contact Popup Handler
 function initContactPopup() {
-  console.log('Initializing contact popup...');
 
   // Create popup HTML
   const popupHTML = `
@@ -1111,7 +1104,7 @@ function initContactPopup() {
   // Open popup when clicking contact links
   document.addEventListener('click', function (e) {
     if (e.target.matches('a[href*="contact"], a[href*="lien-he"]')) {
-      console.log('Contact link clicked, opening popup...');
+
       e.preventDefault();
       openPopup();
     }
@@ -1186,7 +1179,7 @@ function initContactPopup() {
         }
       })
       .catch(error => {
-        console.error('Form submission error:', error);
+        // Handle form submission error silently
         showErrorMessage('Có lỗi xảy ra. Vui lòng thử lại.');
       })
       .finally(() => {
@@ -1220,7 +1213,7 @@ function initContactPopup() {
     `);
   }
 
-  console.log('Contact popup initialized successfully');
+
 }
 
 // Initialize everything when DOM is ready
@@ -1236,10 +1229,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Initialize contact popup if enabled
   if (typeof arataContactPopup !== 'undefined' && arataContactPopup.settings.enabled) {
-    console.log('Contact popup enabled, initializing...');
+
     initContactPopup();
   } else {
-    console.log('Contact popup not enabled or not configured');
+
   }
 });
 
