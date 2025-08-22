@@ -20,7 +20,7 @@
                         <div class="w-16 h-1 rounded-full" style="background: #FFAB14;"></div>
                     </div>
 
-                    <div class="space-y-4 text-white/90">
+                    <div class="grid gap-y-4">
                         <!-- Address -->
                         <div class="flex items-start group">
                             <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-4 transition-all duration-300 flex-shrink-0" style="background: #FFAB14;">
@@ -95,7 +95,7 @@
                     </div>
 
                     <!-- Social Media Icons -->
-                    <div class="flex justify-start lg:justify-center gap-8 md:gap-10">
+                    <div class="flex justify-start lg:justify-center gap-4">
                         <?php
                         $facebook_url = get_theme_mod('footer_facebook_url', 'https://www.facebook.com/aratavietnam');
                         $instagram_url = get_theme_mod('footer_instagram_url', 'https://www.instagram.com/aratavietnam/');

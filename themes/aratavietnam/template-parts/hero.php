@@ -20,7 +20,7 @@ $hero_description = get_query_var('description');
             </div>
 
             <h1 class="text-4xl sm:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                <?php echo esc_html($hero_title ? $hero_title : $page_title); ?>
+                <?php echo esc_html($hero_title); ?>
             </h1>
 
             <?php if (!empty($hero_description)) : ?>

@@ -1,10 +1,7 @@
 /* 1FTV Gasket Font Family - Primary font for Vietnamese */
 @font-face {
     font-family: "1FTV Gasket";
-    src: url("../fonts/1FTV-Gasket.woff2") format("woff2"),
-         url("../fonts/1FTV-Gasket.woff") format("woff"),
-         url("../fonts/1FTV-Gasket.ttf") format("truetype"),
-         url("../fonts/1FTV-Gasket.otf") format("opentype");
+    src: url("../fonts/1FTV-Gasket.otf") format("opentype");
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -14,10 +11,7 @@
 /* 1FTV Gasket Font Weight Variations */
 @font-face {
     font-family: "1FTV Gasket";
-    src: url("../fonts/1FTV-Gasket.woff2") format("woff2"),
-         url("../fonts/1FTV-Gasket.woff") format("woff"),
-         url("../fonts/1FTV-Gasket.ttf") format("truetype"),
-         url("../fonts/1FTV-Gasket.otf") format("opentype");
+    src: url("../fonts/1FTV-Gasket.otf") format("opentype");
     font-weight: 300;
     font-style: normal;
     font-display: swap;
@@ -26,10 +20,7 @@
 
 @font-face {
     font-family: "1FTV Gasket";
-    src: url("../fonts/1FTV-Gasket.woff2") format("woff2"),
-         url("../fonts/1FTV-Gasket.woff") format("woff"),
-         url("../fonts/1FTV-Gasket.ttf") format("truetype"),
-         url("../fonts/1FTV-Gasket.otf") format("opentype");
+    src: url("../fonts/1FTV-Gasket.otf") format("opentype");
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -38,10 +29,7 @@
 
 @font-face {
     font-family: "1FTV Gasket";
-    src: url("../fonts/1FTV-Gasket.woff2") format("woff2"),
-         url("../fonts/1FTV-Gasket.woff") format("woff"),
-         url("../fonts/1FTV-Gasket.ttf") format("truetype"),
-         url("../fonts/1FTV-Gasket.otf") format("opentype");
+    src: url("../fonts/1FTV-Gasket.otf") format("opentype");
     font-weight: 600;
     font-style: normal;
     font-display: swap;
@@ -50,10 +38,7 @@
 
 @font-face {
     font-family: "1FTV Gasket";
-    src: url("../fonts/1FTV-Gasket.woff2") format("woff2"),
-         url("../fonts/1FTV-Gasket.woff") format("woff"),
-         url("../fonts/1FTV-Gasket.ttf") format("truetype"),
-         url("../fonts/1FTV-Gasket.otf") format("opentype");
+    src: url("../fonts/1FTV-Gasket.otf") format("opentype");
     font-weight: 700;
     font-style: normal;
     font-display: swap;

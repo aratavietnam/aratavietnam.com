@@ -161,21 +161,37 @@
 						'container'      => false,
 						'walker'         => new class extends Walker_Nav_Menu {
 							function start_lvl(&$output, $depth = 0, $args = null) {
-								$output .= '<ul class="sub-menu ml-4 mt-2 space-y-1">';
+								// Add 'hidden' class to hide submenu by default
+								$output .= '<ul class="sub-menu ml-4 mt-2 space-y-1 hidden">';
 							}
 							function end_lvl(&$output, $depth = 0, $args = null) {
 								$output .= '</ul>';
 							}
 							function start_el(&$output, $item, $depth = 0, $args = null, $id = 0) {
 								$classes = empty($item->classes) ? array() : (array) $item->classes;
+								$has_children = in_array('menu-item-has-children', $classes);
+
 								$classes[] = 'menu-item-' . $item->ID;
 								$class_names = join(' ', apply_filters('nav_menu_css_class', array_filter($classes), $item, $args));
 								$class_names = $class_names ? ' class="' . esc_attr($class_names) . '"' : '';
 
-								$output .= '<li' . $class_names .'>';
-								$output .= '<a href="' . esc_url($item->url) . '" class="block px-4 py-3 text-gray-900 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors duration-200 font-medium">';
+								$output .= '<li' . $class_names . '>';
+
+								// Wrap link and toggle in a div for flex layout
+								$output .= '<div class="flex items-center justify-between">';
+
+								$output .= '<a href="' . esc_url($item->url) . '" class="flex-grow block px-4 py-3 text-gray-900 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors duration-200 font-medium">';
 								$output .= esc_html($item->title);
 								$output .= '</a>';
+
+								// Add toggle button if item has children
+								if ($has_children) {
+									$output .= '<button class="mobile-submenu-toggle p-2 mr-2 text-gray-500 hover:text-primary rounded-md">';
+									$output .= '<svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>';
+									$output .= '</button>';
+								}
+
+								$output .= '</div>';
 							}
 							function end_el(&$output, $item, $depth = 0, $args = null) {
 								$output .= '</li>';

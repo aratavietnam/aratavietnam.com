@@ -18,6 +18,9 @@ require_once get_template_directory() . '/inc/news-meta-fields.php';
 require_once get_template_directory() . '/inc/news-forms.php';
 require_once get_template_directory() . '/inc/class-dropdown-walker.php';
 require_once get_template_directory() . '/inc/about-meta.php';
+require_once get_template_directory() . '/inc/admin-columns.php';
+require_once get_template_directory() . '/inc/template-filters.php';
+require_once get_template_directory() . '/inc/upload-mimes.php';
 
 // Register custom page templates
 function aratavietnam_register_page_templates($templates) {
@@ -137,6 +140,15 @@ function disable_emojis_remove_dns_prefetch( $urls, $relation_type ) {
 
 		$urls = array_diff( $urls, array( $emoji_svg_url ) );
 	}
+
+
+
+
+
+
+
+
+
 
 	return $urls;
 }

@@ -216,12 +216,15 @@
   function validateField(field) {
     const fieldName = field.getAttribute('name');
     const value = field.value;
+    const formGroup = field.closest('.arata-form-group');
+    if (!formGroup) return true;
+
+    const errorElement = formGroup.querySelector('.arata-error-message');
     let isValid = true;
     let errorMessage = '';
 
     // Remove previous error styling
     field.classList.remove('arata-input-error');
-    const errorElement = field.parentNode.querySelector('.arata-error-message');
     if (errorElement) {
       errorElement.textContent = '';
       errorElement.style.display = 'none';
@@ -244,7 +247,7 @@
       case 'phone':
         if (!validatePhone(value)) {
           isValid = false;
-          errorMessage = 'Số điện thoại không hợp lệ';
+          errorMessage = 'Số điện thoại không hợp lệ (yêu cầu 10-15 số)';
         }
         break;
       case 'message':
@@ -412,8 +415,21 @@
     }
   }
 
+  // Clear existing alerts
+  function clearAlerts() {
+    const popup = document.getElementById('arata-contact-popup');
+    if (!popup) return;
+    const existingAlert = popup.querySelector('.arata-error-alert');
+    if (existingAlert) {
+      existingAlert.remove();
+    }
+  }
+
   // Submit form after confirmation
   function submitForm(form, submitBtn, submitText, loadingSpinner) {
+    // Clear any previous alerts before proceeding
+    clearAlerts();
+
     // Show loading state
     submitBtn.disabled = true;
     submitText.textContent = 'Đang gửi...';
@@ -431,16 +447,19 @@
       .then(data => {
         if (data.success) {
           showSuccessMessage(data.data.message);
-          resetForm();
-          setTimeout(closePopup, 3000);
+          // No need to reset button here, as the form is replaced
         } else {
           showErrorMessage(data.data.message || 'Có lỗi xảy ra. Vui lòng thử lại.');
+          // Reset button on failure
+          submitBtn.disabled = false;
+          submitText.textContent = 'Gửi liên hệ';
+          loadingSpinner.style.display = 'none';
         }
       })
       .catch(error => {
-        showErrorMessage('Có lỗi xảy ra. Vui lòng thử lại.');
-      })
-      .finally(() => {
+        console.error('Contact form error:', error);
+        showErrorMessage('Có lỗi xảy ra khi gửi form. Vui lòng thử lại.');
+        // Reset button on failure
         submitBtn.disabled = false;
         submitText.textContent = 'Gửi liên hệ';
         loadingSpinner.style.display = 'none';

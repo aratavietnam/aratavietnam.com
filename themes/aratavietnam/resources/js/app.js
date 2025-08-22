@@ -1005,12 +1005,41 @@ function initDropdownMenu() {
 }
 
 
+/**
+ * Mobile Submenu Toggle Functionality
+ */
+function initMobileSubmenuToggle() {
+  const toggleButtons = document.querySelectorAll('.mobile-submenu-toggle');
+
+  toggleButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      const parentLi = button.closest('.menu-item-has-children');
+      const subMenu = parentLi.querySelector('.sub-menu');
+      const icon = button.querySelector('svg');
+
+      if (subMenu) {
+        // Toggle submenu visibility
+        if (subMenu.classList.contains('hidden')) {
+          subMenu.classList.remove('hidden');
+          icon.style.transform = 'rotate(180deg)';
+        } else {
+          subMenu.classList.add('hidden');
+          icon.style.transform = 'rotate(0deg)';
+        }
+      }
+    });
+  });
+}
+
+
 
 // Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', function () {
   detectFontLoading();
   optimizeVietnameseText();
-  initNavigation();
+  	initNavigation();
+  initMobileSubmenuToggle();
   initDropdownMenu();
   initSearch();
   initCart();

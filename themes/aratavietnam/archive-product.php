@@ -1,454 +1,479 @@
 <?php
 /**
- * The Template for displaying product archives, including the main shop page
- * Designed according to Arata Vietnam Brief requirements
+ * The Template for displaying product archives, including the main shop page.
  *
  * @package ArataVietnam
  */
 
+if (!defined('ABSPATH')) { exit; }
+
 get_header();
+
+// Hero section
+$hero_title = 'Sản phẩm';
+$hero_subtitle = 'Khám phá các dòng sản phẩm chất lượng từ Arata Nhật Bản';
+set_query_var('title', $hero_title);
+set_query_var('subtitle', $hero_subtitle);
+get_template_part('template-parts/hero');
 ?>
 
-<main id="site-content" class="min-h-screen bg-white">
-    <!-- Page Header with Brand Colors -->
-    <section class="page-header bg-gradient-to-r from-secondary/15 to-primary/10 py-16">
-        <div class="container mx-auto px-4">
-            <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">
-                    <?php
-                    if (is_shop()) {
-                        echo __('TẤT CẢ SẢN PHẨM', 'aratavietnam');
-                    } elseif (is_product_category()) {
-                        echo strtoupper(single_cat_title('', false));
-                    } elseif (is_product_tag()) {
-                        echo strtoupper(single_tag_title('', false));
-                    } else {
-                        echo __('SẢN PHẨM', 'aratavietnam');
-                    }
-                    ?>
-                </h1>
+<main id="site-content" class="bg-white">
+	<!-- Product Categories Section -->
+	<section class="py-12 bg-blue-50">
+		<div class="container mx-auto px-4">
+			<div class="text-center mb-8">
+				<h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-4">BỘ SẢN PHẨM</h2>
+				<p class="text-gray-600 max-w-2xl mx-auto">Khám phá 8 bộ sản phẩm chất lượng cao từ Arata Nhật Bản</p>
+			</div>
 
-                <div class="w-24 h-1 bg-primary mx-auto mb-6"></div>
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+				<?php
+				// Get product categories
+				$product_categories = get_terms(array(
+					'taxonomy' => 'product_cat',
+					'hide_empty' => false,
+					'parent' => 0,
+					'number' => 8
+				));
 
-                <?php if (is_product_category() && category_description()) : ?>
-                    <div class="text-gray-600 max-w-2xl mx-auto text-lg">
-                        <?php echo category_description(); ?>
-                    </div>
-                <?php endif; ?>
+				if (!empty($product_categories) && !is_wp_error($product_categories)) :
+					foreach ($product_categories as $category) :
+						$thumbnail_id = get_term_meta($category->term_id, 'thumbnail_id', true);
+						$image_url = $thumbnail_id ? wp_get_attachment_url($thumbnail_id) : wc_placeholder_img_src();
+				?>
+					<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+						<div class="aspect-square overflow-hidden">
+							<img src="<?php echo esc_url($image_url); ?>"
+								 alt="<?php echo esc_attr($category->name); ?>"
+								 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+						</div>
+						<div class="p-4">
+							<h3 class="text-lg font-semibold text-gray-900 mb-2"><?php echo esc_html($category->name); ?></h3>
+							<p class="text-sm text-gray-600 mb-3"><?php echo esc_html($category->description); ?></p>
+							<a href="<?php echo esc_url(get_term_link($category)); ?>"
+							   class="inline-flex items-center text-orange-500 hover:text-orange-600 font-medium">
+								Xem sản phẩm
+								<svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+								</svg>
+							</a>
+						</div>
+					</div>
+				<?php
+					endforeach;
+				else :
+				?>
+					<div class="col-span-full text-center py-8">
+						<p class="text-gray-500">Chưa có danh mục sản phẩm nào.</p>
+					</div>
+				<?php endif; ?>
+			</div>
+		</div>
+	</section>
 
-                <!-- Breadcrumb -->
-                <nav class="mt-6">
-                    <?php woocommerce_breadcrumb(array(
-                        'delimiter' => ' <span class="text-gray-400 mx-2">/</span> ',
-                        'wrap_before' => '<div class="text-sm text-gray-500 bg-white/50 rounded-full px-4 py-2 inline-block">',
-                        'wrap_after' => '</div>',
-                        'before' => '',
-                        'after' => '',
-                        'home' => __('Trang chủ', 'aratavietnam'),
-                    )); ?>
-                </nav>
-            </div>
-        </div>
-    </section>
+	<!-- Featured Products Section -->
+	<section class="py-12 bg-blue-600">
+		<div class="container mx-auto px-4">
+			<div class="text-center mb-8">
+				<h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-4">SẢN PHẨM NỔI BẬT</h2>
+				<p class="text-white max-w-2xl mx-auto">Những sản phẩm được yêu thích nhất từ Arata</p>
+			</div>
 
-    <!-- 8 Product Collections Section (According to Brief) -->
-    <section class="bg-secondary/5 py-12">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-8">
-                <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">8 BỘ SẢN PHẨM ARATA</h2>
-                <div class="w-24 h-1 bg-primary mx-auto"></div>
-            </div>
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+				<?php
+				// Get featured products (4x2 grid = 8 products)
+				$featured_args = array(
+					'post_type' => 'product',
+					'posts_per_page' => 8,
+					'meta_query' => array(
+						array(
+							'key' => '_featured',
+							'value' => 'yes'
+						)
+					)
+				);
+				$featured_products = new WP_Query($featured_args);
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <?php
-                // Define 8 product collections according to brief
-                $product_collections = array(
-                    array('name' => 'Chăm sóc da mặt', 'slug' => 'cham-soc-da-mat', 'icon' => '🧴'),
-                    array('name' => 'Làm sạch', 'slug' => 'lam-sach', 'icon' => '🧽'),
-                    array('name' => 'Dưỡng ẩm', 'slug' => 'duong-am', 'icon' => '💧'),
-                    array('name' => 'Chống lão hóa', 'slug' => 'chong-lao-hoa', 'icon' => '✨'),
-                    array('name' => 'Làm sáng da', 'slug' => 'lam-sang-da', 'icon' => '☀️'),
-                    array('name' => 'Trị mụn', 'slug' => 'tri-mun', 'icon' => '🎯'),
-                    array('name' => 'Chăm sóc mắt', 'slug' => 'cham-soc-mat', 'icon' => '👁️'),
-                    array('name' => 'Kem chống nắng', 'slug' => 'kem-chong-nang', 'icon' => '🌞')
-                );
+				if ($featured_products->have_posts()) :
+					while ($featured_products->have_posts()) : $featured_products->the_post();
+						global $product;
+				?>
+					<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+						<div class="aspect-square overflow-hidden relative">
+							<?php if ($product->is_on_sale()) : ?>
+								<span class="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded z-10">Sale</span>
+							<?php endif; ?>
+							<a href="<?php the_permalink(); ?>">
+								<?php the_post_thumbnail('woocommerce_thumbnail', array('class' => 'w-full h-full object-cover hover:scale-105 transition-transform duration-300')); ?>
+							</a>
+						</div>
+						<div class="p-4">
+							<h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+								<a href="<?php the_permalink(); ?>" class="hover:text-orange-500"><?php the_title(); ?></a>
+							</h3>
+							<div class="flex items-center justify-between">
+								<div class="text-orange-500 font-bold">
+									<?php echo $product->get_price_html(); ?>
+								</div>
+								<button class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded text-sm transition-colors duration-200">
+									Thêm vào giỏ
+								</button>
+							</div>
+						</div>
+					</div>
+				<?php
+					endwhile;
+					wp_reset_postdata();
+				else :
+				?>
+					<div class="col-span-full text-center py-8">
+						<p class="text-white">Chưa có sản phẩm nổi bật nào.</p>
+					</div>
+				<?php endif; ?>
+			</div>
+		</div>
+	</section>
 
-                foreach ($product_collections as $index => $collection) :
-                    $term = get_term_by('slug', $collection['slug'], 'product_cat');
-                    $count = $term ? $term->count : 0;
-                    $link = $term ? get_term_link($term) : '#';
-                ?>
-                    <div class="product-collection-card bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group"
-                         data-collection="<?php echo esc_attr($collection['slug']); ?>">
-                        <div class="text-center">
-                            <div class="text-3xl mb-2"><?php echo $collection['icon']; ?></div>
-                            <h3 class="font-semibold text-gray-800 group-hover:text-primary transition-colors duration-200">
-                                <?php echo esc_html($collection['name']); ?>
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1"><?php echo $count; ?> sản phẩm</p>
+	<!-- All Products Section -->
+	<section class="py-12 bg-white">
+		<div class="container mx-auto px-4">
+			<div class="text-center mb-8">
+				<h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-4">TẤT CẢ SẢN PHẨM</h2>
+				<p class="text-gray-600 max-w-2xl mx-auto">Toàn bộ sản phẩm chất lượng cao từ Arata Nhật Bản</p>
+			</div>
 
-                            <!-- Dropdown arrow -->
-                            <div class="mt-2">
-                                <svg class="w-4 h-4 mx-auto text-gray-400 group-hover:text-primary transition-all duration-200 transform group-hover:rotate-180"
-                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </div>
-                        </div>
+			<!-- Product Filter -->
+			<div class="flex flex-wrap justify-center gap-4 mb-8">
+				<button class="filter-btn active bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600 transition-colors" data-filter="*">
+					Tất cả
+				</button>
+				<?php
+				if (!empty($product_categories) && !is_wp_error($product_categories)) :
+					foreach (array_slice($product_categories, 0, 5) as $category) :
+				?>
+					<button class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-full hover:bg-orange-500 hover:text-white transition-colors"
+							data-filter=".cat-<?php echo esc_attr($category->slug); ?>">
+						<?php echo esc_html($category->name); ?>
+					</button>
+				<?php
+					endforeach;
+				endif;
+				?>
+			</div>
 
-                        <!-- Hidden subcategories (will be shown on click) -->
-                        <div class="subcategories hidden mt-4 pt-4 border-t border-gray-100">
-                            <div class="space-y-2">
-                                <?php if ($term) : ?>
-                                    <a href="<?php echo esc_url($link); ?>"
-                                       class="block text-sm text-gray-600 hover:text-primary transition-colors duration-200 py-1">
-                                        Xem tất cả <?php echo esc_html($collection['name']); ?>
-                                    </a>
-                                <?php endif; ?>
-                                <!-- Add more subcategories here if needed -->
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
+			<!-- Products Grid -->
+			<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6" id="products-grid">
+				<?php
+				// Get all products with pagination
+				$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+				$products_args = array(
+					'post_type' => 'product',
+					'posts_per_page' => 20,
+					'paged' => $paged,
+					'post_status' => 'publish'
+				);
+				$products_query = new WP_Query($products_args);
 
-    <div class="container mx-auto px-4 py-8">
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            <!-- Sidebar -->
-            <aside class="lg:col-span-1">
-                <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
-                    <h3 class="text-lg font-semibold text-secondary mb-4 flex items-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
-                        </svg>
-                        Danh mục sản phẩm
-                    </h3>
+				if ($products_query->have_posts()) :
+					while ($products_query->have_posts()) : $products_query->the_post();
+						global $product;
 
-                    <?php
-                    // Get product categories
-                    $product_categories = get_terms(array(
-                        'taxonomy' => 'product_cat',
-                        'hide_empty' => true,
-                        'exclude' => array(get_option('default_product_cat'))
-                    ));
+						// Get product categories for filtering
+						$product_cats = wp_get_post_terms(get_the_ID(), 'product_cat');
+						$cat_classes = '';
+						if (!empty($product_cats)) {
+							foreach ($product_cats as $cat) {
+								$cat_classes .= ' cat-' . $cat->slug;
+							}
+						}
+				?>
+					<div class="product-item<?php echo esc_attr($cat_classes); ?> bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300">
+						<div class="aspect-square overflow-hidden relative group">
+							<?php if ($product->is_on_sale()) : ?>
+								<span class="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded z-10">
+									<?php echo esc_html__('Sale', 'aratavietnam'); ?>
+								</span>
+							<?php endif; ?>
 
-                    if (!empty($product_categories)) :
-                    ?>
-                        <ul class="space-y-1">
-                            <li>
-                                <a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>"
-                                   class="block py-3 px-4 rounded-lg text-gray-600 hover:bg-primary/10 hover:text-primary transition-all duration-200 border-l-3 hover:border-l-primary <?php echo is_shop() && !is_product_category() ? 'bg-primary/10 text-primary font-semibold border-l-primary' : 'border-l-transparent'; ?>">
-                                    <span class="flex items-center justify-between">
-                                        Tất cả sản phẩm
-                                        <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                                            <?php echo wp_count_posts('product')->publish; ?>
-                                        </span>
-                                    </span>
-                                </a>
-                            </li>
-                            <?php foreach ($product_categories as $category) : ?>
-                                <li>
-                                    <a href="<?php echo esc_url(get_term_link($category)); ?>"
-                                       class="block py-3 px-4 rounded-lg text-gray-600 hover:bg-primary/10 hover:text-primary transition-all duration-200 border-l-3 hover:border-l-primary <?php echo is_product_category($category->slug) ? 'bg-primary/10 text-primary font-semibold border-l-primary' : 'border-l-transparent'; ?>">
-                                        <span class="flex items-center justify-between">
-                                            <?php echo esc_html($category->name); ?>
-                                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                                                <?php echo $category->count; ?>
-                                            </span>
-                                        </span>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php else : ?>
-                        <p class="text-gray-500 text-sm">Chưa có danh mục sản phẩm</p>
-                    <?php endif; ?>
-                </div>
+							<?php if (!$product->is_in_stock()) : ?>
+								<span class="absolute top-2 right-2 bg-gray-500 text-white text-xs px-2 py-1 rounded z-10">
+									<?php echo esc_html__('Hết hàng', 'aratavietnam'); ?>
+								</span>
+							<?php endif; ?>
 
-                <!-- Price Filter -->
-                <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-100 mt-6">
-                    <h3 class="text-lg font-semibold text-secondary mb-4 flex items-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                        </svg>
-                        Lọc theo giá
-                    </h3>
-                    <?php the_widget('WC_Widget_Price_Filter'); ?>
-                </div>
-            </aside>
+							<a href="<?php the_permalink(); ?>">
+								<?php
+								if (has_post_thumbnail()) {
+									the_post_thumbnail('woocommerce_thumbnail', array('class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'));
+								} else {
+									echo '<img src="' . wc_placeholder_img_src() . '" alt="' . esc_attr(get_the_title()) . '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">';
+								}
+								?>
+							</a>
 
-            <!-- Main Content -->
-            <div class="lg:col-span-3">
-                <?php if (woocommerce_product_loop()) : ?>
-                    <!-- Toolbar with Brand Styling -->
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 bg-white rounded-lg p-6 shadow-sm border border-gray-100">
-                        <div class="mb-4 sm:mb-0">
-                            <div class="text-secondary font-semibold">
-                                <?php woocommerce_result_count(); ?>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-4">
-                            <label class="text-sm font-medium text-gray-700">Sắp xếp:</label>
-                            <?php woocommerce_catalog_ordering(); ?>
-                        </div>
-                    </div>
+							<!-- Quick view overlay -->
+							<div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+								<a href="<?php the_permalink(); ?>" class="bg-white text-gray-900 px-4 py-2 rounded hover:bg-gray-100 transition-colors">
+									<?php echo esc_html__('Xem chi tiết', 'aratavietnam'); ?>
+								</a>
+							</div>
+						</div>
 
-                    <!-- Products Grid with Enhanced Design -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <?php
-                        woocommerce_product_loop_start();
+						<div class="p-4">
+							<h3 class="text-sm font-semibold text-gray-900 mb-2 line-clamp-2 h-10">
+								<a href="<?php the_permalink(); ?>" class="hover:text-orange-500 transition-colors">
+									<?php the_title(); ?>
+								</a>
+							</h3>
 
-                        if (wc_get_loop_prop('is_shortcode')) {
-                            $columns = absint(wc_get_loop_prop('columns'));
-                        } else {
-                            $columns = wc_get_default_products_per_row();
-                        }
+							<div class="flex items-center justify-between mb-2">
+								<div class="text-orange-500 font-bold text-sm">
+									<?php echo $product->get_price_html(); ?>
+								</div>
 
-                        while (have_posts()) :
-                            the_post();
-                            global $product;
-                        ?>
-                            <div class="product-card bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 group">
-                                <a href="<?php echo esc_url(get_permalink()); ?>" class="block">
-                                    <div class="aspect-square overflow-hidden relative bg-gray-50">
-                                        <?php if ($product->get_image_id()) : ?>
-                                            <?php echo wp_get_attachment_image($product->get_image_id(), 'medium', false, array('class' => 'w-full h-full object-cover group-hover:scale-110 transition-transform duration-500')); ?>
-                                        <?php else : ?>
-                                            <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                                                <div class="text-center">
-                                                    <svg class="w-12 h-12 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                                    </svg>
-                                                    <span class="text-gray-400 text-sm">Chưa có ảnh</span>
-                                                </div>
-                                            </div>
-                                        <?php endif; ?>
+								<?php if ($product->get_average_rating()) : ?>
+									<div class="flex items-center text-xs text-gray-500">
+										<span class="text-yellow-400">★</span>
+										<span class="ml-1"><?php echo esc_html($product->get_average_rating()); ?></span>
+									</div>
+								<?php endif; ?>
+							</div>
 
-                                        <!-- Sale Badge with Brand Colors -->
-                                        <?php if ($product->is_on_sale()) : ?>
-                                            <span class="absolute top-3 left-3 bg-gradient-to-r from-primary to-tertiary text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
-                                                SALE
-                                            </span>
-                                        <?php endif; ?>
+							<?php if ($product->is_in_stock()) : ?>
+								<button class="w-full bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded text-sm transition-colors duration-200 add-to-cart-btn"
+										data-product-id="<?php echo esc_attr($product->get_id()); ?>">
+									<?php echo esc_html__('Thêm vào giỏ', 'aratavietnam'); ?>
+								</button>
+							<?php else : ?>
+								<button class="w-full bg-gray-400 text-white px-3 py-2 rounded text-sm cursor-not-allowed" disabled>
+									<?php echo esc_html__('Hết hàng', 'aratavietnam'); ?>
+								</button>
+							<?php endif; ?>
+						</div>
+					</div>
+				<?php
+					endwhile;
+				else :
+				?>
+					<div class="col-span-full text-center py-12">
+						<div class="max-w-md mx-auto">
+							<svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+							</svg>
+							<h3 class="text-lg font-semibold text-gray-900 mb-2"><?php echo esc_html__('Chưa có sản phẩm', 'aratavietnam'); ?></h3>
+							<p class="text-gray-500"><?php echo esc_html__('Hiện tại chưa có sản phẩm nào trong cửa hàng.', 'aratavietnam'); ?></p>
+						</div>
+					</div>
+				<?php endif; ?>
+			</div>
 
-                                        <!-- Featured Badge -->
-                                        <?php if ($product->is_featured()) : ?>
-                                            <span class="absolute top-3 right-3 bg-secondary text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
-                                                NỔI BẬT
-                                            </span>
-                                        <?php endif; ?>
+			<!-- Pagination -->
+			<?php if ($products_query->max_num_pages > 1) : ?>
+				<div class="mt-12 flex justify-center">
+					<div class="flex items-center space-x-2">
+						<?php
+						echo paginate_links(array(
+							'total' => $products_query->max_num_pages,
+							'current' => $paged,
+							'format' => '?paged=%#%',
+							'show_all' => false,
+							'end_size' => 1,
+							'mid_size' => 2,
+							'prev_next' => true,
+							'prev_text' => '← Trước',
+							'next_text' => 'Sau →',
+							'type' => 'plain',
+							'add_args' => false,
+							'add_fragment' => '',
+							'before_page_number' => '',
+							'after_page_number' => ''
+						));
+						?>
+					</div>
+				</div>
+			<?php endif; ?>
 
-                                        <!-- Quick View Overlay -->
-                                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                            <span class="bg-white text-gray-800 px-4 py-2 rounded-lg font-medium shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                                Xem chi tiết
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="p-6">
-                                        <h3 class="font-semibold text-gray-800 mb-3 line-clamp-2 group-hover:text-primary transition-colors duration-200 text-lg leading-tight">
-                                            <?php echo esc_html($product->get_name()); ?>
-                                        </h3>
-
-                                        <!-- Product Rating -->
-                                        <?php if ($product->get_average_rating()) : ?>
-                                            <div class="flex items-center mb-3">
-                                                <div class="flex text-tertiary text-sm">
-                                                    <?php for ($i = 1; $i <= 5; $i++) : ?>
-                                                        <svg class="w-4 h-4 <?php echo $i <= $product->get_average_rating() ? 'fill-current' : 'text-gray-300'; ?>" viewBox="0 0 20 20">
-                                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                                        </svg>
-                                                    <?php endfor; ?>
-                                                </div>
-                                                <span class="text-sm text-gray-500 ml-2">(<?php echo $product->get_review_count(); ?>)</span>
-                                            </div>
-                                        <?php endif; ?>
-
-                                        <div class="text-primary font-bold text-xl mb-4">
-                                            <?php echo $product->get_price_html(); ?>
-                                        </div>
-
-                                        <!-- Add to Cart Button with Brand Styling -->
-                                        <div class="mt-auto">
-                                            <?php
-                                            $button_text = $product->add_to_cart_text();
-                                            $button_class = 'w-full text-center py-3 px-6 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-sm';
-
-                                            if ($product->is_purchasable() && $product->is_in_stock()) {
-                                                $button_class .= ' bg-gradient-to-r from-primary to-primary-dark text-white hover:shadow-lg';
-                                            } else {
-                                                $button_class .= ' bg-gray-200 text-gray-500 cursor-not-allowed';
-                                                $button_text = 'Hết hàng';
-                                            }
-
-                                            echo apply_filters(
-                                                'woocommerce_loop_add_to_cart_link',
-                                                sprintf(
-                                                    '<a href="%s" data-quantity="%s" class="%s" %s>%s</a>',
-                                                    esc_url($product->add_to_cart_url()),
-                                                    esc_attr(isset($args['quantity']) ? $args['quantity'] : 1),
-                                                    esc_attr($button_class),
-                                                    isset($args['attributes']) ? wc_implode_html_attributes($args['attributes']) : '',
-                                                    esc_html($button_text)
-                                                ),
-                                                $product,
-                                                $args ?? array()
-                                            );
-                                            ?>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        <?php endwhile; ?>
-                    </div>
-
-                    <?php woocommerce_product_loop_end(); ?>
-
-                    <!-- Enhanced Pagination -->
-                    <div class="mt-12 flex justify-center">
-                        <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
-                            <?php woocommerce_pagination(); ?>
-                        </div>
-                    </div>
-
-                <?php else : ?>
-                    <!-- No Products Found with Enhanced Design -->
-                    <div class="text-center py-20 bg-white rounded-xl shadow-sm border border-gray-100">
-                        <div class="max-w-md mx-auto">
-                            <div class="mb-6">
-                                <svg class="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-                                </svg>
-                            </div>
-                            <h3 class="text-2xl font-bold text-gray-800 mb-3">Không tìm thấy sản phẩm</h3>
-                            <p class="text-gray-600 mb-8 leading-relaxed">Hiện tại chưa có sản phẩm nào trong danh mục này.<br>Hãy thử tìm kiếm với từ khóa khác hoặc xem tất cả sản phẩm.</p>
-                            <div class="space-y-3">
-                                <a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>"
-                                   class="inline-block bg-gradient-to-r from-primary to-primary-dark text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105">
-                                    Xem tất cả sản phẩm
-                                </a>
-                                <div class="text-sm text-gray-500">
-                                    hoặc <a href="<?php echo esc_url(home_url('/')); ?>" class="text-primary hover:text-primary-dark font-medium">về trang chủ</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
+			<?php wp_reset_postdata(); ?>
+		</div>
+	</section>
 </main>
 
-<!-- JavaScript for Product Collections Interaction -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Product collection cards interaction
-    const collectionCards = document.querySelectorAll('.product-collection-card');
-
-    collectionCards.forEach(card => {
-        card.addEventListener('click', function() {
-            const subcategories = this.querySelector('.subcategories');
-            const arrow = this.querySelector('svg');
-
-            // Toggle subcategories
-            if (subcategories.classList.contains('hidden')) {
-                // Close all other subcategories
-                collectionCards.forEach(otherCard => {
-                    if (otherCard !== this) {
-                        otherCard.querySelector('.subcategories').classList.add('hidden');
-                        otherCard.querySelector('svg').classList.remove('rotate-180');
-                    }
-                });
-
-                // Open this subcategory
-                subcategories.classList.remove('hidden');
-                arrow.classList.add('rotate-180');
-            } else {
-                // Close this subcategory
-                subcategories.classList.add('hidden');
-                arrow.classList.remove('rotate-180');
-            }
-        });
-    });
-
-    // Enhanced hover effects for product cards
-    const productCards = document.querySelectorAll('.product-card');
-
-    productCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-4px)';
-        });
-
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
-    });
-
-    // Smooth scroll for collection navigation
-    const collectionLinks = document.querySelectorAll('.product-collection-card a');
-
-    collectionLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            // Add loading animation
-            const card = this.closest('.product-collection-card');
-            card.style.opacity = '0.7';
-            card.style.transform = 'scale(0.98)';
-
-            setTimeout(() => {
-                card.style.opacity = '1';
-                card.style.transform = 'scale(1)';
-            }, 200);
-        });
-    });
-});
-</script>
-
 <style>
-/* Additional CSS for enhanced product page styling */
-.product-collection-card {
-    transition: all 0.3s ease;
-}
-
-.product-collection-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
-
-.product-card {
-    transition: all 0.3s ease;
-}
-
 .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
 }
 
-/* Custom styling for WooCommerce elements */
-.woocommerce-ordering select {
-    @apply border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+.product-item {
+	transition: all 0.3s ease;
 }
 
-.woocommerce-result-count {
-    @apply text-gray-600;
+.product-item.hide {
+	opacity: 0;
+	transform: scale(0.8);
+	pointer-events: none;
 }
 
-/* Pagination styling */
-.woocommerce-pagination {
-    @apply flex justify-center;
+.filter-btn.active {
+	background-color: #f97316;
+	color: white;
 }
 
-.woocommerce-pagination .page-numbers {
-    @apply mx-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-primary hover:text-white hover:border-primary transition-all duration-200;
+.pagination a, .pagination span {
+	display: inline-block;
+	padding: 8px 12px;
+	margin: 0 4px;
+	text-decoration: none;
+	border: 1px solid #e5e7eb;
+	border-radius: 6px;
+	color: #374151;
+	transition: all 0.2s;
 }
 
-.woocommerce-pagination .page-numbers.current {
-    @apply bg-primary text-white border-primary;
+.pagination a:hover {
+	background-color: #f97316;
+	color: white;
+	border-color: #f97316;
+}
+
+.pagination .current {
+	background-color: #f97316;
+	color: white;
+	border-color: #f97316;
 }
 </style>
 
-<?php get_footer(); ?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+	// Product filter functionality
+	const filterButtons = document.querySelectorAll('.filter-btn');
+	const productItems = document.querySelectorAll('.product-item');
+
+	filterButtons.forEach(button => {
+		button.addEventListener('click', function() {
+			const filter = this.getAttribute('data-filter');
+
+			// Update active button
+			filterButtons.forEach(btn => btn.classList.remove('active', 'bg-orange-500', 'text-white'));
+			filterButtons.forEach(btn => btn.classList.add('bg-gray-200', 'text-gray-700'));
+
+			this.classList.remove('bg-gray-200', 'text-gray-700');
+			this.classList.add('active', 'bg-orange-500', 'text-white');
+
+			// Filter products
+			productItems.forEach(item => {
+				if (filter === '*' || item.classList.contains(filter.substring(1))) {
+					item.classList.remove('hide');
+				} else {
+					item.classList.add('hide');
+				}
+			});
+		});
+	});
+
+	// Add to cart functionality
+	const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+
+	addToCartButtons.forEach(button => {
+		button.addEventListener('click', function(e) {
+			e.preventDefault();
+
+			const productId = this.getAttribute('data-product-id');
+			const originalText = this.textContent;
+
+			// Show loading state
+			this.disabled = true;
+			this.textContent = 'Đang thêm...';
+			this.classList.add('opacity-75');
+
+			// AJAX add to cart
+			fetch(wc_add_to_cart_params.ajax_url, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+				body: new URLSearchParams({
+					'action': 'woocommerce_add_to_cart',
+					'product_id': productId,
+					'quantity': 1
+				})
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data.success) {
+					this.textContent = 'Đã thêm ✓';
+					this.classList.add('bg-green-500');
+					this.classList.remove('bg-orange-500');
+
+					// Update cart count if exists
+					const cartCount = document.querySelector('.cart-count');
+					if (cartCount && data.cart_count) {
+						cartCount.textContent = data.cart_count;
+					}
+
+					// Reset button after 2 seconds
+					setTimeout(() => {
+						this.textContent = originalText;
+						this.classList.remove('bg-green-500');
+						this.classList.add('bg-orange-500');
+						this.disabled = false;
+						this.classList.remove('opacity-75');
+					}, 2000);
+				} else {
+					this.textContent = 'Lỗi';
+					this.classList.add('bg-red-500');
+					this.classList.remove('bg-orange-500');
+
+					setTimeout(() => {
+						this.textContent = originalText;
+						this.classList.remove('bg-red-500');
+						this.classList.add('bg-orange-500');
+						this.disabled = false;
+						this.classList.remove('opacity-75');
+					}, 2000);
+				}
+			})
+			.catch(error => {
+				console.error('Error:', error);
+				this.textContent = originalText;
+				this.disabled = false;
+				this.classList.remove('opacity-75');
+			});
+		});
+	});
+
+	// Smooth scroll for category links
+	document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+		anchor.addEventListener('click', function (e) {
+			e.preventDefault();
+			const target = document.querySelector(this.getAttribute('href'));
+			if (target) {
+				target.scrollIntoView({
+					behavior: 'smooth',
+					block: 'start'
+				});
+			}
+		});
+	});
+
+	// Lazy loading for images
+	if ('IntersectionObserver' in window) {
+		const imageObserver = new IntersectionObserver((entries, observer) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					const img = entry.target;
+					img.src = img.dataset.src;
+					img.classList.remove('lazy');
+					imageObserver.unobserve(img);
+				}
+			});
+		});
+
+		document.querySelectorAll('img[data-src]').forEach(img => {
+			imageObserver.observe(img);
+		});
+	}
+});
+</script>

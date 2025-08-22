@@ -21,7 +21,7 @@ export default defineConfig(({ command }) => {
                     'resources/css/editor-style.css'
                 ],
             },
-            assetsDir: 'assets',
+            assetsDir: '', // Assets in the same directory
             copyPublicDir: false,
         },
         publicDir: false,

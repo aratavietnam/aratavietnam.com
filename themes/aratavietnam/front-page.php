@@ -16,9 +16,11 @@ get_header();
             <p class="text-xl md:text-2xl text-primary font-semibold mb-8">
                 NHÀ PHÂN PHỐI HÓA MỸ PHẨM HÀNG ĐẦU NHẬT BẢN
             </p>
+            <?php if (class_exists('WooCommerce')) : ?>
             <a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>" class="inline-block bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-dark transition-colors duration-300">
                 Khám phá sản phẩm
             </a>
+            <?php endif; ?>
         </div>
     </section>
 
@@ -87,7 +89,7 @@ get_header();
             </div>
 
             <div class="text-center mt-8">
-                <a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>" class="inline-block bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-dark transition-colors duration-300">
+                <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>" class="inline-block bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-dark transition-colors duration-300">
                     Xem tất cả sản phẩm
                 </a>
             </div>

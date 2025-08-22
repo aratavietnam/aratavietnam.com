@@ -360,3 +360,19 @@
     }
   }
 }
+
+
+/* Mobile Submenu Toggle Styles */
+.mobile-navigation .sub-menu {
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+  max-height: 0;
+}
+
+.mobile-navigation .sub-menu:not(.hidden) {
+  max-height: 1000px; /* Set a large enough max-height to show all items */
+}
+
+.mobile-submenu-toggle svg {
+  transition: transform 0.3s ease-in-out;
+}
