@@ -1,0 +1,39 @@
+.homepage-meta-tabs .tab-links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-bottom: 1px solid #ddd;
+    overflow: hidden;
+}
+
+.homepage-meta-tabs .tab-links li {
+    float: left;
+    margin: 0 5px 0 0;
+}
+
+.homepage-meta-tabs .tab-links a {
+    display: block;
+    padding: 10px 15px;
+    background: #f7f7f7;
+    border: 1px solid #ddd;
+    border-bottom: 0;
+    text-decoration: none;
+    color: #555;
+}
+
+.homepage-meta-tabs .tab-links .active a {
+    background: #fff;
+    border-bottom: 1px solid #fff;
+}
+
+.homepage-meta-tabs .tab-content .tab {
+    display: none;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-top: 0;
+    background: #fff;
+}
+
+.homepage-meta-tabs .tab-content .active {
+    display: block;
+}

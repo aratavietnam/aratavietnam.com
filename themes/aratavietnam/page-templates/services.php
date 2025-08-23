@@ -18,11 +18,42 @@ $featured_text = get_post_meta(get_the_ID(), 'arata_services_featured_text', tru
 $cta_text = get_post_meta(get_the_ID(), 'arata_services_cta_text', true) ?: 'Liên hệ tư vấn';
 $cta_link = get_post_meta(get_the_ID(), 'arata_services_cta_link', true) ?: '/lien-he';
 
+// Section visibility controls
+$show_hero = get_post_meta(get_the_ID(), 'arata_show_hero', true) === '1';
+$show_services = get_post_meta(get_the_ID(), 'arata_show_services', true) === '1';
+$show_stats = get_post_meta(get_the_ID(), 'arata_show_stats', true) === '1';
+$show_why_choose = get_post_meta(get_the_ID(), 'arata_show_why_choose', true) === '1';
+$show_testimonials = get_post_meta(get_the_ID(), 'arata_show_testimonials', true) === '1';
+
+// Statistics section fields
+$stats_title = get_post_meta(get_the_ID(), 'arata_stats_title', true) ?: 'Thống kê ấn tượng';
+$stats_subtitle = get_post_meta(get_the_ID(), 'arata_stats_subtitle', true) ?: 'Những con số thể hiện sự tin tưởng và hài lòng của khách hàng đối với dịch vụ của chúng tôi.';
+$stats_customers = get_post_meta(get_the_ID(), 'arata_stats_customers', true) ?: '500';
+$stats_projects = get_post_meta(get_the_ID(), 'arata_stats_projects', true) ?: '50';
+$stats_years = get_post_meta(get_the_ID(), 'arata_stats_years', true) ?: '5';
+$stats_success_rate = get_post_meta(get_the_ID(), 'arata_stats_success_rate', true) ?: '98';
+
+// Why Choose Us section fields
+$why_choose_title = get_post_meta(get_the_ID(), 'arata_why_choose_title', true) ?: 'Tại sao chọn Arata Vietnam?';
+$why_choose_subtitle = get_post_meta(get_the_ID(), 'arata_why_choose_subtitle', true) ?: 'Chúng tôi cam kết mang đến những giá trị tốt nhất cho khách hàng thông qua chất lượng dịch vụ và sự tận tâm.';
+$why_choose_quality_title = get_post_meta(get_the_ID(), 'arata_why_choose_quality_title', true) ?: 'Chất lượng hàng đầu';
+$why_choose_quality_desc = get_post_meta(get_the_ID(), 'arata_why_choose_quality_desc', true) ?: 'Cam kết cung cấp dịch vụ chất lượng cao với tiêu chuẩn Nhật Bản.';
+$why_choose_team_title = get_post_meta(get_the_ID(), 'arata_why_choose_team_title', true) ?: 'Đội ngũ chuyên nghiệp';
+$why_choose_team_desc = get_post_meta(get_the_ID(), 'arata_why_choose_team_desc', true) ?: 'Đội ngũ nhân viên giàu kinh nghiệm, được đào tạo bài bản.';
+$why_choose_service_title = get_post_meta(get_the_ID(), 'arata_why_choose_service_title', true) ?: 'Dịch vụ 24/7';
+$why_choose_service_desc = get_post_meta(get_the_ID(), 'arata_why_choose_service_desc', true) ?: 'Hỗ trợ khách hàng mọi lúc, mọi nơi với tinh thần phục vụ tận tâm.';
+
+// Testimonials section fields
+$testimonials_title = get_post_meta(get_the_ID(), 'arata_testimonials_title', true) ?: 'Khách hàng nói gì về chúng tôi';
+$testimonials_subtitle = get_post_meta(get_the_ID(), 'arata_testimonials_subtitle', true) ?: 'Những đánh giá chân thực từ khách hàng đã sử dụng dịch vụ của Arata Vietnam.';
+
 // Set hero variables
 set_query_var('title', get_the_title());
 set_query_var('subtitle', $hero_subtitle);
 set_query_var('description', $hero_intro);
-get_template_part('template-parts/hero');
+if ($show_hero) {
+    get_template_part('template-parts/hero');
+}
 ?>
 
 <main id="site-content" class="bg-white">
@@ -62,6 +93,7 @@ get_template_part('template-parts/hero');
     </section>
 
     <!-- Featured Services Section -->
+    <?php if ($show_services) : ?>
     <section class="py-16 bg-gradient-to-br from-secondary/5 to-primary/5">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
@@ -141,6 +173,14 @@ get_template_part('template-parts/hero');
                         <div class="service-card group bg-white rounded-xl border-2 border-gray-200 hover:shadow-xl transition-all duration-300 overflow-hidden <?php echo $current_border_color; ?>"
                              data-categories="<?php echo esc_attr($category_slugs); ?>"
                              data-title="<?php echo esc_attr(get_the_title()); ?>">
+
+                            <!-- Service Featured Image -->
+                            <?php if (has_post_thumbnail()) : ?>
+                            <div class="w-full h-48 overflow-hidden">
+                                <?php the_post_thumbnail('medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300']); ?>
+                            </div>
+                            <?php endif; ?>
+
                             <!-- Service Header -->
                             <div class="p-6 border-b border-gray-100">
                                 <div class="flex items-start justify-between mb-4">
@@ -232,43 +272,47 @@ get_template_part('template-parts/hero');
             </div>
         </div>
     </section>
+    <?php endif; ?>
 
 
     <!-- Statistics Section -->
+    <?php if ($show_stats) : ?>
     <section class="py-16 bg-gradient-to-r from-primary/5 to-secondary/5">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">Thống kê ấn tượng</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Những con số thể hiện sự tin tưởng và hài lòng của khách hàng đối với dịch vụ của chúng tôi.</p>
+                <h2 class="text-3xl font-bold text-gray-900 mb-6"><?php echo esc_html($stats_title); ?></h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto"><?php echo esc_html($stats_subtitle); ?></p>
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold text-primary mb-2" data-count="500">0</div>
+                    <div class="text-4xl md:text-5xl font-bold text-primary mb-2" data-count="<?php echo esc_attr($stats_customers); ?>"><?php echo esc_html($stats_customers); ?></div>
                     <p class="text-gray-600 font-medium">+ Khách hàng hài lòng</p>
                 </div>
                 <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold text-secondary mb-2" data-count="50">0</div>
+                    <div class="text-4xl md:text-5xl font-bold text-secondary mb-2" data-count="<?php echo esc_attr($stats_projects); ?>"><?php echo esc_html($stats_projects); ?></div>
                     <p class="text-gray-600 font-medium">+ Dự án thành công</p>
                 </div>
                 <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold text-tertiary mb-2" data-count="5">0</div>
+                    <div class="text-4xl md:text-5xl font-bold text-tertiary mb-2" data-count="<?php echo esc_attr($stats_years); ?>"><?php echo esc_html($stats_years); ?></div>
                     <p class="text-gray-600 font-medium">+ Năm kinh nghiệm</p>
                 </div>
                 <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold text-success mb-2" data-count="98">0</div>
+                    <div class="text-4xl md:text-5xl font-bold text-success mb-2" data-count="<?php echo esc_attr($stats_success_rate); ?>"><?php echo esc_html($stats_success_rate); ?></div>
                     <p class="text-gray-600 font-medium">% Tỷ lệ thành công</p>
                 </div>
             </div>
         </div>
     </section>
+    <?php endif; ?>
 
     <!-- Why Choose Us Section -->
+    <?php if ($show_why_choose) : ?>
     <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">Tại sao chọn Arata Vietnam?</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Chúng tôi cam kết mang đến những giá trị tốt nhất cho khách hàng thông qua chất lượng dịch vụ và sự tận tâm.</p>
+                <h2 class="text-3xl font-bold text-gray-900 mb-6"><?php echo esc_html($why_choose_title); ?></h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto"><?php echo esc_html($why_choose_subtitle); ?></p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -276,49 +320,59 @@ get_template_part('template-parts/hero');
                     <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                         <span data-icon="award" data-size="32" class="text-primary"></span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Chất lượng hàng đầu</h3>
-                    <p class="text-gray-600">Cam kết cung cấp dịch vụ chất lượng cao với tiêu chuẩn Nhật Bản.</p>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3"><?php echo esc_html($why_choose_quality_title); ?></h3>
+                    <p class="text-gray-600"><?php echo esc_html($why_choose_quality_desc); ?></p>
                 </div>
 
                 <div class="text-center group">
                     <div class="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                         <span data-icon="users" data-size="32" class="text-secondary"></span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Đội ngũ chuyên nghiệp</h3>
-                    <p class="text-gray-600">Đội ngũ nhân viên giàu kinh nghiệm, được đào tạo bài bản.</p>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3"><?php echo esc_html($why_choose_team_title); ?></h3>
+                    <p class="text-gray-600"><?php echo esc_html($why_choose_team_desc); ?></p>
                 </div>
 
                 <div class="text-center group">
                     <div class="w-16 h-16 bg-tertiary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                         <span data-icon="clock" data-size="32" class="text-tertiary"></span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Dịch vụ 24/7</h3>
-                    <p class="text-gray-600">Hỗ trợ khách hàng mọi lúc, mọi nơi với tinh thần phục vụ tận tâm.</p>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3"><?php echo esc_html($why_choose_service_title); ?></h3>
+                    <p class="text-gray-600"><?php echo esc_html($why_choose_service_desc); ?></p>
                 </div>
             </div>
         </div>
     </section>
+    <?php endif; ?>
 
     <!-- Testimonials Section -->
+    <?php if ($show_testimonials) : ?>
     <section class="py-16 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">Khách hàng nói gì về chúng tôi</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Những đánh giá chân thực từ khách hàng đã sử dụng dịch vụ của Arata Vietnam.</p>
+                <h2 class="text-3xl font-bold text-gray-900 mb-6"><?php echo esc_html($testimonials_title); ?></h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto"><?php echo esc_html($testimonials_subtitle); ?></p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <?php
+                $testimonial_colors = ['primary', 'secondary', 'tertiary'];
+                for ($i = 1; $i <= 3; $i++) {
+                    $name = get_post_meta(get_the_ID(), 'arata_testimonial_' . $i . '_name', true) ?: 'Khách hàng ' . $i;
+                    $position = get_post_meta(get_the_ID(), 'arata_testimonial_' . $i . '_position', true) ?: 'Chức vụ';
+                    $content = get_post_meta(get_the_ID(), 'arata_testimonial_' . $i . '_content', true) ?: 'Nội dung đánh giá';
+                    $color = $testimonial_colors[$i - 1];
+                ?>
                 <div class="bg-gray-50 p-6 rounded-xl">
                     <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
-                            <span data-icon="user" data-size="24" class="text-primary"></span>
+                        <div class="w-12 h-12 bg-<?php echo $color; ?>/10 rounded-full flex items-center justify-center mr-4">
+                            <span data-icon="user" data-size="24" class="text-<?php echo $color; ?>"></span>
                         </div>
                         <div>
-                            <h4 class="font-semibold text-gray-900">Nguyễn Văn An</h4>
-                            <p class="text-sm text-gray-600">Giám đốc Công ty ABC</p>
+                            <h4 class="font-semibold text-gray-900"><?php echo esc_html($name); ?></h4>
+                            <p class="text-sm text-gray-600"><?php echo esc_html($position); ?></p>
                         </div>
                     </div>
-                    <p class="text-gray-700 italic">"Arata Vietnam đã giúp chúng tôi tối ưu hóa quy trình kinh doanh và tăng hiệu quả hoạt động đáng kể. Đội ngũ chuyên nghiệp và tận tâm."</p>
+                    <p class="text-gray-700 italic">"<?php echo esc_html($content); ?>"</p>
                     <div class="flex text-yellow-400 mt-3">
                         <span data-icon="star" data-size="16"></span>
                         <span data-icon="star" data-size="16"></span>
@@ -327,49 +381,11 @@ get_template_part('template-parts/hero');
                         <span data-icon="star" data-size="16"></span>
                     </div>
                 </div>
-
-                <div class="bg-gray-50 p-6 rounded-xl">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center mr-4">
-                            <span data-icon="user" data-size="24" class="text-secondary"></span>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-gray-900">Trần Thị Bình</h4>
-                            <p class="text-sm text-gray-600">Chủ doanh nghiệp XYZ</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-700 italic">"Dịch vụ marketing số của Arata Vietnam thực sự hiệu quả. Chúng tôi đã thấy rõ sự tăng trưởng trong doanh số và nhận diện thương hiệu."</p>
-                    <div class="flex text-yellow-400 mt-3">
-                        <span data-icon="star" data-size="16"></span>
-                        <span data-icon="star" data-size="16"></span>
-                        <span data-icon="star" data-size="16"></span>
-                        <span data-icon="star" data-size="16"></span>
-                        <span data-icon="star" data-size="16"></span>
-                    </div>
-                </div>
-
-                <div class="bg-gray-50 p-6 rounded-xl">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-tertiary/10 rounded-full flex items-center justify-center mr-4">
-                            <span data-icon="user" data-size="24" class="text-tertiary"></span>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-gray-900">Lê Văn Cường</h4>
-                            <p class="text-sm text-gray-600">Quản lý Dự án DEF</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-700 italic">"Hỗ trợ kỹ thuật 24/7 của Arata Vietnam giúp chúng tôi yên tâm vận hành hệ thống. Đội ngũ kỹ thuật viên rất chuyên nghiệp và nhanh nhạy."</p>
-                    <div class="flex text-yellow-400 mt-3">
-                        <span data-icon="star" data-size="16"></span>
-                        <span data-icon="star" data-size="16"></span>
-                        <span data-icon="star" data-size="16"></span>
-                        <span data-icon="star" data-size="16"></span>
-                        <span data-icon="star" data-size="16"></span>
-                    </div>
-                </div>
+                <?php } ?>
             </div>
         </div>
     </section>
+    <?php endif; ?>
 
 
 </main>

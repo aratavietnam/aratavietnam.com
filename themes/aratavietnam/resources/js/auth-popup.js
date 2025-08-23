@@ -200,14 +200,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Bind account button to show login popup
   function bindAccountButton() {
-    document.addEventListener('click', function (e) {
-      const accountButton = e.target.closest('.account-toggle');
-      if (accountButton) {
-        e.preventDefault();
-        e.stopPropagation();
-        showPopup('login');
-      }
-    });
+    const accountButton = document.querySelector('.account-toggle');
+    if (!accountButton) return;
+
+    // Store the event handler function so we can remove it later
+    window.accountButtonHandler = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      showPopup('login');
+    };
+
+    // Bind directly to the button instead of document
+    accountButton.addEventListener('click', window.accountButtonHandler);
+  }
+
+  // Disable account button click after login
+  function disableAccountButtonClick() {
+    const accountButton = document.querySelector('.account-toggle');
+    if (accountButton && window.accountButtonHandler) {
+      accountButton.removeEventListener('click', window.accountButtonHandler);
+      window.accountButtonHandler = null;
+    }
   }
 
   function showPopup(type) {
@@ -351,11 +364,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (data.success) {
           showSuccessMessage(data.data.message || 'Thao tác thành công!');
           setTimeout(() => {
-            if (data.data.redirect) {
-              window.location.href = data.data.redirect;
-            } else {
-              window.location.reload();
+            if (type === 'login' || type === 'register') {
+              // Update the account button to show user dropdown instead of login popup
+              updateAccountButtonAfterLogin(data.data.user);
             }
+            // Don't reload the page, just close the popup
+            closePopup();
           }, 1500);
         } else {
           showErrorMessage(form, data.data.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.');
@@ -502,6 +516,67 @@ document.addEventListener('DOMContentLoaded', function () {
     `;
     form.prepend(errorAlert);
   }
+
+  // Update account button after successful login
+  function updateAccountButtonAfterLogin(user) {
+    // First, completely disable click events
+    disableAccountButtonClick();
+
+    const accountButton = document.querySelector('.account-toggle');
+    if (!accountButton) return;
+
+    // Replace the button with user dropdown (hover-based, no click events)
+    const userDropdownHTML = `
+      <div class="relative group">
+        <button class="user-account-btn p-2 text-gray-800 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300" aria-label="Tài khoản" style="pointer-events: none;">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </button>
+        <div class="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+          <div class="p-3 border-b border-gray-100">
+            <p class="text-sm font-medium text-gray-900">${user.display_name}</p>
+            <p class="text-xs text-gray-500">${user.email}</p>
+          </div>
+          <div class="py-1">
+            <a href="/wp-admin/profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Thông tin cá nhân</a>
+            <a href="/wp-login.php?action=logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Đăng xuất</a>
+          </div>
+        </div>
+      </div>
+    `;
+
+    accountButton.parentElement.innerHTML = userDropdownHTML;
+
+    // Bind new event listener for logout functionality
+    bindUserDropdownEvents();
+  }
+
+  // Bind events for user dropdown menu
+  function bindUserDropdownEvents() {
+    // Handle logout link click
+    const logoutLink = document.querySelector('a[href*="action=logout"]');
+    if (logoutLink) {
+      logoutLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        // Redirect to logout URL
+        window.location.href = this.href;
+      });
+    }
+
+    // Handle profile link click
+    const profileLink = document.querySelector('a[href*="profile.php"]');
+    if (profileLink) {
+      profileLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        // Redirect to profile URL
+        window.location.href = this.href;
+      });
+    }
+  }
+
+
 
   // Initialize the popup logic
   initAuthPopup();

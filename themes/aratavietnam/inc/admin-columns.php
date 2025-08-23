@@ -20,13 +20,13 @@ function aratavietnam_add_featured_image_column_to_post_types() {
  * Thêm cột ảnh đại diện vào đầu bảng
  */
 function aratavietnam_add_featured_image_column($columns) {
-    // Tạo array mới với cột ảnh đại diện ở đầu
+    // Add featured image column for Posts
     $new_columns = array();
 
-    // Thêm cột ảnh đại diện đầu tiên
-    $new_columns['featured_image'] = '<span class="dashicons dashicons-format-image" title="Ảnh đại diện"></span>';
+    // Add featured image column first
+    $new_columns['featured_image'] = 'Ảnh đại diện';
 
-    // Thêm các cột còn lại
+    // Add remaining columns
     foreach ($columns as $key => $value) {
         $new_columns[$key] = $value;
     }

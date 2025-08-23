@@ -68,17 +68,15 @@ class Arata_Auth_Handler {
         }
 
         // Attempt login
-        $credentials = array(
-            'user_login'    => $username,
-            'user_password' => $password,
-            'remember'      => $remember
-        );
-
-        $user = wp_signon($credentials, false);
+        $user = wp_authenticate($username, $password);
 
         if (is_wp_error($user)) {
             wp_send_json_error(array('message' => $user->get_error_message()));
         }
+
+        // Set current user and auth cookie
+        wp_set_current_user($user->ID);
+        wp_set_auth_cookie($user->ID, $remember);
 
         // Login successful
         wp_send_json_success(array(

@@ -66,7 +66,7 @@ get_template_part('template-parts/hero');
                 <?php
                 if (have_posts()) :
                     while (have_posts()) : the_post();
-                        // Lấy meta fields từ news-meta-fields.php
+                        // Get meta fields from news-meta-fields.php
                         $type = get_post_meta(get_the_ID(), 'arata_promotion_type', true);
                         $discount = get_post_meta(get_the_ID(), 'arata_promotion_discount', true);
                         $code = get_post_meta(get_the_ID(), 'arata_promotion_code', true);
@@ -74,15 +74,6 @@ get_template_part('template-parts/hero');
                         $end_date = get_post_meta(get_the_ID(), 'arata_promotion_end_date', true);
                         $conditions = get_post_meta(get_the_ID(), 'arata_promotion_conditions', true);
                         $products = get_post_meta(get_the_ID(), 'arata_promotion_products', true);
-
-                        // Định nghĩa label cho loại khuyến mãi
-                        $type_labels = [
-                            'percentage' => 'Giảm theo phần trăm',
-                            'fixed' => 'Giảm số tiền cố định',
-                            'buy_get' => 'Mua X tặng Y',
-                            'free_shipping' => 'Miễn phí vận chuyển',
-                            'bundle' => 'Combo sản phẩm'
-                        ];
                         ?>
                         <div class="bg-white rounded-lg border border-gray-200 hover:border-primary transition-colors duration-300 flex flex-col md:flex-row overflow-hidden">
                             <!-- Image Column -->
@@ -113,10 +104,20 @@ get_template_part('template-parts/hero');
                                     <?php endif; ?>
                                 </div>
 
-                                <?php if ($type && isset($type_labels[$type])): ?>
+                                <?php if ($type) : ?>
                                     <div class="mb-3">
                                         <span class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
-                                            <?php echo esc_html($type_labels[$type]); ?>
+                                            <?php
+                                            // Define labels for promotion types
+                                            $type_labels = array(
+                                                'percentage' => 'Giảm theo phần trăm',
+                                                'fixed' => 'Giảm số tiền cố định',
+                                                'buy_get' => 'Mua X tặng Y',
+                                                'free_shipping' => 'Miễn phí vận chuyển',
+                                                'bundle' => 'Combo sản phẩm'
+                                            );
+                                            echo isset($type_labels[$type]) ? $type_labels[$type] : $type;
+                                            ?>
                                         </span>
                                     </div>
                                 <?php endif; ?>

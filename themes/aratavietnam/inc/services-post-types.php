@@ -39,7 +39,7 @@ add_action('init', function () {
         'menu_icon' => 'dashicons-admin-tools',
         'menu_position' => 27,
         'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'custom-fields', 'page-attributes'],
-        'has_archive' => true,
+        'has_archive' => false, // Disable default archive
         'rewrite' => ['slug' => 'dich-vu'],
         'show_in_rest' => true,
         'capability_type' => 'post',
@@ -47,6 +47,29 @@ add_action('init', function () {
         'show_in_nav_menus' => true,
     ]);
 });
+
+/**
+ * Fix rewrite rules for service post type
+ * Ensure archive page works correctly
+ */
+add_action('init', function() {
+    // Remove conflicting rewrite rules first
+    remove_rewrite_tag('%service%');
+
+    // Add rewrite rule for the "Dịch vụ" page (highest priority)
+    add_rewrite_rule(
+        '^dich-vu/?$',
+        'index.php?pagename=dich-vu',
+        'top'
+    );
+
+    // Add custom rewrite rules for single service posts
+    add_rewrite_rule(
+        '^dich-vu/([^/]+)/?$',
+        'index.php?post_type=service&name=$matches[1]',
+        'top'
+    );
+}, 10);
 
 /**
  * Register Service Categories Taxonomy
@@ -297,9 +320,11 @@ add_action('add_meta_boxes', function () {
                     }
                     echo '</select>';
                 } elseif ($field['type'] === 'textarea') {
-                    echo '<textarea id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" rows="4" class="large-text" placeholder="' . esc_attr($field['placeholder']) . '">' . esc_textarea($value) . '</textarea>';
+                    echo '<textarea id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" rows="3" class="large-text">' . esc_textarea($value) . '</textarea>';
+                } elseif ($field['type'] === 'checkbox') {
+                    echo '<input type="checkbox" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="1" ' . checked($value, '1', false) . ' />';
                 } else {
-                    echo '<input type="' . esc_attr($field['type']) . '" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" class="regular-text" value="' . esc_attr($value) . '" placeholder="' . esc_attr($field['placeholder']) . '" />';
+                    echo '<input type="text" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="' . esc_attr($value) . '" class="regular-text" />';
                 }
 
                 echo '</td></tr>';
@@ -433,6 +458,343 @@ add_action('save_post_page', function($post_id) {
             update_post_meta($post_id, $key, $value);
         } else {
             delete_post_meta($post_id, $key);
+        }
+    }
+});
+
+/**
+ * Add meta boxes for Services Page Template
+ */
+add_action('add_meta_boxes', function () {
+    // Add meta box for Services page template
+    add_meta_box(
+        'arata_services_page_meta',
+        __('Cài đặt trang dịch vụ', 'aratavietnam'),
+        function ($post) {
+            // Only show for Services page template
+            if (get_page_template_slug($post->ID) !== 'page-templates/services.php') {
+                echo '<p class="description">Meta box này chỉ hiển thị cho trang sử dụng template "Services Page".</p>';
+                return;
+            }
+
+            wp_nonce_field('arata_services_page_meta_save', 'arata_services_page_meta_nonce');
+
+            $fields = [
+                // Section visibility controls
+                'arata_show_hero' => [
+                    'label' => __('Hiển thị Hero Section', 'aratavietnam'),
+                    'type' => 'checkbox',
+                    'default' => '1'
+                ],
+                'arata_show_services' => [
+                    'label' => __('Hiển thị Dịch vụ nổi bật', 'aratavietnam'),
+                    'type' => 'checkbox',
+                    'default' => '1'
+                ],
+                'arata_show_stats' => [
+                    'label' => __('Hiển thị Thống kê', 'aratavietnam'),
+                    'type' => 'checkbox',
+                    'default' => '1'
+                ],
+                'arata_show_why_choose' => [
+                    'label' => __('Hiển thị Tại sao chọn chúng tôi', 'aratavietnam'),
+                    'type' => 'checkbox',
+                    'default' => '1'
+                ],
+                'arata_show_testimonials' => [
+                    'label' => __('Hiển thị Đánh giá khách hàng', 'aratavietnam'),
+                    'type' => 'checkbox',
+                    'default' => '1'
+                ],
+
+                // Statistics section
+                'arata_stats_title' => [
+                    'label' => __('Tiêu đề thống kê', 'aratavietnam'),
+                    'type' => 'text',
+                    'default' => 'Thống kê ấn tượng'
+                ],
+                'arata_stats_subtitle' => [
+                    'label' => __('Mô tả thống kê', 'aratavietnam'),
+                    'type' => 'textarea',
+                    'default' => 'Những con số thể hiện sự tin tưởng và hài lòng của khách hàng đối với dịch vụ của chúng tôi.'
+                ],
+                'arata_stats_customers' => [
+                    'label' => __('Số khách hàng hài lòng', 'aratavietnam'),
+                    'type' => 'text',
+                    'default' => '500'
+                ],
+                'arata_stats_projects' => [
+                    'label' => __('Số dự án thành công', 'aratavietnam'),
+                    'type' => 'text',
+                    'default' => '50'
+                ],
+                'arata_stats_years' => [
+                    'label' => __('Số năm kinh nghiệm', 'aratavietnam'),
+                    'type' => 'text',
+                    'default' => '5'
+                ],
+                'arata_stats_success_rate' => [
+                    'label' => __('Tỷ lệ thành công (%)', 'aratavietnam'),
+                    'type' => 'text',
+                    'default' => '98'
+                ],
+
+                // Why Choose Us section
+                'arata_why_choose_title' => [
+                    'label' => __('Tiêu đề "Tại sao chọn"', 'aratavietnam'),
+                    'type' => 'text',
+                    'default' => 'Tại sao chọn Arata Vietnam?'
+                ],
+                'arata_why_choose_subtitle' => [
+                    'label' => __('Mô tả "Tại sao chọn"', 'aratavietnam'),
+                    'type' => 'textarea',
+                    'default' => 'Chúng tôi cam kết mang đến những giá trị tốt nhất cho khách hàng thông qua chất lượng dịch vụ và sự tận tâm.'
+                ],
+                'arata_why_choose_quality_title' => [
+                    'label' => __('Tiêu đề "Chất lượng hàng đầu"', 'aratavietnam'),
+                    'type' => 'text',
+                    'default' => 'Chất lượng hàng đầu'
+                ],
+                'arata_why_choose_quality_desc' => [
+                    'label' => __('Mô tả "Chất lượng hàng đầu"', 'aratavietnam'),
+                    'type' => 'textarea',
+                    'default' => 'Cam kết cung cấp dịch vụ chất lượng cao với tiêu chuẩn Nhật Bản.'
+                ],
+                'arata_why_choose_team_title' => [
+                    'label' => __('Tiêu đề "Đội ngũ chuyên nghiệp"', 'aratavietnam'),
+                    'type' => 'text',
+                    'default' => 'Đội ngũ chuyên nghiệp'
+                ],
+                'arata_why_choose_team_desc' => [
+                    'label' => __('Mô tả "Đội ngũ chuyên nghiệp"', 'aratavietnam'),
+                    'type' => 'textarea',
+                    'default' => 'Đội ngũ nhân viên giàu kinh nghiệm, được đào tạo bài bản.'
+                ],
+                'arata_why_choose_service_title' => [
+                    'label' => __('Tiêu đề "Dịch vụ 24/7"', 'aratavietnam'),
+                    'type' => 'text',
+                    'default' => 'Dịch vụ 24/7'
+                ],
+                'arata_why_choose_service_desc' => [
+                    'label' => __('Mô tả "Dịch vụ 24/7"', 'aratavietnam'),
+                    'type' => 'textarea',
+                    'default' => 'Hỗ trợ khách hàng mọi lúc, mọi nơi với tinh thần phục vụ tận tâm.'
+                ],
+
+                // Testimonials section
+                'arata_testimonials_title' => [
+                    'label' => __('Tiêu đề đánh giá', 'aratavietnam'),
+                    'type' => 'text',
+                    'default' => 'Khách hàng nói gì về chúng tôi'
+                ],
+                'arata_testimonials_subtitle' => [
+                    'label' => __('Mô tả đánh giá', 'aratavietnam'),
+                    'type' => 'textarea',
+                    'default' => 'Những đánh giá chân thực từ khách hàng đã sử dụng dịch vụ của Arata Vietnam.'
+                ],
+
+                // Testimonial 1
+                'arata_testimonial_1_name' => [
+                    'label' => __('Tên khách hàng 1', 'aratavietnam'),
+                    'type' => 'text',
+                    'default' => 'Nguyễn Văn An'
+                ],
+                'arata_testimonial_1_position' => [
+                    'label' => __('Chức vụ khách hàng 1', 'aratavietnam'),
+                    'type' => 'text',
+                    'default' => 'Giám đốc Công ty ABC'
+                ],
+                'arata_testimonial_1_content' => [
+                    'label' => __('Nội dung đánh giá 1', 'aratavietnam'),
+                    'type' => 'textarea',
+                    'default' => 'Arata Vietnam đã giúp chúng tôi tối ưu hóa quy trình kinh doanh và tăng hiệu quả hoạt động đáng kể. Đội ngũ chuyên nghiệp và tận tâm.'
+                ],
+
+                // Testimonial 2
+                'arata_testimonial_2_name' => [
+                    'label' => __('Tên khách hàng 2', 'aratavietnam'),
+                    'type' => 'text',
+                    'default' => 'Trần Thị Bình'
+                ],
+                'arata_testimonial_2_position' => [
+                    'label' => __('Chức vụ khách hàng 2', 'aratavietnam'),
+                    'type' => 'text',
+                    'default' => 'Chủ doanh nghiệp XYZ'
+                ],
+                'arata_testimonial_2_content' => [
+                    'label' => __('Nội dung đánh giá 2', 'aratavietnam'),
+                    'type' => 'textarea',
+                    'default' => 'Dịch vụ marketing số của Arata Vietnam thực sự hiệu quả. Chúng tôi đã thấy rõ sự tăng trưởng trong doanh số và nhận diện thương hiệu.'
+                ],
+
+                // Testimonial 3
+                'arata_testimonial_3_name' => [
+                    'label' => __('Tên khách hàng 3', 'aratavietnam'),
+                    'type' => 'text',
+                    'default' => 'Lê Văn Cường'
+                ],
+                'arata_testimonial_3_position' => [
+                    'label' => __('Chức vụ khách hàng 3', 'aratavietnam'),
+                    'type' => 'text',
+                    'default' => 'Quản lý Dự án DEF'
+                ],
+                'arata_testimonial_3_content' => [
+                    'label' => __('Nội dung đánh giá 3', 'aratavietnam'),
+                    'type' => 'textarea',
+                    'default' => 'Hỗ trợ kỹ thuật 24/7 của Arata Vietnam giúp chúng tôi yên tâm vận hành hệ thống. Đội ngũ kỹ thuật viên rất chuyên nghiệp và nhanh nhạy.'
+                ]
+            ];
+
+            echo '<div class="arata-meta-sections">';
+
+            // Section visibility controls
+            echo '<div class="arata-meta-section">';
+            echo '<h3 style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-left: 4px solid #0073aa;">Cài đặt hiển thị</h3>';
+            foreach (['arata_show_hero', 'arata_show_services', 'arata_show_stats', 'arata_show_why_choose', 'arata_show_testimonials'] as $key) {
+                $field = $fields[$key];
+                $value = get_post_meta($post->ID, $key, true);
+                echo '<table class="form-table"><tr>';
+                echo '<th><label for="' . esc_attr($key) . '">' . esc_html($field['label']) . '</label></th>';
+                echo '<td>';
+                echo '<input type="checkbox" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="1" ' . checked($value, '1', false) . ' />';
+                echo '</td></tr></table>';
+            }
+            echo '</div>';
+
+            // Statistics Section
+            echo '<div class="arata-meta-section">';
+            echo '<h3 style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-left: 4px solid #0073aa;">Thống kê ấn tượng</h3>';
+            foreach (['arata_stats_title', 'arata_stats_subtitle', 'arata_stats_customers', 'arata_stats_projects', 'arata_stats_years', 'arata_stats_success_rate'] as $key) {
+                $field = $fields[$key];
+                $value = get_post_meta($post->ID, $key, true) ?: $field['default'];
+                echo '<table class="form-table"><tr>';
+                echo '<th><label for="' . esc_attr($key) . '">' . esc_html($field['label']) . '</label></th>';
+                echo '<td>';
+                if ($field['type'] === 'textarea') {
+                    echo '<textarea id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" rows="3" class="large-text">' . esc_textarea($value) . '</textarea>';
+                } else {
+                    echo '<input type="text" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="' . esc_attr($value) . '" class="regular-text" />';
+                }
+                echo '</td></tr></table>';
+            }
+            echo '</div>';
+
+            // Why Choose Us Section
+            echo '<div class="arata-meta-section">';
+            echo '<h3 style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-left: 4px solid #0073aa;">Tại sao chọn Arata Vietnam?</h3>';
+            foreach (['arata_why_choose_title', 'arata_why_choose_subtitle', 'arata_why_choose_quality_title', 'arata_why_choose_quality_desc', 'arata_why_choose_team_title', 'arata_why_choose_team_desc', 'arata_why_choose_service_title', 'arata_why_choose_service_desc'] as $key) {
+                $field = $fields[$key];
+                $value = get_post_meta($post->ID, $key, true) ?: $field['default'];
+                echo '<table class="form-table"><tr>';
+                echo '<th><label for="' . esc_attr($key) . '">' . esc_html($field['label']) . '</label></th>';
+                echo '<td>';
+                if ($field['type'] === 'textarea') {
+                    echo '<textarea id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" rows="3" class="large-text">' . esc_textarea($value) . '</textarea>';
+                } else {
+                    echo '<input type="text" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="' . esc_attr($value) . '" class="regular-text" />';
+                }
+                echo '</td></tr></table>';
+            }
+            echo '</div>';
+
+            // Testimonials Section
+            echo '<div class="arata-meta-section">';
+            echo '<h3 style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-left: 4px solid #0073aa;">Đánh giá khách hàng</h3>';
+
+            // General testimonials fields
+            foreach (['arata_testimonials_title', 'arata_testimonials_subtitle'] as $key) {
+                $field = $fields[$key];
+                $value = get_post_meta($post->ID, $key, true) ?: $field['default'];
+                echo '<table class="form-table"><tr>';
+                echo '<th><label for="' . esc_attr($key) . '">' . esc_html($field['label']) . '</label></th>';
+                echo '<td>';
+                if ($field['type'] === 'textarea') {
+                    echo '<textarea id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" rows="3" class="large-text">' . esc_textarea($value) . '</textarea>';
+                } else {
+                    echo '<input type="text" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="' . esc_attr($value) . '" class="regular-text" />';
+                }
+                echo '</td></tr></table>';
+            }
+
+            // Individual testimonials
+            for ($i = 1; $i <= 3; $i++) {
+                echo '<h4 style="margin-top: 15px; padding: 8px; background: #f9f9f9; border-left: 3px solid #0073aa;">Khách hàng ' . $i . '</h4>';
+
+                foreach (['name', 'position', 'content'] as $field_type) {
+                    $key = 'arata_testimonial_' . $i . '_' . $field_type;
+                    $field = $fields[$key];
+                    $value = get_post_meta($post->ID, $key, true) ?: $field['default'];
+                    echo '<table class="form-table"><tr>';
+                    echo '<th><label for="' . esc_attr($key) . '">' . esc_html($field['label']) . '</label></th>';
+                    echo '<td>';
+                    if ($field['type'] === 'textarea') {
+                        echo '<textarea id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" rows="3" class="large-text">' . esc_textarea($value) . '</textarea>';
+                    } else {
+                        echo '<input type="text" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="' . esc_attr($value) . '" class="regular-text" />';
+                    }
+                    echo '</td></tr></table>';
+                }
+            }
+
+            echo '</div>';
+
+            echo '</div>';
+        },
+        'page',
+        'normal',
+        'high'
+    );
+});
+
+/**
+ * Save meta boxes for Services Page Template
+ */
+add_action('save_post', function ($post_id) {
+    // Check if this is an autosave
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    // Check if this is a page
+    if (get_post_type($post_id) !== 'page') {
+        return;
+    }
+
+    // Check if this is the Services page template
+    if (get_page_template_slug($post_id) !== 'page-templates/services.php') {
+        return;
+    }
+
+    // Verify nonce
+    if (!isset($_POST['arata_services_page_meta_nonce']) || !wp_verify_nonce($_POST['arata_services_page_meta_nonce'], 'arata_services_page_meta_save')) {
+        return;
+    }
+
+    // Check user permissions
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    // Save meta fields
+    $meta_fields = [
+        'arata_show_hero', 'arata_show_services', 'arata_show_stats', 'arata_show_why_choose', 'arata_show_testimonials',
+        'arata_stats_title', 'arata_stats_subtitle', 'arata_stats_customers', 'arata_stats_projects', 'arata_stats_years', 'arata_stats_success_rate',
+        'arata_why_choose_title', 'arata_why_choose_subtitle', 'arata_why_choose_quality_title', 'arata_why_choose_quality_desc',
+        'arata_why_choose_team_title', 'arata_why_choose_team_desc', 'arata_why_choose_service_title', 'arata_why_choose_service_desc',
+        'arata_testimonials_title', 'arata_testimonials_subtitle',
+        'arata_testimonial_1_name', 'arata_testimonial_1_position', 'arata_testimonial_1_content',
+        'arata_testimonial_2_name', 'arata_testimonial_2_position', 'arata_testimonial_2_content',
+        'arata_testimonial_3_name', 'arata_testimonial_3_position', 'arata_testimonial_3_content'
+    ];
+
+    foreach ($meta_fields as $field) {
+        if (isset($_POST[$field])) {
+            update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
+        } else {
+            // For checkboxes, if not set in POST, save as empty string (unchecked)
+            if (strpos($field, 'arata_show_') === 0) {
+                update_post_meta($post_id, $field, '');
+            }
         }
     }
 });

@@ -65,10 +65,10 @@ get_template_part('template-parts/hero');
                 <?php
                 if (have_posts()) :
                     while (have_posts()) : the_post();
-                        // Lấy meta fields từ news-meta-fields.php
+                        // Get meta fields from news-meta-fields.php
                         $department = get_post_meta(get_the_ID(), 'arata_job_department', true);
                         $location = get_post_meta(get_the_ID(), 'arata_job_location', true);
-                        $type = get_post_meta(get_the_ID(), 'arata_job_type', true);
+                        $job_type = get_post_meta(get_the_ID(), 'arata_job_type', true);
                         $level = get_post_meta(get_the_ID(), 'arata_job_level', true);
                         $salary = get_post_meta(get_the_ID(), 'arata_job_salary', true);
                         $deadline = get_post_meta(get_the_ID(), 'arata_job_deadline', true);
@@ -127,10 +127,10 @@ get_template_part('template-parts/hero');
                                         </div>
                                     <?php endif; ?>
 
-                                    <?php if ($type && isset($type_labels[$type])): ?>
+                                    <?php if ($job_type && isset($type_labels[$job_type])): ?>
                                         <div class="flex items-center text-sm text-gray-600">
                                             <span data-icon="clock" data-size="16" class="text-gray-400 mr-2"></span>
-                                            <?php echo esc_html($type_labels[$type]); ?>
+                                            <?php echo esc_html($type_labels[$job_type]); ?>
                                         </div>
                                     <?php endif; ?>
 

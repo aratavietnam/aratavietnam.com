@@ -153,6 +153,14 @@ $current_icon_color = $icon_color_classes[$service_color] ?? $icon_color_classes
 
                     <!-- Main Content -->
                     <div class="lg:col-span-2">
+
+                        <!-- Featured Image -->
+                        <?php if (has_post_thumbnail()) : ?>
+                        <div class="mb-8 rounded-xl overflow-hidden shadow-lg">
+                            <?php the_post_thumbnail('large', ['class' => 'w-full h-auto object-cover']); ?>
+                        </div>
+                        <?php endif; ?>
+
                         <!-- Service Description -->
                         <div class="prose prose-lg max-w-none mb-12">
                             <?php the_content(); ?>
@@ -200,9 +208,11 @@ $current_icon_color = $icon_color_classes[$service_color] ?? $icon_color_classes
 
                     <!-- Sidebar -->
                     <div class="lg:col-span-1">
-                        <!-- Service Requirements -->
-                        <?php if ($service_requirements) : ?>
-                            <div class="bg-white border border-gray-200 rounded-2xl p-6 mb-6 sticky top-6">
+                        <div class="sticky top-24 space-y-6">
+
+                            <!-- Service Requirements -->
+                            <?php if ($service_requirements) : ?>
+                            <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
                                 <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                                     <span data-icon="clipboard-list" data-size="20" class="mr-2 <?php echo $current_icon_color; ?>"></span>
                                     Yêu cầu khách hàng
@@ -211,11 +221,11 @@ $current_icon_color = $icon_color_classes[$service_color] ?? $icon_color_classes
                                     <?php echo wpautop($service_requirements); ?>
                                 </div>
                             </div>
-                        <?php endif; ?>
+                            <?php endif; ?>
 
-                        <!-- Service Deliverables -->
-                        <?php if ($service_deliverables) : ?>
-                            <div class="bg-white border border-gray-200 rounded-2xl p-6 mb-6">
+                            <!-- Service Deliverables -->
+                            <?php if ($service_deliverables) : ?>
+                            <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
                                 <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                                     <span data-icon="package" data-size="20" class="mr-2 <?php echo $current_icon_color; ?>"></span>
                                     Sản phẩm đầu ra
@@ -224,16 +234,17 @@ $current_icon_color = $icon_color_classes[$service_color] ?? $icon_color_classes
                                     <?php echo wpautop($service_deliverables); ?>
                                 </div>
                             </div>
-                        <?php endif; ?>
+                            <?php endif; ?>
 
-                        <!-- CTA Section -->
-                        <div class="bg-gradient-to-br from-primary to-secondary rounded-2xl p-6 text-center text-white">
-                            <h3 class="text-lg font-semibold mb-3">Sẵn sàng tư vấn</h3>
-                            <p class="text-sm opacity-90 mb-4">Hãy để chúng tôi giúp bạn hiểu rõ hơn về dịch vụ này</p>
-                            <a href="/lien-he" class="inline-flex items-center px-6 py-3 bg-white text-primary font-semibold rounded-lg hover:bg-gray-50 transition-colors shadow-lg">
-                                <span data-icon="phone" data-size="18" class="mr-2"></span>
-                                Liên hệ ngay
-                            </a>
+                            <!-- CTA Section -->
+                            <div class="bg-gradient-to-br from-primary to-secondary rounded-2xl p-6 text-center text-white shadow-lg">
+                                <h3 class="text-lg font-semibold mb-3">Sẵn sàng tư vấn</h3>
+                                <p class="text-sm opacity-90 mb-4">Hãy để chúng tôi giúp bạn hiểu rõ hơn về dịch vụ này</p>
+                                <a href="/lien-he" class="inline-flex items-center px-6 py-3 bg-white text-primary font-semibold rounded-lg hover:bg-gray-50 transition-colors shadow-lg">
+                                    <span data-icon="phone" data-size="18" class="mr-2"></span>
+                                    Liên hệ ngay
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -267,12 +278,19 @@ $current_icon_color = $icon_color_classes[$service_color] ?? $icon_color_classes
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <?php while ($related_services->have_posts()) : $related_services->the_post(); ?>
-                        <div class="bg-white rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 overflow-hidden">
+                        <div class="bg-white rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 overflow-hidden group">
                             <?php if (has_post_thumbnail()) : ?>
                                 <div class="aspect-video overflow-hidden">
                                     <a href="<?php the_permalink(); ?>">
-                                        <?php the_post_thumbnail('medium_large', ['class' => 'w-full h-full object-cover hover:scale-105 transition-transform duration-300']); ?>
+                                        <?php the_post_thumbnail('medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300']); ?>
                                     </a>
+                                </div>
+                            <?php else : ?>
+                                <div class="aspect-video bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
+                                    <div class="text-center">
+                                        <span data-icon="settings" data-size="32" class="text-gray-400 mb-2"></span>
+                                        <p class="text-gray-500 text-sm">Arata Vietnam</p>
+                                    </div>
                                 </div>
                             <?php endif; ?>
 
@@ -281,9 +299,9 @@ $current_icon_color = $icon_color_classes[$service_color] ?? $icon_color_classes
                                     <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors"><?php the_title(); ?></a>
                                 </h3>
                                 <p class="text-gray-600 mb-4 line-clamp-2"><?php echo get_the_excerpt(); ?></p>
-                                <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-sm font-medium text-primary hover:underline">
+                                <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-sm font-medium text-primary hover:underline group-hover:scale-105 transition-transform">
                                     Xem chi tiết
-                                    <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
+                                    <span data-icon="arrow-right" data-size="16" class="ml-1 group-hover:translate-x-1 transition-transform"></span>
                                 </a>
                             </div>
                         </div>

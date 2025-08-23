@@ -10,7 +10,7 @@
 - Remove all emoji icons from project
 - Add WordPress migration plugins
 - Update theme files with modern structure
-- Implement Vietnamese font support 
+- Implement Vietnamese font support
 - Refactor functions.php into modular files
 - Clean up debug code and comments
 

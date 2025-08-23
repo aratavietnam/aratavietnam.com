@@ -5,6 +5,11 @@
  * @package ArataVietnam
  */
 
+// Don't use this template for service post type
+if (get_post_type() === 'service') {
+    return;
+}
+
 get_header();
 ?>
 
