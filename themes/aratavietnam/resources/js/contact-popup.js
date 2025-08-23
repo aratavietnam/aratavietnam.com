@@ -83,7 +83,7 @@
               <div class="pt-2">
                 <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center rounded-lg bg-primary px-6 py-2.5 text-white font-medium hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                   <span class="submit-text">Gửi liên hệ</span>
-                  <svg class="animate-spin -mr-1 ml-2 h-4 w-4 text-white hidden loading-spinner" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                  <svg class="animate-spin -mr-1 ml-2 h-4 w-4 text-white opacity-0 loading-spinner" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                 </button>
               </div>
             </form>
@@ -158,7 +158,11 @@
     popup.style.display = 'flex';
     setTimeout(() => {
       popup.classList.remove('opacity-0');
-      popup.querySelector('.transform').classList.remove('scale-95');
+      // Find the popup content div (second child of popup)
+      const popupContent = popup.querySelector('div > div');
+      if (popupContent) {
+        popupContent.classList.remove('scale-95');
+      }
     }, 10);
     document.body.classList.add('overflow-hidden');
     const firstInput = popup.querySelector('input[name="name"]');
@@ -182,6 +186,8 @@
       if (form) {
         form.reset();
       }
+      // Restore body scroll
+      document.body.classList.remove('overflow-hidden');
     }
   }
 
@@ -196,10 +202,14 @@
     form.querySelectorAll('.arata-form-input, .arata-form-textarea').forEach(function (field) {
       field.classList.remove('arata-input-error');
     });
-    const submitBtn = form.querySelector('.arata-submit-btn');
-    submitBtn.disabled = false;
-    submitBtn.querySelector('.arata-submit-text').textContent = 'Gửi liên hệ';
-    submitBtn.querySelector('.arata-loading-spinner').style.display = 'none';
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      const submitText = submitBtn.querySelector('.submit-text');
+      const loadingSpinner = submitBtn.querySelector('.loading-spinner');
+      if (submitText) submitText.textContent = 'Gửi liên hệ';
+      if (loadingSpinner) loadingSpinner.classList.add('opacity-0');
+    }
   }
 
   // Validation functions
@@ -332,46 +342,49 @@
     const message = form.querySelector('[name="message"]').value;
 
     const confirmationHTML = `
-      <div id="arata-confirmation-dialog" class="arata-confirmation-overlay">
-        <div class="arata-confirmation-container">
-          <div class="arata-confirmation-header">
-            <h3 class="arata-confirmation-title">Xác nhận thông tin liên hệ</h3>
+      <div id="arata-confirmation-dialog" class="fixed inset-0 bg-black/60 z-[10000] flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+          <div class="flex items-center justify-between p-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Xác nhận thông tin liên hệ</h3>
+            <button type="button" class="text-gray-400 hover:text-gray-600 transition-colors" onclick="this.closest('#arata-confirmation-dialog').remove()">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
           </div>
 
-          <div class="arata-confirmation-body">
-            <p class="arata-confirmation-description">Vui lòng kiểm tra lại thông tin trước khi gửi:</p>
+          <div class="p-4 overflow-y-auto">
+            <p class="text-sm text-gray-600 mb-4">Vui lòng kiểm tra lại thông tin trước khi gửi:</p>
 
-            <div class="arata-confirmation-details">
-              <div class="arata-detail-item">
-                <span class="arata-detail-label">Họ và tên:</span>
-                <span class="arata-detail-value">${escapeHtml(name)}</span>
+            <div class="space-y-3">
+              <div class="flex justify-between py-2 border-b border-gray-100">
+                <span class="font-medium text-gray-700">Họ và tên:</span>
+                <span class="text-gray-900">${escapeHtml(name)}</span>
               </div>
-              <div class="arata-detail-item">
-                <span class="arata-detail-label">Email:</span>
-                <span class="arata-detail-value">${escapeHtml(email)}</span>
+              <div class="flex justify-between py-2 border-b border-gray-100">
+                <span class="font-medium text-gray-700">Email:</span>
+                <span class="text-gray-900">${escapeHtml(email)}</span>
               </div>
               ${phone ? `
-                <div class="arata-detail-item">
-                  <span class="arata-detail-label">Số điện thoại:</span>
-                  <span class="arata-detail-value">${escapeHtml(phone)}</span>
+                <div class="flex justify-between py-2 border-b border-gray-100">
+                  <span class="font-medium text-gray-700">Số điện thoại:</span>
+                  <span class="text-gray-900">${escapeHtml(phone)}</span>
                 </div>
               ` : ''}
               ${subject ? `
-                <div class="arata-detail-item">
-                  <span class="arata-detail-label">Chủ đề:</span>
-                  <span class="arata-detail-value">${escapeHtml(subject)}</span>
+                <div class="flex justify-between py-2 border-b border-gray-100">
+                  <span class="font-medium text-gray-700">Chủ đề:</span>
+                  <span class="text-gray-900">${escapeHtml(subject)}</span>
                 </div>
               ` : ''}
-              <div class="arata-detail-item">
-                <span class="arata-detail-label">Nội dung:</span>
-                <span class="arata-detail-value arata-message-preview">${escapeHtml(message.substring(0, 100))}${message.length > 100 ? '...' : ''}</span>
+              <div class="flex justify-between py-2 border-b border-gray-100">
+                <span class="font-medium text-gray-700">Nội dung:</span>
+                <span class="text-gray-900 text-sm">${escapeHtml(message.substring(0, 100))}${message.length > 100 ? '...' : ''}</span>
               </div>
             </div>
           </div>
 
-          <div class="arata-confirmation-actions">
-            <button type="button" class="arata-btn-cancel">Hủy</button>
-            <button type="button" class="arata-btn-confirm">Xác nhận gửi</button>
+          <div class="flex justify-end space-x-3 p-4 border-t border-gray-200">
+            <button type="button" class="arata-btn-cancel px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Hủy</button>
+            <button type="button" class="arata-btn-confirm px-4 py-2 bg-primary text-white hover:bg-primary-dark rounded-lg transition-colors">Xác nhận gửi</button>
           </div>
         </div>
       </div>
@@ -421,6 +434,11 @@
     if (dialog) {
       dialog.remove();
     }
+    // Restore body scroll if popup is also closed
+    const popup = document.getElementById('arata-contact-popup');
+    if (popup && popup.style.display === 'none') {
+      document.body.classList.remove('overflow-hidden');
+    }
   }
 
   // Clear existing alerts
@@ -457,7 +475,7 @@
       submitText.textContent = 'Đang gửi...';
     }
     if (loadingSpinner) {
-      loadingSpinner.classList.remove('hidden');
+      loadingSpinner.classList.remove('opacity-0');
     }
 
     // Prepare form data
@@ -478,7 +496,7 @@
           submitText.textContent = 'Gửi liên hệ';
         }
         if (loadingSpinner) {
-          loadingSpinner.classList.add('hidden');
+          loadingSpinner.classList.add('opacity-0');
         }
 
         if (data.success) {
@@ -496,7 +514,7 @@
           submitText.textContent = 'Gửi liên hệ';
         }
         if (loadingSpinner) {
-          loadingSpinner.classList.add('hidden');
+          loadingSpinner.classList.add('opacity-0');
         }
         showErrorMessage('Có lỗi xảy ra. Vui lòng thử lại.');
       });
@@ -535,8 +553,8 @@
     }
 
     body.innerHTML = `
-            <div class="arata-success-message text-center py-8">
-                <svg class="arata-success-icon w-16 h-16 mx-auto text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="text-center py-8">
+                <svg class="w-16 h-16 mx-auto text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
                 <p class="text-lg font-semibold text-gray-900 mb-2">Thành công!</p>
@@ -555,16 +573,23 @@
     const popup = document.getElementById('arata-contact-popup');
     if (!popup) return;
 
-    const body = popup.querySelector('.arata-popup-body');
+    // Find the popup body - try multiple selectors
+    let body = popup.querySelector('.arata-popup-body');
+    if (!body) {
+      body = popup.querySelector('.p-4.lg\\:p-6');
+    }
+    if (!body) {
+      body = popup.querySelector('form').parentElement;
+    }
     if (!body) return;
 
     const errorAlert = document.createElement('div');
-    errorAlert.className = 'arata-error-alert';
+    errorAlert.className = 'arata-error-alert bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 flex items-start space-x-2';
     errorAlert.innerHTML = `
-        <svg class="arata-error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="arata-error-icon w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
-        <p>${message}</p>
+        <p class="text-sm">${message}</p>
     `;
 
     // Safe insert - check if firstChild exists

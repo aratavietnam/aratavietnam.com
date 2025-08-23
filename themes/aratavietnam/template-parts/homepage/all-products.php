@@ -1,151 +1,177 @@
 <?php
 /**
- * Homepage All Products Section
+ * Homepage All Products Section - Horizontal Slider
  */
 ?>
 
 <!-- All Products Section -->
-<section class="py-16 bg-white">
-    <div class="container mx-auto px-4">
+<section id="all-products" class="py-20 bg-white">
+    <div class="container mx-auto px-4 text-center">
         <!-- Section Header -->
-        <div class="text-center mb-16">
-            <div class="flex items-center justify-center mb-4">
-                <div class="w-12 h-1 bg-primary rounded-full mr-4"></div>
-                <span class="text-primary font-medium text-sm uppercase tracking-wider">Danh mục sản phẩm</span>
-                <div class="w-12 h-1 bg-primary rounded-full ml-4"></div>
-            </div>
-            <h2 class="text-4xl font-bold text-gray-900 mb-6">
-                <span class="text-primary">TẤT CẢ</span> 
-                <span class="text-secondary">SẢN PHẨM</span>
+        <div class="mb-16">
+            <!-- Single title -->
+            <h2 class="text-3xl sm:text-4xl font-bold text-orange-500 leading-tight mb-4">
+                TẤT CẢ SẢN PHẨM
             </h2>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                Khám phá đầy đủ các bộ sản phẩm hóa mỹ phẩm từ các thương hiệu hàng đầu Nhật Bản
+
+            <!-- Compact description -->
+            <p class="text-base sm:text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
+                Khám phá đầy đủ các sản phẩm hóa mỹ phẩm từ các thương hiệu hàng đầu Nhật Bản
             </p>
         </div>
 
-        <!-- Product Categories Carousel -->
-        <div class="relative">
-            <!-- Carousel Container -->
-            <div class="overflow-hidden">
-                <div class="product-categories-carousel flex transition-transform duration-500 ease-in-out" id="categoriesCarousel">
-                    <?php
-                    // Get product categories
-                    $product_categories = get_terms([
-                        'taxonomy' => 'product_cat',
-                        'hide_empty' => true,
-                        'parent' => 0,
-                        'number' => 10
-                    ]);
+        <!-- Products Slider -->
+        <div class="products-container">
+            <?php
+            // Get all products (limit to 20 for slider)
+            $all_products = wc_get_products([
+                'limit' => 20,
+                'status' => 'publish',
+                'orderby' => 'date',
+                'order' => 'DESC'
+            ]);
 
-                    if ($product_categories && !is_wp_error($product_categories)) :
-                        foreach ($product_categories as $category) :
-                            $category_image = get_term_meta($category->term_id, 'thumbnail_id', true);
-                            $category_image_url = $category_image ? wp_get_attachment_image_src($category_image, 'medium')[0] : '';
-                            $category_link = get_term_link($category);
-                            $product_count = $category->count;
-                            ?>
-                            <div class="flex-none w-full sm:w-1/2 lg:w-1/3 xl:w-1/5 px-3">
-                                <div class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary/30 h-full">
-                                    <!-- Category Image -->
-                                    <div class="relative aspect-square overflow-hidden bg-gradient-to-br from-primary/5 to-secondary/5">
-                                        <?php if ($category_image_url) : ?>
-                                            <img src="<?php echo esc_url($category_image_url); ?>" 
-                                                 alt="<?php echo esc_attr($category->name); ?>"
-                                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+            if ($all_products) :
+            ?>
+                <!-- Desktop Slider (5 products per view) -->
+                <div class="hidden md:block">
+                    <div class="desktop-slider overflow-hidden relative">
+                        <!-- Left Navigation Button -->
+                        <button class="desktop-nav absolute -left-16 top-1/2 transform -translate-y-1/2 z-10 bg-orange-500 text-white w-12 h-12 rounded-full text-lg font-medium hover:bg-orange-600 transition-colors" data-direction="prev">
+                            ←
+                        </button>
+
+                        <!-- Right Navigation Button -->
+                        <button class="desktop-nav absolute -right-16 top-1/2 transform -translate-y-1/2 z-10 bg-orange-500 text-white w-12 h-12 rounded-full text-lg font-medium hover:bg-orange-600 transition-colors" data-direction="next">
+                            →
+                        </button>
+
+                        <div class="flex gap-6 pb-4 px-4" id="desktop-products-slider">
+                            <?php foreach ($all_products as $product) :
+                                $product_id = $product->get_id();
+                                $product_name = $product->get_name();
+                                $product_price = $product->get_price();
+                                $product_image = wp_get_attachment_image_src(get_post_thumbnail_id($product_id), 'medium');
+                                $product_link = get_permalink($product_id);
+                                ?>
+                                <div class="group flex-shrink-0 w-[calc(20%-1rem)]">
+                                    <!-- Product Image -->
+                                    <div class="aspect-square overflow-hidden bg-gray-50 mb-3 rounded-lg">
+                                        <?php if ($product_image) : ?>
+                                            <a href="<?php echo esc_url($product_link); ?>">
+                                                <img src="<?php echo esc_url($product_image[0]); ?>"
+                                                     alt="<?php echo esc_attr($product_name); ?>"
+                                                     class="w-full h-full object-cover" />
+                                            </a>
                                         <?php else : ?>
-                                            <div class="w-full h-full flex items-center justify-center">
-                                                <div class="text-center">
-                                                    <span data-icon="package" data-size="48" class="text-primary/60 mb-2"></span>
-                                                    <p class="text-primary font-medium text-sm"><?php echo esc_html($category->name); ?></p>
-                                                </div>
+                                            <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                                                <span data-icon="package" data-size="48" class="text-gray-400"></span>
                                             </div>
                                         <?php endif; ?>
-
-                                        <!-- Overlay -->
-                                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                        
-                                        <!-- View Products Button -->
-                                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                            <a href="<?php echo esc_url($category_link); ?>" 
-                                               class="bg-white text-gray-900 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                                Xem sản phẩm
-                                            </a>
-                                        </div>
                                     </div>
 
-                                    <!-- Category Info -->
-                                    <div class="p-4">
-                                        <h3 class="font-semibold text-gray-900 mb-2 group-hover:text-primary transition-colors">
-                                            <a href="<?php echo esc_url($category_link); ?>">
-                                                <?php echo esc_html($category->name); ?>
+                                    <!-- Product Info -->
+                                    <div class="text-center min-h-[4rem] flex flex-col justify-center">
+                                        <!-- Product Name -->
+                                        <h3 class="font-semibold text-gray-800 mb-2 line-clamp-1 text-base leading-relaxed group-hover:text-orange-500 transition-colors">
+                                            <a href="<?php echo esc_url($product_link); ?>">
+                                                <?php echo esc_html($product_name); ?>
                                             </a>
                                         </h3>
-                                        
-                                        <?php if ($category->description) : ?>
-                                            <p class="text-sm text-gray-600 mb-3 line-clamp-2">
-                                                <?php echo esc_html($category->description); ?>
-                                            </p>
-                                        <?php endif; ?>
 
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-sm text-gray-500">
-                                                <?php echo $product_count; ?> sản phẩm
-                                            </span>
-                                            <a href="<?php echo esc_url($category_link); ?>" 
-                                               class="text-primary hover:text-primary-dark font-medium text-sm">
-                                                Xem tất cả →
-                                            </a>
+                                        <!-- Product Price -->
+                                        <div class="text-base font-semibold text-gray-700">
+                                            <?php if ($product_price) : ?>
+                                                <?php echo number_format($product_price); ?>₫
+                                            <?php else : ?>
+                                                Liên hệ
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <?php
-                        endforeach;
-                    else :
-                        // Fallback content if no categories
-                        for ($i = 1; $i <= 5; $i++) :
-                            ?>
-                            <div class="flex-none w-full sm:w-1/2 lg:w-1/3 xl:w-1/5 px-3">
-                                <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 h-full">
-                                    <div class="aspect-square bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
-                                        <div class="text-center">
-                                            <span data-icon="package" data-size="48" class="text-gray-400 mb-2"></span>
-                                            <p class="text-gray-600 font-medium">Danh mục <?php echo $i; ?></p>
-                                        </div>
-                                    </div>
-                                    <div class="p-4">
-                                        <h3 class="font-semibold text-gray-900 mb-2">Sản phẩm mẫu <?php echo $i; ?></h3>
-                                        <p class="text-sm text-gray-600 mb-3">Mô tả danh mục sản phẩm</p>
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-sm text-gray-500">0 sản phẩm</span>
-                                            <span class="text-primary font-medium text-sm">Xem tất cả →</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php
-                        endfor;
-                    endif;
-                    ?>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Carousel Navigation -->
-            <button class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-600 hover:text-primary hover:shadow-xl transition-all duration-300 z-10" id="prevCategory">
-                <span data-icon="chevron-left" data-size="20"></span>
-            </button>
-            <button class="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-600 hover:text-primary hover:shadow-xl transition-all duration-300 z-10" id="nextCategory">
-                <span data-icon="chevron-right" data-size="20"></span>
-            </button>
+                <!-- Mobile Slider (2 products per view) -->
+                <div class="md:hidden">
+                    <div class="mobile-slider overflow-hidden relative">
+                        <!-- Left Navigation Button -->
+                        <button class="mobile-nav absolute -left-12 top-1/2 transform -translate-y-1/2 z-10 bg-orange-500 text-white w-10 h-10 rounded-full text-sm font-medium hover:bg-orange-600 transition-colors" data-direction="prev">
+                            ←
+                        </button>
+
+                        <!-- Right Navigation Button -->
+                        <button class="mobile-nav absolute -right-12 top-1/2 transform -translate-y-1/2 z-10 bg-orange-500 text-white w-10 h-10 rounded-full text-sm font-medium hover:bg-orange-600 transition-colors" data-direction="next">
+                            →
+                        </button>
+
+                        <div class="flex gap-4 pb-4 px-2" id="mobile-products-slider">
+                            <?php foreach ($all_products as $product) :
+                                $product_id = $product->get_id();
+                                $product_name = $product->get_name();
+                                $product_price = $product->get_price();
+                                $product_image = wp_get_attachment_image_src(get_post_thumbnail_id($product_id), 'medium');
+                                $product_link = get_permalink($product_id);
+                                ?>
+                                <div class="group flex-shrink-0 w-[calc(50%-0.5rem)]">
+                                    <!-- Product Image -->
+                                    <div class="aspect-square overflow-hidden bg-gray-50 mb-3 rounded-lg">
+                                        <?php if ($product_image) : ?>
+                                            <a href="<?php echo esc_url($product_link); ?>">
+                                                <img src="<?php echo esc_url($product_image[0]); ?>"
+                                                     alt="<?php echo esc_attr($product_name); ?>"
+                                                     class="w-full h-full object-cover" />
+                                            </a>
+                                        <?php else : ?>
+                                            <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                                                <span data-icon="package" data-size="48" class="text-gray-400"></span>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <!-- Product Info -->
+                                    <div class="text-center min-h-[4rem] flex flex-col justify-center">
+                                        <!-- Product Name -->
+                                        <h3 class="font-semibold text-gray-800 mb-2 line-clamp-1 text-sm leading-relaxed group-hover:text-orange-500 transition-colors">
+                                            <a href="<?php echo esc_url($product_link); ?>">
+                                                <?php echo esc_html($product_name); ?>
+                                            </a>
+                                        </h3>
+
+                                        <!-- Product Price -->
+                                        <div class="text-sm font-semibold text-gray-700">
+                                            <?php if ($product_price) : ?>
+                                                <?php echo number_format($product_price); ?>₫
+                                            <?php else : ?>
+                                                Liên hệ
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php else : ?>
+                <!-- No Products Found -->
+                <div class="text-center py-16">
+                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span data-icon="package" data-size="32" class="text-gray-400"></span>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-600 mb-2">Chưa có sản phẩm nào</h3>
+                    <p class="text-gray-500">Vui lòng thêm sản phẩm trong admin panel.</p>
+                </div>
+            <?php endif; ?>
         </div>
 
-        <!-- View All Categories Button -->
+        <!-- View All Products Button -->
         <div class="text-center mt-12">
-            <a href="<?php echo wc_get_page_permalink('shop'); ?>" 
-               class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-secondary to-primary text-white font-semibold rounded-lg hover:from-secondary-dark hover:to-primary-dark transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                <span data-icon="grid" data-size="20" class="mr-2"></span>
-                Xem tất cả danh mục
-                <span data-icon="arrow-right" data-size="20" class="ml-2"></span>
+            <a href="<?php echo wc_get_page_permalink('shop'); ?>"
+               class="inline-flex items-center px-6 py-3 bg-orange-500 text-white font-medium rounded-lg hover:bg-orange-600 transition-all duration-300">
+                Xem tất cả sản phẩm
+                <span data-icon="arrow-right" data-size="16" class="ml-2"></span>
             </a>
         </div>
     </div>
@@ -153,96 +179,268 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const carousel = document.getElementById('categoriesCarousel');
-    const prevBtn = document.getElementById('prevCategory');
-    const nextBtn = document.getElementById('nextCategory');
-    const items = carousel.children;
-    const totalItems = items.length;
-    
-    let currentIndex = 0;
-    let itemsPerView = 5; // Default for xl screens
-    
-    // Calculate items per view based on screen size
-    function updateItemsPerView() {
-        if (window.innerWidth < 640) {
-            itemsPerView = 1; // sm
-        } else if (window.innerWidth < 1024) {
-            itemsPerView = 2; // md
-        } else if (window.innerWidth < 1280) {
-            itemsPerView = 3; // lg
-        } else {
-            itemsPerView = 5; // xl
+    // Desktop Slider (5 products per view)
+    const desktopSlider = document.getElementById('desktop-products-slider');
+    const desktopNavButtons = document.querySelectorAll('.desktop-nav');
+
+    if (desktopSlider && desktopNavButtons.length > 0) {
+        let desktopCurrentIndex = 0;
+        const desktopTotalProducts = desktopSlider.children.length;
+        const desktopProductsPerView = 5;
+        const desktopMaxIndex = Math.max(0, desktopTotalProducts - desktopProductsPerView);
+
+        function updateDesktopSlider() {
+            const translateX = -desktopCurrentIndex * (100 / desktopProductsPerView);
+            desktopSlider.style.transform = `translateX(${translateX}%)`;
+
+            // Update navigation buttons
+            desktopNavButtons.forEach(btn => {
+                if (btn.dataset.direction === 'prev') {
+                    btn.style.opacity = desktopCurrentIndex === 0 ? '0.5' : '1';
+                    btn.disabled = desktopCurrentIndex === 0;
+                } else if (btn.dataset.direction === 'next') {
+                    btn.style.opacity = desktopCurrentIndex >= desktopMaxIndex ? '0.5' : '1';
+                    btn.disabled = desktopCurrentIndex >= desktopMaxIndex;
+                }
+            });
         }
-    }
-    
-    function updateCarousel() {
-        const translateX = -(currentIndex * (100 / itemsPerView));
-        carousel.style.transform = `translateX(${translateX}%)`;
-        
-        // Update button states
-        prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1';
-        nextBtn.style.opacity = currentIndex >= totalItems - itemsPerView ? '0.5' : '1';
-    }
-    
-    function nextSlide() {
-        if (currentIndex < totalItems - itemsPerView) {
-            currentIndex++;
-            updateCarousel();
-        }
-    }
-    
-    function prevSlide() {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateCarousel();
-        }
-    }
-    
-    // Event listeners
-    nextBtn.addEventListener('click', nextSlide);
-    prevBtn.addEventListener('click', prevSlide);
-    
-    // Handle window resize
-    window.addEventListener('resize', () => {
-        updateItemsPerView();
-        currentIndex = Math.min(currentIndex, Math.max(0, totalItems - itemsPerView));
-        updateCarousel();
-    });
-    
-    // Initialize
-    updateItemsPerView();
-    updateCarousel();
-    
-    // Auto-scroll (optional)
-    let autoScrollInterval = setInterval(() => {
-        if (currentIndex >= totalItems - itemsPerView) {
-            currentIndex = 0;
-        } else {
-            currentIndex++;
-        }
-        updateCarousel();
-    }, 4000);
-    
-    // Pause auto-scroll on hover
-    carousel.addEventListener('mouseenter', () => clearInterval(autoScrollInterval));
-    carousel.addEventListener('mouseleave', () => {
-        autoScrollInterval = setInterval(() => {
-            if (currentIndex >= totalItems - itemsPerView) {
-                currentIndex = 0;
+
+        // Desktop navigation button clicks
+        desktopNavButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.dataset.direction === 'prev' && desktopCurrentIndex > 0) {
+                    desktopCurrentIndex--;
+                } else if (this.dataset.direction === 'next' && desktopCurrentIndex < desktopMaxIndex) {
+                    desktopCurrentIndex++;
+                }
+                updateDesktopSlider();
+            });
+        });
+
+        // Initialize desktop slider
+        updateDesktopSlider();
+
+        // Auto-slider for desktop (slow)
+        let desktopAutoInterval = setInterval(() => {
+            if (desktopCurrentIndex >= desktopMaxIndex) {
+                desktopCurrentIndex = 0;
             } else {
-                currentIndex++;
+                desktopCurrentIndex++;
             }
-            updateCarousel();
-        }, 4000);
-    });
+            updateDesktopSlider();
+        }, 5000); // 5 seconds per slide
+
+        // Pause auto-slider on hover
+        desktopSlider.addEventListener('mouseenter', () => clearInterval(desktopAutoInterval));
+        desktopSlider.addEventListener('mouseleave', () => {
+            desktopAutoInterval = setInterval(() => {
+                if (desktopCurrentIndex >= desktopMaxIndex) {
+                    desktopCurrentIndex = 0;
+                } else {
+                    desktopCurrentIndex++;
+                }
+                updateDesktopSlider();
+            }, 5000);
+        });
+    }
+
+    // Mobile Slider (2 products per view)
+    const mobileSlider = document.getElementById('mobile-products-slider');
+    const mobileNavButtons = document.querySelectorAll('.mobile-nav');
+
+    if (mobileSlider && mobileNavButtons.length > 0) {
+        let mobileCurrentIndex = 0;
+        const mobileTotalProducts = mobileSlider.children.length;
+        const mobileProductsPerView = 2;
+        const mobileMaxIndex = Math.max(0, mobileTotalProducts - mobileProductsPerView);
+
+        function updateMobileSlider() {
+            const translateX = -mobileCurrentIndex * (100 / mobileProductsPerView);
+            mobileSlider.style.transform = `translateX(${translateX}%)`;
+
+            // Update navigation buttons
+            mobileNavButtons.forEach(btn => {
+                if (btn.dataset.direction === 'prev') {
+                    btn.style.opacity = mobileCurrentIndex === 0 ? '0.5' : '1';
+                    btn.disabled = mobileCurrentIndex === 0;
+                } else if (btn.dataset.direction === 'next') {
+                    btn.style.opacity = mobileCurrentIndex >= mobileMaxIndex ? '0.5' : '1';
+                    btn.disabled = mobileCurrentIndex >= mobileMaxIndex;
+                }
+            });
+        }
+
+        // Mobile navigation button clicks
+        mobileNavButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.dataset.direction === 'prev' && mobileCurrentIndex > 0) {
+                    mobileCurrentIndex--;
+                } else if (this.dataset.direction === 'next' && mobileCurrentIndex < mobileMaxIndex) {
+                    mobileCurrentIndex++;
+                }
+                updateMobileSlider();
+            });
+        });
+
+        // Touch/swipe support for mobile
+        let startX = 0;
+        let currentX = 0;
+
+        mobileSlider.addEventListener('touchstart', function(e) {
+            startX = e.touches[0].clientX;
+        });
+
+        mobileSlider.addEventListener('touchmove', function(e) {
+            currentX = e.touches[0].clientX;
+        });
+
+        mobileSlider.addEventListener('touchend', function() {
+            const diff = startX - currentX;
+            const threshold = 50;
+
+            if (Math.abs(diff) > threshold) {
+                if (diff > 0 && mobileCurrentIndex < mobileMaxIndex) {
+                    // Swipe left - next
+                    mobileCurrentIndex++;
+                } else if (diff < 0 && mobileCurrentIndex > 0) {
+                    // Swipe right - prev
+                    mobileCurrentIndex--;
+                }
+                updateMobileSlider();
+            }
+        });
+
+        // Initialize mobile slider
+        updateMobileSlider();
+
+        // Auto-slider for mobile (slow)
+        let mobileAutoInterval = setInterval(() => {
+            if (mobileCurrentIndex >= mobileMaxIndex) {
+                mobileCurrentIndex = 0;
+            } else {
+                mobileCurrentIndex++;
+            }
+            updateMobileSlider();
+        }, 5000); // 5 seconds per slide
+
+        // Pause auto-slider on hover
+        mobileSlider.addEventListener('mouseenter', () => clearInterval(mobileAutoInterval));
+        mobileSlider.addEventListener('mouseleave', () => {
+            mobileAutoInterval = setInterval(() => {
+                if (mobileCurrentIndex >= mobileMaxIndex) {
+                    mobileCurrentIndex = 0;
+                } else {
+                    mobileCurrentIndex++;
+                }
+                updateMobileSlider();
+            }, 5000);
+        });
+    }
 });
 </script>
 
 <style>
-.line-clamp-2 {
+.line-clamp-1 {
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+/* Flat design - minimal hover effects */
+#all-products .group:hover h3 a {
+    color: #f97316;
+}
+
+/* Smooth transitions for text only */
+#all-products h3 a {
+    transition: color 0.2s ease;
+}
+
+/* Desktop Slider Styles */
+.desktop-slider {
+    -webkit-overflow-scrolling: touch;
+}
+
+#desktop-products-slider {
+    transition: transform 0.3s ease;
+    width: 100%;
+}
+
+.desktop-nav {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.desktop-nav:hover:not(:disabled) {
+    background-color: #ea580c;
+}
+
+.desktop-nav:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Mobile Slider Styles */
+.mobile-slider {
+    -webkit-overflow-scrolling: touch;
+}
+
+#mobile-products-slider {
+    transition: transform 0.3s ease;
+    width: 100%;
+}
+
+.mobile-nav {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.mobile-nav:hover:not(:disabled) {
+    background-color: #ea580c;
+}
+
+.mobile-nav:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Color scheme - Orange and White */
+.text-orange-500 {
+    color: #f97316;
+}
+
+.bg-orange-500 {
+    background-color: #f97316;
+}
+
+.hover\:bg-orange-600:hover {
+    background-color: #ea580c;
+}
+
+/* Typography improvements */
+#all-products h3 a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Responsive text sizes */
+@media (max-width: 640px) {
+    #all-products h2 {
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+    }
+
+    #all-products h3 {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+    }
+}
+
+@media (min-width: 641px) {
+    #all-products h3 {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
 }
 </style>

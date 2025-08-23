@@ -27,6 +27,9 @@ add_action('add_meta_boxes', 'arata_add_homepage_meta_box');
 function arata_homepage_meta_box_callback($post) {
     wp_nonce_field('arata_homepage_save_meta_box_data', 'arata_homepage_meta_box_nonce');
 
+    // Marquee text field
+    $marquee_text = get_post_meta($post->ID, '_marquee_text', true);
+
     // Slide 1 fields
     $slide1_type = get_post_meta($post->ID, '_slide1_type', true) ?: 'image';
     $slide1_image = get_post_meta($post->ID, '_slide1_image', true);
@@ -46,14 +49,25 @@ function arata_homepage_meta_box_callback($post) {
     ?>
     <div class="homepage-meta-tabs">
         <ul class="tab-links">
-            <li class="active"><a href="#slide1">Slide 1</a></li>
+            <li class="active"><a href="#marquee">Marquee Text</a></li>
+            <li><a href="#slide1">Slide 1</a></li>
             <li><a href="#slide2">Slide 2</a></li>
             <li><a href="#slide3">Slide 3</a></li>
         </ul>
 
         <div class="tab-content">
+            <!-- Marquee Text Content -->
+            <div id="marquee" class="tab active">
+                <h4>Marquee Running Text Settings</h4>
+                <p>
+                    <label><strong>Running Text:</strong></label>
+                    <input type="text" name="marquee_text" value="<?php echo esc_attr($marquee_text); ?>" class="widefat" placeholder="ARATA - NHÀ PHÂN PHỐI HÓA MỸ PHẨM HÀNG ĐẦU NHẬT BẢN" />
+                    <em>Text sẽ chạy liên tục từ phải sang trái dưới hero banner</em>
+                </p>
+            </div>
+
             <!-- Slide 1 Content -->
-            <div id="slide1" class="tab active">
+            <div id="slide1" class="tab">
                 <h4>Slide 1 Settings</h4>
                 <p>
                     <label>Type:</label>
@@ -132,6 +146,11 @@ function arata_homepage_save_meta_box_data($post_id) {
     }
     if (!current_user_can('edit_page', $post_id)) {
         return;
+    }
+
+    // Save Marquee text
+    if (isset($_POST['marquee_text'])) {
+        update_post_meta($post_id, '_marquee_text', sanitize_text_field($_POST['marquee_text']));
     }
 
     // Save Slide 1 data

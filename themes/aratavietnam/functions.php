@@ -17,13 +17,17 @@ require_once get_template_directory() . '/inc/news-post-types.php';
 require_once get_template_directory() . '/inc/news-meta-fields.php';
 require_once get_template_directory() . '/inc/news-forms.php';
 require_once get_template_directory() . '/inc/class-dropdown-walker.php';
-require_once get_template_directory() . '/inc/about-meta.php';
+// // require_once get_template_directory() . '/inc/about-meta.php';
 require_once get_template_directory() . '/inc/admin-columns.php';
 require_once get_template_directory() . '/inc/template-filters.php';
 require_once get_template_directory() . '/inc/upload-mimes.php';
 require_once get_template_directory() . '/inc/auth-handler.php';
 require_once get_template_directory() . '/inc/job-application-handler.php';
 require_once get_template_directory() . '/inc/services-post-types.php';
+require_once get_template_directory() . '/inc/product-assets.php';
+require_once get_template_directory() . '/inc/product-brand-taxonomy.php';
+require_once get_template_directory() . '/inc/product-filters.php';
+require_once get_template_directory() . '/inc/homepage-meta.php';
 
 // Register custom page templates
 function aratavietnam_register_page_templates($templates) {
@@ -33,6 +37,7 @@ function aratavietnam_register_page_templates($templates) {
     $templates['page-templates/blog.php'] = 'Blog Page';
     $templates['page-templates/contact.php'] = 'Contact Page';
     $templates['page-templates/services.php'] = 'Services Page';
+    $templates['page-templates/about.php'] = 'About Page';
     return $templates;
 }
 add_filter('theme_page_templates', 'aratavietnam_register_page_templates');
@@ -457,3 +462,183 @@ add_filter('style_loader_src', 'aratavietnam_cache_busting', 10, 2);
 
 // Remove footer debug info if exists
 remove_action('wp_footer', 'aratavietnam_debug_info');
+
+// Enqueue admin styles for homepage meta box
+function arata_admin_styles() {
+    global $pagenow;
+    if ($pagenow == 'post.php' && isset($_GET['post']) && $_GET['post'] == get_option('page_on_front')) {
+        wp_enqueue_style('arata-homepage-admin-css', get_template_directory_uri() . '/assets/css/homepage-admin.css');
+    }
+}
+add_action('admin_enqueue_scripts', 'arata_admin_styles');
+
+
+
+// --- Start of About Page Meta Box Code (Restored) ---
+
+add_action('add_meta_boxes_page', function($post) {
+    $template = get_post_meta($post->ID, '_wp_page_template', true);
+
+    if ($template === 'page-templates/about.php') {
+        add_meta_box(
+            'arata_about_meta',
+            __('About Page Settings', 'aratavietnam'),
+            function($post) {
+                wp_nonce_field('arata_about_meta_save', 'arata_about_meta_nonce');
+
+                // Field definitions
+                $content_fields = [
+                    'arata_about_company_intro' => __('Company Introduction', 'aratavietnam'),
+                    'arata_about_history' => __('History & Achievements', 'aratavietnam'),
+                    'arata_about_mission' => __('Mission & Vision', 'aratavietnam'),
+                    'arata_about_values' => __('Core Values', 'aratavietnam'),
+                    'arata_about_commitment' => __('Quality Commitment', 'aratavietnam'),
+                ];
+                $image_fields = [
+                    'arata_about_left_image' => __('Left Image', 'aratavietnam'),
+                    'arata_about_right_image' => __('Right Image', 'aratavietnam'),
+                ];
+
+                // Tabs HTML
+                echo '<div class="arata-about-meta-tabs">';
+                echo '<nav class="nav-tab-wrapper"><a href="#content-tab" class="nav-tab nav-tab-active">Content</a><a href="#images-tab" class="nav-tab">Images</a></nav>';
+
+                // Content Tab
+                echo '<div id="content-tab" class="tab-content active"><table class="form-table">';
+                foreach ($content_fields as $key => $label) {
+                    $value = get_post_meta($post->ID, $key, true);
+                    echo '<tr><th><label for="' . esc_attr($key) . '">' . esc_html($label) . '</label></th><td>';
+                    echo '<textarea id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" rows="5" class="large-text">' . esc_textarea($value) . '</textarea>';
+                    echo '<p class="description">You can use HTML tags for formatting.</p>';
+                    echo '</td></tr>';
+                }
+                echo '</table></div>';
+
+                // Images Tab
+                echo '<div id="images-tab" class="tab-content"><table class="form-table">';
+                foreach ($image_fields as $key => $label) {
+                    $value = get_post_meta($post->ID, $key, true);
+                    echo '<tr><th><label for="' . esc_attr($key) . '">' . esc_html($label) . '</label></th><td>';
+                    echo arata_about_image_uploader($key, $value);
+                    echo '</td></tr>';
+                }
+                echo '</table></div>';
+
+                echo '</div>'; // Close tabs container
+                ?>
+                <script>
+                jQuery(document).ready(function($) {
+                    $('.nav-tab').click(function(e) {
+                        e.preventDefault();
+                        var target = $(this).attr('href');
+                        $('.nav-tab').removeClass('nav-tab-active');
+                        $(this).addClass('nav-tab-active');
+                        $('.tab-content').removeClass('active');
+                        $(target).addClass('active');
+                    });
+                });
+                </script>
+                <style>
+                .arata-about-meta-tabs .nav-tab-wrapper { margin-bottom: 20px; }
+                .tab-content { display: none; }
+                .tab-content.active { display: block; }
+                </style>
+                <?php
+            },
+            'page',
+            'normal',
+            'high'
+        );
+    }
+});
+
+
+// Helper function to create an image uploader
+function arata_about_image_uploader($name, $value = '') {
+    $image_url = $value ? wp_get_attachment_image_url($value, 'thumbnail') : '';
+    ob_start();
+    ?>
+    <div class="arata-image-uploader">
+        <input type="hidden" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>">
+        <div class="image-preview" style="margin-bottom: 10px; min-height: 100px; border: 1px dashed #ccc; background: #f7f7f7; text-align: center;">
+            <?php if ($image_url): ?>
+                <img src="<?php echo esc_url($image_url); ?>" style="max-width: 100%; height: auto;">
+            <?php else: ?>
+                <p style="padding: 10px; color: #888;"><?php _e('No image selected', 'aratavietnam'); ?></p>
+            <?php endif; ?>
+        </div>
+        <button type="button" class="button button-primary select-image-btn"><?php _e('Select Image', 'aratavietnam'); ?></button>
+        <button type="button" class="button remove-image-btn" style="<?php echo $value ? '' : 'display:none;'; ?>"><?php _e('Remove Image', 'aratavietnam'); ?></button>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+
+// Enqueue script for media uploader
+add_action('admin_enqueue_scripts', function($hook) {
+    if ($hook === 'post.php' || $hook === 'post-new.php') {
+        wp_enqueue_media();
+        wp_add_inline_script('media-editor', "
+            jQuery(document).ready(function($) {
+                $(document).on('click', '.select-image-btn', function(e) {
+                    e.preventDefault();
+                    var button = $(this);
+                    var uploaderContainer = button.closest('.arata-image-uploader');
+                    var mediaUploader = wp.media({
+                        title: 'Select Image',
+                        button: { text: 'Use this image' },
+                        multiple: false
+                    });
+
+                    mediaUploader.on('select', function() {
+                        var attachment = mediaUploader.state().get('selection').first().toJSON();
+                        uploaderContainer.find('input[type=hidden]').val(attachment.id);
+                        var thumbnailUrl = attachment.sizes && attachment.sizes.thumbnail ? attachment.sizes.thumbnail.url : attachment.url;
+                        uploaderContainer.find('.image-preview').html('<img src=\"' + thumbnailUrl + '\" style=\"max-width: 100%; height: auto;\">');
+                        uploaderContainer.find('.remove-image-btn').show();
+                    });
+
+                    mediaUploader.open();
+                });
+
+                $(document).on('click', '.remove-image-btn', function(e) {
+                    e.preventDefault();
+                    var button = $(this);
+                    var uploaderContainer = button.closest('.arata-image-uploader');
+                    uploaderContainer.find('input[type=hidden]').val('');
+                    uploaderContainer.find('.image-preview').html('<p style=\"padding: 10px; color: #888;\">No image selected</p>');
+                    button.hide();
+                });
+            });
+        ");
+    }
+});
+
+// Save meta
+add_action('save_post_page', function($post_id) {
+    if (!isset($_POST['arata_about_meta_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['arata_about_meta_nonce']), 'arata_about_meta_save')) {
+        return;
+    }
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) { return; }
+    if (!current_user_can('edit_page', $post_id)) { return; }
+
+    $keys = [
+        'arata_about_company_intro',
+        'arata_about_history',
+        'arata_about_mission',
+        'arata_about_values',
+        'arata_about_commitment',
+        'arata_about_left_image',
+        'arata_about_right_image',
+    ];
+
+    foreach ($keys as $key) {
+        if (isset($_POST[$key])) {
+            update_post_meta($post_id, $key, wp_kses_post(wp_unslash($_POST[$key])));
+        } else {
+            delete_post_meta($post_id, $key);
+        }
+    }
+});
+
+// --- End of About Page Meta Box Code (Restored) ---

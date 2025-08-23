@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) { exit; }
 
 // Set products per page for WooCommerce
 add_filter('loop_shop_per_page', function() {
-    return 12; // Show 12 products per page (4 columns x 3 rows)
+    return 6; // Show 6 products per page (for better pagination)
 }, 20);
 
 ?>
@@ -48,13 +48,35 @@ add_filter('loop_shop_per_page', function() {
                         <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
                             <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
                                 <h3 class="text-base font-semibold text-gray-900 flex items-center">
-                                    <span data-icon="grid" data-size="16" class="text-primary mr-2"></span>
+                                    <span data-icon="folder" data-size="16" class="text-primary mr-2"></span>
                                     Danh mục sản phẩm
                                 </h3>
                             </div>
 
                             <div class="p-3">
                                 <div class="space-y-1">
+                                    <?php
+                                    // Check if we're on the main shop page (all products)
+                                    $is_shop_page = is_shop() && !is_product_category() && !is_product_tag();
+                                    ?>
+
+                                    <!-- All Products Tab -->
+                                    <div class="border-b border-gray-100">
+                                        <div class="flex items-center justify-between group">
+                                            <a href="<?php echo wc_get_page_permalink('shop'); ?>"
+                                               class="flex-1 py-2 px-2 text-gray-700 hover:text-primary hover:bg-primary/5 rounded transition-all duration-200 group-hover:bg-primary/5 <?php echo $is_shop_page ? 'text-primary bg-primary/10 font-semibold' : ''; ?>">
+                                                <span data-icon="grid-3x3" data-size="14" class="mr-2 inline-block"></span>
+                                                Tất cả sản phẩm
+                                                <?php
+                                                // Get total product count
+                                                $all_products_count = wp_count_posts('product');
+                                                $total_count = $all_products_count->publish;
+                                                ?>
+                                                <span class="text-xs text-gray-400 ml-2 bg-gray-100 px-1.5 py-0.5 rounded-full"><?php echo $total_count; ?></span>
+                                            </a>
+                                        </div>
+                                    </div>
+
                                     <?php
                                     $product_categories = get_terms([
                                         'taxonomy' => 'product_cat',
@@ -120,7 +142,7 @@ add_filter('loop_shop_per_page', function() {
                         <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
                             <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
                                 <h3 class="text-base font-semibold text-gray-900 flex items-center">
-                                    <span data-icon="tag" data-size="16" class="text-primary mr-2"></span>
+                                    <span data-icon="dollar-sign" data-size="16" class="text-primary mr-2"></span>
                                     Lọc theo giá
                                 </h3>
                             </div>
@@ -154,40 +176,66 @@ add_filter('loop_shop_per_page', function() {
                         <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
                             <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
                                 <h3 class="text-base font-semibold text-gray-900 flex items-center">
-                                    <span data-icon="star" data-size="16" class="text-primary mr-2"></span>
+                                    <span data-icon="award" data-size="16" class="text-primary mr-2"></span>
                                     Thương hiệu
                                 </h3>
                             </div>
                             <div class="p-3">
                                 <div class="space-y-2">
-                                    <label class="flex items-center cursor-pointer group">
-                                        <input type="checkbox" name="brand_filter[]" value="bijinnuka" class="mr-2 text-primary">
-                                        <span class="text-gray-700 group-hover:text-primary transition-colors text-sm">Bijinnuka</span>
-                                    </label>
-                                    <label class="flex items-center cursor-pointer group">
-                                        <input type="checkbox" name="brand_filter[]" value="es-healthy" class="mr-2 text-primary">
-                                        <span class="text-gray-700 group-hover:text-primary transition-colors text-sm">ES Healthy</span>
-                                    </label>
-                                    <label class="flex items-center cursor-pointer group">
-                                        <input type="checkbox" name="brand_filter[]" value="jellan" class="mr-2 text-primary">
-                                        <span class="text-gray-700 group-hover:text-primary transition-colors text-sm">JELLAN</span>
-                                    </label>
-                                    <label class="flex items-center cursor-pointer group">
-                                        <input type="checkbox" name="brand_filter[]" value="purevivi" class="mr-2 text-primary">
-                                        <span class="text-gray-700 group-hover:text-primary transition-colors text-sm">Purevivi</span>
-                                    </label>
-                                    <label class="flex items-center cursor-pointer group">
-                                        <input type="checkbox" name="brand_filter[]" value="paenna" class="mr-2 text-primary">
-                                        <span class="text-gray-700 group-hover:text-primary transition-colors text-sm">PAENNA</span>
-                                    </label>
-                                    <label class="flex items-center cursor-pointer group">
-                                        <input type="checkbox" name="brand_filter[]" value="to-plan" class="mr-2 text-primary">
-                                        <span class="text-gray-700 group-hover:text-primary transition-colors text-sm">TO-PLAN</span>
-                                    </label>
-                                    <label class="flex items-center cursor-pointer group">
-                                        <input type="checkbox" name="brand_filter[]" value="tokyo-fruits" class="mr-2 text-primary">
-                                        <span class="text-gray-700 group-hover:text-primary transition-colors text-sm">TOKYO FRUITS</span>
-                                    </label>
+                                    <?php
+                                    // Get all product brands with product count
+                                    $product_brands = get_terms([
+                                        'taxonomy' => 'product_brand',
+                                        'hide_empty' => false, // Changed to false to show all brands
+                                        'orderby' => 'name',
+                                        'order' => 'ASC',
+                                    ]);
+
+                                    if (!empty($product_brands) && !is_wp_error($product_brands)) :
+                                        foreach ($product_brands as $brand) :
+                                            $is_current_brand = false;
+
+                                            // Check if this brand is currently selected
+                                            if (isset($_GET['brand_filter'])) {
+                                                $selected_brands = explode(',', $_GET['brand_filter']);
+                                                $is_current_brand = in_array($brand->slug, $selected_brands);
+                                            }
+
+                                            // Calculate actual product count for this brand
+                                            $brand_product_count = get_posts([
+                                                'post_type' => 'product',
+                                                'post_status' => 'publish',
+                                                'posts_per_page' => -1,
+                                                'tax_query' => [
+                                                    [
+                                                        'taxonomy' => 'product_brand',
+                                                        'field' => 'slug',
+                                                        'terms' => $brand->slug,
+                                                    ]
+                                                ],
+                                                'fields' => 'ids', // Only get IDs for better performance
+                                            ]);
+                                            $actual_count = count($brand_product_count);
+                                            ?>
+                                            <label class="flex items-center cursor-pointer group">
+                                                <input type="checkbox"
+                                                       name="brand_filter[]"
+                                                       value="<?php echo esc_attr($brand->slug); ?>"
+                                                       class="mr-2 text-primary"
+                                                       <?php echo $is_current_brand ? 'checked' : ''; ?>>
+                                                <span class="text-gray-700 group-hover:text-primary transition-colors text-sm">
+                                                    <?php echo esc_html($brand->name); ?>
+                                                    <span class="text-xs text-gray-400 ml-1 bg-gray-100 px-1.5 py-0.5 rounded-full"><?php echo $actual_count; ?></span>
+                                                </span>
+                                            </label>
+                                            <?php
+                                        endforeach;
+                                    else :
+                                        ?>
+                                        <p class="text-gray-500 text-sm">Chưa có thương hiệu nào.</p>
+                                        <?php
+                                    endif;
+                                    ?>
                                 </div>
                             </div>
                         </div>
@@ -208,81 +256,59 @@ add_filter('loop_shop_per_page', function() {
                 <!-- Main Content - Product Grid (3/4) -->
                 <div class="lg:col-span-3">
                     <?php if (have_posts()) : ?>
+
+                        <!-- Sort Dropdown -->
+                        <div class="bg-white rounded-lg border border-gray-200 p-4 mb-6">
+                            <div class="flex items-center justify-between flex-wrap gap-4">
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-gray-700 font-medium">Sắp xếp theo:</span>
+                                    <div class="relative">
+                                        <select id="product-sort" name="product_sort" class="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 text-gray-700 hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors">
+                                            <?php
+                                            $current_sort = isset($_GET['orderby']) ? $_GET['orderby'] : 'menu_order';
+                                            $sort_options = array(
+                                                'menu_order' => 'Mặc định',
+                                                'title' => 'Tên A đến Z',
+                                                'title-desc' => 'Tên Z đến A',
+                                                'price' => 'Giá thấp đến cao',
+                                                'price-desc' => 'Giá cao đến thấp',
+                                                'date' => 'Mới nhất',
+                                                'popularity' => 'Phổ biến nhất'
+                                            );
+
+                                            foreach ($sort_options as $value => $label) :
+                                                $selected = ($current_sort === $value) ? 'selected' : '';
+                                                echo "<option value='{$value}' {$selected}>{$label}</option>";
+                                            endforeach;
+                                            ?>
+                                        </select>
+                                        <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                            <span data-icon="chevron-down" data-size="16" class="text-gray-400"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text-sm text-gray-500">
+                                    <?php
+                                    global $wp_query;
+                                    $total_products = $wp_query->found_posts;
+                                    $current_page = max(1, get_query_var('paged'));
+                                    $per_page = get_option('posts_per_page');
+                                    $start = (($current_page - 1) * $per_page) + 1;
+                                    $end = min($current_page * $per_page, $total_products);
+
+                                    echo "Hiển thị {$start}–{$end} của {$total_products} sản phẩm";
+                                    ?>
+                                </div>
+                            </div>
+                                                </div>
+
+
+
                         <!-- Products Grid -->
                         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
                             <?php while (have_posts()) : the_post(); ?>
-                                <article class="group h-full">
-                                    <div class="bg-white rounded-lg border border-gray-200 hover:border-primary/30 transition-all duration-300 overflow-hidden h-full flex flex-col">
-                                        <!-- Product Image -->
-                                        <div class="aspect-square overflow-hidden bg-gray-50 flex-shrink-0 relative">
-                                            <?php if (has_post_thumbnail()) : ?>
-                                                <a href="<?php the_permalink(); ?>" class="block w-full h-full">
-                                                    <?php the_post_thumbnail('medium', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300']); ?>
-                                                </a>
-                                            <?php else : ?>
-                                                <div class="w-full h-full flex items-center justify-center text-gray-400">
-                                                    <span data-icon="image" data-size="48"></span>
-                                                </div>
-                                            <?php endif; ?>
-
-                                            <!-- Quick View Overlay -->
-                                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                                                <a href="<?php the_permalink(); ?>" class="bg-white text-primary px-3 py-1.5 rounded font-medium hover:bg-primary hover:text-white transition-colors text-sm">
-                                                    Xem chi tiết
-                                                </a>
-                                            </div>
-                                        </div>
-
-                                        <!-- Product Info -->
-                                        <div class="p-3 flex-1 flex flex-col">
-                                            <!-- Product Categories -->
-                                            <div class="mb-2 flex-shrink-0">
-                                                <?php
-                                                $product_cats = get_the_terms(get_the_ID(), 'product_cat');
-                                                if ($product_cats && !is_wp_error($product_cats)) :
-                                                    $cat_names = array_slice(array_map(function($cat) { return $cat->name; }, $product_cats), 0, 1);
-                                                    foreach ($cat_names as $cat_name) :
-                                                        ?>
-                                                        <span class="text-xs font-medium text-primary uppercase tracking-wide bg-primary/10 px-1.5 py-0.5 rounded-full"><?php echo esc_html($cat_name); ?></span>
-                                                        <?php
-                                                    endforeach;
-                                                endif;
-                                                ?>
-                                            </div>
-
-                                            <!-- Product Title -->
-                                            <h3 class="text-base font-semibold text-gray-900 mb-2 group-hover:text-primary transition-colors flex-shrink-0 line-clamp-2">
-                                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                            </h3>
-
-                                            <!-- Product Price -->
-                                            <div class="flex items-center justify-between mb-3 flex-shrink-0">
-                                                <?php
-                                                $regular_price = get_post_meta(get_the_ID(), '_regular_price', true);
-                                                $sale_price = get_post_meta(get_the_ID(), '_sale_price', true);
-                                                $price = get_post_meta(get_the_ID(), '_price', true);
-
-                                                if ($sale_price && $sale_price < $regular_price) :
-                                                    ?>
-                                                    <div class="flex items-center space-x-2">
-                                                        <span class="text-base font-bold text-primary"><?php echo number_format($sale_price); ?>₫</span>
-                                                        <span class="text-sm text-gray-500 line-through"><?php echo number_format($regular_price); ?>₫</span>
-                                                    </div>
-                                                    <?php
-                                                elseif ($price) :
-                                                    ?>
-                                                    <span class="text-base font-bold text-primary"><?php echo number_format($price); ?>₫</span>
-                                                    <?php
-                                                else :
-                                                    ?>
-                                                    <span class="text-base font-bold text-primary">Liên hệ</span>
-                                                    <?php
-                                                endif;
-                                                ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
+                                <?php get_template_part('template-parts/product-card'); ?>
                             <?php endwhile; ?>
                         </div>
 
@@ -389,190 +415,8 @@ add_filter('loop_shop_per_page', function() {
     </div>
 </main>
 
-<style>
-/* Custom styles for product page */
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
 
-.category-icon {
-    transition: transform 0.2s ease-in-out;
-}
 
-.subcategories {
-    transition: all 0.3s ease-in-out;
-}
 
-/* Filter hover effects */
-input[type="radio"]:checked + span,
-input[type="checkbox"]:checked + span {
-    color: rgb(59, 130, 246);
-    font-weight: 500;
-}
-
-/* Button animations */
-.add-to-cart-btn:hover {
-    transform: translateY(-1px);
-}
-
-.add-to-cart-btn:active {
-    transform: translateY(0);
-}
-
-/* Loading animation */
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.animate-spin {
-    animation: spin 1s linear infinite;
-}
-
-/* Responsive improvements */
-@media (max-width: 1024px) {
-    .sticky {
-        position: relative;
-        top: auto;
-    }
-}
-
-/* Custom scrollbar for subcategories */
-.subcategories::-webkit-scrollbar {
-    width: 4px;
-}
-
-.subcategories::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 2px;
-}
-
-.subcategories::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 2px;
-}
-
-.subcategories::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Category toggle functionality
-    const categoryToggles = document.querySelectorAll('.category-toggle');
-
-    categoryToggles.forEach(toggle => {
-        toggle.addEventListener('click', function() {
-            const categoryId = this.getAttribute('data-category');
-            const subcategories = document.getElementById(`subcategories-${categoryId}`);
-            const icon = this.querySelector('.category-icon');
-
-            if (subcategories.classList.contains('hidden')) {
-                subcategories.classList.remove('hidden');
-                icon.style.transform = 'rotate(180deg)';
-            } else {
-                subcategories.classList.add('hidden');
-                icon.style.transform = 'rotate(0deg)';
-            }
-        });
-    });
-
-    // Filter functionality
-    const priceFilters = document.querySelectorAll('input[name="price_filter"]');
-    const brandFilters = document.querySelectorAll('input[name="brand_filter[]"]');
-    const clearFiltersBtn = document.getElementById('clear-filters');
-
-    // Load saved filter state
-    function loadFilterState() {
-        const savedPrice = localStorage.getItem('product_price_filter');
-        const savedBrands = localStorage.getItem('product_brand_filters');
-
-        if (savedPrice) {
-            document.querySelector(`input[name="price_filter"][value="${savedPrice}"]`).checked = true;
-        }
-
-        if (savedBrands) {
-            const brands = JSON.parse(savedBrands);
-            brands.forEach(brand => {
-                const checkbox = document.querySelector(`input[name="brand_filter[]"][value="${brand}"]`);
-                if (checkbox) checkbox.checked = true;
-            });
-        }
-    }
-
-    // Save filter state
-    function saveFilterState() {
-        const selectedPrice = document.querySelector('input[name="price_filter"]:checked').value;
-        const selectedBrands = Array.from(brandFilters)
-            .filter(filter => filter.checked)
-            .map(filter => filter.value);
-
-        localStorage.setItem('product_price_filter', selectedPrice);
-        localStorage.setItem('product_brand_filters', JSON.stringify(selectedBrands));
-    }
-
-    // Load filters on page load
-    loadFilterState();
-
-    // Price filter change
-    priceFilters.forEach(filter => {
-        filter.addEventListener('change', function() {
-            saveFilterState();
-            applyFilters();
-        });
-    });
-
-    // Brand filter change
-    brandFilters.forEach(filter => {
-        filter.addEventListener('change', function() {
-            saveFilterState();
-            applyFilters();
-        });
-    });
-
-    // Clear filters
-    clearFiltersBtn.addEventListener('click', function() {
-        priceFilters.forEach(filter => filter.checked = false);
-        priceFilters[0].checked = true; // Reset to "all"
-        brandFilters.forEach(filter => filter.checked = false);
-
-        // Clear localStorage
-        localStorage.removeItem('product_price_filter');
-        localStorage.removeItem('product_brand_filters');
-
-        applyFilters();
-    });
-
-    function applyFilters() {
-        const selectedPrice = document.querySelector('input[name="price_filter"]:checked').value;
-        const selectedBrands = Array.from(brandFilters)
-            .filter(filter => filter.checked)
-            .map(filter => filter.value);
-
-        // Build query string
-        const params = new URLSearchParams(window.location.search);
-
-        if (selectedPrice !== 'all') {
-            params.set('price_filter', selectedPrice);
-        } else {
-            params.delete('price_filter');
-        }
-
-        if (selectedBrands.length > 0) {
-            params.set('brand_filter', selectedBrands.join(','));
-        } else {
-            params.delete('brand_filter');
-        }
-
-        // Redirect with filters
-        const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
-        window.location.href = newUrl;
-    }
-});
-</script>
 
 <?php get_footer(); ?>

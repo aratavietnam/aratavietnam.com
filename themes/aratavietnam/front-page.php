@@ -11,6 +11,9 @@ get_header();
     // Hero Banner Section
     get_template_part('template-parts/homepage/hero-banner');
 
+    // Marquee Section - Running Text
+    get_template_part('template-parts/homepage/marquee-section');
+
     // Featured Products Section
     get_template_part('template-parts/homepage/featured-products');
 
@@ -22,6 +25,7 @@ get_header();
 
     // Partners Section
     get_template_part('template-parts/homepage/partners-section');
+
     ?>
 </main>
 

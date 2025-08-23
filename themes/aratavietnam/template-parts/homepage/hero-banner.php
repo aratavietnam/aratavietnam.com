@@ -5,96 +5,48 @@
 ?>
 
 <!-- Hero Banner Section -->
-<section class="relative h-screen overflow-hidden">
+<section class="relative h-[600px] overflow-hidden hero-banner-container">
     <!-- Background Slider -->
     <div class="hero-slider absolute inset-0">
-        <!-- Slide 1 -->
-        <div class="slide active absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20"></div>
-            <?php
-            $banner_image = wp_get_attachment_image_url(275, 'full');
-            if (!$banner_image) {
-                $banner_image = get_template_directory_uri() . '/assets/images/hero-slide-1.jpg';
-            }
+        <?php
+        $front_page_id = get_option('page_on_front');
+        for ($i = 1; $i <= 3; $i++) {
+            $slide_type = get_post_meta($front_page_id, '_slide' . $i . '_type', true) ?: 'image';
+            $slide_image_id = get_post_meta($front_page_id, '_slide' . $i . '_image', true);
+            $slide_video = get_post_meta($front_page_id, '_slide' . $i . '_video', true);
+            $default_slide_ids = [277, 278, 279];
+            $slide_image = $slide_image_id ? wp_get_attachment_image_url($slide_image_id, 'full') : wp_get_attachment_image_url($default_slide_ids[$i - 1], 'full');
+            $active_class = ($i === 1) ? 'active' : '';
             ?>
-            <img src="<?php echo esc_url($banner_image); ?>"
-                 alt="Arata Vietnam - Hóa mỹ phẩm Nhật Bản"
-                 class="w-full h-full object-cover" />
-        </div>
-
-        <!-- Slide 2 -->
-        <div class="slide absolute inset-0 bg-gradient-to-r from-secondary/20 to-tertiary/20">
-            <div class="absolute inset-0 bg-black/30"></div>
-            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/hero-slide-2.jpg"
-                 alt="Sản phẩm chất lượng cao"
-                 class="w-full h-full object-cover" />
-        </div>
-
-        <!-- Slide 3 -->
-        <div class="slide absolute inset-0 bg-gradient-to-r from-tertiary/20 to-primary/20">
-            <div class="absolute inset-0 bg-black/30"></div>
-            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/hero-slide-3.jpg"
-                 alt="Đối tác tin cậy"
-                 class="w-full h-full object-cover" />
-        </div>
-    </div>
-
-    <!-- Hero Content -->
-    <div class="relative z-10 h-full flex items-center justify-center">
-        <div class="container mx-auto px-4 text-center">
-            <div class="max-w-4xl mx-auto">
-                <!-- Main Heading -->
-                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-                    <span class="block text-tertiary">ARATA</span>
-                    <span class="block text-2xl md:text-4xl lg:text-5xl mt-2">
-                        NHÀ PHÂN PHỐI HÓA MỸ PHẨM<br>
-                        <span class="text-primary">HÀNG ĐẦU NHẬT BẢN</span>
-                    </span>
-                </h1>
-
-                <!-- Subtitle -->
-                <p class="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto">
-                    Mang đến những sản phẩm chất lượng cao từ Nhật Bản với dịch vụ tận tâm
-                </p>
-
-                <!-- CTA Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                    <a href="<?php echo wc_get_page_permalink('shop'); ?>"
-                       class="inline-flex items-center px-8 py-4 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                        <span data-icon="shopping-bag" data-size="20" class="mr-2"></span>
-                        Khám phá sản phẩm
-                    </a>
-                    <a href="<?php echo home_url('/ve-arata-vietnam'); ?>"
-                       class="inline-flex items-center px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-lg border-2 border-white/30 hover:bg-white/20 transition-all duration-300">
-                        <span data-icon="info" data-size="20" class="mr-2"></span>
-                        Tìm hiểu thêm
-                    </a>
-                </div>
+            <div class="slide <?php echo $active_class; ?> absolute inset-0" data-slide="<?php echo $i; ?>">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/10"></div>
+                <?php if ($slide_type === 'video' && !empty($slide_video)) : ?>
+                    <video class="w-full h-full object-cover" autoplay loop muted playsinline>
+                        <source src="<?php echo esc_url($slide_video); ?>" type="video/mp4">
+                    </video>
+                <?php else : ?>
+                    <img src="<?php echo esc_url($slide_image); ?>"
+                         alt="Arata Vietnam Slide <?php echo $i; ?>"
+                         class="w-full h-full object-cover" />
+                <?php endif; ?>
             </div>
-        </div>
+            <?php
+        }
+        ?>
     </div>
 
-    <!-- Scroll Down Arrow -->
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
-        <div class="animate-bounce">
-            <a href="#featured-products" class="block w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-colors">
-                <span data-icon="chevron-down" data-size="24"></span>
-            </a>
-        </div>
-    </div>
-
-    <!-- Slider Navigation -->
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 flex space-x-2">
-        <button class="slider-dot active w-3 h-3 rounded-full bg-white/50 hover:bg-white transition-colors" data-slide="0"></button>
-        <button class="slider-dot w-3 h-3 rounded-full bg-white/30 hover:bg-white transition-colors" data-slide="1"></button>
-        <button class="slider-dot w-3 h-3 rounded-full bg-white/30 hover:bg-white transition-colors" data-slide="2"></button>
+    <!-- Slider Indicators -->
+    <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20 flex space-x-3">
+        <?php for ($i = 1; $i <= 3; $i++) : ?>
+            <button class="slider-indicator w-3 h-3 rounded-full bg-white/40 hover:bg-white/70 transition-all duration-300 <?php echo $i === 1 ? 'active' : ''; ?>" data-slide="<?php echo $i - 1; ?>"></button>
+        <?php endfor; ?>
     </div>
 
     <!-- Slider Controls -->
-    <button class="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-colors" id="prevSlide">
+    <button class="slider-control absolute left-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300 hover:scale-105" id="prevSlide">
         <span data-icon="chevron-left" data-size="24"></span>
     </button>
-    <button class="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-colors" id="nextSlide">
+    <button class="slider-control absolute right-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300 hover:scale-105" id="nextSlide">
         <span data-icon="chevron-right" data-size="24"></span>
     </button>
 </section>
@@ -102,30 +54,65 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const slides = document.querySelectorAll('.slide');
-    const dots = document.querySelectorAll('.slider-dot');
+    const indicators = document.querySelectorAll('.slider-indicator');
     const prevBtn = document.getElementById('prevSlide');
     const nextBtn = document.getElementById('nextSlide');
     let currentSlide = 0;
     let slideInterval;
+    let isTransitioning = false;
 
-    function showSlide(index) {
-        slides.forEach((slide, i) => {
-            slide.classList.toggle('active', i === index);
+    function showSlide(index, direction = 'next') {
+        if (isTransitioning) return;
+        isTransitioning = true;
+
+        const currentSlideEl = slides[currentSlide];
+        const nextSlideEl = slides[index];
+
+        // Update indicators
+        indicators.forEach((indicator, i) => {
+            indicator.classList.toggle('active', i === index);
         });
-        dots.forEach((dot, i) => {
-            dot.classList.toggle('active', i === index);
-            dot.classList.toggle('bg-white', i === index);
-            dot.classList.toggle('bg-white/30', i !== index);
-        });
+
+        // Determine slide direction
+        const slideDirection = direction === 'next' ? 'slide-left' : 'slide-right';
+
+        // Prepare next slide
+        nextSlideEl.style.transform = direction === 'next' ? 'translateX(100%)' : 'translateX(-100%)';
+        nextSlideEl.classList.add('active');
+
+        // Force reflow
+        nextSlideEl.offsetHeight;
+
+        // Animate slides
+        currentSlideEl.style.transform = direction === 'next' ? 'translateX(-100%)' : 'translateX(100%)';
+        nextSlideEl.style.transform = 'translateX(0)';
+
+        // Clean up after transition
+        setTimeout(() => {
+            currentSlideEl.classList.remove('active');
+            currentSlideEl.style.transform = '';
+            nextSlideEl.style.transform = '';
+            isTransitioning = false;
+        }, 600);
+
         currentSlide = index;
     }
 
     function nextSlide() {
-        showSlide((currentSlide + 1) % slides.length);
+        const nextIndex = (currentSlide + 1) % slides.length;
+        showSlide(nextIndex, 'next');
     }
 
     function prevSlide() {
-        showSlide((currentSlide - 1 + slides.length) % slides.length);
+        const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(prevIndex, 'prev');
+    }
+
+    function goToSlide(index) {
+        if (index !== currentSlide) {
+            const direction = index > currentSlide ? 'next' : 'prev';
+            showSlide(index, direction);
+        }
     }
 
     function startSlideshow() {
@@ -149,59 +136,149 @@ document.addEventListener('DOMContentLoaded', function() {
         startSlideshow();
     });
 
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
+    // Indicator click events
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
             stopSlideshow();
-            showSlide(index);
+            goToSlide(index);
             startSlideshow();
         });
     });
 
-    // Pause on hover
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+            stopSlideshow();
+            prevSlide();
+            startSlideshow();
+        } else if (e.key === 'ArrowRight') {
+            stopSlideshow();
+            nextSlide();
+            startSlideshow();
+        }
+    });
+
+    // Touch/swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+
     const heroSection = document.querySelector('.hero-slider');
+
+    heroSection.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    heroSection.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
+
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                stopSlideshow();
+                nextSlide();
+                startSlideshow();
+            } else {
+                stopSlideshow();
+                prevSlide();
+                startSlideshow();
+            }
+        }
+    }
+
+    // Pause on hover
     heroSection.addEventListener('mouseenter', stopSlideshow);
     heroSection.addEventListener('mouseleave', startSlideshow);
 
     // Start slideshow
     startSlideshow();
-
-    // Smooth scroll for arrow
-    document.querySelector('a[href="#featured-products"]').addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('featured-products').scrollIntoView({
-            behavior: 'smooth'
-        });
-    });
 });
 </script>
 
 <style>
 .slide {
     opacity: 0;
-    transition: opacity 1s ease-in-out;
+    visibility: hidden;
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform: translateX(100%);
 }
 
 .slide.active {
     opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
 }
 
+/* Active slide image animation - subtle Ken Burns effect */
 .slide.active img {
     animation: kenburns 20s ease-in-out infinite;
 }
 
 @keyframes kenburns {
-    0% {
+    0%, 100% {
         transform: scale(1) translate(0, 0);
     }
     50% {
-        transform: scale(1.1) translate(-5px, 5px);
-    }
-    100% {
-        transform: scale(1) translate(0, 0);
+        transform: scale(1.05) translate(-2px, 2px);
     }
 }
 
-.slider-dot.active {
+/* Slider Indicators */
+.slider-indicator {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.slider-indicator.active {
     background-color: white !important;
+    transform: scale(1.2);
+}
+
+/* Slider Controls */
+.hero-banner-container .slider-control {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.3s ease;
+}
+
+.hero-banner-container:hover .slider-control {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.slider-control:hover {
+    background-color: rgba(255, 255, 255, 0.35) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .slider-control {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .slider-indicator {
+        width: 8px !important;
+        height: 8px !important;
+    }
+
+    .hero-banner-container .slider-control {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+}
+
+/* Smooth performance optimizations */
+.slide,
+.slide img,
+.slide video {
+    will-change: transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
 }
 </style>

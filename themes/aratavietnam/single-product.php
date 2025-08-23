@@ -11,7 +11,7 @@ get_header();
 <main id="site-content" class="min-h-screen bg-gray-50">
     <?php while (have_posts()) : the_post(); ?>
         <?php global $product; ?>
-        
+
         <!-- Breadcrumb -->
         <section class="bg-white border-b border-gray-200 py-4">
             <div class="container mx-auto px-4">
@@ -37,7 +37,7 @@ get_header();
                             // Product gallery
                             $attachment_ids = $product->get_gallery_image_ids();
                             $main_image_id = $product->get_image_id();
-                            
+
                             if ($main_image_id || !empty($attachment_ids)) :
                             ?>
                                 <!-- Main Image -->
@@ -50,7 +50,7 @@ get_header();
                                         </div>
                                     <?php endif; ?>
                                 </div>
-                                
+
                                 <!-- Thumbnail Gallery -->
                                 <?php if (!empty($attachment_ids)) : ?>
                                     <div class="grid grid-cols-4 gap-2 p-4">
@@ -59,7 +59,7 @@ get_header();
                                                 <?php echo wp_get_attachment_image($main_image_id, 'thumbnail', false, array('class' => 'w-full h-full object-cover')); ?>
                                             </button>
                                         <?php endif; ?>
-                                        
+
                                         <?php foreach ($attachment_ids as $attachment_id) : ?>
                                             <button class="aspect-square overflow-hidden rounded-lg border-2 border-gray-200 hover:border-primary thumbnail-btn" data-image-id="<?php echo $attachment_id; ?>">
                                                 <?php echo wp_get_attachment_image($attachment_id, 'thumbnail', false, array('class' => 'w-full h-full object-cover')); ?>
@@ -104,14 +104,14 @@ get_header();
                                             <span class="text-gray-600"><?php echo $product->get_sku(); ?></span>
                                         </div>
                                     <?php endif; ?>
-                                    
+
                                     <div>
                                         <span class="font-semibold text-gray-700">Tình trạng:</span>
                                         <span class="text-gray-600">
                                             <?php echo $product->is_in_stock() ? 'Còn hàng' : 'Hết hàng'; ?>
                                         </span>
                                     </div>
-                                    
+
                                     <?php
                                     $categories = get_the_terms($product->get_id(), 'product_cat');
                                     if ($categories && !is_wp_error($categories)) :
@@ -250,74 +250,6 @@ get_header();
     <?php endwhile; ?>
 </main>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Image gallery functionality
-    const thumbnails = document.querySelectorAll('.thumbnail-btn');
-    const mainImage = document.getElementById('main-product-image');
-    
-    thumbnails.forEach(function(thumbnail) {
-        thumbnail.addEventListener('click', function() {
-            const imageId = this.dataset.imageId;
-            
-            // Remove active class from all thumbnails
-            thumbnails.forEach(t => {
-                t.classList.remove('active', 'border-primary');
-                t.classList.add('border-gray-200');
-            });
-            
-            // Add active class to clicked thumbnail
-            this.classList.add('active', 'border-primary');
-            this.classList.remove('border-gray-200');
-            
-            // Update main image (you would need to implement this based on your image data)
-            // This is a simplified version
-        });
-    });
-    
-    // Tab functionality
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-    
-    tabBtns.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            const tabId = this.dataset.tab;
-            
-            // Remove active classes
-            tabBtns.forEach(b => {
-                b.classList.remove('active', 'border-primary', 'text-primary');
-                b.classList.add('border-transparent', 'text-gray-500');
-            });
-            
-            tabContents.forEach(c => c.classList.add('hidden'));
-            
-            // Add active classes
-            this.classList.add('active', 'border-primary', 'text-primary');
-            this.classList.remove('border-transparent', 'text-gray-500');
-            
-            document.getElementById(tabId + '-tab').classList.remove('hidden');
-        });
-    });
-    
-    // Quantity controls
-    window.increaseQuantity = function() {
-        const input = document.getElementById('quantity');
-        const currentValue = parseInt(input.value);
-        const maxValue = parseInt(input.getAttribute('max')) || 999;
-        if (currentValue < maxValue) {
-            input.value = currentValue + 1;
-        }
-    };
-    
-    window.decreaseQuantity = function() {
-        const input = document.getElementById('quantity');
-        const currentValue = parseInt(input.value);
-        const minValue = parseInt(input.getAttribute('min')) || 1;
-        if (currentValue > minValue) {
-            input.value = currentValue - 1;
-        }
-    };
-});
-</script>
+
 
 <?php get_footer(); ?>
