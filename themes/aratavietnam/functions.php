@@ -26,9 +26,12 @@ require_once get_template_directory() . '/inc/job-application-handler.php';
 require_once get_template_directory() . '/inc/services-post-types.php';
 require_once get_template_directory() . '/inc/product-assets.php';
 require_once get_template_directory() . '/inc/product-brand-taxonomy.php';
+
 require_once get_template_directory() . '/inc/product-filters.php';
 require_once get_template_directory() . '/inc/homepage-meta.php';
 
+require_once get_template_directory() . '/inc/product-policies-meta.php';
+require_once get_template_directory() . '/inc/partner-post-type.php';
 // Register custom page templates
 function aratavietnam_register_page_templates($templates) {
     $templates['page-templates/news.php'] = 'News Page';
@@ -55,6 +58,7 @@ function aratavietnam_force_template_recognition($template) {
                 return $template_path;
             }
         }
+
     }
 
     return $template;
@@ -78,6 +82,7 @@ function aratavietnam(): TailPress\Framework\Theme
         ->features(fn($manager) => $manager->add(TailPress\Framework\Features\MenuOptions::class))
         ->menus(fn($manager) => $manager
             ->add('primary', __( 'Primary Menu', 'aratavietnam'))
+
             ->add('footer-menu-1', __( 'Footer Menu 1', 'aratavietnam'))
             ->add('footer-menu-2', __( 'Footer Menu 2', 'aratavietnam'))
         )
@@ -104,9 +109,24 @@ function aratavietnam(): TailPress\Framework\Theme
 
 aratavietnam();
 
+// Add type="module" to the main theme script tag.
+add_filter('script_loader_tag', function ($tag, $handle, $src) {
+    if ('aratavietnam-app' === $handle) {
+        $tag = '<script type="module" src="' . esc_url($src) . '" id="' . esc_attr($handle) . '-js"></script>';
+    }
+    return $tag;
+}, 10, 3);
 
 
 
+
+
+function aratavietnam_enqueue_custom_scripts() {
+    if (is_front_page()) {
+        wp_enqueue_script('aratavietnam-about-slider', get_template_directory_uri() . '/assets/js/about-slider.js', array(), '1.0.5', true);
+    }
+}
+add_action('wp_enqueue_scripts', 'aratavietnam_enqueue_custom_scripts');
 // Track post views
 function arata_get_post_views($postID){
     $count_key = 'post_views_count';
@@ -115,6 +135,7 @@ function arata_get_post_views($postID){
         delete_post_meta($postID, $count_key);
         add_post_meta($postID, $count_key, '0');
         return "0 View";
+
     }
     return $count.' Views';
 }
@@ -453,7 +474,11 @@ add_action('wp_enqueue_scripts', 'aratavietnam_localize_theme_data');
  */
 function aratavietnam_cache_busting($src, $handle) {
     if (strpos($handle, 'aratavietnam') !== false) {
-        $src = add_query_arg('v', '1.0.1', $src);
+        $asset_path = str_replace(get_template_directory_uri(), get_template_directory(), $src);
+        if (file_exists($asset_path)) {
+            $version = filemtime($asset_path);
+            $src = add_query_arg('v', $version, $src);
+        }
     }
     return $src;
 }
@@ -642,3 +667,31 @@ add_action('save_post_page', function($post_id) {
 });
 
 // --- End of About Page Meta Box Code (Restored) ---
+
+
+// Helper function to get post meta with a default value.
+if (!function_exists('arata_get_meta_value')) {
+    function arata_get_meta_value($post_id, $key, $default = '') {
+        $value = get_post_meta($post_id, $key, true);
+        return !empty($value) ? $value : $default;
+    }
+}
+
+// Translate WooCommerce single product tabs
+add_filter('woocommerce_product_tabs', 'aratavietnam_translate_product_tabs', 98);
+function aratavietnam_translate_product_tabs($tabs) {
+    if (isset($tabs['description'])) {
+        $tabs['description']['title'] = __('Mô tả sản phẩm', 'aratavietnam');
+    }
+    if (isset($tabs['reviews'])) {
+        $tabs['reviews']['title'] = __('Đánh giá', 'aratavietnam');
+    }
+    if (isset($tabs['additional_information'])) {
+        $tabs['additional_information']['title'] = __('Thông tin bổ sung', 'aratavietnam');
+    }
+    return $tabs;
+}
+
+
+// Remove the heading from the description tab
+add_filter('woocommerce_product_description_heading', '__return_null');

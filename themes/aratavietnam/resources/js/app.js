@@ -6,6 +6,11 @@ import './contact-popup.js';
 
 // Import Auth Popup
 import './auth-popup.js';
+// Import Swiper and PhotoSwipe for product gallery
+import 'photoswipe/style.css';
+import 'swiper/css';
+
+
 
 // Helper function to get theme directory URI
 function getThemeDirectoryUri() {

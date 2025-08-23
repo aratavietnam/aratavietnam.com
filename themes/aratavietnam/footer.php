@@ -4,7 +4,7 @@
  */
 ?>
 
-<footer id="colophon" class="site-footer" style="background: linear-gradient(135deg, #0066A6 0%, #004d7a 100%);">
+<footer id="colophon" class="site-footer relative z-10" style="background: linear-gradient(135deg, #0066A6 0%, #004d7a 100%);">
     <div class="container mx-auto px-4 py-12">
         <div>
             <!-- Footer Content -->
@@ -204,7 +204,16 @@ get_template_part('template-parts/floating-social');
 
 <?php wp_footer(); ?>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.body.classList.add('preloading');
+});
 
+window.addEventListener('load', function() {
+    document.body.classList.remove('preloading');
+    document.body.classList.add('loaded');
+});
+</script>
 
 </body>
 </html>

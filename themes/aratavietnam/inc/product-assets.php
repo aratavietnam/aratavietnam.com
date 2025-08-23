@@ -13,6 +13,17 @@ if (!defined('ABSPATH')) {
 
 /**
  * Enqueue product page assets
+
+
+    if (is_singular('product')) {
+        wp_enqueue_script(
+            'aratavietnam-product-single',
+            get_template_directory_uri() . '/resources/js/product-single.js',
+            [],
+            filemtime(get_template_directory() . '/resources/js/product-single.js'),
+            true
+        );
+    }
  */
 function aratavietnam_enqueue_product_assets() {
     // Get theme version for cache busting
@@ -37,7 +48,9 @@ function aratavietnam_enqueue_product_assets() {
         );
 
         // Localize script with product data
-        global $product;
+        global $post;
+        $product = wc_get_product($post->ID);
+
         if ($product) {
             wp_localize_script('aratavietnam-product-single', 'productData', array(
                 'id' => $product->get_id(),

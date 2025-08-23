@@ -78,7 +78,7 @@ get_template_part('template-parts/hero');
                         ?>
 
                         <?php if ($company_intro) : ?>
-                            <section class="mb-8">
+                            <section class="mb-8 scroll-animate">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Giới thiệu công ty</h2>
                                 <div class="bg-white rounded-lg p-6 shadow-sm">
                                     <div class="text-gray-700 leading-relaxed">
@@ -89,7 +89,7 @@ get_template_part('template-parts/hero');
                         <?php endif; ?>
 
                         <?php if ($history) : ?>
-                            <section class="mb-8">
+                            <section class="mb-8 scroll-animate">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Lịch sử & Thành tựu</h2>
                                 <div class="bg-white rounded-lg p-6 shadow-sm">
                                     <div class="text-gray-700 leading-relaxed">
@@ -100,7 +100,7 @@ get_template_part('template-parts/hero');
                         <?php endif; ?>
 
                         <?php if ($mission) : ?>
-                            <section class="mb-8">
+                            <section class="mb-8 scroll-animate">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Sứ mệnh & Tầm nhìn</h2>
                                 <div class="bg-white rounded-lg p-6 shadow-sm">
                                     <div class="text-gray-700 leading-relaxed">
@@ -111,7 +111,7 @@ get_template_part('template-parts/hero');
                         <?php endif; ?>
 
                         <?php if ($values) : ?>
-                            <section class="mb-8">
+                            <section class="mb-8 scroll-animate">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Giá trị cốt lõi</h2>
                                 <div class="bg-white rounded-lg p-6 shadow-sm">
                                     <div class="text-gray-700 leading-relaxed">
@@ -122,7 +122,7 @@ get_template_part('template-parts/hero');
                         <?php endif; ?>
 
                         <?php if ($commitment) : ?>
-                            <section class="mb-8">
+                            <section class="mb-8 scroll-animate">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Cam kết chất lượng</h2>
                                 <div class="bg-white rounded-lg p-6 shadow-sm">
                                     <div class="text-gray-700 leading-relaxed">

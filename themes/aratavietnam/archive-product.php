@@ -40,8 +40,16 @@ add_filter('loop_shop_per_page', function() {
             <!-- Main Content Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-4 lg:gap-x-8">
 
-                <!-- Sidebar - Product Categories & Filters (1/4) -->
-                <aside class="lg:col-span-1 mb-6 lg:mb-0">
+                <!-- Mobile Filter Trigger -->
+                <div class="lg:hidden mb-4">
+                    <button id="mobile-filter-trigger" class="w-full flex items-center justify-center bg-white border border-gray-300 rounded-lg py-2 px-4 text-gray-700 font-semibold hover:bg-gray-50 transition-colors">
+                        <span data-icon="filter" data-size="16" class="mr-2"></span>
+                        Bộ lọc
+                    </button>
+                </div>
+
+                <!-- Sidebar - Product Categories & Filters (1/4) - Hidden on Mobile -->
+                <aside class="hidden lg:block lg:col-span-1">
                     <div class="sticky top-24 space-y-4">
 
                         <!-- Product Categories -->
@@ -64,8 +72,8 @@ add_filter('loop_shop_per_page', function() {
                                     <div class="border-b border-gray-100">
                                         <div class="flex items-center justify-between group">
                                             <a href="<?php echo wc_get_page_permalink('shop'); ?>"
-                                               class="flex-1 py-2 px-2 text-gray-700 hover:text-primary hover:bg-primary/5 rounded transition-all duration-200 group-hover:bg-primary/5 <?php echo $is_shop_page ? 'text-primary bg-primary/10 font-semibold' : ''; ?>">
-                                                <span data-icon="grid-3x3" data-size="14" class="mr-2 inline-block"></span>
+                                               class="flex-1 py-2 px-2 text-gray-700 hover:text-primary hover:bg-primary/5 rounded transition-all duration-200 group-hover:bg-primary/5 flex items-center <?php echo $is_shop_page ? 'text-primary bg-primary/10 font-semibold' : ''; ?>">
+                                                <span data-icon="folder" data-size="14" class="mr-2 inline-block"></span>
                                                 Tất cả sản phẩm
                                                 <?php
                                                 // Get total product count
@@ -101,7 +109,8 @@ add_filter('loop_shop_per_page', function() {
                                             <div class="border-b border-gray-100 last:border-b-0">
                                                 <div class="flex items-center justify-between group">
                                                     <a href="<?php echo esc_url($category_link); ?>"
-                                                       class="flex-1 py-2 px-2 text-gray-700 hover:text-primary hover:bg-primary/5 rounded transition-all duration-200 group-hover:bg-primary/5 <?php echo $is_current ? 'text-primary bg-primary/10 font-semibold' : ''; ?>">
+                                                       class="flex-1 py-2 px-2 text-gray-700 hover:text-primary hover:bg-primary/5 rounded transition-all duration-200 group-hover:bg-primary/5 flex items-center <?php echo $is_current ? 'text-primary bg-primary/10 font-semibold' : ''; ?>">
+                                                        <span data-icon="folder" data-size="14" class="mr-2 inline-block"></span>
                                                         <?php echo esc_html($category->name); ?>
                                                         <span class="text-xs text-gray-400 ml-2 bg-gray-100 px-1.5 py-0.5 rounded-full"><?php echo $category->count; ?></span>
                                                     </a>
@@ -253,17 +262,19 @@ add_filter('loop_shop_per_page', function() {
                     </div>
                 </aside>
 
+
+
                 <!-- Main Content - Product Grid (3/4) -->
                 <div class="lg:col-span-3">
                     <?php if (have_posts()) : ?>
 
                         <!-- Sort Dropdown -->
-                        <div class="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-                            <div class="flex items-center justify-between flex-wrap gap-4">
-                                <div class="flex items-center space-x-4">
-                                    <span class="text-gray-700 font-medium">Sắp xếp theo:</span>
+                        <div class="bg-white rounded-lg border border-gray-200 p-3 mb-6">
+                            <div class="flex items-center justify-between flex-wrap gap-x-4 gap-y-2">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-gray-700 font-medium text-sm">Sắp xếp theo:</span>
                                     <div class="relative">
-                                        <select id="product-sort" name="product_sort" class="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 text-gray-700 hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors">
+                                        <select id="product-sort" name="product_sort" class="text-sm appearance-none bg-white border border-gray-300 rounded-lg px-3 py-1.5 pr-8 text-gray-700 hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors">
                                             <?php
                                             $current_sort = isset($_GET['orderby']) ? $_GET['orderby'] : 'menu_order';
                                             $sort_options = array(
@@ -283,7 +294,7 @@ add_filter('loop_shop_per_page', function() {
                                             ?>
                                         </select>
                                         <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                                            <span data-icon="chevron-down" data-size="16" class="text-gray-400"></span>
+                                            <span data-icon="chevron-down" data-size="14" class="text-gray-400"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -301,12 +312,12 @@ add_filter('loop_shop_per_page', function() {
                                     ?>
                                 </div>
                             </div>
-                                                </div>
+                        </div>
 
 
 
                         <!-- Products Grid -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
                             <?php while (have_posts()) : the_post(); ?>
                                 <?php get_template_part('template-parts/product-card'); ?>
                             <?php endwhile; ?>
@@ -414,6 +425,24 @@ add_filter('loop_shop_per_page', function() {
         </div>
     </div>
 </main>
+
+<!-- Mobile Filter Panel (Off-canvas) -->
+<div id="mobile-filter-panel" class="fixed inset-0 bg-black bg-opacity-50 z-[9998] hidden" aria-hidden="true">
+    <div id="mobile-filter-content" class="absolute top-0 right-0 h-full bg-white w-80 max-w-full shadow-lg z-[9999] transform translate-x-full transition-transform duration-300 overflow-y-auto">
+        <!-- Panel Header -->
+        <div class="flex items-center justify-between p-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Bộ lọc sản phẩm</h3>
+            <button id="mobile-filter-close" class="p-2 text-gray-500 hover:text-primary rounded-full hover:bg-gray-100">
+                <span data-icon="x" data-size="20"></span>
+            </button>
+        </div>
+
+        <!-- Panel Body (Cloned Filters) -->
+        <div class="p-4 space-y-6">
+            <!-- Filters will be cloned here by JS -->
+        </div>
+    </div>
+</div>
 
 
 

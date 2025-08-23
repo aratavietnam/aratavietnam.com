@@ -62,13 +62,13 @@
                     ?>
                 </div>
 
-                <!-- Tags -->
+                <!-- Footer with Tags and Social Share -->
                 <footer class="mt-12 pt-8 border-t border-gray-200">
                     <?php
                     $tags = get_the_tags();
                     if ($tags) :
                     ?>
-                        <div class="flex items-center flex-wrap">
+                        <div class="flex items-center flex-wrap mb-6">
                             <span class="font-semibold mr-4 text-gray-700">Tags:</span>
                             <div class="flex flex-wrap gap-2">
                                 <?php foreach ($tags as $tag) : ?>
@@ -79,6 +79,8 @@
                             </div>
                         </div>
                     <?php endif; ?>
+
+                    <?php get_template_part('template-parts/shared/social-share'); ?>
                 </footer>
             </article>
         </div>

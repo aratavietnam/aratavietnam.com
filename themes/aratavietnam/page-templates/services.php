@@ -94,7 +94,7 @@ if ($show_hero) {
 
     <!-- Featured Services Section -->
     <?php if ($show_services) : ?>
-    <section class="py-16 bg-gradient-to-br from-secondary/5 to-primary/5">
+    <section class="py-16 bg-gradient-to-br from-secondary/5 to-primary/5 scroll-animate">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
                 <div class="flex items-center justify-center mb-4">
@@ -277,7 +277,7 @@ if ($show_hero) {
 
     <!-- Statistics Section -->
     <?php if ($show_stats) : ?>
-    <section class="py-16 bg-gradient-to-r from-primary/5 to-secondary/5">
+    <section class="py-16 bg-gradient-to-r from-primary/5 to-secondary/5 scroll-animate">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
                 <h2 class="text-3xl font-bold text-gray-900 mb-6"><?php echo esc_html($stats_title); ?></h2>
@@ -308,7 +308,7 @@ if ($show_hero) {
 
     <!-- Why Choose Us Section -->
     <?php if ($show_why_choose) : ?>
-    <section class="py-16 bg-gray-50">
+    <section class="py-16 bg-gray-50 scroll-animate">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
                 <h2 class="text-3xl font-bold text-gray-900 mb-6"><?php echo esc_html($why_choose_title); ?></h2>
@@ -346,7 +346,7 @@ if ($show_hero) {
 
     <!-- Testimonials Section -->
     <?php if ($show_testimonials) : ?>
-    <section class="py-16 bg-white">
+    <section class="py-16 bg-white scroll-animate">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
                 <h2 class="text-3xl font-bold text-gray-900 mb-6"><?php echo esc_html($testimonials_title); ?></h2>

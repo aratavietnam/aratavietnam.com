@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const categoryId = this.getAttribute('data-category');
       const subcategories = document.getElementById(`subcategories-${categoryId}`);
       const icon = this.querySelector('.category-icon');
-
+      
       if (subcategories && icon) {
         if (subcategories.classList.contains('hidden')) {
           subcategories.classList.remove('hidden');
@@ -202,3 +202,67 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
+
+
+
+  // Mobile filter panel functionality
+  const trigger = document.getElementById('mobile-filter-trigger');
+  const panel = document.getElementById('mobile-filter-panel');
+  const content = document.getElementById('mobile-filter-content');
+  const closeBtn = document.getElementById('mobile-filter-close');
+  const desktopSidebar = document.querySelector('aside.hidden.lg\\:block');
+
+  if (trigger && panel && content && closeBtn && desktopSidebar) {
+    // Clone sidebar content to mobile panel
+    const cloneContainer = content.querySelector('.p-4.space-y-6');
+    if (cloneContainer) {
+        const filtersToClone = desktopSidebar.querySelectorAll('.bg-white.rounded-lg.border');
+        filtersToClone.forEach(filter => {
+            cloneContainer.appendChild(filter.cloneNode(true));
+        });
+    }
+
+    // Re-initialize category toggles for the cloned filters
+    const mobileCategoryToggles = cloneContainer.querySelectorAll('.category-toggle');
+    mobileCategoryToggles.forEach(toggle => {
+        toggle.addEventListener('click', function () {
+            const categoryId = this.getAttribute('data-category');
+            const subcategories = cloneContainer.querySelector(`#subcategories-${categoryId}`);
+            const icon = this.querySelector('.category-icon');
+
+            if (subcategories && icon) {
+                if (subcategories.classList.contains('hidden')) {
+                    subcategories.classList.remove('hidden');
+                    icon.style.transform = 'rotate(180deg)';
+                } else {
+                    subcategories.classList.add('hidden');
+                    icon.style.transform = 'rotate(0deg)';
+                }
+            }
+        });
+    });
+
+    function openPanel() {
+        panel.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => {
+            content.classList.remove('translate-x-full');
+        }, 10);
+    }
+
+    function closePanel() {
+        content.classList.add('translate-x-full');
+        document.body.style.overflow = '';
+        setTimeout(() => {
+            panel.classList.add('hidden');
+        }, 300);
+    }
+
+    trigger.addEventListener('click', openPanel);
+    closeBtn.addEventListener('click', closePanel);
+    panel.addEventListener('click', function (e) {
+        if (e.target === panel) {
+            closePanel();
+        }
+    });
+  }

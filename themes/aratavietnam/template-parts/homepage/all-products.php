@@ -5,20 +5,49 @@
 ?>
 
 <!-- All Products Section -->
-<section id="all-products" class="py-20 bg-white">
+<section id="all-products" class="py-20 bg-white scroll-animate">
     <div class="container mx-auto px-4 text-center">
-        <!-- Section Header -->
-        <div class="mb-16">
-            <!-- Single title -->
-            <h2 class="text-3xl sm:text-4xl font-bold text-orange-500 leading-tight mb-4">
-                TẤT CẢ SẢN PHẨM
-            </h2>
+        <?php
+        // Get custom content for the section header
+        $front_page_id = get_option('page_on_front');
+        $section_title = get_post_meta($front_page_id, '_all_products_title', true);
+        $section_description = get_post_meta($front_page_id, '_all_products_description', true);
 
-            <!-- Compact description -->
-            <p class="text-base sm:text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
-                Khám phá đầy đủ các sản phẩm hóa mỹ phẩm từ các thương hiệu hàng đầu Nhật Bản
-            </p>
-        </div>
+        // Fallback to default text if not set
+        if (empty($section_title)) {
+            $section_title = 'TẤT CẢ SẢN PHẨM';
+        }
+        if (empty($section_description)) {
+            $section_description = 'Khám phá đầy đủ các sản phẩm hóa mỹ phẩm từ các thương hiệu hàng đầu Nhật Bản';
+        }
+        ?>
+            <?php
+            // Get custom content for the section header
+            $front_page_id = get_option('page_on_front');
+            $title_part1 = get_post_meta($front_page_id, '_all_products_title_part1', true);
+            $title_part2 = get_post_meta($front_page_id, '_all_products_title_part2', true);
+            $section_description = get_post_meta($front_page_id, '_all_products_description', true);
+
+            // Fallback to default text if not set
+            if (empty($title_part1)) {
+                $title_part1 = 'Tất cả';
+            }
+            if (empty($title_part2)) {
+                $title_part2 = 'Sản phẩm';
+            }
+            if (empty($section_description)) {
+                $section_description = 'Khám phá đầy đủ các sản phẩm hóa mỹ phẩm từ các thương hiệu hàng đầu Nhật Bản';
+            }
+            ?>
+            <div class="mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                    <span class="text-secondary"><?php echo esc_html($title_part1); ?></span>
+                    <span class="text-primary"><?php echo esc_html($title_part2); ?></span>
+                </h2>
+                <p class="text-base sm:text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
+                    <?php echo esc_html($section_description); ?>
+                </p>
+            </div>
 
         <!-- Products Slider -->
         <div class="products-container">
@@ -34,18 +63,18 @@
             if ($all_products) :
             ?>
                 <!-- Desktop Slider (5 products per view) -->
-                <div class="hidden md:block">
-                    <div class="desktop-slider overflow-hidden relative">
-                        <!-- Left Navigation Button -->
-                        <button class="desktop-nav absolute -left-16 top-1/2 transform -translate-y-1/2 z-10 bg-orange-500 text-white w-12 h-12 rounded-full text-lg font-medium hover:bg-orange-600 transition-colors" data-direction="prev">
-                            ←
-                        </button>
+                <div class="hidden md:block relative">
+                    <!-- Left Navigation Button -->
+                    <button class="desktop-nav absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-[calc(100%+1rem)] z-10 bg-white/80 backdrop-blur-sm shadow-lg text-gray-700 w-12 h-12 rounded-full text-lg font-medium hover:bg-white transition-colors" data-direction="prev">
+                        ←
+                    </button>
 
-                        <!-- Right Navigation Button -->
-                        <button class="desktop-nav absolute -right-16 top-1/2 transform -translate-y-1/2 z-10 bg-orange-500 text-white w-12 h-12 rounded-full text-lg font-medium hover:bg-orange-600 transition-colors" data-direction="next">
-                            →
-                        </button>
+                    <!-- Right Navigation Button -->
+                    <button class="desktop-nav absolute top-1/2 right-0 transform -translate-y-1/2 translate-x-[calc(100%+1rem)] z-10 bg-white/80 backdrop-blur-sm shadow-lg text-gray-700 w-12 h-12 rounded-full text-lg font-medium hover:bg-white transition-colors" data-direction="next">
+                        →
+                    </button>
 
+                    <div class="desktop-slider overflow-hidden">
                         <div class="flex gap-6 pb-4 px-4" id="desktop-products-slider">
                             <?php foreach ($all_products as $product) :
                                 $product_id = $product->get_id();
@@ -95,18 +124,17 @@
                 </div>
 
                 <!-- Mobile Slider (2 products per view) -->
-                <div class="md:hidden">
-                    <div class="mobile-slider overflow-hidden relative">
-                        <!-- Left Navigation Button -->
-                        <button class="mobile-nav absolute -left-12 top-1/2 transform -translate-y-1/2 z-10 bg-orange-500 text-white w-10 h-10 rounded-full text-sm font-medium hover:bg-orange-600 transition-colors" data-direction="prev">
-                            ←
-                        </button>
+                <div class="md:hidden relative">
+                    <!-- Left Navigation Button -->
+                    <button class="mobile-nav absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-[calc(100%+0.5rem)] z-10 bg-white/80 backdrop-blur-sm shadow-lg text-gray-700 w-10 h-10 rounded-full text-sm font-medium hover:bg-white transition-colors" data-direction="prev">
+                        ←
+                    </button>
 
-                        <!-- Right Navigation Button -->
-                        <button class="mobile-nav absolute -right-12 top-1/2 transform -translate-y-1/2 z-10 bg-orange-500 text-white w-10 h-10 rounded-full text-sm font-medium hover:bg-orange-600 transition-colors" data-direction="next">
-                            →
-                        </button>
-
+                    <!-- Right Navigation Button -->
+                    <button class="mobile-nav absolute top-1/2 right-0 transform -translate-y-1/2 translate-x-[calc(100%+0.5rem)] z-10 bg-white/80 backdrop-blur-sm shadow-lg text-gray-700 w-10 h-10 rounded-full text-sm font-medium hover:bg-white transition-colors" data-direction="next">
+                        →
+                    </button>
+                    <div class="mobile-slider overflow-hidden">
                         <div class="flex gap-4 pb-4 px-2" id="mobile-products-slider">
                             <?php foreach ($all_products as $product) :
                                 $product_id = $product->get_id();

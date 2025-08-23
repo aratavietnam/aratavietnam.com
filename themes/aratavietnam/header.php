@@ -13,6 +13,15 @@
 	<link rel="profile" href="https://gmpg.org/xfn/11">
 
 	<?php wp_head(); ?>
+	<style>
+		body.preloading {
+			opacity: 0;
+			transition: opacity 0.5s ease-in-out;
+		}
+		body.loaded {
+			opacity: 1;
+		}
+	</style>
 </head>
 
 <body <?php body_class('font-primary'); ?>>

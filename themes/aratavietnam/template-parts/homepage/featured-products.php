@@ -5,18 +5,46 @@
 ?>
 
 <!-- Featured Products Section -->
-<section id="featured-products" class="py-20 bg-blue-600">
+<section id="featured-products" class="py-20 scroll-animate" style="background-color: oklch(0.55 0.16 254.65);">
     <div class="container mx-auto px-4 text-center">
+        <?php
+        // Get custom content for the section header
+        $front_page_id = get_option('page_on_front');
+        $section_title = get_post_meta($front_page_id, '_featured_products_title', true);
+        $section_description = get_post_meta($front_page_id, '_featured_products_description', true);
+
+        // Fallback to default text if not set
+        if (empty($section_title)) {
+            $section_title = 'SẢN PHẨM NỔI BẬT';
+        }
+        if (empty($section_description)) {
+            $section_description = 'Khám phá những sản phẩm hóa mỹ phẩm chất lượng cao được nhập khẩu trực tiếp từ Nhật Bản';
+        }
+        ?>
         <!-- Section Header -->
         <div class="mb-16">
-            <!-- Single title -->
-            <h2 class="text-3xl sm:text-4xl font-bold text-white leading-tight mb-4">
-                SẢN PHẨM NỔI BẬT
+            <?php
+            // Get custom content for the section header
+            $front_page_id = get_option('page_on_front');
+            $title_part1 = get_post_meta($front_page_id, '_featured_products_title_part1', true);
+            $title_part2 = get_post_meta($front_page_id, '_featured_products_title_part2', true);
+
+            // Fallback to default text if not set
+            if (empty($title_part1)) {
+                $title_part1 = 'Sản phẩm';
+            }
+            if (empty($title_part2)) {
+                $title_part2 = 'Nổi bật';
+            }
+            ?>
+            <h2 class="text-4xl font-bold text-white mb-4">
+                <span class="text-white opacity-80"><?php echo esc_html($title_part1); ?></span>
+                <span class="text-white"><?php echo esc_html($title_part2); ?></span>
             </h2>
 
             <!-- Compact description -->
             <p class="text-base sm:text-lg text-blue-100 leading-relaxed max-w-2xl mx-auto">
-                Khám phá những sản phẩm hóa mỹ phẩm chất lượng cao được nhập khẩu trực tiếp từ Nhật Bản
+                <?php echo esc_html($section_description); ?>
             </p>
         </div>
 
@@ -120,7 +148,7 @@
 
                                     <!-- Product Info - Outside image box, flat design -->
                                     <div class="text-center min-h-[4rem] flex flex-col justify-center">
-                                        <!-- Product Name -->
+                                        <!-- Product Na me -->
                                         <h3 class="font-semibold text-white mb-2 line-clamp-1 text-sm leading-relaxed group-hover:text-orange-500 transition-colors">
                                             <a href="<?php echo esc_url($product_link); ?>">
                                                 <?php echo esc_html($product_name); ?>
