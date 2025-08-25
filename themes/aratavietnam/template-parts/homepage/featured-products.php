@@ -5,7 +5,7 @@
 ?>
 
 <!-- Featured Products Section -->
-<section id="featured-products" class="py-20 scroll-animate" style="background-color: oklch(0.55 0.16 254.65);">
+<section id="featured-products" class="py-20 scroll-animate" style="background-color: oklch(0.95 0.04 254.65);">
     <div class="container mx-auto px-4 text-center">
         <?php
         // Get custom content for the section header
@@ -37,13 +37,13 @@
                 $title_part2 = 'Nổi bật';
             }
             ?>
-            <h2 class="text-4xl font-bold text-white mb-4">
-                <span class="text-white opacity-80"><?php echo esc_html($title_part1); ?></span>
-                <span class="text-white"><?php echo esc_html($title_part2); ?></span>
+            <h2 class="text-4xl font-bold mb-4">
+                <span class="text-gray-700"><?php echo esc_html($title_part1); ?></span>
+                <span style="color: oklch(0.55 0.16 254.65);"><?php echo esc_html($title_part2); ?></span>
             </h2>
 
             <!-- Compact description -->
-            <p class="text-base sm:text-lg text-blue-100 leading-relaxed max-w-2xl mx-auto">
+            <p class="text-base sm:text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
                 <?php echo esc_html($section_description); ?>
             </p>
         </div>
@@ -100,14 +100,14 @@
                             <!-- Product Info - Outside image box, flat design -->
                             <div class="text-center min-h-[4rem] flex flex-col justify-center">
                                 <!-- Product Name -->
-                                <h3 class="font-semibold text-white mb-2 line-clamp-1 text-base leading-relaxed group-hover:text-orange-500 transition-colors">
+                                <h3 class="font-semibold text-gray-800 mb-2 line-clamp-1 text-base leading-relaxed group-hover:text-orange-500 transition-colors">
                                     <a href="<?php echo esc_url($product_link); ?>">
                                         <?php echo esc_html($product_name); ?>
                                     </a>
                                 </h3>
 
                                 <!-- Product Price -->
-                                <div class="text-base font-semibold text-white">
+                                <div class="text-base font-semibold text-gray-700">
                                     <?php if ($product_price) : ?>
                                         <?php echo number_format($product_price); ?>₫
                                     <?php else : ?>
@@ -149,14 +149,14 @@
                                     <!-- Product Info - Outside image box, flat design -->
                                     <div class="text-center min-h-[4rem] flex flex-col justify-center">
                                         <!-- Product Na me -->
-                                        <h3 class="font-semibold text-white mb-2 line-clamp-1 text-sm leading-relaxed group-hover:text-orange-500 transition-colors">
+                                        <h3 class="font-semibold text-gray-800 mb-2 line-clamp-1 text-sm leading-relaxed group-hover:text-orange-500 transition-colors">
                                             <a href="<?php echo esc_url($product_link); ?>">
                                                 <?php echo esc_html($product_name); ?>
                                             </a>
                                         </h3>
 
                                         <!-- Product Price -->
-                                        <div class="text-sm font-semibold text-white">
+                                        <div class="text-sm font-semibold text-gray-700">
                                             <?php if ($product_price) : ?>
                                                 <?php echo number_format($product_price); ?>₫
                                             <?php else : ?>

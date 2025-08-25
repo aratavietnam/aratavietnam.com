@@ -126,12 +126,12 @@
                 <!-- Mobile Slider (2 products per view) -->
                 <div class="md:hidden relative">
                     <!-- Left Navigation Button -->
-                    <button class="mobile-nav absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-[calc(100%+0.5rem)] z-10 bg-white/80 backdrop-blur-sm shadow-lg text-gray-700 w-10 h-10 rounded-full text-sm font-medium hover:bg-white transition-colors" data-direction="prev">
+                    <button class="mobile-nav absolute top-1/2 left-2 transform -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-lg text-gray-700 w-10 h-10 rounded-full text-sm font-medium hover:bg-white transition-colors" data-direction="prev">
                         ←
                     </button>
 
                     <!-- Right Navigation Button -->
-                    <button class="mobile-nav absolute top-1/2 right-0 transform -translate-y-1/2 translate-x-[calc(100%+0.5rem)] z-10 bg-white/80 backdrop-blur-sm shadow-lg text-gray-700 w-10 h-10 rounded-full text-sm font-medium hover:bg-white transition-colors" data-direction="next">
+                    <button class="mobile-nav absolute top-1/2 right-2 transform -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-lg text-gray-700 w-10 h-10 rounded-full text-sm font-medium hover:bg-white transition-colors" data-direction="next">
                         →
                     </button>
                     <div class="mobile-slider overflow-hidden">

@@ -3,25 +3,44 @@
  * Handles image gallery, tabs, and quantity controls
  */
 
-
+import PhotoSwipeLightbox from 'photoswipe/lightbox';
 import Swiper from 'swiper';
-import { Navigation, Thumbs } from 'swiper/modules';
+import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
+
 document.addEventListener('DOMContentLoaded', function() {
     // Swiper and PhotoSwipe for Product Gallery
     const mainSwiperEl = document.querySelector('.main-product-swiper');
     const thumbsSwiperEl = document.querySelector('.thumbs-product-swiper');
 
     if (mainSwiperEl && thumbsSwiperEl) {
+        // Initialize thumbnails swiper first
         const thumbsSwiper = new Swiper(thumbsSwiperEl, {
-            spaceBetween: 10,
-            slidesPerView: 4,
+            modules: [FreeMode],
+            spaceBetween: 8,
+            slidesPerView: 'auto',
             freeMode: true,
             watchSlidesProgress: true,
+            breakpoints: {
+                320: {
+                    slidesPerView: 3,
+                    spaceBetween: 6,
+                },
+                640: {
+                    slidesPerView: 4,
+                    spaceBetween: 8,
+                },
+                768: {
+                    slidesPerView: 5,
+                    spaceBetween: 10,
+                }
+            }
         });
 
+        // Initialize main swiper
         const mainSwiper = new Swiper(mainSwiperEl, {
             modules: [Navigation, Thumbs],
-            spaceBetween: 10,
+            spaceBetween: 0,
+            loop: false,
             navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
@@ -29,15 +48,75 @@ document.addEventListener('DOMContentLoaded', function() {
             thumbs: {
                 swiper: thumbsSwiper,
             },
+            on: {
+                slideChange: function() {
+                    // Update active thumbnail
+                    const activeIndex = this.activeIndex;
+                    const thumbSlides = thumbsSwiperEl.querySelectorAll('.swiper-slide');
+
+                    thumbSlides.forEach((slide, index) => {
+                        if (index === activeIndex) {
+                            slide.classList.add('border-primary', 'border-opacity-100');
+                            slide.classList.remove('border-transparent');
+                        } else {
+                            slide.classList.remove('border-primary', 'border-opacity-100');
+                            slide.classList.add('border-transparent');
+                        }
+                    });
+
+                    // Update slide counter
+                    const currentSlideEl = mainSwiperEl.querySelector('.current-slide');
+                    if (currentSlideEl) {
+                        currentSlideEl.textContent = activeIndex + 1;
+                    }
+                }
+            }
         });
 
-        // Initialize PhotoSwipe
-        const lightbox = new PhotoSwipe({
+        // Initialize PhotoSwipe Lightbox
+        const lightbox = new PhotoSwipeLightbox({
             gallery: '.main-product-swiper .swiper-wrapper',
             children: 'a',
             pswpModule: () => import('photoswipe'),
+            paddingFn: (viewportSize) => {
+                return {
+                    top: 30, bottom: 30, left: 30, right: 30
+                };
+            }
         });
+
+        // Customize PhotoSwipe UI
+        lightbox.on('uiRegister', function() {
+            lightbox.pswp.ui.registerElement({
+                name: 'custom-caption',
+                order: 9,
+                isButton: false,
+                appendTo: 'root',
+                html: 'Caption text',
+                onInit: (el, pswp) => {
+                    lightbox.pswp.on('change', () => {
+                        const currSlideElement = lightbox.pswp.currSlide.data.element;
+                        let captionHTML = '';
+                        if (currSlideElement) {
+                            const hiddenCaption = currSlideElement.querySelector('.hidden-caption-content');
+                            if (hiddenCaption) {
+                                captionHTML = hiddenCaption.innerHTML;
+                            }
+                        }
+                        el.innerHTML = captionHTML || '';
+                    });
+                }
+            });
+        });
+
         lightbox.init();
+
+        // Set initial active thumbnail
+        const firstThumb = thumbsSwiperEl.querySelector('.swiper-slide');
+        if (firstThumb) {
+            firstThumb.classList.add('border-primary', 'border-opacity-100');
+            firstThumb.classList.remove('border-transparent');
+        }
     }
 
     // Tab functionality

@@ -39,12 +39,26 @@ function aratavietnam_add_featured_image_column($columns) {
  */
 function aratavietnam_display_featured_image_column($column, $post_id) {
     if ($column === 'featured_image') {
-        $thumbnail = get_the_post_thumbnail($post_id, array(60, 60));
+        $thumbnail_id = get_post_thumbnail_id($post_id);
 
-        if ($thumbnail) {
-            echo $thumbnail;
+        if ($thumbnail_id) {
+            $attachment_url = wp_get_attachment_url($thumbnail_id);
+            $attachment_mime = get_post_mime_type($thumbnail_id);
+
+            // Check if it's an SVG file
+            if ($attachment_mime === 'image/svg+xml') {
+                echo '<div class="aratavietnam-admin-thumbnail">';
+                echo '<img src="' . esc_url($attachment_url) . '" alt="' . esc_attr(get_the_title($post_id)) . '" style="width: 60px; height: 60px; object-fit: contain;">';
+                echo '</div>';
+            } else {
+                // For regular images (PNG, JPEG, etc.), use the standard thumbnail
+                $thumbnail = get_the_post_thumbnail($post_id, array(60, 60), array('class' => 'aratavietnam-admin-thumbnail-img'));
+                echo '<div class="aratavietnam-admin-thumbnail">' . $thumbnail . '</div>';
+            }
         } else {
+            echo '<div class="aratavietnam-admin-thumbnail aratavietnam-no-image">';
             echo '<span class="dashicons dashicons-format-image"></span>';
+            echo '</div>';
         }
     }
 }
@@ -67,11 +81,18 @@ function aratavietnam_admin_columns_css() {
             background: #f9f9f9;
         }
 
-        .aratavietnam-admin-thumbnail img {
+        .aratavietnam-admin-thumbnail img,
+        .aratavietnam-admin-thumbnail-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 3px;
+        }
+
+        /* Special handling for SVG images */
+        .aratavietnam-admin-thumbnail img[src$=".svg"] {
+            object-fit: contain;
+            background: white;
         }
 
         .aratavietnam-no-image {

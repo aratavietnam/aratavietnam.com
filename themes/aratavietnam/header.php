@@ -6,25 +6,16 @@
  */
 ?>
 <!DOCTYPE html>
-<html <?php language_attributes(); ?>>
+<html <?php language_attributes(); ?> class="overflow-x-hidden">
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="profile" href="https://gmpg.org/xfn/11">
 
 	<?php wp_head(); ?>
-	<style>
-		body.preloading {
-			opacity: 0;
-			transition: opacity 0.5s ease-in-out;
-		}
-		body.loaded {
-			opacity: 1;
-		}
-	</style>
 </head>
 
-<body <?php body_class('font-primary'); ?>>
+<body <?php body_class('font-primary overflow-x-hidden'); ?>>
 <?php wp_body_open(); ?>
 
 <div id="page" class="site">
@@ -44,14 +35,14 @@
 						// Use custom logo if set
 						echo '<a href="' . esc_url(home_url('/')) . '" class="custom-logo-link flex items-center" rel="home">';
 						echo wp_get_attachment_image($custom_logo_id, 'full', false, array(
-							'class' => 'custom-logo h-10 w-auto max-w-48',
+							'class' => 'custom-logo h-10 w-auto max-w-40',
 							'alt' => get_bloginfo('name'),
 						));
 						echo '</a>';
 					} elseif (file_exists(get_template_directory() . '/assets/images/logo.png')) {
 						// Use default logo
 						echo '<a href="' . esc_url(home_url('/')) . '" class="custom-logo-link flex items-center" rel="home">';
-						echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr(get_bloginfo('name')) . '" class="custom-logo h-10 w-auto max-w-48">';
+						echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr(get_bloginfo('name')) . '" class="custom-logo h-10 w-auto max-w-40">';
 						echo '</a>';
 					} else {
 						// Fallback to text logo

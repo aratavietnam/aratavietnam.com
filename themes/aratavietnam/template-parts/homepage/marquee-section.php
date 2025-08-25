@@ -14,7 +14,7 @@ if (empty($marquee_text)) {
 ?>
 
 <!-- Marquee Section -->
-<section class="marquee-section bg-white py-8 overflow-hidden scroll-animate">
+<section class="marquee-section bg-white py-8 overflow-hidden scroll-animate w-full">
     <div class="marquee-container">
         <div class="marquee-content">
             <span class="marquee-text"><?php echo esc_html($marquee_text); ?></span>

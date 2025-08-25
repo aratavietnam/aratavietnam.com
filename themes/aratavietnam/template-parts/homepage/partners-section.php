@@ -60,7 +60,7 @@
                         <!-- First set of partners -->
                         <div class="flex space-x-8 flex-shrink-0">
                             <?php foreach ($partners_row1 as $partner_post) : ?>
-                                <div class="flex-shrink-0 w-32 h-20 bg-white rounded-lg border border-gray-200 hover:border-primary/30 transition-colors duration-300 flex items-center justify-center group hover:shadow-md">
+                                <div class="flex-shrink-0 w-32 h-20 bg-white rounded-lg transition-colors duration-300 flex items-center justify-center group">
                                     <?php if (has_post_thumbnail($partner_post->ID)) : ?>
                                         <img src="<?php echo get_the_post_thumbnail_url($partner_post->ID, 'medium'); ?>"
                                              alt="<?php echo esc_attr(get_the_title($partner_post->ID)); ?>"
@@ -73,7 +73,7 @@
                         <!-- Duplicate set for seamless loop -->
                         <div class="flex space-x-8 flex-shrink-0 ml-8">
                             <?php foreach ($partners_row1 as $partner_post) : ?>
-                                <div class="flex-shrink-0 w-32 h-20 bg-white rounded-lg border border-gray-200 hover:border-primary/30 transition-colors duration-300 flex items-center justify-center group hover:shadow-md">
+                                <div class="flex-shrink-0 w-32 h-20 bg-white rounded-lg transition-colors duration-300 flex items-center justify-center group">
                                     <?php if (has_post_thumbnail($partner_post->ID)) : ?>
                                         <img src="<?php echo get_the_post_thumbnail_url($partner_post->ID, 'medium'); ?>"
                                              alt="<?php echo esc_attr(get_the_title($partner_post->ID)); ?>"
@@ -95,7 +95,7 @@
                         <!-- First set of partners -->
                         <div class="flex space-x-8 flex-shrink-0">
                             <?php foreach ($partners_row2 as $partner_post) : ?>
-                                <div class="flex-shrink-0 w-32 h-20 bg-white rounded-lg border border-gray-200 hover:border-secondary/30 transition-colors duration-300 flex items-center justify-center group hover:shadow-md">
+                                <div class="flex-shrink-0 w-32 h-20 bg-white rounded-lg transition-colors duration-300 flex items-center justify-center group">
                                     <?php if (has_post_thumbnail($partner_post->ID)) : ?>
                                         <img src="<?php echo get_the_post_thumbnail_url($partner_post->ID, 'medium'); ?>"
                                              alt="<?php echo esc_attr(get_the_title($partner_post->ID)); ?>"
@@ -108,7 +108,7 @@
                         <!-- Duplicate set for seamless loop -->
                         <div class="flex space-x-8 flex-shrink-0 ml-8">
                             <?php foreach ($partners_row2 as $partner_post) : ?>
-                                <div class="flex-shrink-0 w-32 h-20 bg-white rounded-lg border border-gray-200 hover:border-secondary/30 transition-colors duration-300 flex items-center justify-center group hover:shadow-md">
+                                <div class="flex-shrink-0 w-32 h-20 bg-white rounded-lg transition-colors duration-300 flex items-center justify-center group">
                                     <?php if (has_post_thumbnail($partner_post->ID)) : ?>
                                         <img src="<?php echo get_the_post_thumbnail_url($partner_post->ID, 'medium'); ?>"
                                              alt="<?php echo esc_attr(get_the_title($partner_post->ID)); ?>"

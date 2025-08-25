@@ -21,10 +21,7 @@
 - Footer social media iconsrm
 - Template parts optimization
 
-
-xử lý cho tôi trang chi tiết bài viết theo phong cách và đẹp hơn
-UPDATE all nội dung tin tức các trang
-
-
-XỬ LÝ loading thêm animation trang chủ load nhẹ nhàng đẹp các phần
-dùng mcp brower check mobile reponsive xem hiện tại tôi thấy mobile reponsive bị vỡ xíu
+trang chủ
+về arate đang lỗi nhẹ
+xử lý load trang đẹp
+tôi ưu pagepseed trang chủ

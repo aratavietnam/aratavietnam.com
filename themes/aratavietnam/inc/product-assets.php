@@ -37,36 +37,7 @@ function aratavietnam_enqueue_product_assets() {
         $theme_version
     );
 
-    // Enqueue single product page JS
-    if (is_product()) {
-        wp_enqueue_script(
-            'aratavietnam-product-single',
-            get_template_directory_uri() . '/resources/js/product-single.js',
-            array(),
-            $theme_version,
-            true
-        );
 
-        // Localize script with product data
-        global $post;
-        $product = wc_get_product($post->ID);
-
-        if ($product) {
-            wp_localize_script('aratavietnam-product-single', 'productData', array(
-                'id' => $product->get_id(),
-                'type' => $product->get_type(),
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'nonce' => wp_create_nonce('product_nonce'),
-                'currency_symbol' => get_woocommerce_currency_symbol(),
-                'strings' => array(
-                    'adding_to_cart' => __('Đang thêm...', 'aratavietnam'),
-                    'add_to_cart' => __('Thêm vào giỏ hàng', 'aratavietnam'),
-                    'added_to_cart' => __('Đã thêm vào giỏ hàng', 'aratavietnam'),
-                    'error' => __('Có lỗi xảy ra', 'aratavietnam'),
-                )
-            ));
-        }
-    }
 
     // Enqueue product archive page JS
     if (is_shop() || is_product_category() || is_product_tag() || is_tax('product_brand')) {
@@ -92,6 +63,8 @@ function aratavietnam_enqueue_product_assets() {
     }
 }
 add_action('wp_enqueue_scripts', 'aratavietnam_enqueue_product_assets');
+
+
 
 /**
  * Add product page body classes

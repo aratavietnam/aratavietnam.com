@@ -5,24 +5,34 @@
 ?>
 
 <!-- About Arata Section -->
-<section class="py-16 scroll-animate" style="background-color: oklch(0.55 0.16 254.65);">
+<section class="py-16 scroll-animate" style="background-color: oklch(0.95 0.04 254.65);">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
             <!-- Left Side: Image Slider -->
-            <div class="relative">
+            <div class="relative about-slider-wrapper">
                 <div class="about-slider-container overflow-hidden">
-                    <div class="about-slider-track flex">
+                    <div class="about-slider-track flex" id="about-gallery">
                     <?php
                     $front_page_id = get_option('page_on_front');
                     for ($i = 1; $i <= 5; $i++) {
                         $image_id = get_post_meta($front_page_id, '_about_image_' . $i, true);
-                        $image_url = $image_id ? wp_get_attachment_image_url($image_id, 'large') : '';
+                        $image_data = $image_id ? wp_get_attachment_image_src($image_id, 'full') : null;
+                        $image_url = $image_data ? $image_data[0] : '';
+                        $image_width = $image_data ? $image_data[1] : 0;
+                        $image_height = $image_data ? $image_data[2] : 0;
                         ?>
                         <div class="about-slide">
                             <div class="about-slide-content">
                                 <?php if ($image_url) : ?>
-                                    <img src="<?php echo esc_url($image_url); ?>" alt="Về Arata <?php echo $i; ?>">
+                                    <a href="<?php echo esc_url($image_url); ?>"
+                                       data-pswp-width="<?php echo esc_attr($image_width); ?>"
+                                       data-pswp-height="<?php echo esc_attr($image_height); ?>"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="about-gallery-item">
+                                        <img src="<?php echo esc_url($image_url); ?>" alt="Về Arata <?php echo $i; ?>">
+                                    </a>
                                 <?php else : ?>
                                     <div class="w-full h-full bg-gray-200"></div>
                                 <?php endif; ?>
@@ -61,16 +71,16 @@
                         $title_part2 = 'Arata';
                     }
                     ?>
-                    <h2 class="text-4xl font-bold text-white mb-6">
-                        <span class="font-light"><?php echo esc_html($title_part1); ?></span>
-                        <span><?php echo esc_html($title_part2); ?></span>
+                    <h2 class="text-4xl font-bold mb-6">
+                        <span class="text-gray-700"><?php echo esc_html($title_part1); ?></span>
+                        <span style="color: oklch(0.55 0.16 254.65);"><?php echo esc_html($title_part2); ?></span>
                     </h2>
                 </div>
 
                 <!-- Company Description -->
                 <div class="prose prose-lg max-w-none prose-invert">
-                    <p class="text-blue-100 text-lg leading-relaxed mb-6">
-                        <strong class="text-white">Arata Việt Nam</strong> là công ty con của Tập đoàn Arata Nhật Bản,
+                    <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                        <strong class="text-gray-800">Arata Việt Nam</strong> là công ty con của Tập đoàn Arata Nhật Bản,
                         được thành lập với sứ mệnh mang đến những sản phẩm hóa mỹ phẩm chất lượng cao từ Nhật Bản
                         cho thị trường Việt Nam.
                     </p>
@@ -80,7 +90,7 @@
                 <!-- CTA Button -->
                 <div class="pt-4">
                     <a href="<?php echo home_url('/ve-arata-vietnam'); ?>"
-                       class="inline-flex items-center px-6 py-3 border border-white text-white font-semibold rounded-lg hover:bg-white hover:text-blue-500 transition-all duration-300">
+                       class="inline-flex items-center px-6 py-3 border font-semibold rounded-lg transition-all duration-300 hover:bg-blue-500 hover:text-white" style="border-color: oklch(0.55 0.16 254.65); color: oklch(0.55 0.16 254.65);">
                         Tìm hiểu thêm
                         <span data-icon="arrow-right" data-size="16" class="ml-2"></span>
                     </a>
@@ -111,6 +121,13 @@
     width: 100%;
     height: 100%;
     object-fit: cover; /* Ensures image covers the area, cropping if necessary */
+}
+.about-slider-nav {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+.about-slider-wrapper:hover .about-slider-nav {
+    opacity: 1;
 }
 .about-slider-nav:disabled {
     opacity: 0.4;

@@ -1327,6 +1327,27 @@ function initContactFormConfirmation() {
 }
 
 // Initialize everything when DOM is ready
+/**
+ * About Section Gallery (PhotoSwipe)
+ */
+function initAboutGallery() {
+    const gallery = document.getElementById('about-gallery');
+    if (!gallery) return;
+
+    // Dynamically import PhotoSwipeLightbox
+    import('photoswipe/lightbox').then((PhotoSwipeLightboxModule) => {
+        const PhotoSwipeLightbox = PhotoSwipeLightboxModule.default;
+        const lightbox = new PhotoSwipeLightbox({
+            gallery: '#about-gallery',
+            children: '.about-gallery-item',
+            pswpModule: () => import('photoswipe'),
+        });
+        lightbox.init();
+    }).catch(error => {
+        console.error('Failed to load PhotoSwipeLightbox for about gallery', error);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   detectFontLoading();
   optimizeVietnameseText();
@@ -1338,6 +1359,7 @@ document.addEventListener('DOMContentLoaded', function () {
   initFloatingSocial();
   monitorFontPerformance();
   initContactFormConfirmation();
+  initAboutGallery();
 });
 
 // Initialize navigation when window loads (fallback)

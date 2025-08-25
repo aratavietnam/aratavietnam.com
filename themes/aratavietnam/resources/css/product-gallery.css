@@ -1,0 +1,185 @@
+/* Product Gallery Styles */
+
+/* Swiper Navigation Buttons */
+.main-product-swiper .swiper-button-next,
+.main-product-swiper .swiper-button-prev {
+  --swiper-navigation-size: 24px;
+  --swiper-theme-color: #F55E25;
+}
+
+.main-product-swiper .swiper-button-next:after,
+.main-product-swiper .swiper-button-prev:after {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* Thumbnail Swiper Styling */
+.thumbs-product-swiper .swiper-slide {
+  transition: all 0.3s ease;
+  opacity: 0.7;
+}
+
+.thumbs-product-swiper .swiper-slide-thumb-active {
+  opacity: 1;
+}
+
+.thumbs-product-swiper .swiper-slide:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* PhotoSwipe Custom Styles */
+.pswp {
+  --pswp-bg: rgba(0, 0, 0, 0.9);
+  --pswp-placeholder-bg: rgba(255, 255, 255, 0.1);
+}
+
+.pswp__custom-caption {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+  font-size: 14px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 20px 40px 30px;
+  pointer-events: none;
+}
+
+.pswp__custom-caption h3 {
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.pswp__custom-caption p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Gallery Loading States */
+.product-gallery-slider .swiper-slide img {
+  transition: opacity 0.3s ease;
+}
+
+.product-gallery-slider .swiper-slide img[loading="lazy"] {
+  opacity: 0;
+}
+
+.product-gallery-slider .swiper-slide img[loading="lazy"].loaded {
+  opacity: 1;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .main-product-swiper .swiper-button-next,
+  .main-product-swiper .swiper-button-prev {
+    --swiper-navigation-size: 20px;
+    width: 36px !important;
+    height: 36px !important;
+  }
+  
+  .main-product-swiper .swiper-button-next:after,
+  .main-product-swiper .swiper-button-prev:after {
+    font-size: 14px;
+  }
+  
+  .pswp__custom-caption {
+    padding: 15px 20px 20px;
+  }
+  
+  .pswp__custom-caption h3 {
+    font-size: 14px;
+  }
+  
+  .pswp__custom-caption p {
+    font-size: 12px;
+  }
+}
+
+/* Gallery Hover Effects */
+.product-gallery-slider:hover .swiper-button-next,
+.product-gallery-slider:hover .swiper-button-prev {
+  opacity: 1;
+}
+
+/* Slide Counter Styling */
+.main-product-swiper .current-slide,
+.main-product-swiper .total-slides {
+  font-weight: 600;
+}
+
+/* Zoom Icon Animation */
+.group\/image:hover .bg-white {
+  transform: scale(1.1);
+}
+
+/* Thumbnail Border Animation */
+.thumbs-product-swiper .swiper-slide {
+  border-width: 2px;
+  border-style: solid;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.thumbs-product-swiper .swiper-slide.border-primary {
+  box-shadow: 0 0 0 2px rgba(245, 94, 37, 0.2);
+}
+
+/* Loading Spinner for Images */
+.product-gallery-slider .image-loading {
+  position: relative;
+}
+
+.product-gallery-slider .image-loading::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #F55E25;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 1;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Gallery Placeholder Improvements */
+.product-gallery-slider .aspect-square.bg-gray-100 {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.product-gallery-slider .aspect-square.bg-gray-100 svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* Smooth Transitions */
+.main-product-swiper .swiper-slide {
+  transition: transform 0.3s ease;
+}
+
+.main-product-swiper .swiper-slide-active {
+  transform: scale(1);
+}
+
+/* Focus States for Accessibility */
+.main-product-swiper a:focus,
+.thumbs-product-swiper .swiper-slide:focus {
+  outline: 2px solid #F55E25;
+  outline-offset: 2px;
+}
+
+/* High DPI Display Optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .product-gallery-slider img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}

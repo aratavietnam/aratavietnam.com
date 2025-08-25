@@ -71,14 +71,19 @@ function aratavietnam(): TailPress\Framework\Theme
     $viteCompiler->handle = 'aratavietnam';
 
     return TailPress\Framework\Theme::instance()
-        ->assets(fn($manager) => $manager
-            ->withCompiler($viteCompiler, fn($compiler) => $compiler
-                ->registerAsset('resources/css/app.css')
-                ->registerAsset('resources/js/app.js')
-                ->editorStyleFile('resources/css/editor-style.css')
-            )
-            ->enqueueAssets()
-        )
+        ->assets(function ($manager) use ($viteCompiler) {
+            $manager->withCompiler($viteCompiler, function ($compiler) {
+                $compiler->registerAsset('resources/css/app.css');
+                $compiler->registerAsset('resources/js/app.js');
+                $compiler->editorStyleFile('resources/css/editor-style.css');
+
+                // Conditionally load product-single.js on single product pages
+                if (is_singular('product')) {
+                    $compiler->registerAsset('resources/js/product-single.js');
+                }
+            });
+            $manager->enqueueAssets();
+        })
         ->features(fn($manager) => $manager->add(TailPress\Framework\Features\MenuOptions::class))
         ->menus(fn($manager) => $manager
             ->add('primary', __( 'Primary Menu', 'aratavietnam'))
@@ -111,8 +116,8 @@ aratavietnam();
 
 // Add type="module" to the main theme script tag.
 add_filter('script_loader_tag', function ($tag, $handle, $src) {
-    if ('aratavietnam-app' === $handle) {
-        $tag = '<script type="module" src="' . esc_url($src) . '" id="' . esc_attr($handle) . '-js"></script>';
+    if (strpos($handle, 'aratavietnam') !== false) {
+        return '<script type="module" src="' . esc_url($src) . '" id="' . esc_attr($handle) . '-js"></script>';
     }
     return $tag;
 }, 10, 3);
