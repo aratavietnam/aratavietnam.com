@@ -15,7 +15,7 @@ if (!empty($tabs)) : ?>
         <div class="border-b border-gray-100">
             <nav class="-mb-px flex space-x-8 px-6" aria-label="Tabs">
                 <?php foreach ($tabs as $key => $tab) : ?>
-                    <button class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm tab-btn <?php echo $key === 'description' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'; ?>"
+                    <button class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg tab-btn <?php echo $key === 'description' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'; ?>"
                             data-tab="<?php echo esc_attr($key); ?>">
                         <?php echo apply_filters('woocommerce_product_' . $key . '_tab_title', esc_html($tab['title']), $key); ?>
                     </button>

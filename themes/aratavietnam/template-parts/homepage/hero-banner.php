@@ -5,7 +5,7 @@
 ?>
 
 <!-- Hero Banner Section -->
-<section class="relative h-[600px] overflow-hidden hero-banner-container">
+<section class="relative h-[600px] overflow-hidden hero-banner-container mt-18">
     <!-- Background Slider -->
     <div class="hero-slider absolute inset-0">
         <?php

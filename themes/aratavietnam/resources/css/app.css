@@ -50,6 +50,7 @@
   html,
   body {
     font-family: var(--font-sans);
+    padding-top: 80px; /* Offset for fixed header */
   }
 
 
@@ -740,3 +741,4 @@
 .woocommerce-error a {
   @apply text-red-600 hover:text-red-800;
 }
+

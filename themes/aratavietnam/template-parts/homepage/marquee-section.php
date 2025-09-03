@@ -57,7 +57,6 @@ if (empty($marquee_text)) {
     white-space: nowrap;
 }
 
-/* Animation chạy từ giữa ra */
 @keyframes marqueeMove {
     0% {
         transform: translateX(50vw);
@@ -67,7 +66,6 @@ if (empty($marquee_text)) {
     }
 }
 
-/* Hover effect để tạm dừng animation */
 .marquee-section:hover .marquee-content {
     animation-play-state: paused;
 }

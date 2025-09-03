@@ -10,8 +10,7 @@ add_filter('loop_shop_per_page', function() {
 <?php get_header(); ?>
 
 <!-- Hero Section -->
-<section class="relative bg-gradient-to-r from-primary/3 via-white to-secondary/3 border-b border-gray-100">
-    <div class="absolute inset-0 bg-white/80 backdrop-blur-sm"></div>
+<section class="relative bg-gradient-to-r from-primary/3 via-white to-secondary/3 border-b border-gray-100" style="margin-top: 80px;">
     <div class="relative container mx-auto px-4 py-8 sm:py-12">
         <div class="max-w-3xl mx-auto text-center">
             <!-- Compact title indicator -->
@@ -147,39 +146,6 @@ add_filter('loop_shop_per_page', function() {
                             </div>
                         </div>
 
-                        <!-- Price Filter -->
-                        <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                            <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                                <h3 class="text-base font-semibold text-gray-900 flex items-center">
-                                    <span data-icon="dollar-sign" data-size="16" class="text-primary mr-2"></span>
-                                    Lọc theo giá
-                                </h3>
-                            </div>
-                            <div class="p-3">
-                                <div class="space-y-2">
-                                    <label class="flex items-center cursor-pointer group">
-                                        <input type="radio" name="price_filter" value="all" class="mr-2 text-primary" checked>
-                                        <span class="text-gray-700 group-hover:text-primary transition-colors text-sm">Tất cả giá</span>
-                                    </label>
-                                    <label class="flex items-center cursor-pointer group">
-                                        <input type="radio" name="price_filter" value="0-100000" class="mr-2 text-primary">
-                                        <span class="text-gray-700 group-hover:text-primary transition-colors text-sm">Dưới 100.000₫</span>
-                                    </label>
-                                    <label class="flex items-center cursor-pointer group">
-                                        <input type="radio" name="price_filter" value="100000-300000" class="mr-2 text-primary">
-                                        <span class="text-gray-700 group-hover:text-primary transition-colors text-sm">100.000₫ - 300.000₫</span>
-                                    </label>
-                                    <label class="flex items-center cursor-pointer group">
-                                        <input type="radio" name="price_filter" value="300000-500000" class="mr-2 text-primary">
-                                        <span class="text-gray-700 group-hover:text-primary transition-colors text-sm">300.000₫ - 500.000₫</span>
-                                    </label>
-                                    <label class="flex items-center cursor-pointer group">
-                                        <input type="radio" name="price_filter" value="500000+" class="mr-2 text-primary">
-                                        <span class="text-gray-700 group-hover:text-primary transition-colors text-sm">Trên 500.000₫</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- Brand Filter -->
                         <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
@@ -268,33 +234,36 @@ add_filter('loop_shop_per_page', function() {
                 <div class="lg:col-span-3">
                     <?php if (have_posts()) : ?>
 
-                        <!-- Sort Dropdown -->
+                        <!-- Category Dropdown Filter & Sort -->
                         <div class="bg-white rounded-lg border border-gray-200 p-3 mb-6">
                             <div class="flex items-center justify-between flex-wrap gap-x-4 gap-y-2">
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-gray-700 font-medium text-sm">Sắp xếp theo:</span>
-                                    <div class="relative">
-                                        <select id="product-sort" name="product_sort" class="text-sm appearance-none bg-white border border-gray-300 rounded-lg px-3 py-1.5 pr-8 text-gray-700 hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors">
-                                            <?php
-                                            $current_sort = isset($_GET['orderby']) ? $_GET['orderby'] : 'menu_order';
-                                            $sort_options = array(
-                                                'menu_order' => 'Mặc định',
-                                                'title' => 'Tên A đến Z',
-                                                'title-desc' => 'Tên Z đến A',
-                                                'price' => 'Giá thấp đến cao',
-                                                'price-desc' => 'Giá cao đến thấp',
-                                                'date' => 'Mới nhất',
-                                                'popularity' => 'Phổ biến nhất'
-                                            );
+                                <!-- Sort Dropdown -->
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-gray-700 font-medium text-sm">Sắp xếp:</span>
+                                        <div class="relative">
+                                            <select id="product-sort" name="product_sort" class="text-sm appearance-none bg-white border border-gray-300 rounded-lg px-3 py-1.5 pr-8 text-gray-700 hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors">
+                                                <?php
+                                                $current_sort = isset($_GET['orderby']) ? $_GET['orderby'] : 'menu_order';
+                                                $sort_options = array(
+                                                    'menu_order' => 'Mặc định',
+                                                    'title' => 'Tên A đến Z',
+                                                    'title-desc' => 'Tên Z đến A',
+                                                    'price' => 'Giá thấp đến cao',
+                                                    'price-desc' => 'Giá cao đến thấp',
+                                                    'date' => 'Mới nhất',
+                                                    'popularity' => 'Phổ biến nhất'
+                                                );
 
-                                            foreach ($sort_options as $value => $label) :
-                                                $selected = ($current_sort === $value) ? 'selected' : '';
-                                                echo "<option value='{$value}' {$selected}>{$label}</option>";
-                                            endforeach;
-                                            ?>
-                                        </select>
-                                        <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                                            <span data-icon="chevron-down" data-size="14" class="text-gray-400"></span>
+                                                foreach ($sort_options as $value => $label) :
+                                                    $selected = ($current_sort === $value) ? 'selected' : '';
+                                                    echo "<option value='{$value}' {$selected}>{$label}</option>";
+                                                endforeach;
+                                                ?>
+                                            </select>
+                                            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                                <span data-icon="chevron-down" data-size="14" class="text-gray-400"></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

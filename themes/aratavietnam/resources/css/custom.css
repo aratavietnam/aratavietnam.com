@@ -1253,3 +1253,65 @@ a:where(:not(.wp-element-button)) {
     height: 64px;
   }
 }
+
+/* Back to Top Button */
+.back-to-top-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 90px;
+  width: 40px;
+  height: 40px;
+  background: var(--color-secondary);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px rgba(0, 102, 166, 0.3);
+  cursor: pointer;
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.back-to-top-btn.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  background: white;
+  color: var(--color-secondary);
+  border: 2px solid var(--color-secondary);
+  box-shadow: 0 4px 20px rgba(0, 102, 166, 0.4);
+}
+
+.back-to-top-btn:active {
+  transform: translateY(0) scale(1);
+}
+
+/* Responsive adjustments for back to top */
+@media (max-width: 768px) {
+  .back-to-top-btn {
+    bottom: 15px;
+    left: 15px;
+    right: auto;
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .back-to-top-btn {
+    bottom: 10px;
+    left: 10px;
+    right: auto;
+    width: 32px;
+    height: 32px;
+  }
+}

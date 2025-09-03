@@ -1,34 +1,34 @@
 #!/bin/bash
 
 # Script to run inside Docker container to fix All-in-One WP Migration permissions
-echo "🐳 Running Docker permission fix for All-in-One WP Migration..."
+echo "Running Docker permission fix for All-in-One WP Migration..."
 
 # Get the WordPress container name (adjust if different)
 CONTAINER_NAME="wordpress_app"
 
 # Check if container exists
 if ! docker ps -a --format "table {{.Names}}" | grep -q "$CONTAINER_NAME"; then
-    echo "❌ Container $CONTAINER_NAME not found!"
-    echo "📋 Available containers:"
+    echo "Container $CONTAINER_NAME not found!"
+    echo "Available containers:"
     docker ps -a --format "table {{.Names}}\t{{.Status}}"
     echo ""
-    echo "💡 Please update CONTAINER_NAME in this script with the correct container name."
+    echo "Please update CONTAINER_NAME in this script with the correct container name."
     exit 1
 fi
 
 # Check if container is running
 if ! docker ps --format "table {{.Names}}" | grep -q "$CONTAINER_NAME"; then
-    echo "⚠️  Container $CONTAINER_NAME is not running!"
-    echo "🚀 Starting container..."
+    echo "Container $CONTAINER_NAME is not running!"
+    echo "Starting container..."
     docker start "$CONTAINER_NAME"
     sleep 5
 fi
 
-echo "🔧 Executing permission fix inside container..."
+echo "Executing permission fix inside container..."
 
 # Execute the permission fix inside the container
 docker exec "$CONTAINER_NAME" bash -c '
-echo "🔧 Fixing permissions inside Docker container..."
+echo "Fixing permissions inside Docker container..."
 
 # Create ai1wm-backups directory
 mkdir -p /var/www/html/wp-content/ai1wm-backups
@@ -118,14 +118,14 @@ echo "✅ Permissions fixed successfully inside Docker container!"
 if [ $? -eq 0 ]; then
     echo "✅ Docker permission fix completed successfully!"
     echo ""
-    echo "📋 What was fixed:"
+    echo "What was fixed:"
     echo "   ✓ Created ai1wm-backups directory with 777 permissions"
     echo "   ✓ Added all required security files"
     echo "   ✓ Set proper file permissions (644)"
     echo "   ✓ Fixed uploads directory for EWWW Image Optimizer"
     echo "   ✓ Set ownership to www-data:www-data"
     echo ""
-    echo "🔄 Please refresh your WordPress admin page to verify the fix."
+    echo "Please refresh your WordPress admin page to verify the fix."
 else
     echo "❌ Failed to fix permissions in Docker container!"
     exit 1

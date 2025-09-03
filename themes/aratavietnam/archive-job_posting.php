@@ -76,7 +76,6 @@ get_template_part('template-parts/hero');
                         $benefits = get_post_meta(get_the_ID(), 'arata_job_benefits', true);
                         $contact = get_post_meta(get_the_ID(), 'arata_job_contact', true);
 
-                        // Định nghĩa label cho loại hình công việc
                         $type_labels = [
                             'full_time' => 'Toàn thời gian',
                             'part_time' => 'Bán thời gian',
@@ -85,7 +84,6 @@ get_template_part('template-parts/hero');
                             'freelance' => 'Freelance'
                         ];
 
-                        // Định nghĩa label cho cấp bậc
                         $level_labels = [
                             'intern' => 'Thực tập sinh',
                             'fresher' => 'Nhân viên mới',

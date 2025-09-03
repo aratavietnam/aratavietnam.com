@@ -50,6 +50,13 @@ function aratavietnam_policies_meta_box_html($post) {
                 <input type="text" id="arata_policy_returns" name="arata_policy_returns" class="widefat" value="<?php echo esc_attr($policy3); ?>" placeholder="Ví dụ: Hỗ trợ đổi trả trong 7 ngày.">
             </td>
         </tr>
+        <tr>
+            <th><label for="arata_shopee_link"><?php _e('Link Shopee', 'aratavietnam'); ?></label></th>
+            <td>
+                <input type="url" id="arata_shopee_link" name="arata_shopee_link" class="widefat" value="<?php echo esc_attr(get_post_meta($post->ID, '_arata_shopee_link', true)); ?>" placeholder="https://shopee.vn/product/123456">
+                <p class="description">Nhập link sản phẩm trên Shopee để hiển thị button "Mua trên Shopee"</p>
+            </td>
+        </tr>
     </table>
     <?php
 }
@@ -71,7 +78,8 @@ function aratavietnam_save_policies_meta_data($post_id) {
     $fields = [
         'arata_policy_commitment',
         'arata_policy_shipping',
-        'arata_policy_returns'
+        'arata_policy_returns',
+        'arata_shopee_link'
     ];
 
     foreach ($fields as $field) {

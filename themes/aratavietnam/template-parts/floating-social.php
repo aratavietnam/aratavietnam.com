@@ -128,3 +128,8 @@ if (empty($social_links)) {
         <span class="icon-close" data-icon="close" data-size="24" data-stroke="2.5"></span>
     </button>
 </div>
+
+<!-- Back to Top Button -->
+<button id="back-to-top" class="back-to-top-btn" aria-label="Lên đầu trang" style="display: none;">
+    <span data-icon="chevron-up" data-size="20" data-stroke="2.5"></span>
+</button>

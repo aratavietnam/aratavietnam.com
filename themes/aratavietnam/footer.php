@@ -207,13 +207,131 @@ get_template_part('template-parts/floating-social');
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.body.classList.add('preloading');
+    
+    // Sticky Header Effect
+    const header = document.getElementById('masthead');
+    if (header) {
+        let ticking = false;
+        
+        function updateHeader() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 50) {
+                header.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
+                header.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                header.classList.add('scrolled');
+            } else {
+                header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                header.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';
+                header.classList.remove('scrolled');
+            }
+            ticking = false;
+        }
+        
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(updateHeader);
+                ticking = true;
+            }
+        });
+    }
+    
+    // Multi-level Menu Fix
+    const dropdownItems = document.querySelectorAll('.has-submenu');
+    dropdownItems.forEach(item => {
+        const submenu = item.querySelector('.dropdown-menu');
+        if (submenu) {
+            item.addEventListener('mouseenter', function() {
+                submenu.style.opacity = '1';
+                submenu.style.visibility = 'visible';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                submenu.style.opacity = '0';
+                submenu.style.visibility = 'hidden';
+            });
+        }
+    });
 });
 
 window.addEventListener('load', function() {
     document.body.classList.remove('preloading');
     document.body.classList.add('loaded');
 });
+
+// Back to Top Button functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const backToTopBtn = document.getElementById('back-to-top');
+    
+    if (backToTopBtn) {
+        // Show/hide button based on scroll position
+        function toggleBackToTop() {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.style.display = 'flex';
+                setTimeout(() => backToTopBtn.classList.add('show'), 10);
+            } else {
+                backToTopBtn.classList.remove('show');
+                setTimeout(() => {
+                    if (!backToTopBtn.classList.contains('show')) {
+                        backToTopBtn.style.display = 'none';
+                    }
+                }, 300);
+            }
+        }
+        
+        // Throttled scroll event
+        let ticking = false;
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(function() {
+                    toggleBackToTop();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+        
+        // Smooth scroll to top
+        backToTopBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+});
 </script>
+
+<style>
+/* Fix for multi-level menu display */
+.has-submenu > .dropdown-menu {
+    position: absolute !important;
+    left: 100% !important;
+    top: 0 !important;
+    margin-left: 0.5rem !important;
+    width: 12rem !important;
+    background-color: white !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all 0.3s ease !important;
+    z-index: 60 !important;
+}
+
+.has-submenu:hover > .dropdown-menu {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Ensure proper positioning context */
+.dropdown-item.has-submenu {
+    position: relative !important;
+}
+
+</style>
 
 </body>
 </html>

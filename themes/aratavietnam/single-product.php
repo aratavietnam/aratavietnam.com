@@ -15,7 +15,7 @@ get_header();
         <!-- Breadcrumb -->
         <section class="bg-white border-b border-gray-200">
             <div class="container mx-auto px-4">
-                <div class="py-3 overflow-x-auto whitespace-nowrap">
+                <div class="py-1 overflow-x-auto whitespace-nowrap">
                     <?php woocommerce_breadcrumb(array(
                         'delimiter'   => ' <span class="text-gray-400 mx-2">/</span> ',
                         'wrap_before' => '<nav class="text-sm text-gray-600">',
@@ -43,34 +43,6 @@ get_header();
                             <?php get_template_part('template-parts/single-product/product-summary'); ?>
                         </div>
 
-                        <!-- Sale Policies -->
-                        <div class="mt-6 bg-white rounded-lg shadow-sm p-6 lg:p-8">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Chính sách bán hàng</h3>
-                            <?php
-                            $policy1 = get_post_meta($product->get_id(), '_arata_policy_commitment', true);
-                            $policy2 = get_post_meta($product->get_id(), '_arata_policy_shipping', true);
-                            $policy3 = get_post_meta($product->get_id(), '_arata_policy_returns', true);
-
-                            // Use default if custom is empty
-                            $policy1 = !empty($policy1) ? $policy1 : 'Cam kết 100% sản phẩm chính hãng từ Nhật Bản.';
-                            $policy2 = !empty($policy2) ? $policy2 : 'Giao hàng toàn quốc, thanh toán linh hoạt.';
-                            $policy3 = !empty($policy3) ? $policy3 : 'Hỗ trợ đổi trả trong 7 ngày nếu có lỗi từ nhà sản xuất.';
-                            ?>
-                            <ul class="space-y-3 text-gray-600 text-sm">
-                                <li class="flex items-start">
-                                    <span data-icon="shield-check" data-size="16" class="text-primary mr-3 mt-1"></span>
-                                    <span><?php echo esc_html($policy1); ?></span>
-                                </li>
-                                <li class="flex items-start">
-                                    <span data-icon="truck" data-size="16" class="text-primary mr-3 mt-1"></span>
-                                    <span><?php echo esc_html($policy2); ?></span>
-                                </li>
-                                <li class="flex items-start">
-                                    <span data-icon="refresh-cw" data-size="16" class="text-primary mr-3 mt-1"></span>
-                                    <span><?php echo esc_html($policy3); ?></span>
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
             </div>

@@ -56,7 +56,6 @@ add_action('init', function() {
     // Remove conflicting rewrite rules first
     remove_rewrite_tag('%service%');
 
-    // Add rewrite rule for the "Dịch vụ" page (highest priority)
     add_rewrite_rule(
         '^dich-vu/?$',
         'index.php?pagename=dich-vu',

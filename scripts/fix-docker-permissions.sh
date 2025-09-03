@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # Fix Docker permissions for All-in-One WP Migration
-echo "🔧 Fixing Docker permissions for All-in-One WP Migration..."
+echo "Fixing Docker permissions for All-in-One WP Migration..."
 
 # Create ai1wm-backups directory with proper permissions
-echo "📁 Creating ai1wm-backups directory..."
+echo "Creating ai1wm-backups directory..."
 mkdir -p /var/www/html/wp-content/ai1wm-backups
 chmod 777 /var/www/html/wp-content/ai1wm-backups
 
 # Create required security files
-echo "🔒 Creating security files..."
+echo "Creating security files..."
 
 # .htaccess file
 cat > /var/www/html/wp-content/ai1wm-backups/.htaccess << 'EOF'
@@ -74,7 +74,7 @@ Disallow: /
 EOF
 
 # Set proper permissions for all files
-echo "🔐 Setting file permissions..."
+echo "Setting file permissions..."
 chmod 644 /var/www/html/wp-content/ai1wm-backups/.htaccess
 chmod 644 /var/www/html/wp-content/ai1wm-backups/web.config
 chmod 644 /var/www/html/wp-content/ai1wm-backups/index.php
@@ -82,21 +82,21 @@ chmod 644 /var/www/html/wp-content/ai1wm-backups/index.html
 chmod 644 /var/www/html/wp-content/ai1wm-backups/robots.txt
 
 # Fix uploads directory permissions for EWWW Image Optimizer
-echo "🖼️ Fixing uploads directory permissions..."
+echo "Fixing uploads directory permissions..."
 mkdir -p /var/www/html/wp-content/uploads/ewww/tools
 chmod -R 755 /var/www/html/wp-content/uploads/
 chmod 777 /var/www/html/wp-content/uploads/ewww/
 
 # Set ownership to www-data (Apache user in Docker)
-echo "👤 Setting ownership to www-data..."
+echo "Setting ownership to www-data..."
 chown -R www-data:www-data /var/www/html/wp-content/ai1wm-backups/
 chown -R www-data:www-data /var/www/html/wp-content/uploads/
 
 echo "✅ Docker permissions fixed successfully!"
-echo "📋 Summary:"
+echo "Summary:"
 echo "   - ai1wm-backups directory: 777 permissions"
 echo "   - Security files created with 644 permissions"
 echo "   - uploads/ewww directory: 777 permissions"
 echo "   - Owner set to www-data:www-data"
 echo ""
-echo "🔄 Please restart your WordPress container or refresh the plugin page."
+echo "Please restart your WordPress container or refresh the plugin page."

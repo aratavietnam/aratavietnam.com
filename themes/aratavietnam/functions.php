@@ -10,6 +10,7 @@ require_once get_template_directory() . '/inc/fonts-vietnamese.php';
 require_once get_template_directory() . '/inc/favicon-pwa.php';
 require_once get_template_directory() . '/inc/logo-branding.php';
 require_once get_template_directory() . '/inc/customizer-footer.php';
+require_once get_template_directory() . '/inc/customizer-colors.php';
 require_once get_template_directory() . '/inc/contact-form.php';
 require_once get_template_directory() . '/inc/contact-meta.php';
 require_once get_template_directory() . '/inc/contact-config.php';
@@ -107,6 +108,7 @@ function aratavietnam(): TailPress\Framework\Theme
             'align-wide',
             'wp-block-styles',
             'responsive-embeds',
+            'menus',
             'woocommerce',
             'wc-product-gallery-zoom',
             'wc-product-gallery-lightbox',
@@ -122,12 +124,50 @@ function aratavietnam(): TailPress\Framework\Theme
 }
 
 /**
+ * Register menu locations properly
+ */
+function aratavietnam_register_menus() {
+    register_nav_menus(array(
+        'primary' => __('Primary Menu', 'aratavietnam'),
+        'footer-menu-1' => __('Footer Menu 1', 'aratavietnam'),
+        'footer-menu-2' => __('Footer Menu 2', 'aratavietnam'),
+    ));
+}
+add_action('init', 'aratavietnam_register_menus');
+
+/**
  * Initialize theme after textdomain is loaded
  */
 function aratavietnam_init_theme() {
     aratavietnam();
 }
 add_action('init', 'aratavietnam_init_theme', 20);
+
+/**
+ * Add theme supports
+ */
+function aratavietnam_after_setup_theme() {
+    // Enable WordPress title tag support
+    add_theme_support('title-tag');
+    
+    // Enable WordPress meta description support
+    add_theme_support('html5', array(
+        'search-form',
+        'comment-form',
+        'comment-list',
+        'gallery',
+        'caption',
+    ));
+    
+    // Custom logo support
+    add_theme_support('custom-logo', array(
+        'height' => 100,
+        'width' => 400,
+        'flex-height' => true,
+        'flex-width' => true,
+    ));
+}
+add_action('after_setup_theme', 'aratavietnam_after_setup_theme');
 
 // Add type="module" to the main theme script tag.
 add_filter('script_loader_tag', function ($tag, $handle, $src) {

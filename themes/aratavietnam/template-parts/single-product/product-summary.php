@@ -32,21 +32,71 @@ global $product;
 
         <div class="flex items-center space-x-4 mb-6">
             <label for="quantity_<?php echo esc_attr( $product->get_id() ); ?>" class="font-semibold text-gray-700">Số lượng:</label>
-            <?php
-            woocommerce_quantity_input(
-                array(
-                    'min_value'   => apply_filters( 'woocommerce_quantity_input_min', $product->get_min_purchase_quantity(), $product ),
-                    'max_value'   => apply_filters( 'woocommerce_quantity_input_max', $product->get_max_purchase_quantity(), $product ),
-                    'input_value' => isset( $_POST['quantity'] ) ? wc_stock_amount( wp_unslash( $_POST['quantity'] ) ) : $product->get_min_purchase_quantity(),
-                )
-            );
-            ?>
+            <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                <button type="button" class="quantity-minus px-3 py-2 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors">
+                    <span data-icon="minus" data-size="16"></span>
+                </button>
+                <?php
+                woocommerce_quantity_input(
+                    array(
+                        'min_value'   => apply_filters( 'woocommerce_quantity_input_min', $product->get_min_purchase_quantity(), $product ),
+                        'max_value'   => apply_filters( 'woocommerce_quantity_input_max', $product->get_max_purchase_quantity(), $product ),
+                        'input_value' => isset( $_POST['quantity'] ) ? wc_stock_amount( wp_unslash( $_POST['quantity'] ) ) : $product->get_min_purchase_quantity(),
+                        'classes'     => array( 'quantity-input' ),
+                    )
+                );
+                ?>
+                <button type="button" class="quantity-plus px-3 py-2 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors">
+                    <span data-icon="plus" data-size="16"></span>
+                </button>
+            </div>
         </div>
 
-        <button type="submit" name="add-to-cart" value="<?php echo esc_attr($product->get_id()); ?>" class="w-full bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-dark transition-colors duration-300 flex items-center justify-center">
-            <span data-icon="shopping-cart" data-size="18" class="mr-2"></span>
-            Thêm vào giỏ hàng
-        </button>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const quantityInput = document.querySelector('.quantity-input');
+            const minusBtn = document.querySelector('.quantity-minus');
+            const plusBtn = document.querySelector('.quantity-plus');
+            
+            if (quantityInput && minusBtn && plusBtn) {
+                const min = parseInt(quantityInput.getAttribute('min')) || 1;
+                const max = parseInt(quantityInput.getAttribute('max')) || 9999;
+                
+                minusBtn.onclick = function() {
+                    const current = parseInt(quantityInput.value) || 1;
+                    if (current > min) {
+                        quantityInput.value = current - 1;
+                    }
+                };
+                
+                plusBtn.onclick = function() {
+                    const current = parseInt(quantityInput.value) || 1;
+                    if (current < max) {
+                        quantityInput.value = current + 1;
+                    }
+                };
+            }
+        });
+        </script>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+            <button type="submit" name="add-to-cart" value="<?php echo esc_attr($product->get_id()); ?>" class="flex-1 bg-primary text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-dark transition-colors duration-300 flex items-center justify-center">
+                <span data-icon="cart" data-size="16" class="mr-2"></span>
+                Thêm vào giỏ
+            </button>
+
+            <!-- Shopee Button -->
+            <?php 
+            $shopee_link = get_post_meta($product->get_id(), '_arata_shopee_link', true);
+            if (!empty($shopee_link)) : 
+            ?>
+                <a href="<?php echo esc_url($shopee_link); ?>" target="_blank" rel="noopener noreferrer" 
+                   class="flex-1 bg-orange-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-orange-600 transition-colors duration-300 flex items-center justify-center">
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/shopee-icon.svg" alt="Shopee" class="w-4 h-4 mr-2" style="filter: brightness(0) invert(1);">
+                    Mua trên Shopee
+                </a>
+            <?php endif; ?>
+        </div>
 
         <?php do_action('woocommerce_after_add_to_cart_button'); ?>
     </form>

@@ -5,17 +5,10 @@
  */
 
 get_header();
-
-// Hero Section Setup
-$hero_title = __('404 - Không tìm thấy trang', 'aratavietnam');
-$hero_subtitle = __('Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.', 'aratavietnam');
-set_query_var('title', $hero_title);
-set_query_var('subtitle', $hero_subtitle);
-get_template_part('template-parts/hero');
 ?>
 
-<main id="site-content" class="bg-white">
-    <div class="container mx-auto px-4 py-16 text-center">
+<main id="site-content" class="bg-white min-h-screen flex items-center">
+    <div class="container mx-auto px-4 py-32 text-center">
         <div class="max-w-2xl mx-auto">
             <h2 class="text-2xl font-semibold text-gray-900 mb-4"><?php _e('Lỗi không tìm thấy trang', 'aratavietnam'); ?></h2>
             <p class="text-gray-600 leading-relaxed">

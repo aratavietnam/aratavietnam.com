@@ -4,7 +4,6 @@
  * Thêm cột ảnh đại diện vào bảng danh sách bài viết trong WordPress admin
  */
 
-// Thêm cột ảnh đại diện cho Posts
 add_action('admin_init', 'aratavietnam_add_featured_image_column_to_post_types');
 
 function aratavietnam_add_featured_image_column_to_post_types() {
@@ -104,7 +103,6 @@ function aratavietnam_admin_columns_css() {
             font-size: 24px;
         }
 
-        /* Điều chỉnh độ rộng cột */
         .column-featured_image {
             width: 80px;
             text-align: center;

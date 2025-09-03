@@ -21,7 +21,7 @@
 <div id="page" class="site">
 	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'aratavietnam' ); ?></a>
 
-	<header id="masthead" class="site-header bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+	<header id="masthead" class="site-header" style="position: fixed; top: 0; left: 0; right: 0; z-index: 9999; background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border-bottom: 1px solid #e5e7eb; transition: all 0.3s ease;">
 		<div class="container mx-auto px-4">
 			<div class="flex items-center justify-between py-4">
 				<!-- Logo -->

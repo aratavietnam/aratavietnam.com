@@ -78,8 +78,8 @@ plugins/wp-mail-smtp-pro/
 # Keep custom plugins (exclude from ignore)
 !plugins/arata-allow-uploads/
 
-# WordPress uploads
-uploads/
+# # WordPress uploads
+# uploads/
 
 # WP-CLI
 wp-cli.phar

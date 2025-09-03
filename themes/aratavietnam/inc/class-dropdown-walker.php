@@ -14,7 +14,16 @@ class Arata_Dropdown_Walker extends Walker_Nav_Menu {
      */
     public function start_lvl(&$output, $depth = 0, $args = null) {
         $indent = str_repeat("\t", $depth);
-        $output .= "\n$indent<ul class=\"dropdown-menu absolute left-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50\">\n";
+        
+        if ($depth === 0) {
+            // First level dropdown (level 2 items) - show below
+            $classes = "dropdown-menu absolute left-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50";
+        } else {
+            // Second level dropdown (level 3 items) - show to the right
+            $classes = "dropdown-menu absolute left-full top-0 ml-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50";
+        }
+        
+        $output .= "\n$indent<ul class=\"$classes\">\n";
     }
 
     /**
@@ -44,8 +53,11 @@ class Arata_Dropdown_Walker extends Walker_Nav_Menu {
                 $class_names .= ' has-dropdown menu-item-has-children';
             }
         } else {
-            // Dropdown items
-            $class_names = 'dropdown-item';
+            // Dropdown items (level 2+)
+            $class_names = 'dropdown-item relative group';
+            if ($has_children) {
+                $class_names .= ' has-submenu';
+            }
         }
 
         $class_names = apply_filters('nav_menu_css_class', array_filter(explode(' ', $class_names)), $item, $args, $depth);

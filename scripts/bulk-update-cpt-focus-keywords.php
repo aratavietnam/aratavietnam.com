@@ -22,4 +22,3 @@ foreach ($post_types_to_update as $post_type) {
 }
 
 echo "Bulk update of focus keywords for custom post types is complete.\n";
-
