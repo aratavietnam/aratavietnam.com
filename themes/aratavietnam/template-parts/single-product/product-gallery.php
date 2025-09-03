@@ -41,7 +41,8 @@ $image_ids = array_filter(array_unique($image_ids));
                      src="<?php echo esc_url($main_src[0]); ?>" 
                      alt="<?php echo esc_attr($alt_text); ?>" 
                      class="w-full h-full object-cover cursor-pointer"
-                     onclick="openGalleryLightbox(0)">
+                     onclick="openGalleryLightbox(0)"
+                     onerror="this.style.backgroundImage='url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMiA4VjE2TTggMTJIMTYiIHN0cm9rZT0iIzlDQTNBRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPHN2Zz4K)'; this.style.backgroundSize='60px 60px'; this.style.backgroundRepeat='no-repeat'; this.style.backgroundPosition='center'; this.style.backgroundColor='#f3f4f6'; this.src=''">
                 
                 <!-- View Gallery Button - Always visible on mobile, hover on desktop -->
                 <div class="absolute top-4 right-4 z-10">
@@ -68,12 +69,18 @@ $image_ids = array_filter(array_unique($image_ids));
                     $large_src = wp_get_attachment_image_src($image_id, 'large');
                     $alt_text = get_post_meta($image_id, '_wp_attachment_image_alt', true) ?: $product->get_name();
                 ?>
+                    <?php if ($thumb_src && $thumb_src[0] && $large_src && $large_src[0]) : ?>
                     <div class="thumbnail-item flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 cursor-pointer overflow-hidden transition-all duration-300 <?php echo $index === 0 ? 'border-primary' : 'border-gray-200 hover:border-primary'; ?>" 
                          onclick="changeMainImage(<?php echo $index; ?>, '<?php echo esc_url($large_src[0]); ?>', '<?php echo esc_attr($alt_text); ?>')">
                         <img src="<?php echo esc_url($thumb_src[0]); ?>" 
                              alt="<?php echo esc_attr($alt_text); ?>" 
                              class="w-full h-full object-cover transition-transform duration-200 hover:scale-110">
                     </div>
+                    <?php else : ?>
+                    <div class="thumbnail-item flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 border-gray-200 overflow-hidden bg-gray-100 flex items-center justify-center">
+                        <span data-icon="package" data-size="20" class="text-gray-400"></span>
+                    </div>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             </div>
         </div>
