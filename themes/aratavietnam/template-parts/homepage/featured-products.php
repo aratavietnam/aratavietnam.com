@@ -52,22 +52,25 @@
         <div class="products-container">
             <?php
             // Get featured products (8 products for 4x2 grid)
-            $featured_products = wc_get_products([
-                'limit' => 8,
-                'status' => 'publish',
-                'featured' => true,
-                'orderby' => 'menu_order',
-                'order' => 'ASC'
-            ]);
-
-            if (empty($featured_products)) {
-                // Fallback to latest products if no featured products
+            $featured_products = array();
+            if (function_exists('wc_get_products')) {
                 $featured_products = wc_get_products([
                     'limit' => 8,
                     'status' => 'publish',
-                    'orderby' => 'date',
-                    'order' => 'DESC'
+                    'featured' => true,
+                    'orderby' => 'menu_order',
+                    'order' => 'ASC'
                 ]);
+
+                if (empty($featured_products)) {
+                    // Fallback to latest products if no featured products
+                    $featured_products = wc_get_products([
+                        'limit' => 8,
+                        'status' => 'publish',
+                        'orderby' => 'date',
+                        'order' => 'DESC'
+                    ]);
+                }
             }
 
             if ($featured_products) :

@@ -1,12 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The htaccess rewrite rule operation class
  *
  * @since      1.0.0
  * @package    LiteSpeed
- * @subpackage LiteSpeed/inc
- * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -564,22 +563,22 @@ class Htaccess extends Root {
 		// webp support
 		$id = Base::O_IMG_OPTM_WEBP;
 		if (!empty($cfg[$id])) {
-			$webP_rule       = 'RewriteRule .* - [E=Cache-Control:vary=%{ENV:LSCACHE_VARY_VALUE}+webp]';
 			$next_gen_format = 'webp';
 			if ($cfg[$id] == 2) {
 				$next_gen_format = 'avif';
 			}
 			$new_rules[] = self::MARKER_WEBP . self::MARKER_START;
-			$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} "image/' . $next_gen_format . '"';
-			$new_rules[] = $webP_rule;
+			// Check for WebP support via HTTP_ACCEPT
+			$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} image/' . $next_gen_format . ' [OR]';
 
-			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} iPhone.*Version/(\d{2}).*Safari';
-			$new_rules[] = 'RewriteCond %1 >13';
-			$new_rules[] = $webP_rule;
+			// Check for iPhone browsers (version > 13)
+			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} iPhone\ OS\ (1[4-9]|[2-9][0-9]) [OR]';
 
-			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} Firefox/([0-9]+)';
-			$new_rules[] = 'RewriteCond %1 >=65';
-			$new_rules[] = $webP_rule;
+			// Check for Firefox (version >= 65)
+			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} Firefox/([6-9][0-9]|[1-9][0-9]{2,})';
+
+			// Add vary
+			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=%{ENV:LSCACHE_VARY_VALUE}+webp]';
 			$new_rules[] = self::MARKER_WEBP . self::MARKER_END;
 			$new_rules[] = '';
 		}

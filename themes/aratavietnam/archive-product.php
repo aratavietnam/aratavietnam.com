@@ -65,7 +65,7 @@ add_filter('loop_shop_per_page', function() {
                                 <div class="space-y-1">
                                     <?php
                                     // Check if we're on the main shop page (all products)
-                                    $is_shop_page = is_shop() && !is_product_category() && !is_product_tag();
+                                    $is_shop_page = function_exists('is_shop') && is_shop() && !is_product_category() && !is_product_tag();
                                     ?>
 
                                     <!-- All Products Tab -->

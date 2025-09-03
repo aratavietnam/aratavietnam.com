@@ -1,13 +1,11 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The class to operate media data.
  *
  * @since       1.4
- * @since       1.5 Moved into /inc
- * @package     Core
- * @subpackage  Core/inc
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
+ * @package     LiteSpeed
  */
 
 namespace LiteSpeed;
@@ -52,11 +50,18 @@ class Media extends Root {
 	/**
 	 * Hooks after user init
 	 *
-	 * @since  7.2
+	 * @since 7.2
+	 * @since 7.4 Add media replace original with scaled.
 	 */
 	public function after_user_init() {
 		// Hook to attachment delete action (PR#844, Issue#841) for AJAX del compatibility
 		add_action('delete_attachment', array( $this, 'delete_attachment' ), 11, 2);
+
+		// For big images, allow to replace original with scaled image.
+		if( $this->conf(Base::O_MEDIA_AUTO_RESCALE_ORI) ){
+			// Added priority 9 to happen before other functions added.
+			add_filter('wp_update_attachment_metadata', array( $this, 'rescale_ori' ), 9, 2);
+		}
 	}
 
 	/**
@@ -96,6 +101,47 @@ class Media extends Root {
 		add_filter('litespeed_buffer_finalize', array( $this, 'finalize' ), 4);
 
 		add_filter('litespeed_optm_html_head', array( $this, 'finalize_head' ));
+	}
+
+	/**
+	 * Handle attachment create
+	 *
+	 * @param array $metadata Current meta array.
+	 * @param int $attachment_id Attachment ID.
+	 * @return array $metadata
+	 * @since  7.4
+	 */
+	public function rescale_ori( $metadata, $attachment_id ) {
+		// Test if create and image was resized.
+		if( $metadata && isset($metadata['original_image']) && isset($metadata['file']) && false !== strstr($metadata['file'], '-scaled')){
+			// Get rescaled file name.
+			$path_exploded      = explode( '/', strrev($metadata['file']), 2 );
+			$rescaled_file_name = strrev($path_exploded[0]);
+
+			// Create paths for images: resized and original.
+			$base_path     = $this->_wp_upload_dir['basedir'] . $this->_wp_upload_dir['subdir'] . '/';
+			$rescaled_path = $base_path . $rescaled_file_name;
+			$new_path      = $base_path . $metadata['original_image'];
+
+			// Change array file key.
+			$metadata['file'] = $this->_wp_upload_dir['subdir'] . '/' . $metadata['original_image'];
+			if( 0 === strpos( $metadata['file'], '/' ) ){
+				$metadata['file'] = substr( $metadata['file'], 1 );
+			}
+
+			// Delete array "original_image" key.
+			unset($metadata['original_image']);
+
+			if( file_exists( $rescaled_path ) && file_exists( $new_path ) ){
+				// Move rescaled to original.
+				rename( $rescaled_path, $new_path );
+
+				// Update meta "_wp_attached_file".
+				update_post_meta( $attachment_id, '_wp_attached_file', $metadata['file'] );
+			}
+		}
+
+		return $metadata;
 	}
 
 	/**
@@ -202,7 +248,7 @@ class Media extends Root {
 		 * WP Stateless compatibility #143 https://github.com/litespeedtech/lscache_wp/issues/143
 		 *
 		 * @since 2.9.8
-		 * @return array( 'url', 'md5', 'size' )
+		 * Should return array( 'url', 'md5', 'size' )
 		 */
 		$info = apply_filters('litespeed_media_info', array(), $short_file_path, $post_id);
 		if (!empty($info['url']) && !empty($info['md5']) && !empty($info['size'])) {
@@ -614,7 +660,15 @@ class Media extends Root {
 
 		// Include lazyload lib js and init lazyload
 		if ($cfg_lazy || $cfg_iframe_lazy) {
-			$lazy_lib      = '<script data-no-optimize="1">' . File::read(LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD) . '</script>';
+			$lazy_lib      = '<script data-no-optimize="1">window.lazyLoadOptions=Object.assign({},{threshold:' . apply_filters('litespeed_lazyload_threshold', 300) . '},window.lazyLoadOptions||{});' . File::read(LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD) . '</script>';
+			if ($cfg_js_delay) {
+				// Load JS delay lib
+				if (!defined('LITESPEED_JS_DELAY_LIB_LOADED')) {
+					define('LITESPEED_JS_DELAY_LIB_LOADED', true);
+					$lazy_lib .= '<script data-no-optimize="1">' . File::read(LSCWP_DIR . Optimize::LIB_FILE_JS_DELAY) . '</script>';
+				}
+			}
+
 			$this->content = str_replace('</body>', $lazy_lib . '</body>', $this->content);
 		}
 	}

@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 function aratavietnam_filter_products($query) {
     // Only apply to product queries on frontend
     if (!is_admin() && $query->is_main_query() && 
-        (is_shop() || is_product_category() || is_product_tag() || is_tax('product_brand'))) {
+        (function_exists('is_shop') && (is_shop() || is_product_category() || is_product_tag() || is_tax('product_brand')))) {
         
         // Sorting filter
         if (isset($_GET['orderby']) && !empty($_GET['orderby'])) {
@@ -161,7 +161,7 @@ add_action('pre_get_posts', 'aratavietnam_filter_products');
  */
 function aratavietnam_add_brand_to_product_query($query) {
     if (!is_admin() && $query->is_main_query() && 
-        (is_shop() || is_product_category() || is_product_tag())) {
+        (function_exists('is_shop') && (is_shop() || is_product_category() || is_product_tag()))) {
         
         // Add brand taxonomy to the query
         $query->set('tax_query', array(

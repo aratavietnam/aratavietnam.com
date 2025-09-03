@@ -156,8 +156,8 @@ function aratavietnam_enqueue_wc_cart_scripts() {
         wp_localize_script('aratavietnam-app', 'wc_add_to_cart_params', array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'wc_ajax_nonce' => wp_create_nonce('wc_add_to_cart_nonce'),
-            'cart_url' => wc_get_cart_url(),
-            'is_cart' => is_cart(),
+            'cart_url' => function_exists('wc_get_cart_url') ? wc_get_cart_url() : '#',
+            'is_cart' => function_exists('is_cart') ? is_cart() : false,
             'cart_redirect_after_add' => get_option('woocommerce_cart_redirect_after_add')
         ));
     }

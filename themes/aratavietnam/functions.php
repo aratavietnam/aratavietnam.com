@@ -32,6 +32,15 @@ require_once get_template_directory() . '/inc/homepage-meta.php';
 
 require_once get_template_directory() . '/inc/product-policies-meta.php';
 require_once get_template_directory() . '/inc/partner-post-type.php';
+
+/**
+ * Load theme textdomain
+ */
+function aratavietnam_load_textdomain() {
+    load_theme_textdomain('aratavietnam', get_template_directory() . '/languages');
+}
+add_action('init', 'aratavietnam_load_textdomain');
+
 // Register custom page templates
 function aratavietnam_register_page_templates($templates) {
     $templates['page-templates/news.php'] = 'News Page';
@@ -112,7 +121,13 @@ function aratavietnam(): TailPress\Framework\Theme
         ]));
 }
 
-aratavietnam();
+/**
+ * Initialize theme after textdomain is loaded
+ */
+function aratavietnam_init_theme() {
+    aratavietnam();
+}
+add_action('init', 'aratavietnam_init_theme', 20);
 
 // Add type="module" to the main theme script tag.
 add_filter('script_loader_tag', function ($tag, $handle, $src) {
@@ -346,7 +361,7 @@ add_filter('woocommerce_checkout_privacy_policy_text', function($text) {
 
 // Remove entry footer from WooCommerce pages
 add_filter('woocommerce_show_page_title', function($show) {
-    if (is_cart() || is_checkout()) {
+    if (function_exists('is_cart') && (is_cart() || is_checkout())) {
         remove_action('wp_footer', 'wp_footer');
     }
     return $show;
@@ -354,7 +369,7 @@ add_filter('woocommerce_show_page_title', function($show) {
 
 // Remove entry footer from WooCommerce pages
 add_action('wp_head', function() {
-    if (is_cart() || is_checkout()) {
+    if (function_exists('is_cart') && (is_cart() || is_checkout())) {
         echo '<style>
             .entry-footer { display: none !important; }
         </style>';

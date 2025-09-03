@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 /**
  * The core plugin config class.
@@ -6,10 +7,7 @@
  * This maintains all the options and settings for this plugin.
  *
  * @since       1.0.0
- * @since       1.5 Moved into /inc
  * @package     LiteSpeed
- * @subpackage  LiteSpeed/inc
- * @author      LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 namespace LiteSpeed;
@@ -74,11 +72,8 @@ class Conf extends Base {
 		/**
 		 * Version is less than v3.0, or, is a new installation
 		 */
-		$ver_check_tag = '';
-		if (!$ver) {
-			// Try upgrade first (network will upgrade inside too)
-			$ver_check_tag = Data::cls()->try_upgrade_conf_3_0();
-		} else {
+		$ver_check_tag = 'new';
+		if ($ver) {
 			defined('LSCWP_CUR_V') || define('LSCWP_CUR_V', $ver);
 
 			/**
@@ -101,7 +96,7 @@ class Conf extends Base {
 				// New install
 				$this->set_conf(self::$_default_options);
 
-				$ver_check_tag .= ' activate' . (defined('LSCWP_REF') ? '_' . LSCWP_REF : '');
+				$ver_check_tag .= ' activate' . (defined('LSCWP_REF') ? '_' . constant( 'LSCWP_REF' ) : '');
 			}
 
 			// Init new default/missing options
@@ -125,6 +120,12 @@ class Conf extends Base {
 		 * Override conf if is network subsites and chose `Use Primary Config`
 		 */
 		$this->_try_load_site_options();
+
+		// Check if debug is on
+		// Init debug as early as possible
+		if ($this->conf(Base::O_DEBUG)) {
+			$this->cls('Debug2')->init();
+		}
 
 		// Mark as conf loaded
 		defined('LITESPEED_CONF_LOADED') || define('LITESPEED_CONF_LOADED', true);

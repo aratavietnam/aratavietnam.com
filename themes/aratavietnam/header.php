@@ -194,7 +194,7 @@
 								$has_children = in_array('menu-item-has-children', $classes);
 
 								$classes[] = 'menu-item-' . $item->ID;
-								$class_names = join(' ', apply_filters('nav_menu_css_class', array_filter($classes), $item, $args));
+								$class_names = join(' ', apply_filters('nav_menu_css_class', array_filter($classes), $item, $args, $depth));
 								$class_names = $class_names ? ' class="' . esc_attr($class_names) . '"' : '';
 
 								$output .= '<li' . $class_names . '>';

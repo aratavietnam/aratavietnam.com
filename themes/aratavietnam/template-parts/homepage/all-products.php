@@ -53,12 +53,15 @@
         <div class="products-container">
             <?php
             // Get all products (limit to 20 for slider)
-            $all_products = wc_get_products([
-                'limit' => 20,
-                'status' => 'publish',
-                'orderby' => 'date',
-                'order' => 'DESC'
-            ]);
+            $all_products = array();
+            if (function_exists('wc_get_products')) {
+                $all_products = wc_get_products([
+                    'limit' => 20,
+                    'status' => 'publish',
+                    'orderby' => 'date',
+                    'order' => 'DESC'
+                ]);
+            }
 
             if ($all_products) :
             ?>

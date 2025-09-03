@@ -40,7 +40,7 @@ function aratavietnam_enqueue_product_assets() {
 
 
     // Enqueue product archive page JS
-    if (is_shop() || is_product_category() || is_product_tag() || is_tax('product_brand')) {
+    if (function_exists('is_shop') && (is_shop() || is_product_category() || is_product_tag() || is_tax('product_brand'))) {
         wp_enqueue_script(
             'aratavietnam-product-archive',
             get_template_directory_uri() . '/resources/js/product-archive.js',
@@ -70,11 +70,11 @@ add_action('wp_enqueue_scripts', 'aratavietnam_enqueue_product_assets');
  * Add product page body classes
  */
 function aratavietnam_product_body_classes($classes) {
-    if (is_product()) {
+    if (function_exists('is_product') && is_product()) {
         $classes[] = 'single-product-page';
     }
 
-    if (is_shop() || is_product_category() || is_product_tag()) {
+    if (function_exists('is_shop') && (is_shop() || is_product_category() || is_product_tag())) {
         $classes[] = 'product-archive-page';
     }
 
@@ -86,7 +86,7 @@ add_filter('body_class', 'aratavietnam_product_body_classes');
  * Add inline CSS variables for product pages
  */
 function aratavietnam_product_css_variables() {
-    if (is_product() || is_shop() || is_product_category() || is_product_tag()) {
+    if (function_exists('is_product') && (is_product() || (function_exists('is_shop') && (is_shop() || is_product_category() || is_product_tag())))) {
         $primary_color = get_theme_mod('primary_color', '#3b82f6');
         $secondary_color = get_theme_mod('secondary_color', '#10b981');
 

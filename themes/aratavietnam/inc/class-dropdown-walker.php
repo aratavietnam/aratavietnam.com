@@ -48,7 +48,7 @@ class Arata_Dropdown_Walker extends Walker_Nav_Menu {
             $class_names = 'dropdown-item';
         }
 
-        $class_names = apply_filters('nav_menu_css_class', array_filter(explode(' ', $class_names)), $item, $args);
+        $class_names = apply_filters('nav_menu_css_class', array_filter(explode(' ', $class_names)), $item, $args, $depth);
         $class_names = $class_names ? ' class="' . esc_attr(implode(' ', $class_names)) . '"' : '';
 
         $id = apply_filters('nav_menu_item_id', 'menu-item-'. $item->ID, $item, $args);
