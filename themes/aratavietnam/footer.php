@@ -2,9 +2,13 @@
 /**
  * The template for displaying the footer
  */
+
+// Get footer background color from customizer
+$footer_background_color = get_theme_mod('theme_footer_background_color', '#0066A6');
+$tertiary_color = get_theme_mod('theme_tertiary_color', '#FFAB14');
 ?>
 
-<footer id="colophon" class="site-footer relative z-10" style="background: linear-gradient(135deg, #0066A6 0%, #004d7a 100%);">
+<footer id="colophon" class="site-footer relative z-10" style="background-color: <?php echo esc_attr($footer_background_color); ?>;">
     <div class="container mx-auto px-4 py-12">
         <div>
             <!-- Footer Content -->
@@ -137,7 +141,7 @@
                 <div class="text-left space-y-6 order-3 lg:order-3">
                     <div>
                         <h4 class="text-xl font-bold mb-2 text-white"><?php echo esc_html(get_theme_mod('footer_service_title', 'Dịch vụ khách hàng')); ?></h4>
-                        <div class="w-16 h-1 rounded-full mb-6" style="background: #FFAB14;"></div>
+                        <div class="w-16 h-1 rounded-full mb-6" style="background-color: <?php echo esc_attr($tertiary_color); ?>;"></div>
                     </div>
 
                     <!-- Menu columns -->

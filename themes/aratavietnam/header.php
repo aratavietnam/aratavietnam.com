@@ -4,6 +4,9 @@
  *
  * @package ArataVietnam
  */
+
+// Get header background color from customizer
+$header_background_color = get_theme_mod('theme_header_background_color', '#ffffff');
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?> class="overflow-x-hidden">
@@ -21,7 +24,7 @@
 <div id="page" class="site">
 	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'aratavietnam' ); ?></a>
 
-	<header id="masthead" class="site-header" style="position: fixed; top: 0; left: 0; right: 0; z-index: 9999; background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border-bottom: 1px solid #e5e7eb; transition: all 0.3s ease;">
+	<header id="masthead" class="site-header" style="position: fixed; top: 0; left: 0; right: 0; z-index: 9999; background-color: <?php echo esc_attr($header_background_color); ?>; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border-bottom: 1px solid #e5e7eb; transition: all 0.3s ease;">
 		<div class="container mx-auto px-4">
 			<div class="flex items-center justify-between py-4">
 				<!-- Logo -->
@@ -64,7 +67,7 @@
 				</div>
 
 				<!-- Navigation Menu - Desktop (ngay sau logo) -->
-				<nav id="site-navigation" class="main-navigation hidden lg:block mr-auto">
+				<nav id="site-navigation" class="main-navigation hidden sm:block mr-auto">
 					<?php
 					wp_nav_menu(
 						array(
@@ -158,7 +161,7 @@
 						<?php endif; ?>
 
 						<!-- Mobile Menu Toggle -->
-						<button class="menu-toggle lg:hidden p-2 text-gray-800 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300 ml-2" aria-controls="primary-menu" aria-expanded="false" aria-label="Menu">
+						<button class="menu-toggle sm:hidden p-2 text-gray-800 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300 ml-2" aria-controls="primary-menu" aria-expanded="false" aria-label="Menu">
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
 								<line x1="4" x2="20" y1="6" y2="6"></line>
 								<line x1="4" x2="20" y1="12" y2="12"></line>
@@ -172,7 +175,7 @@
 		</div>
 
 		<!-- Mobile Navigation -->
-		<nav id="primary-navigation" class="mobile-navigation lg:hidden hidden bg-white border-t border-gray-200 shadow-lg">
+		<nav id="primary-navigation" class="mobile-navigation sm:hidden hidden bg-white border-t border-gray-200 shadow-lg">
 			<div class="px-4 py-6">
 				<?php
 				wp_nav_menu(

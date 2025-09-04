@@ -144,6 +144,20 @@ html {
   line-height: 1.6;
 }
 
+/* Fix for fixed header spacing */
+body {
+  padding-top: 80px !important; /* Adjust based on header height */
+}
+
+#content.site-content {
+  margin-top: -5px !important;
+}
+
+#primary.site-main {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
 /* Ensure Vietnamese characters display correctly */
 * {
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1;

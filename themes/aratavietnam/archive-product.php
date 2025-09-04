@@ -6,35 +6,65 @@ add_filter('loop_shop_per_page', function() {
     return 6; // Show 6 products per page (for better pagination)
 }, 20);
 
+// Get customizer color settings
+$primary_color = get_theme_mod('theme_primary_color', '#F55E25');
+$secondary_color = get_theme_mod('theme_secondary_color', '#0066A6');
+$tertiary_color = get_theme_mod('theme_tertiary_color', '#FFAB14');
+$background_color = get_theme_mod('theme_background_color', '#ffffff');
+
+// Get shop page meta settings
+$shop_page_id = wc_get_page_id('shop');
+$show_hero = get_post_meta($shop_page_id, 'arata_shop_show_hero', true);
+$hero_title = get_post_meta($shop_page_id, 'arata_shop_hero_title', true);
+$hero_description = get_post_meta($shop_page_id, 'arata_shop_hero_description', true);
+$hero_indicator = get_post_meta($shop_page_id, 'arata_shop_hero_indicator', true);
+
+// Set defaults if empty
+if (empty($hero_title)) {
+    $hero_title = 'Khám phá sản phẩm chất lượng cao';
+}
+if (empty($hero_description)) {
+    $hero_description = 'Các sản phẩm hóa mỹ phẩm được nhập khẩu trực tiếp từ Nhật Bản, đảm bảo chất lượng và an toàn cho người sử dụng';
+}
+if (empty($hero_indicator)) {
+    $hero_indicator = 'Sản phẩm';
+}
+
+// Default to show hero if not set
+if ($show_hero === '') {
+    $show_hero = '1';
+}
 ?>
 <?php get_header(); ?>
 
+<?php if ($show_hero) : ?>
 <!-- Hero Section -->
-<section class="relative bg-gradient-to-r from-primary/3 via-white to-secondary/3 border-b border-gray-100" style="margin-top: 80px;">
+<section class="relative border-b border-gray-100" style="background-color: <?php echo esc_attr($background_color); ?>; margin-top: -5px;">
     <div class="relative container mx-auto px-4 py-8 sm:py-12">
         <div class="max-w-3xl mx-auto text-center">
             <!-- Compact title indicator -->
             <div class="inline-flex items-center mb-3">
-                <div class="w-8 h-0.5 bg-primary rounded-full mr-3"></div>
-                <span class="text-primary font-medium text-xs uppercase tracking-widest">Sản phẩm</span>
-                <div class="w-8 h-0.5 bg-primary rounded-full ml-3"></div>
+                <div class="w-8 h-0.5 rounded-full mr-3" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
+                <span class="font-medium text-xs uppercase tracking-widest" style="color: <?php echo esc_attr($primary_color); ?>;"><?php echo esc_html($hero_indicator); ?></span>
+                <div class="w-8 h-0.5 rounded-full ml-3" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
             </div>
 
             <!-- Smaller, more elegant title -->
             <h1 class="text-2xl sm:text-4xl font-bold text-gray-900 leading-tight mb-4">
-                Khám phá sản phẩm chất lượng cao
+                <?php echo esc_html($hero_title); ?>
             </h1>
 
             <!-- Compact description -->
             <p class="text-base sm:text-lg text-gray-600 leading-relaxed max-w-xl mx-auto">
-                Các sản phẩm hóa mỹ phẩm được nhập khẩu trực tiếp từ Nhật Bản, đảm bảo chất lượng và an toàn cho người sử dụng
+                <?php echo esc_html($hero_description); ?>
             </p>
         </div>
     </div>
 </section>
+<?php endif; ?>
 
-<main id="site-content" class="bg-white">
-    <div class="bg-gray-50 py-12">
+<main id="site-content" style="background-color: <?php echo esc_attr($background_color); ?>; margin-top: -5px;">
+    <div class="py-12" style="background-color: <?php echo esc_attr($background_color); ?>">
         <div class="container mx-auto px-4">
             <!-- Main Content Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-4 lg:gap-x-8">
@@ -49,13 +79,13 @@ add_filter('loop_shop_per_page', function() {
 
                 <!-- Sidebar - Product Categories & Filters (1/4) - Hidden on Mobile -->
                 <aside class="hidden lg:block lg:col-span-1">
-                    <div class="sticky top-24 space-y-4">
+                    <div class="sticky <?php echo $show_hero ? 'top-24' : 'top-4'; ?> space-y-4">
 
                         <!-- Product Categories -->
                         <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
                             <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
                                 <h3 class="text-base font-semibold text-gray-900 flex items-center">
-                                    <span data-icon="folder" data-size="16" class="text-primary mr-2"></span>
+                                    <span data-icon="folder" data-size="16" class="mr-2" style="color: <?php echo esc_attr($primary_color); ?>;"></span>
                                     Danh mục sản phẩm
                                 </h3>
                             </div>
@@ -71,7 +101,7 @@ add_filter('loop_shop_per_page', function() {
                                     <div class="border-b border-gray-100">
                                         <div class="flex items-center justify-between group">
                                             <a href="<?php echo wc_get_page_permalink('shop'); ?>"
-                                               class="flex-1 py-2 px-2 text-gray-700 hover:text-primary hover:bg-primary/5 rounded transition-all duration-200 group-hover:bg-primary/5 flex items-center <?php echo $is_shop_page ? 'text-primary bg-primary/10 font-semibold' : ''; ?>">
+                                               class="flex-1 py-2 px-2 text-gray-700 hover:bg-primary/5 rounded transition-all duration-200 group-hover:bg-primary/5 flex items-center <?php echo $is_shop_page ? 'bg-primary/10 font-semibold' : ''; ?>" style="<?php echo $is_shop_page ? 'color: ' . esc_attr($primary_color) . ';' : ''; ?>">
                                                 <span data-icon="folder" data-size="14" class="mr-2 inline-block"></span>
                                                 Tất cả sản phẩm
                                                 <?php
@@ -108,7 +138,7 @@ add_filter('loop_shop_per_page', function() {
                                             <div class="border-b border-gray-100 last:border-b-0">
                                                 <div class="flex items-center justify-between group">
                                                     <a href="<?php echo esc_url($category_link); ?>"
-                                                       class="flex-1 py-2 px-2 text-gray-700 hover:text-primary hover:bg-primary/5 rounded transition-all duration-200 group-hover:bg-primary/5 flex items-center <?php echo $is_current ? 'text-primary bg-primary/10 font-semibold' : ''; ?>">
+                                                       class="flex-1 py-2 px-2 text-gray-700 hover:bg-primary/5 rounded transition-all duration-200 group-hover:bg-primary/5 flex items-center <?php echo $is_current ? 'bg-primary/10 font-semibold' : ''; ?>" style="<?php echo $is_current ? 'color: ' . esc_attr($primary_color) . ';' : ''; ?>">
                                                         <span data-icon="folder" data-size="14" class="mr-2 inline-block"></span>
                                                         <?php echo esc_html($category->name); ?>
                                                         <span class="text-xs text-gray-400 ml-2 bg-gray-100 px-1.5 py-0.5 rounded-full"><?php echo $category->count; ?></span>
@@ -151,7 +181,7 @@ add_filter('loop_shop_per_page', function() {
                         <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
                             <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
                                 <h3 class="text-base font-semibold text-gray-900 flex items-center">
-                                    <span data-icon="award" data-size="16" class="text-primary mr-2"></span>
+                                    <span data-icon="award" data-size="16" class="mr-2" style="color: <?php echo esc_attr($primary_color); ?>;"></span>
                                     Thương hiệu
                                 </h3>
                             </div>
@@ -218,7 +248,7 @@ add_filter('loop_shop_per_page', function() {
                         <!-- Clear Filters Button -->
                         <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
                             <div class="p-3">
-                                <button id="clear-filters" class="w-full bg-primary text-white py-2 px-3 rounded hover:bg-primary-dark transition-all duration-200 font-medium">
+                                <button id="clear-filters" class="w-full text-white py-2 px-3 rounded hover:opacity-90 transition-all duration-200 font-medium" style="background-color: <?php echo esc_attr($primary_color); ?>;">
                                     <span data-icon="refresh" data-size="14" class="mr-2"></span>
                                     Xóa bộ lọc
                                 </button>
@@ -333,7 +363,7 @@ add_filter('loop_shop_per_page', function() {
                                     for ($i = $start_page; $i <= $end_page; $i++) :
                                         if ($i == $current_page) :
                                             ?>
-                                            <span class="px-3 py-2 text-white bg-primary border border-primary rounded-lg">
+                                            <span class="px-3 py-2 text-white rounded-lg" style="background-color: <?php echo esc_attr($primary_color); ?>; border-color: <?php echo esc_attr($primary_color); ?>;">
                                                 <?php echo $i; ?>
                                             </span>
                                             <?php

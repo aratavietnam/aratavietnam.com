@@ -17,6 +17,8 @@ export default defineConfig(({ command }) => {
             rollupOptions: {
                 input: [
                     'resources/js/app.js',
+                    'resources/js/notifications.js',
+                    'resources/js/add-to-cart.js',
                     'resources/js/product-single.js',
                     'resources/css/app.css',
                     'resources/css/editor-style.css'

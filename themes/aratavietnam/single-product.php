@@ -5,15 +5,26 @@
  * @package ArataVietnam
  */
 
+// Prevent direct access
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+// Get customizer color settings
+$primary_color = get_theme_mod('theme_primary_color', '#F55E25');
+$secondary_color = get_theme_mod('theme_secondary_color', '#0066A6');
+$tertiary_color = get_theme_mod('theme_tertiary_color', '#FFAB14');
+$background_color = get_theme_mod('theme_background_color', '#ffffff');
+
 get_header();
 ?>
 
-<main id="site-content" class="bg-gray-50">
+<main id="site-content" class="bg-gray-50" style="margin-top: -5px;">
     <?php while (have_posts()) : the_post(); ?>
         <?php global $product; ?>
 
         <!-- Breadcrumb -->
-        <section class="bg-white border-b border-gray-200">
+        <section class="border-b border-gray-200" style="background-color: <?php echo esc_attr($background_color); ?>">
             <div class="container mx-auto px-4">
                 <div class="py-1 overflow-x-auto whitespace-nowrap">
                     <?php woocommerce_breadcrumb(array(
@@ -29,7 +40,7 @@ get_header();
         </section>
 
         <!-- Product Details Section -->
-        <section class="py-12">
+        <section class="py-12" style="background-color: <?php echo esc_attr($background_color); ?>">
             <div class="container mx-auto px-4">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                     <!-- Product Gallery -->
@@ -49,7 +60,7 @@ get_header();
         </section>
 
         <!-- Product Tabs (Description, Reviews, etc.) -->
-        <section class="py-12 bg-white">
+        <section class="py-12" style="background-color: <?php echo esc_attr($background_color); ?>">
             <div class="container mx-auto px-4">
                 <?php get_template_part('template-parts/single-product/product-tabs'); ?>
             </div>
@@ -65,9 +76,9 @@ get_header();
                     <div class="text-center mb-12">
                         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
                             <span class="text-gray-700">Sản phẩm</span>
-                            <span class="text-primary">Liên Quan</span>
+                            <span style="color: <?php echo esc_attr($primary_color); ?>">Liên Quan</span>
                         </h2>
-                        <div class="w-24 h-1 bg-primary mx-auto mt-4"></div>
+                        <div class="w-24 h-1 mx-auto mt-4" style="background-color: <?php echo esc_attr($primary_color); ?>"></div>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         <?php
@@ -91,14 +102,14 @@ get_header();
 
         if ( !empty($viewed_products) ) :
         ?>
-        <section class="py-12 bg-white border-t border-gray-200">
+        <section class="py-12 border-t border-gray-200" style="background-color: <?php echo esc_attr($background_color); ?>">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
                         <span class="text-gray-700">Sản phẩm</span>
-                        <span class="text-primary">Đã Xem</span>
+                        <span style="color: <?php echo esc_attr($primary_color); ?>">Đã Xem</span>
                     </h2>
-                    <div class="w-24 h-1 bg-primary mx-auto mt-4"></div>
+                    <div class="w-24 h-1 mx-auto mt-4" style="background-color: <?php echo esc_attr($primary_color); ?>"></div>
                 </div>
                 <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <?php

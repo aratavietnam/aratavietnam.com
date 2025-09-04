@@ -149,6 +149,88 @@ function aratavietnam_woocommerce_products_per_page() {
 add_filter('loop_shop_per_page', 'aratavietnam_woocommerce_products_per_page', 20);
 
 /**
+ * AJAX handler for enhanced add to cart
+ */
+add_action('wp_ajax_arata_add_to_cart', 'aratavietnam_ajax_add_to_cart');
+add_action('wp_ajax_nopriv_arata_add_to_cart', 'aratavietnam_ajax_add_to_cart');
+
+function aratavietnam_ajax_add_to_cart() {
+    if (!class_exists('WooCommerce')) {
+        wp_send_json_error('WooCommerce not active');
+        return;
+    }
+
+    // Verify nonce
+    if (!wp_verify_nonce($_POST['nonce'] ?? '', 'arata_add_to_cart_nonce')) {
+        wp_send_json_error('Security check failed');
+        return;
+    }
+
+    $product_id = absint($_POST['product_id'] ?? 0);
+    $quantity = absint($_POST['quantity'] ?? 1);
+    $variation_id = absint($_POST['variation_id'] ?? 0);
+    
+    if (!$product_id) {
+        wp_send_json_error([
+            'message' => 'Không thể xác định sản phẩm'
+        ]);
+        return;
+    }
+
+    $product = wc_get_product($product_id);
+    if (!$product) {
+        wp_send_json_error([
+            'message' => 'Sản phẩm không tồn tại'
+        ]);
+        return;
+    }
+
+    // Check stock
+    if (!$product->is_in_stock()) {
+        wp_send_json_error([
+            'message' => 'Sản phẩm đã hết hàng',
+            'type' => 'out_of_stock'
+        ]);
+        return;
+    }
+
+    // Check quantity
+    if (!$product->has_enough_stock($quantity)) {
+        wp_send_json_error([
+            'message' => sprintf('Chỉ còn %d sản phẩm trong kho', $product->get_stock_quantity()),
+            'type' => 'insufficient_stock'
+        ]);
+        return;
+    }
+
+    // Add to cart
+    $passed_validation = apply_filters('woocommerce_add_to_cart_validation', true, $product_id, $quantity);
+    
+    if (!$passed_validation) {
+        wp_send_json_error([
+            'message' => 'Không thể thêm sản phẩm vào giỏ hàng'
+        ]);
+        return;
+    }
+
+    $cart_item_key = WC()->cart->add_to_cart($product_id, $quantity, $variation_id);
+    
+    if ($cart_item_key) {
+        wp_send_json_success([
+            'message' => sprintf('Đã thêm "%s" vào giỏ hàng', $product->get_name()),
+            'product_name' => $product->get_name(),
+            'cart_count' => WC()->cart->get_cart_contents_count(),
+            'cart_total' => WC()->cart->get_cart_total(),
+            'cart_url' => wc_get_cart_url()
+        ]);
+    } else {
+        wp_send_json_error([
+            'message' => 'Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng'
+        ]);
+    }
+}
+
+/**
  * Enqueue WooCommerce AJAX scripts and localize data
  */
 function aratavietnam_enqueue_wc_cart_scripts() {
@@ -156,6 +238,7 @@ function aratavietnam_enqueue_wc_cart_scripts() {
         wp_localize_script('aratavietnam-app', 'wc_add_to_cart_params', array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'wc_ajax_nonce' => wp_create_nonce('wc_add_to_cart_nonce'),
+            'arata_ajax_nonce' => wp_create_nonce('arata_add_to_cart_nonce'),
             'cart_url' => function_exists('wc_get_cart_url') ? wc_get_cart_url() : '#',
             'is_cart' => function_exists('is_cart') ? is_cart() : false,
             'cart_redirect_after_add' => get_option('woocommerce_cart_redirect_after_add')

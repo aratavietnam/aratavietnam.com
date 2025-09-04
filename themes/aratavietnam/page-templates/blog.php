@@ -9,71 +9,65 @@ if (!defined('ABSPATH')) { exit; }
 
 get_header();
 
-// Hero
-$hero_title = get_the_title();
-// Try to get subtitle from the current page first
-$hero_subtitle = get_post_meta(get_the_ID(), 'arata_news_subtitle', true);
+// Get customizer color settings
+$primary_color = get_theme_mod('theme_primary_color', '#F55E25');
+$secondary_color = get_theme_mod('theme_secondary_color', '#0066A6');
+$tertiary_color = get_theme_mod('theme_tertiary_color', '#FFAB14');
+$background_color = get_theme_mod('theme_background_color', '#ffffff');
 
-// If empty, fall back to the main News page setting
-if (empty($hero_subtitle)) {
-    $news_page = get_pages(['meta_key' => '_wp_page_template', 'meta_value' => 'page-templates/news.php']);
-    if (!empty($news_page)) {
-        $news_page_id = $news_page[0]->ID;
-        $hero_subtitle = get_post_meta($news_page_id, 'arata_news_subtitle', true);
-    }
-}
+// Get page meta fields for hero customization
+$hero_subtitle = get_post_meta(get_the_ID(), 'arata_blog_subtitle', true) ?: 'Blog';
+$hero_intro = get_post_meta(get_the_ID(), 'arata_blog_intro', true) ?: 'Khám phá những bài viết chuyên sâu về hóa mỹ phẩm, xu hướng làm đẹp và kiến thức chăm sóc sắc đẹp từ Nhật Bản.';
 
-// Fallback to a default value if still not found
-if (empty($hero_subtitle)) {
-    $hero_subtitle = 'Chia sẻ kiến thức và kinh nghiệm';
-}
-set_query_var('title', $hero_title);
+// Section visibility controls
+$show_hero = get_post_meta(get_the_ID(), 'arata_show_hero', true) !== '0'; // Default to true if not set
+$use_compact_hero = get_post_meta(get_the_ID(), 'arata_compact_hero', true) === '1'; // New compact option
+
+// Set hero variables
+set_query_var('title', get_the_title());
 set_query_var('subtitle', $hero_subtitle);
-get_template_part('template-parts/hero');
+set_query_var('description', $hero_intro);
+set_query_var('compact_mode', $use_compact_hero);
+
+if ($show_hero) {
+    if ($use_compact_hero) {
+        // Use compact hero inline
+        ?>
+        <main id="site-content" class="min-h-[30vh] flex items-center" style="background-color: <?php echo esc_attr($background_color); ?>;">
+            <div class="container mx-auto px-4 py-16 text-center">
+                <div class="max-w-2xl mx-auto">
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-4"><?php echo esc_html($hero_subtitle); ?></h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        <?php echo esc_html($hero_intro); ?>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Blog Content Section -->
+            <div class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>;">
+                <div class="container mx-auto px-4">
+        <?php
+    } else {
+        // Use full hero template part
+        get_template_part('template-parts/hero');
+        ?>
+        <main id="site-content" class="bg-white">
+            <!-- Blog Content Section -->
+            <div class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>;">
+                <div class="container mx-auto px-4">
+        <?php
+    }
+} else {
+    ?>
+    <main id="site-content" class="bg-white">
+        <!-- Blog Content Section -->
+        <div class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>;">
+            <div class="container mx-auto px-4">
+    <?php
+}
 ?>
 
-<main id="site-content" class="bg-white">
-    <?php
-    // Only show the Page Content section if the page has content in the editor.
-    if (have_posts()) {
-        the_post(); // Set up the post data
-        if (trim(get_the_content())) { // Check if there is actual content, not just whitespace
-            rewind_posts(); // Rewind the loop so it can run again below
-    ?>
-    <!-- Page Content -->
-    <div class="container mx-auto px-4 py-12">
-        <article id="post-<?php the_ID(); ?>" <?php post_class('prose max-w-none mb-12'); ?>>
-            <div class="entry-content">
-                <?php
-                while (have_posts()) : the_post();
-                    the_content();
-                endwhile;
-                ?>
-            </div>
-        </article>
-    </div>
-    <?php
-        }
-    }
-    ?>
-
-    <!-- Blog Layout Section -->
-    <div class="bg-gray-50 py-16">
-        <div class="container mx-auto px-4">
-            <!-- Section Header -->
-            <div class="text-center mb-12">
-                <div class="flex items-center justify-center mb-4">
-                    <div class="w-12 h-1 bg-primary rounded-full mr-4"></div>
-                    <span class="text-primary font-medium text-sm uppercase tracking-wider">Blog Arata Vietnam</span>
-                    <div class="w-12 h-1 bg-primary rounded-full ml-4"></div>
-                </div>
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">Bài viết mới nhất</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">
-                    Khám phá những bài viết chuyên sâu về hóa mỹ phẩm, xu hướng làm đẹp và kiến thức chăm sóc sắc đẹp từ Nhật Bản.
-                </p>
-            </div>
-
-            <!-- Main Blog Layout: Left (6 posts horizontal) + Right (sidebar vertical) -->
+<!-- Main Blog Layout: Left (6 posts horizontal) + Right (sidebar vertical) -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
                 <!-- Left Side: 6 Posts in Horizontal Layout (2 rows x 3 columns) -->
@@ -110,9 +104,6 @@ get_template_part('template-parts/hero');
                                         <div class="flex items-center text-xs text-gray-500 mb-3">
                                             <span data-icon="calendar" data-size="14" class="mr-1"></span>
                                             <?php echo get_the_date('d/m/Y'); ?>
-                                            <span class="mx-2">•</span>
-                                            <span data-icon="user" data-size="14" class="mr-1"></span>
-                                            <?php the_author(); ?>
                                         </div>
 
                                         <!-- Title -->

@@ -9,42 +9,82 @@ if (!defined('ABSPATH')) { exit; }
 
 get_header();
 
-// Hero
-$hero_title = get_the_title();
-$hero_subtitle = get_post_meta(get_the_ID(), 'arata_news_subtitle', true) ?: 'Ưu đãi đặc biệt từ Arata Vietnam';
-set_query_var('title', $hero_title);
-set_query_var('subtitle', $hero_subtitle);
-get_template_part('template-parts/hero');
-?>
+// Get global colors
+$primary_color = get_theme_mod('theme_primary_color', '#F55E25');
+$secondary_color = get_theme_mod('theme_secondary_color', '#0066A6');
+$tertiary_color = get_theme_mod('theme_tertiary_color', '#FFAB14');
+$background_color = get_theme_mod('theme_background_color', '#ffffff');
 
-<main id="site-content" class="bg-white">
-    <!-- Page Content -->
-    <div class="container mx-auto px-4 py-10">
-        <article id="post-<?php the_ID(); ?>" <?php post_class('prose max-w-none mb-12'); ?>>
-            <div class="entry-content">
-                <?php
-                while (have_posts()) : the_post();
-                    the_content();
-                endwhile;
-                ?>
-            </div>
-        </article>
-    </div>
+// Hero configuration
+$show_hero = get_post_meta(get_the_ID(), 'arata_show_hero', true) !== '0'; // Default to true if not set
+$use_compact_hero = get_post_meta(get_the_ID(), 'arata_compact_hero', true) === '1';
+$hero_subtitle = get_post_meta(get_the_ID(), 'arata_promotions_subtitle', true) ?: 'Ưu đãi đặc biệt từ Arata Vietnam';
+$hero_intro = get_post_meta(get_the_ID(), 'arata_promotions_intro', true) ?: 'Khám phá các chương trình khuyến mãi hấp dẫn và ưu đãi độc quyền từ Arata Vietnam.';
 
-    <!-- Promotions Section -->
-    <div class="bg-gray-50 py-16">
-        <div class="container mx-auto px-4">
-            <!-- Section Header -->
-            <div class="text-center mb-12">
-                <div class="flex items-center justify-center mb-4">
-                    <div class="w-12 h-1 bg-primary rounded-full mr-4"></div>
-                    <span class="text-primary font-medium text-sm uppercase tracking-wider">Khuyến mãi đặc biệt</span>
-                    <div class="w-12 h-1 bg-primary rounded-full ml-4"></div>
+// Set hero variables if using full hero
+if ($show_hero && !$use_compact_hero) {
+    set_query_var('title', get_the_title());
+    set_query_var('subtitle', $hero_subtitle);
+}
+
+if ($show_hero) {
+    if ($use_compact_hero) {
+        // Use compact hero inline
+        ?>
+        <main id="site-content" class="min-h-[30vh] flex items-center" style="background-color: <?php echo esc_attr($background_color); ?>;">
+            <div class="container mx-auto px-4 py-16 text-center">
+                <div class="max-w-2xl mx-auto">
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-4"><?php echo esc_html($hero_subtitle); ?></h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        <?php echo esc_html($hero_intro); ?>
+                    </p>
                 </div>
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">Chương trình khuyến mãi</h2>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <!-- Promotions Content Section -->
+            <div class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>;">
+                <div class="container mx-auto px-4">
+        <?php
+    } else {
+        // Use full hero template part
+        get_template_part('template-parts/hero');
+        ?>
+        <main id="site-content" class="bg-white">
+            <!-- Promotions Content Section -->
+            <div class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>;">
+                <div class="container mx-auto px-4">
+        <?php
+    }
+} else {
+    ?>
+    <main id="site-content" class="bg-white">
+        <!-- Promotions Content Section -->
+        <div class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>;">
+            <div class="container mx-auto px-4">
+    <?php
+}
+?>
+                <!-- Page Content -->
+                <article id="post-<?php the_ID(); ?>" <?php post_class('prose max-w-none mb-12'); ?>>
+                    <div class="entry-content">
+                        <?php
+                        while (have_posts()) : the_post();
+                            the_content();
+                        endwhile;
+                        ?>
+                    </div>
+                </article>
+                <!-- Section Header -->
+                <div class="text-center mb-12">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-12 h-1 rounded-full mr-4" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
+                        <span class="font-medium text-sm uppercase tracking-wider" style="color: <?php echo esc_attr($primary_color); ?>;">Khuyến mãi đặc biệt</span>
+                        <div class="w-12 h-1 rounded-full ml-4" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Chương trình khuyến mãi</h2>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 <!-- Promotions List -->
                 <div>
                     <h3 class="text-2xl font-bold text-gray-900 mb-6">Ưu đãi hiện tại</h3>
@@ -77,15 +117,15 @@ get_template_part('template-parts/hero');
                                 $end_date = get_post_meta(get_the_ID(), 'arata_promotion_end_date', true);
                                 $type = get_post_meta(get_the_ID(), 'arata_promotion_type', true);
                                 ?>
-                                <div class="bg-white rounded-lg p-6 border border-gray-200 hover:border-primary transition-colors duration-300">
+                                <div class="bg-white rounded-lg p-6 border border-gray-200 transition-colors duration-300" style="border-color: #E5E7EB;" onmouseover="this.style.borderColor='<?php echo esc_attr($primary_color); ?>'" onmouseout="this.style.borderColor='#E5E7EB'">
                                     <div class="flex items-start justify-between mb-4">
                                         <h4 class="text-xl font-semibold text-gray-900 flex-1">
-                                            <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
+                                            <a href="<?php the_permalink(); ?>" class="transition-colors" style="color: inherit;" onmouseover="this.style.color='<?php echo esc_attr($primary_color); ?>'" onmouseout="this.style.color='inherit'">
                                                 <?php the_title(); ?>
                                             </a>
                                         </h4>
                                         <?php if ($discount): ?>
-                                            <span class="bg-primary text-white px-4 py-2 rounded-full text-sm font-bold ml-4">
+                                            <span class="text-white px-4 py-2 rounded-full text-sm font-bold ml-4" style="background-color: <?php echo esc_attr($primary_color); ?>;">
                                                 <?php echo esc_html($discount); ?>
                                             </span>
                                         <?php endif; ?>
@@ -95,7 +135,7 @@ get_template_part('template-parts/hero');
                                         <div class="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-300">
                                             <div class="flex items-center justify-between">
                                                 <span class="text-sm text-gray-600">Mã khuyến mãi:</span>
-                                                <code class="bg-primary text-white px-3 py-1 rounded font-mono text-sm font-bold"><?php echo esc_html($code); ?></code>
+                                                <code class="text-white px-3 py-1 rounded font-mono text-sm font-bold" style="background-color: <?php echo esc_attr($primary_color); ?>;"><?php echo esc_html($code); ?></code>
                                             </div>
                                         </div>
                                     <?php endif; ?>
@@ -119,7 +159,7 @@ get_template_part('template-parts/hero');
                                                 </span>
                                             <?php endif; ?>
                                         </div>
-                                        <a href="<?php the_permalink(); ?>" class="text-primary hover:text-primary-dark font-medium">
+                                        <a href="<?php the_permalink(); ?>" class="font-medium transition-colors" style="color: <?php echo esc_attr($primary_color); ?>;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
                                             Xem chi tiết →
                                         </a>
                                     </div>
@@ -146,8 +186,8 @@ get_template_part('template-parts/hero');
                 <div>
                     <div class="bg-gradient-to-br from-primary/5 via-white to-secondary/5 rounded-lg p-8 border border-gray-200">
                         <div class="text-center mb-6">
-                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span data-icon="bell" data-size="32" class="text-primary"></span>
+                            <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: <?php echo esc_attr($primary_color); ?>10;">
+                                <span data-icon="bell" data-size="32" style="color: <?php echo esc_attr($primary_color); ?>;"></span>
                             </div>
                             <h3 class="text-2xl font-bold text-gray-900 mb-2">Đăng ký nhận thông báo</h3>
                             <p class="text-gray-600">Nhận thông tin về các chương trình khuyến mãi và ưu đãi đặc biệt từ Arata Vietnam.</p>
@@ -220,7 +260,7 @@ get_template_part('template-parts/hero');
                                 </div>
                             </div>
 
-                            <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary text-white py-4 rounded-lg hover:from-primary-dark hover:to-secondary-dark transition-all duration-300 font-medium text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                            <button type="submit" class="w-full text-white py-4 rounded-lg transition-all duration-300 font-medium text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" style="background: linear-gradient(to right, <?php echo esc_attr($primary_color); ?>, <?php echo esc_attr($secondary_color); ?>);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
                                 <span class="flex items-center justify-center">
                                     <span data-icon="send" data-size="20" class="mr-2"></span>
                                     Đăng ký ngay
@@ -230,14 +270,14 @@ get_template_part('template-parts/hero');
 
                         <p class="text-xs text-gray-500 text-center mt-4">
                             Bằng cách đăng ký, bạn đồng ý với
-                            <a href="<?php echo home_url('/chinh-sach-bao-mat'); ?>" class="text-primary hover:underline">Chính sách bảo mật</a>
+                            <a href="<?php echo home_url('/chinh-sach-bao-mat'); ?>" class="hover:underline" style="color: <?php echo esc_attr($primary_color); ?>;">Chính sách bảo mật</a>
                             của chúng tôi.
                         </p>
                     </div>
                 </div>
+                </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
 <?php get_footer(); ?>

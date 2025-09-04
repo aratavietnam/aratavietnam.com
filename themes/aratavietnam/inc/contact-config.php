@@ -215,7 +215,7 @@ function arata_modify_contact_menu_links($items, $args) {
 add_filter('wp_nav_menu_items', 'arata_modify_contact_menu_links', 10, 2);
 
 /**
- * Add JavaScript to handle contact menu clicks globally
+ * Add JavaScript to handle contact menu clicks globally (Cache-safe version)
  */
 function arata_add_contact_popup_script() {
     if (!arata_get_contact_popup_mode()) {
@@ -223,44 +223,244 @@ function arata_add_contact_popup_script() {
     }
     ?>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Handle contact menu clicks globally
-        document.addEventListener('click', function(e) {
-            const target = e.target.closest('a');
-            if (!target) return;
+    // Cache-safe contact popup handler
+    (function() {
+        'use strict';
+        
+        let popupInitialized = false;
+        let retryCount = 0;
+        const maxRetries = 50; // 5 seconds max wait
+        
+        function initPopupHandler() {
+            // Global click handler with retry mechanism
+            document.addEventListener('click', function(e) {
+                const target = e.target.closest('a');
+                if (!target) return;
 
-            const href = target.getAttribute('href') || '';
-            const isContactLink = href.includes('contact') ||
-                                 href.includes('lien-he') ||
-                                 href.includes('liên-hệ') ||
-                                 target.getAttribute('data-contact-popup') === 'true';
+                const href = target.getAttribute('href') || '';
+                const isContactLink = href.includes('contact') ||
+                                     href.includes('lien-he') ||
+                                     href.includes('liên-hệ') ||
+                                     target.getAttribute('data-contact-popup') === 'true';
 
-            if (isContactLink) {
+                if (!isContactLink) return;
+                
                 e.preventDefault();
                 e.stopPropagation();
 
-                // Check if popup is available and enabled
-                if (typeof arataContactPopup !== 'undefined' && arataContactPopup.settings.enabled) {
-                    // Try to call the popup function
-                    if (typeof initContactPopup === 'function') {
-                        initContactPopup();
-                    } else if (typeof openPopup === 'function') {
-                        openPopup();
-                    } else {
-                        // Fallback: check for popup element
-                        const popup = document.getElementById('arata-contact-popup');
-                        if (popup) {
-                            popup.style.display = 'flex';
-                            document.body.classList.add('arata-popup-open');
-                        }
-                    }
-                } else {
-                    // Fallback to contact page
-                    window.location.href = href;
+                // Try to open the popup with fallback mechanisms
+                tryOpenPopup();
+            });
+        }
+        
+        function tryOpenPopup() {
+            // Method 1: Check if arataContactPopup object exists and popup is enabled
+            if (typeof window.arataContactPopup !== 'undefined' && 
+                window.arataContactPopup.settings && 
+                window.arataContactPopup.settings.enabled) {
+                
+                // Method 1a: Try to find existing popup element
+                let popup = document.getElementById('arata-contact-popup');
+                if (popup) {
+                    showExistingPopup(popup);
+                    return;
                 }
+                
+                // Method 1b: Try to initialize popup if function exists
+                if (typeof window.initContactPopup === 'function') {
+                    try {
+                        window.initContactPopup();
+                        return;
+                    } catch (e) {
+                        console.warn('initContactPopup failed:', e);
+                    }
+                }
+                
+                // Method 1c: Create popup manually
+                createPopupManually();
+                return;
             }
-        });
-    });
+            
+            // Method 2: Wait for dependencies and retry
+            if (retryCount < maxRetries) {
+                retryCount++;
+                setTimeout(tryOpenPopup, 100);
+                return;
+            }
+            
+            // Method 3: Fallback to contact page
+            const contactUrl = '<?php echo home_url('/lien-he/'); ?>';
+            if (contactUrl) {
+                window.location.href = contactUrl;
+            }
+        }
+        
+        function showExistingPopup(popup) {
+            popup.style.display = 'flex';
+            setTimeout(() => {
+                popup.classList.remove('opacity-0');
+                const popupContent = popup.querySelector('div > div');
+                if (popupContent) {
+                    popupContent.classList.remove('scale-95');
+                }
+            }, 10);
+            document.body.classList.add('overflow-hidden');
+            
+            const firstInput = popup.querySelector('input[name="name"]');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }
+        
+        function createPopupManually() {
+            if (document.getElementById('arata-contact-popup')) return;
+            
+            const settings = window.arataContactPopup.settings;
+            const widthClasses = {
+                sm: 'max-w-sm',
+                md: 'max-w-2xl', 
+                lg: 'max-w-4xl',
+                xl: 'max-w-6xl'
+            };
+            
+            const popupHTML = `
+                <div id="arata-contact-popup" class="fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+                    <div class="bg-white rounded-lg shadow-xl w-full ${widthClasses[settings.width] || 'max-w-2xl'} max-h-[90vh] flex flex-col transform transition-transform duration-300 scale-95">
+                        <div class="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
+                            <h2 class="text-lg lg:text-xl font-semibold text-gray-900">${settings.title}</h2>
+                            <button type="button" class="arata-popup-close text-gray-400 hover:text-gray-600 transition-colors" aria-label="Close popup">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                        <div class="p-4 lg:p-6 overflow-y-auto">
+                            <p class="text-sm text-gray-600 mb-4">${settings.description}</p>
+                            <form id="arata-popup-form" class="space-y-4">
+                                <input type="hidden" name="action" value="arata_popup_contact_submit" />
+                                <input type="hidden" name="nonce" value="${window.arataContactPopup.nonce}" />
+                                <input type="text" name="website" value="" class="hidden" tabindex="-1" autocomplete="off" />
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="popup-name" class="block text-sm font-medium text-gray-700 mb-1">Họ và tên *</label>
+                                        <input id="popup-name" name="name" type="text" required placeholder="Nhập họ và tên của bạn" class="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                                    </div>
+                                    <div>
+                                        <label for="popup-email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                                        <input id="popup-email" name="email" type="email" required placeholder="example@email.com" class="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                                    </div>
+                                    <div>
+                                        <label for="popup-phone" class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
+                                        <input id="popup-phone" name="phone" type="tel" placeholder="0123 456 789" class="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                                    </div>
+                                    <div>
+                                        <label for="popup-subject" class="block text-sm font-medium text-gray-700 mb-1">Chủ đề</label>
+                                        <input id="popup-subject" name="subject" type="text" placeholder="Chủ đề liên hệ" class="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="popup-message" class="block text-sm font-medium text-gray-700 mb-1">Nội dung *</label>
+                                    <textarea id="popup-message" name="message" rows="4" required placeholder="Nhập nội dung tin nhắn của bạn..." class="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"></textarea>
+                                </div>
+                                <div class="pt-2">
+                                    <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center rounded-lg bg-primary px-6 py-2.5 text-white font-medium hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                                        <span class="submit-text">Gửi liên hệ</span>
+                                        <svg class="animate-spin -mr-1 ml-2 h-4 w-4 text-white opacity-0 loading-spinner" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', popupHTML);
+            
+            const popup = document.getElementById('arata-contact-popup');
+            bindPopupEvents(popup);
+            showExistingPopup(popup);
+        }
+        
+        function bindPopupEvents(popup) {
+            const closeBtn = popup.querySelector('.arata-popup-close');
+            const form = popup.querySelector('#arata-popup-form');
+            
+            // Close popup
+            closeBtn.addEventListener('click', function() {
+                popup.style.display = 'none';
+                document.body.classList.remove('overflow-hidden');
+            });
+            
+            popup.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    popup.style.display = 'none';
+                    document.body.classList.remove('overflow-hidden');
+                }
+            });
+            
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitContactForm(form);
+            });
+        }
+        
+        function submitContactForm(form) {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const submitText = form.querySelector('.submit-text');
+            const loadingSpinner = form.querySelector('.loading-spinner');
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitText.textContent = 'Đang gửi...';
+            loadingSpinner.classList.remove('opacity-0');
+            
+            const formData = new FormData(form);
+            
+            fetch(window.arataContactPopup.ajaxUrl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitText.textContent = 'Gửi liên hệ';
+                loadingSpinner.classList.add('opacity-0');
+                
+                if (data.success) {
+                    const popup = document.getElementById('arata-contact-popup');
+                    const body = popup.querySelector('.p-4.lg\\:p-6') || popup.querySelector('form').parentElement;
+                    body.innerHTML = `
+                        <div class="text-center py-8">
+                            <svg class="w-16 h-16 mx-auto text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p class="text-lg font-semibold text-gray-900 mb-2">Thành công!</p>
+                            <p class="text-gray-600">${data.data.message}</p>
+                        </div>
+                    `;
+                    setTimeout(() => {
+                        popup.style.display = 'none';
+                        document.body.classList.remove('overflow-hidden');
+                    }, 2000);
+                } else {
+                    alert('Có lỗi xảy ra: ' + (data.data.message || 'Vui lòng thử lại.'));
+                }
+            })
+            .catch(error => {
+                submitBtn.disabled = false;
+                submitText.textContent = 'Gửi liên hệ';
+                loadingSpinner.classList.add('opacity-0');
+                alert('Có lỗi xảy ra. Vui lòng thử lại.');
+            });
+        }
+        
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initPopupHandler);
+        } else {
+            initPopupHandler();
+        }
+    })();
     </script>
     <?php
 }

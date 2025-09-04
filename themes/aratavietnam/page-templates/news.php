@@ -9,72 +9,196 @@ if (!defined('ABSPATH')) { exit; }
 
 get_header();
 
-// Hero
-$hero_title = get_the_title();
-$hero_subtitle = get_post_meta(get_the_ID(), 'arata_news_subtitle', true) ?: 'Cập nhật tin tức mới nhất từ Arata Vietnam';
-set_query_var('title', $hero_title);
-set_query_var('subtitle', $hero_subtitle);
-get_template_part('template-parts/hero');
+// Get customizer color settings
+$primary_color = get_theme_mod('theme_primary_color', '#F55E25');
+$secondary_color = get_theme_mod('theme_secondary_color', '#0066A6');
+$tertiary_color = get_theme_mod('theme_tertiary_color', '#FFAB14');
+$background_color = get_theme_mod('theme_background_color', '#ffffff');
 ?>
 
-<main id="site-content" class="bg-white">
-    <?php
-    // Only show the Page Content section if the page has content in the editor.
-    if (have_posts()) {
-        the_post(); // Set up the post data
-        if (trim(get_the_content())) { // Check if there is actual content, not just whitespace
-            rewind_posts(); // Rewind the loop so it can run again below
-    ?>
-    <!-- Page Content -->
-    <div class="container mx-auto px-4 py-12">
-        <div class="max-w-4xl mx-auto">
-            <article id="post-<?php the_ID(); ?>" <?php post_class('prose max-w-none mb-12'); ?>>
-                <div class="entry-content">
-                    <?php
-                    while (have_posts()) : the_post();
-                        the_content();
-                    endwhile;
-                    ?>
-                </div>
-            </article>
+<main id="site-content" class="min-h-[30vh] flex items-center" style="background-color: <?php echo esc_attr($background_color); ?>;">
+    <div class="container mx-auto px-4 py-16 text-center">
+        <div class="max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4"><?php _e('Blog', 'aratavietnam'); ?></h2>
+            <p class="text-gray-600 leading-relaxed mb-8">
+                <?php _e('Khám phá những bài viết chuyên sâu về hóa mỹ phẩm, xu hướng làm đẹp và kiến thức chăm sóc sắc đẹp từ Nhật Bản.', 'aratavietnam'); ?>
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <button class="news-tab-btn active px-6 py-3 rounded-lg font-medium transition-all duration-300" style="background-color: <?php echo esc_attr($primary_color); ?>; color: white; border-color: <?php echo esc_attr($primary_color); ?>;" data-tab="blog">
+                    <span data-icon="file-text" data-size="18" class="mr-2"></span>
+                    Blog
+                </button>
+                <button class="news-tab-btn px-6 py-3 rounded-lg font-medium transition-all duration-300" style="background: white; color: <?php echo esc_attr($secondary_color); ?>; border: 1px solid #E5E7EB;" data-tab="careers">
+                    <span data-icon="user" data-size="18" class="mr-2"></span>
+                    Tuyển dụng
+                </button>
+                <button class="news-tab-btn px-6 py-3 rounded-lg font-medium transition-all duration-300" style="background: white; color: <?php echo esc_attr($tertiary_color); ?>; border: 1px solid #E5E7EB;" data-tab="promotions">
+                    <span data-icon="megaphone" data-size="18" class="mr-2"></span>
+                    Khuyến mãi
+                </button>
+            </div>
         </div>
     </div>
-    <?php
-        }
-    }
-    ?>
+</main>
 
-    <!-- News Sections -->
-    <div class="bg-gray-50 py-16">
-        <div class="container mx-auto px-4">
-            <!-- Section Navigation -->
-            <div class="text-center mb-12">
-                <div class="flex items-center justify-center mb-4">
-                    <div class="w-12 h-1 bg-primary rounded-full mr-4"></div>
-                    <span class="text-primary font-medium text-sm uppercase tracking-wider">Tin tức & Thông báo</span>
-                    <div class="w-12 h-1 bg-primary rounded-full ml-4"></div>
-                </div>
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">Cập nhật từ Arata Vietnam</h2>
+<!-- Content Sections -->
+<div class="bg-gray-50 py-16">
+    <div class="container mx-auto px-4">
 
-                <!-- Tab Navigation -->
-                <div class="flex flex-wrap justify-center gap-4 mb-8">
-                    <button class="news-tab-btn active px-6 py-3 rounded-lg font-medium transition-all duration-300" data-tab="promotions">
-                        <span data-icon="megaphone" data-size="18" class="mr-2"></span>
-                        Khuyến mãi
-                    </button>
-                    <button class="news-tab-btn px-6 py-3 rounded-lg font-medium transition-all duration-300" data-tab="careers">
-                        <span data-icon="user" data-size="18" class="mr-2"></span>
-                        Tuyển dụng
-                    </button>
-                    <button class="news-tab-btn px-6 py-3 rounded-lg font-medium transition-all duration-300" data-tab="blog">
-                        <span data-icon="file-text" data-size="18" class="mr-2"></span>
-                        Blog
-                    </button>
+            <!-- Blog Section -->
+            <div id="blog-section" class="news-section active">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                    <!-- Main Blog Posts (2/3 width) -->
+                    <div class="lg:col-span-2">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">Bài viết mới nhất</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <?php
+                            $blog_posts = new WP_Query([
+                                'post_type' => 'post',
+                                'posts_per_page' => 6,
+                                'post_status' => 'publish'
+                            ]);
+
+                            if ($blog_posts->have_posts()) :
+                                while ($blog_posts->have_posts()) : $blog_posts->the_post();
+                                    ?>
+                                    <article class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
+                                        <?php if (has_post_thumbnail()): ?>
+                                            <div class="aspect-video overflow-hidden">
+                                                <a href="<?php the_permalink(); ?>">
+                                                    <?php the_post_thumbnail('medium', ['class' => 'w-full h-full object-cover hover:scale-105 transition-transform duration-300']); ?>
+                                                </a>
+                                            </div>
+                                        <?php else: ?>
+                                            <div class="aspect-video bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
+                                                <div class="text-center">
+                                                    <span data-icon="file-text" data-size="32" class="text-gray-400 mb-2"></span>
+                                                    <p class="text-gray-500 text-sm">Arata Vietnam</p>
+                                                </div>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <div class="p-4">
+                                            <!-- Meta info -->
+                                            <div class="flex items-center text-xs text-gray-500 mb-3">
+                                                <span data-icon="calendar" data-size="14" class="mr-1"></span>
+                                                <?php echo get_the_date('d/m/Y'); ?>
+                                                <span class="mx-2">•</span>
+                                                <span data-icon="user" data-size="14" class="mr-1"></span>
+                                                <?php the_author(); ?>
+                                            </div>
+
+                                            <!-- Title -->
+                                            <h4 class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">
+                                                <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
+                                                    <?php the_title(); ?>
+                                                </a>
+                                            </h4>
+
+                                            <!-- Meta Description (Excerpt) -->
+                                            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                                                <?php
+                                                $excerpt = get_the_excerpt();
+                                                if (empty($excerpt)) {
+                                                    $excerpt = wp_trim_words(get_the_content(), 20);
+                                                }
+                                                echo esc_html($excerpt);
+                                                ?>
+                                            </p>
+
+                                            <!-- Read more link -->
+                                            <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm">
+                                                Đọc tiếp
+                                                <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
+                                            </a>
+                                        </div>
+                                    </article>
+                                    <?php
+                                endwhile;
+                                wp_reset_postdata();
+                            else:
+                                ?>
+                                <div class="col-span-2 text-center py-12">
+                                    <div class="text-gray-400 mb-4">
+                                        <span data-icon="file-text" data-size="48"></span>
+                                    </div>
+                                    <h3 class="text-lg font-medium text-gray-900 mb-2">Chưa có bài viết nào</h3>
+                                    <p class="text-gray-600">Hãy quay lại sau để đọc những bài viết mới nhất từ Arata Vietnam.</p>
+                                </div>
+                                <?php
+                            endif;
+                            ?>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar (1/3 width) -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white rounded-xl p-6 sticky top-8 shadow-sm">
+                            <h3 class="text-xl font-bold text-gray-900 mb-6 pb-3 border-b border-gray-200">
+                                Bài viết được đọc nhiều nhất
+                            </h3>
+
+                            <div class="space-y-4">
+                                <?php
+                                $sidebar_posts = new WP_Query([
+                                    'post_type' => 'post',
+                                    'posts_per_page' => 5,
+                                    'post_status' => 'publish',
+                                    'meta_key' => 'post_views_count',
+                                    'orderby' => 'meta_value_num',
+                                    'order' => 'DESC',
+                                    'date_query' => [
+                                        ['after' => '1 month ago']
+                                    ]
+                                ]);
+
+                                if ($sidebar_posts->have_posts()) :
+                                    while ($sidebar_posts->have_posts()) : $sidebar_posts->the_post();
+                                        ?>
+                                        <div class="border-b border-gray-100/80 pb-3 mb-3 last:border-b-0 last:pb-0 last:mb-0">
+                                            <a href="<?php the_permalink(); ?>" class="flex items-start space-x-4 group">
+                                                <?php if (has_post_thumbnail()): ?>
+                                                    <div class="flex-shrink-0 w-20 h-16">
+                                                        <?php the_post_thumbnail('thumbnail', ['class' => 'w-full h-full object-cover rounded-md group-hover:opacity-90 transition-opacity']); ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <div class="flex-1">
+                                                    <h4 class="text-sm font-semibold text-gray-900 mb-1 line-clamp-2 leading-relaxed group-hover:text-primary transition-colors">
+                                                        <?php the_title(); ?>
+                                                    </h4>
+                                                    <div class="flex items-center text-xs text-gray-500">
+                                                        <span data-icon="calendar" data-size="12" class="mr-1"></span>
+                                                        <?php echo get_the_date('d/m/Y'); ?>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <?php
+                                    endwhile;
+                                    wp_reset_postdata();
+                                else:
+                                    ?>
+                                    <p class="text-gray-600 text-sm">Không có bài viết khác.</p>
+                                    <?php
+                                endif;
+                                ?>
+                            </div>
+
+                            <!-- View all posts link -->
+                            <div class="mt-6 pt-4 border-t border-gray-200">
+                                <a href="<?php echo home_url('/blog'); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm">
+                                    Xem tất cả bài viết
+                                    <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Promotions Section -->
-            <div id="promotions-section" class="news-section active">
+            <div id="promotions-section" class="news-section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <?php
                     $promotions = new WP_Query([
@@ -102,7 +226,7 @@ get_template_part('template-parts/hero');
                     ?>
                 </div>
                 <div class="mt-8 text-center">
-                    <a href="<?php echo home_url('/khuyen-mai'); ?>" class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors duration-300">
+                    <a href="<?php echo home_url('/khuyen-mai'); ?>" class="inline-flex items-center px-6 py-3 rounded-lg hover:opacity-90 transition-opacity duration-300" style="background-color: <?php echo esc_attr($primary_color); ?>; color: white;">
                         Xem tất cả khuyến mãi
                         <span data-icon="arrow-right" data-size="18" class="ml-2"></span>
                     </a>
@@ -178,7 +302,7 @@ get_template_part('template-parts/hero');
                 </div>
 
                 <div class="mt-8 text-center">
-                    <a href="<?php echo home_url('/tuyen-dung'); ?>" class="inline-flex items-center px-6 py-3 bg-secondary text-white rounded-lg hover:bg-secondary-dark transition-colors duration-300">
+                    <a href="<?php echo home_url('/tuyen-dung'); ?>" class="inline-flex items-center px-6 py-3 rounded-lg hover:opacity-90 transition-opacity duration-300" style="background-color: <?php echo esc_attr($secondary_color); ?>; color: white;">
                         Xem tất cả vị trí tuyển dụng
                         <span data-icon="arrow-right" data-size="18" class="ml-2"></span>
                     </a>

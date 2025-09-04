@@ -11,12 +11,18 @@ require_once get_template_directory() . '/inc/favicon-pwa.php';
 require_once get_template_directory() . '/inc/logo-branding.php';
 require_once get_template_directory() . '/inc/customizer-footer.php';
 require_once get_template_directory() . '/inc/customizer-colors.php';
+
+// Include page meta boxes
+require_once get_template_directory() . '/inc/shop-meta.php';
 require_once get_template_directory() . '/inc/contact-form.php';
 require_once get_template_directory() . '/inc/contact-meta.php';
 require_once get_template_directory() . '/inc/contact-config.php';
 require_once get_template_directory() . '/inc/news-post-types.php';
 require_once get_template_directory() . '/inc/news-meta-fields.php';
 require_once get_template_directory() . '/inc/news-forms.php';
+require_once get_template_directory() . '/inc/blog-meta.php';
+require_once get_template_directory() . '/inc/careers-meta.php';
+require_once get_template_directory() . '/inc/promotions-meta.php';
 require_once get_template_directory() . '/inc/class-dropdown-walker.php';
 // // require_once get_template_directory() . '/inc/about-meta.php';
 require_once get_template_directory() . '/inc/admin-columns.php';
@@ -177,16 +183,26 @@ add_filter('script_loader_tag', function ($tag, $handle, $src) {
     return $tag;
 }, 10, 3);
 
-
-
-
-
 function aratavietnam_enqueue_custom_scripts() {
-    if (is_front_page()) {
-        wp_enqueue_script('aratavietnam-about-slider', get_template_directory_uri() . '/assets/js/about-slider.js', array(), '1.0.5', true);
+    $version = wp_get_theme()->get('Version');
+    // Enqueue scripts
+    wp_enqueue_script('aratavietnam-app', get_template_directory_uri() . '/dist/js/app.js', [], $version, true);
+    
+    // Enqueue notification system globally
+    wp_enqueue_script('aratavietnam-notifications', get_template_directory_uri() . '/dist/js/notifications.js', [], $version, true);
+    
+    // Enqueue add-to-cart functionality on relevant pages
+    if (is_shop() || is_product_category() || is_product_tag() || is_product() || is_woocommerce()) {
+        wp_enqueue_script('aratavietnam-add-to-cart', get_template_directory_uri() . '/dist/js/add-to-cart.js', ['aratavietnam-notifications'], $version, true);
+    }
+    
+    // Enqueue product-specific scripts on single product pages
+    if (is_product()) {
+        wp_enqueue_script('aratavietnam-product-single', get_template_directory_uri() . '/dist/js/product-single.js', ['aratavietnam-app', 'aratavietnam-add-to-cart'], $version, true);
     }
 }
 add_action('wp_enqueue_scripts', 'aratavietnam_enqueue_custom_scripts');
+
 // Track post views
 function arata_get_post_views($postID){
     $count_key = 'post_views_count';
@@ -236,18 +252,18 @@ add_filter('comment_form_defaults', function ($defaults) {
     $consent   = empty($commenter['comment_author_email']) ? '' : ' checked="checked"';
     $defaults['fields']['cookies'] = '<p class="comment-form-cookies-consent">' .
                                      '<input id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes"' . $consent . ' />' .
-                                     '<label for="wp-comment-cookies-consent">' . __('Lưu tên, email và trang web của tôi trong trình duyệt này cho lần bình luận tiếp theo.', 'aratavietnam') . '</label>' .
+                                     '<label for="wp-comment-cookies-consent">' . __('Save my name, email, and website in this browser for the next time I comment.', 'aratavietnam') . '</label>' .
                                      '</p>';
     return $defaults;
 });
 
-// WooCommerce: Vietnamese add-to-cart message (simple & small)
+// WooCommerce: Add-to-cart message
 add_filter('wc_add_to_cart_message_html', function($message, $products){
     $cart_url = function_exists('wc_get_cart_url') ? wc_get_cart_url() : '/gio-hang';
-    return sprintf('Đã thêm vào giỏ hàng. <a href="%s" class="underline text-primary">Xem giỏ hàng</a>', esc_url($cart_url));
+    return sprintf('Added to cart. <a href="%s" class="underline text-primary">View cart</a>', esc_url($cart_url));
 }, 10, 2);
 
-// WooCommerce: Vietnamese checkout translations
+// WooCommerce: Checkout translations
 add_filter('woocommerce_checkout_fields', function($fields) {
     // Billing fields
     if (isset($fields['billing'])) {
@@ -321,9 +337,9 @@ add_filter('gettext', function($translation, $text, $domain) {
             case 'Total':
                 return 'Tổng cộng';
             case 'Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.':
-                return 'Dữ liệu cá nhân của bạn sẽ được sử dụng để xử lý đơn hàng, hỗ trợ trải nghiệm của bạn trên toàn bộ trang web này và cho các mục đích khác được mô tả trong chính sách bảo mật của chúng tôi.';
+                return 'Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.';
             case 'Sorry, it seems that there are no available payment methods. Please contact us if you require assistance or wish to make alternate arrangements.':
-                return 'Xin lỗi, có vẻ như không có phương thức thanh toán nào khả dụng. Vui lòng liên hệ với chúng tôi nếu bạn cần hỗ trợ hoặc muốn sắp xếp phương thức thay thế.';
+                return 'Sorry, it seems that there are no available payment methods. Please contact us if you require assistance or wish to make alternate arrangements.';
         }
     }
     return $translation;
@@ -334,7 +350,7 @@ add_filter('woocommerce_cart_item_name', function($name, $cart_item, $cart_item_
     return $name;
 }, 10, 3);
 
-// WooCommerce: Specific checkout text translations
+// WooCommerce: Checkout text translations
 add_filter('woocommerce_checkout_privacy_policy_text', function($text) {
     return 'Dữ liệu cá nhân của bạn sẽ được sử dụng để xử lý đơn hàng, hỗ trợ trải nghiệm của bạn trên toàn bộ trang web này và cho các mục đích khác được mô tả trong chính sách bảo mật của chúng tôi.';
 });
@@ -394,7 +410,7 @@ add_filter('woocommerce_no_available_payment_methods_message', function($message
     return 'Xin lỗi, có vẻ như không có phương thức thanh toán nào khả dụng. Vui lòng liên hệ với chúng tôi nếu bạn cần hỗ trợ hoặc muốn sắp xếp phương thức thay thế.';
 });
 
-// WooCommerce: Vietnamese privacy policy text
+// WooCommerce: Privacy policy text
 add_filter('woocommerce_checkout_privacy_policy_text', function($text) {
     return 'Dữ liệu cá nhân của bạn sẽ được sử dụng để xử lý đơn hàng, hỗ trợ trải nghiệm của bạn trên toàn bộ trang web này và cho các mục đích khác được mô tả trong chính sách bảo mật của chúng tôi.';
 });

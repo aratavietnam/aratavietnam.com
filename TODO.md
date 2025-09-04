@@ -21,7 +21,7 @@
 - Footer social media iconsrm
 - Template parts optimization
 
-trang chủ
-về arate đang lỗi nhẹ
-xử lý load trang đẹp
-tôi ưu pagepseed trang chủ
+
+
+lỗi menu ipad
+LIÊN HỆ BẤM lỗi khi bật litespeed

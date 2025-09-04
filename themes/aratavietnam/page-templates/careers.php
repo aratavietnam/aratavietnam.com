@@ -9,46 +9,86 @@ if (!defined('ABSPATH')) { exit; }
 
 get_header();
 
-// Hero
-$hero_title = get_the_title();
-$hero_subtitle = get_post_meta(get_the_ID(), 'arata_news_subtitle', true) ?: 'Cơ hội nghề nghiệp tại Arata Vietnam';
-set_query_var('title', $hero_title);
-set_query_var('subtitle', $hero_subtitle);
-get_template_part('template-parts/hero');
-?>
+// Get global colors
+$primary_color = get_theme_mod('theme_primary_color', '#F55E25');
+$secondary_color = get_theme_mod('theme_secondary_color', '#0066A6');
+$tertiary_color = get_theme_mod('theme_tertiary_color', '#FFAB14');
+$background_color = get_theme_mod('theme_background_color', '#ffffff');
 
-<main id="site-content" class="bg-white">
-    <!-- Page Content -->
-    <div class="container mx-auto px-4 py-10">
-        <article id="post-<?php the_ID(); ?>" <?php post_class('prose max-w-none mb-12'); ?>>
-            <div class="entry-content">
-                <?php
-                while (have_posts()) : the_post();
-                    the_content();
-                endwhile;
-                ?>
-            </div>
-        </article>
-    </div>
+// Hero configuration
+$show_hero = get_post_meta(get_the_ID(), 'arata_show_hero', true) !== '0'; // Default to true if not set
+$use_compact_hero = get_post_meta(get_the_ID(), 'arata_compact_hero', true) === '1';
+$hero_subtitle = get_post_meta(get_the_ID(), 'arata_careers_subtitle', true) ?: 'Cơ hội nghề nghiệp tại Arata Vietnam';
+$hero_intro = get_post_meta(get_the_ID(), 'arata_careers_intro', true) ?: 'Gia nhập đội ngũ Arata Vietnam và phát triển sự nghiệp trong lĩnh vực hóa mỹ phẩm hàng đầu.';
 
-    <!-- Careers Section -->
-    <div class="bg-gray-50 py-16">
-        <div class="container mx-auto px-4">
-            <!-- Section Header -->
-            <div class="text-center mb-12">
-                <div class="flex items-center justify-center mb-4">
-                    <div class="w-12 h-1 bg-primary rounded-full mr-4"></div>
-                    <span class="text-primary font-medium text-sm uppercase tracking-wider">Cơ hội nghề nghiệp</span>
-                    <div class="w-12 h-1 bg-primary rounded-full ml-4"></div>
+// Set hero variables if using full hero
+if ($show_hero && !$use_compact_hero) {
+    set_query_var('title', get_the_title());
+    set_query_var('subtitle', $hero_subtitle);
+}
+
+if ($show_hero) {
+    if ($use_compact_hero) {
+        // Use compact hero inline
+        ?>
+        <main id="site-content" class="min-h-[30vh] flex items-center" style="background-color: <?php echo esc_attr($background_color); ?>;">
+            <div class="container mx-auto px-4 py-16 text-center">
+                <div class="max-w-2xl mx-auto">
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-4"><?php echo esc_html($hero_subtitle); ?></h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        <?php echo esc_html($hero_intro); ?>
+                    </p>
                 </div>
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">Vị trí tuyển dụng</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">
-                    Gia nhập đội ngũ Arata Vietnam và phát triển sự nghiệp trong lĩnh vực hóa mỹ phẩm hàng đầu.
-                </p>
             </div>
+            
+            <!-- Careers Content Section -->
+            <div class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>;">
+                <div class="container mx-auto px-4">
+        <?php
+    } else {
+        // Use full hero template part
+        get_template_part('template-parts/hero');
+        ?>
+        <main id="site-content" class="bg-white">
+            <!-- Careers Content Section -->
+            <div class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>;">
+                <div class="container mx-auto px-4">
+        <?php
+    }
+} else {
+    ?>
+    <main id="site-content" class="bg-white">
+        <!-- Careers Content Section -->
+        <div class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>;">
+            <div class="container mx-auto px-4">
+    <?php
+}
+?>
+                <!-- Page Content -->
+                <article id="post-<?php the_ID(); ?>" <?php post_class('prose max-w-none mb-12'); ?>>
+                    <div class="entry-content">
+                        <?php
+                        while (have_posts()) : the_post();
+                            the_content();
+                        endwhile;
+                        ?>
+                    </div>
+                </article>
+                <!-- Section Header -->
+                <div class="text-center mb-12">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-12 h-1 rounded-full mr-4" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
+                        <span class="font-medium text-sm uppercase tracking-wider" style="color: <?php echo esc_attr($primary_color); ?>;">Cơ hội nghề nghiệp</span>
+                        <div class="w-12 h-1 rounded-full ml-4" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Vị trí tuyển dụng</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        Gia nhập đội ngũ Arata Vietnam và phát triển sự nghiệp trong lĩnh vực hóa mỹ phẩm hàng đầu.
+                    </p>
+                </div>
 
-            <!-- Job Listings -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+                <!-- Job Listings -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
                 <?php
                 $jobs = new WP_Query([
                     'post_type' => 'job_posting',
@@ -96,15 +136,15 @@ get_template_part('template-parts/hero');
                             'director' => 'Giám đốc'
                         ];
                         ?>
-                        <div class="bg-white rounded-lg p-6 border border-gray-200 hover:border-secondary transition-colors duration-300">
+                        <div class="bg-white rounded-lg p-6 border border-gray-200 transition-colors duration-300" style="border-color: <?php echo esc_attr($secondary_color); ?>;" onmouseover="this.style.borderColor='<?php echo esc_attr($secondary_color); ?>'" onmouseout="this.style.borderColor='#E5E7EB'">
                             <div class="flex items-start justify-between mb-4">
                                 <h3 class="text-xl font-semibold text-gray-900 flex-1">
-                                    <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
+                                    <a href="<?php the_permalink(); ?>" class="transition-colors" style="color: inherit;" onmouseover="this.style.color='<?php echo esc_attr($primary_color); ?>'" onmouseout="this.style.color='inherit'">
                                         <?php the_title(); ?>
                                     </a>
                                 </h3>
                                 <?php if ($type): ?>
-                                    <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-medium ml-4">
+                                    <span class="px-3 py-1 rounded-full text-xs font-medium ml-4" style="background-color: <?php echo esc_attr($primary_color); ?>10; color: <?php echo esc_attr($primary_color); ?>;">
                                         <?php echo esc_html($type_labels[$type] ?? $type); ?>
                                     </span>
                                 <?php endif; ?>
@@ -155,10 +195,10 @@ get_template_part('template-parts/hero');
                             <p class="text-gray-600 text-sm mb-4 line-clamp-3"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
 
                             <div class="flex items-center justify-between">
-                                <a href="<?php the_permalink(); ?>" class="text-primary hover:text-primary-dark font-medium text-sm">
+                                <a href="<?php the_permalink(); ?>" class="font-medium text-sm transition-colors" style="color: <?php echo esc_attr($primary_color); ?>;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
                                     Xem chi tiết →
                                 </a>
-                                <button onclick="openApplicationModal('<?php echo esc_js(get_the_title()); ?>')" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors">
+                                <button onclick="openApplicationModal('<?php echo esc_js(get_the_title()); ?>')" class="text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" style="background-color: <?php echo esc_attr($primary_color); ?>;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
                                     Ứng tuyển ngay
                                 </button>
                             </div>
@@ -174,45 +214,45 @@ get_template_part('template-parts/hero');
                         </div>
                         <h3 class="text-lg font-medium text-gray-900 mb-2">Hiện tại chưa có vị trí tuyển dụng</h3>
                         <p class="text-gray-600 mb-6">Chúng tôi sẽ cập nhật các vị trí tuyển dụng mới trong thời gian tới.</p>
-                        <button onclick="openApplicationModal('Ứng tuyển tự do')" class="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-dark transition-colors">
+                        <button onclick="openApplicationModal('Ứng tuyển tự do')" class="text-white px-6 py-3 rounded-lg font-medium transition-colors" style="background-color: <?php echo esc_attr($primary_color); ?>;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
                             Gửi hồ sơ tự do
                         </button>
                     </div>
                     <?php
                 endif;
                 ?>
-            </div>
+                </div>
 
-            <!-- Why Join Us Section -->
-            <div class="bg-white rounded-lg p-8 shadow-sm border border-gray-200">
-                <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Tại sao chọn Arata Vietnam?</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="text-center">
-                        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <span data-icon="users" data-size="32" class="text-primary"></span>
+                <!-- Why Join Us Section -->
+                <div class="bg-white rounded-lg p-8 shadow-sm border border-gray-200">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Tại sao chọn Arata Vietnam?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: <?php echo esc_attr($primary_color); ?>10;">
+                                <span data-icon="users" data-size="32" style="color: <?php echo esc_attr($primary_color); ?>;"></span>
+                            </div>
+                            <h4 class="font-semibold text-gray-900 mb-2">Môi trường chuyên nghiệp</h4>
+                            <p class="text-gray-600 text-sm">Làm việc cùng đội ngũ chuyên gia giàu kinh nghiệm trong lĩnh vực hóa mỹ phẩm.</p>
                         </div>
-                        <h4 class="font-semibold text-gray-900 mb-2">Môi trường chuyên nghiệp</h4>
-                        <p class="text-gray-600 text-sm">Làm việc cùng đội ngũ chuyên gia giàu kinh nghiệm trong lĩnh vực hóa mỹ phẩm.</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <span data-icon="trending-up" data-size="32" class="text-secondary"></span>
+                        <div class="text-center">
+                            <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: <?php echo esc_attr($secondary_color); ?>10;">
+                                <span data-icon="trending-up" data-size="32" style="color: <?php echo esc_attr($secondary_color); ?>;"></span>
+                            </div>
+                            <h4 class="font-semibold text-gray-900 mb-2">Cơ hội phát triển</h4>
+                            <p class="text-gray-600 text-sm">Nhiều cơ hội thăng tiến và phát triển kỹ năng trong môi trường năng động.</p>
                         </div>
-                        <h4 class="font-semibold text-gray-900 mb-2">Cơ hội phát triển</h4>
-                        <p class="text-gray-600 text-sm">Nhiều cơ hội thăng tiến và phát triển kỹ năng trong môi trường năng động.</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="w-16 h-16 bg-tertiary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <span data-icon="heart" data-size="32" class="text-tertiary"></span>
+                        <div class="text-center">
+                            <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: <?php echo esc_attr($tertiary_color); ?>10;">
+                                <span data-icon="heart" data-size="32" style="color: <?php echo esc_attr($tertiary_color); ?>;"></span>
+                            </div>
+                            <h4 class="font-semibold text-gray-900 mb-2">Phúc lợi hấp dẫn</h4>
+                            <p class="text-gray-600 text-sm">Chế độ đãi ngộ cạnh tranh và các phúc lợi đặc biệt cho nhân viên.</p>
                         </div>
-                        <h4 class="font-semibold text-gray-900 mb-2">Phúc lợi hấp dẫn</h4>
-                        <p class="text-gray-600 text-sm">Chế độ đãi ngộ cạnh tranh và các phúc lợi đặc biệt cho nhân viên.</p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
 <!-- Application Modal -->
 <div id="applicationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
@@ -261,7 +301,7 @@ get_template_part('template-parts/hero');
                     <button type="button" onclick="closeApplicationModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800">
                         Hủy
                     </button>
-                    <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition-colors">
+                    <button type="submit" class="text-white px-6 py-2 rounded-lg transition-colors" style="background-color: <?php echo esc_attr($primary_color); ?>;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
                         Gửi hồ sơ
                     </button>
                 </div>
