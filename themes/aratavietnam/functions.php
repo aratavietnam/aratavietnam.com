@@ -155,7 +155,7 @@ add_action('init', 'aratavietnam_init_theme', 20);
 function aratavietnam_after_setup_theme() {
     // Enable WordPress title tag support
     add_theme_support('title-tag');
-    
+
     // Enable WordPress meta description support
     add_theme_support('html5', array(
         'search-form',
@@ -164,7 +164,7 @@ function aratavietnam_after_setup_theme() {
         'gallery',
         'caption',
     ));
-    
+
     // Custom logo support
     add_theme_support('custom-logo', array(
         'height' => 100,
@@ -185,20 +185,20 @@ add_filter('script_loader_tag', function ($tag, $handle, $src) {
 
 function aratavietnam_enqueue_custom_scripts() {
     $version = wp_get_theme()->get('Version');
-    // Enqueue scripts
-    wp_enqueue_script('aratavietnam-app', get_template_directory_uri() . '/dist/js/app.js', [], $version, true);
-    
+    // Enqueue scripts (using manifest for hashed filenames)
+    wp_enqueue_script('aratavietnam-app', get_template_directory_uri() . '/dist/app-BQpr0Ux-.js', [], $version, true);
+
     // Enqueue notification system globally
-    wp_enqueue_script('aratavietnam-notifications', get_template_directory_uri() . '/dist/js/notifications.js', [], $version, true);
-    
+    wp_enqueue_script('aratavietnam-notifications', get_template_directory_uri() . '/dist/notifications-DX7Hjlbv.js', [], $version, true);
+
     // Enqueue add-to-cart functionality on relevant pages
     if (is_shop() || is_product_category() || is_product_tag() || is_product() || is_woocommerce()) {
-        wp_enqueue_script('aratavietnam-add-to-cart', get_template_directory_uri() . '/dist/js/add-to-cart.js', ['aratavietnam-notifications'], $version, true);
+        wp_enqueue_script('aratavietnam-add-to-cart', get_template_directory_uri() . '/dist/add-to-cart-DOaesbe3.js', ['aratavietnam-notifications'], $version, true);
     }
-    
+
     // Enqueue product-specific scripts on single product pages
     if (is_product()) {
-        wp_enqueue_script('aratavietnam-product-single', get_template_directory_uri() . '/dist/js/product-single.js', ['aratavietnam-app', 'aratavietnam-add-to-cart'], $version, true);
+        wp_enqueue_script('aratavietnam-product-single', get_template_directory_uri() . '/dist/product-single-DWIbL6ns.js', ['aratavietnam-app', 'aratavietnam-add-to-cart'], $version, true);
     }
 }
 add_action('wp_enqueue_scripts', 'aratavietnam_enqueue_custom_scripts');

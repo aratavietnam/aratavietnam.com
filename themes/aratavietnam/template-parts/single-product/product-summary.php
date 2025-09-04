@@ -298,13 +298,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 quantityInput.dataset.inputInitialized = 'true';
             }
             
-            console.log('Quantity controls initialized successfully');
+            // Quantity controls initialized successfully
         } else {
-            console.log('Quantity controls not found:', {
-                input: !!quantityInput,
-                minus: !!minusButton,
-                plus: !!plusButton
-            });
+            // Quantity controls not found
         }
     }
     

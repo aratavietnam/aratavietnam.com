@@ -27,7 +27,7 @@ class NotificationManager {
     show(message, type = 'info', duration = 5000, options = {}) {
         const notification = this.createNotification(message, type, options);
         this.container.appendChild(notification);
-        
+
         // Animate in
         requestAnimationFrame(() => {
             notification.classList.remove('translate-x-full', 'opacity-0');
@@ -47,39 +47,35 @@ class NotificationManager {
         const notification = document.createElement('div');
         notification.className = `
             transform translate-x-full opacity-0 transition-all duration-300 ease-in-out
-            bg-white border border-gray-200 rounded-lg shadow-lg p-4 
-            flex items-start space-x-3 max-w-sm
+            bg-white border border-gray-200 rounded-lg shadow-md p-3
+            flex items-center space-x-2 max-w-xs
         `;
 
-        const { icon, bgColor, textColor, borderColor } = this.getTypeStyles(type);
+        const { icon, bgColor, textColor } = this.getTypeStyles(type);
 
         notification.innerHTML = `
             <div class="flex-shrink-0">
-                <div class="w-5 h-5 ${bgColor} ${textColor} rounded-full flex items-center justify-center">
+                <div class="w-4 h-4 ${bgColor} ${textColor} rounded-full flex items-center justify-center">
                     ${icon}
                 </div>
             </div>
             <div class="flex-1 min-w-0">
-                <div class="text-sm font-medium text-gray-900">
+                <div class="text-xs font-medium text-gray-900">
                     ${message}
                 </div>
                 ${options.description ? `
-                    <div class="text-xs text-gray-500 mt-1">
+                    <div class="text-xs text-gray-500 mt-0.5">
                         ${options.description}
                     </div>
                 ` : ''}
                 ${options.actions ? this.createActions(options.actions) : ''}
             </div>
-            <button class="flex-shrink-0 ml-2 text-gray-400 hover:text-gray-600 transition-colors" onclick="window.notificationManager.remove(this.closest('.transform'))">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button class="flex-shrink-0 ml-1 text-gray-400 hover:text-gray-600 transition-colors" onclick="window.notificationManager.remove(this.closest('.transform'))">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
         `;
-
-        // Add border color
-        notification.style.borderLeftColor = borderColor;
-        notification.style.borderLeftWidth = '4px';
 
         return notification;
     }
@@ -111,16 +107,16 @@ class NotificationManager {
                 borderColor: '#3b82f6'
             }
         };
-        
+
         return styles[type] || styles.info;
     }
 
     createActions(actions) {
         return `
-            <div class="mt-2 flex space-x-2">
+            <div class="mt-1 flex space-x-1">
                 ${actions.map(action => `
-                    <button 
-                        class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded transition-colors"
+                    <button
+                        class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-1.5 py-0.5 rounded transition-colors"
                         onclick="${action.onclick}"
                     >
                         ${action.text}
@@ -134,7 +130,7 @@ class NotificationManager {
         if (!notification || !notification.parentNode) return;
 
         notification.classList.add('translate-x-full', 'opacity-0');
-        
+
         setTimeout(() => {
             if (notification.parentNode) {
                 notification.parentNode.removeChild(notification);
@@ -169,5 +165,7 @@ class NotificationManager {
 // Initialize global notification manager
 window.notificationManager = new NotificationManager();
 
-// Export for modules
-export default NotificationManager;
+// Make available globally for WordPress
+if (typeof window !== 'undefined') {
+    window.NotificationManager = NotificationManager;
+}

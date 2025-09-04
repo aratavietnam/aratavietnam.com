@@ -7,6 +7,12 @@ if (!defined('ABSPATH')) { exit; }
 
 get_header();
 
+// Get global colors
+$primary_color = get_theme_mod('theme_primary_color', '#F55E25');
+$secondary_color = get_theme_mod('theme_secondary_color', '#0066A6');
+$tertiary_color = get_theme_mod('theme_tertiary_color', '#FFAB14');
+$background_color = get_theme_mod('theme_background_color', '#ffffff');
+
 // Hero
 $hero_title = 'Tuyển dụng';
 $hero_subtitle = 'Cơ hội nghề nghiệp tại Arata Vietnam'; // Default subtitle
@@ -17,12 +23,12 @@ $careers_page = get_pages(['meta_key' => '_wp_page_template', 'meta_value' => 'p
 if (!empty($careers_page)) {
     $careers_page_id = $careers_page[0]->ID;
 
-    $saved_subtitle = get_post_meta($careers_page_id, 'arata_news_subtitle', true);
+    $saved_subtitle = get_post_meta($careers_page_id, 'arata_careers_subtitle', true);
     if (!empty($saved_subtitle)) {
         $hero_subtitle = $saved_subtitle;
     }
 
-    $saved_description = get_post_meta($careers_page_id, 'arata_news_intro', true);
+    $saved_description = get_post_meta($careers_page_id, 'arata_careers_intro', true);
     if (!empty($saved_description)) {
         $hero_description = $saved_description;
     }
@@ -53,9 +59,9 @@ get_template_part('template-parts/hero');
             <!-- Section Header -->
             <div class="text-center mb-12">
                 <div class="flex items-center justify-center mb-4">
-                    <div class="w-12 h-1 bg-primary rounded-full mr-4"></div>
-                    <span class="text-primary font-medium text-sm uppercase tracking-wider">Cơ hội nghề nghiệp</span>
-                    <div class="w-12 h-1 bg-primary rounded-full ml-4"></div>
+                    <div class="w-12 h-1 rounded-full mr-4" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
+                    <span class="font-medium text-sm uppercase tracking-wider" style="color: <?php echo esc_attr($primary_color); ?>;">Cơ hội nghề nghiệp</span>
+                    <div class="w-12 h-1 rounded-full ml-4" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
                 </div>
                 <h2 class="text-3xl font-bold text-gray-900 mb-6">Vị trí tuyển dụng hiện tại</h2>
             </div>
@@ -94,7 +100,7 @@ get_template_part('template-parts/hero');
                             'director' => 'Giám đốc'
                         ];
                         ?>
-                        <div class="bg-white rounded-lg border border-gray-200 hover:border-secondary transition-colors duration-300 flex flex-col">
+                        <div class="bg-white rounded-lg border border-gray-200 transition-colors duration-300 flex flex-col" style="border-color: #E5E7EB;" onmouseover="this.style.borderColor='<?php echo esc_attr($secondary_color); ?>'" onmouseout="this.style.borderColor='#E5E7EB'">
                             <?php if (has_post_thumbnail()) : ?>
                                 <a href="<?php the_permalink(); ?>" class="block aspect-video">
                                     <?php the_post_thumbnail('medium', ['class' => 'w-full h-full object-cover']); ?>
@@ -108,12 +114,12 @@ get_template_part('template-parts/hero');
                             <div class="p-6 flex-grow flex flex-col">
                                 <div class="mb-4">
                                     <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                                        <a href="<?php the_permalink(); ?>" class="hover:text-secondary transition-colors">
+                                        <a href="<?php the_permalink(); ?>" class="transition-colors" style="color: inherit;" onmouseover="this.style.color='<?php echo esc_attr($secondary_color); ?>'" onmouseout="this.style.color='inherit'">
                                             <?php the_title(); ?>
                                         </a>
                                     </h3>
                                     <?php if ($department): ?>
-                                        <p class="text-secondary font-medium text-sm mb-1"><?php echo esc_html($department); ?></p>
+                                        <p class="font-medium text-sm mb-1" style="color: <?php echo esc_attr($secondary_color); ?>;"><?php echo esc_html($department); ?></p>
                                     <?php endif; ?>
                                 </div>
 
@@ -169,7 +175,7 @@ get_template_part('template-parts/hero');
                                 <?php endif; ?>
 
                                 <div class="pt-4 border-t border-gray-200 mt-auto">
-                                    <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-secondary hover:text-secondary-dark font-medium text-sm">
+                                    <a href="<?php the_permalink(); ?>" class="inline-flex items-center font-medium text-sm transition-colors" style="color: <?php echo esc_attr($secondary_color); ?>;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
                                         Xem chi tiết
                                         <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
                                     </a>
@@ -185,7 +191,7 @@ get_template_part('template-parts/hero');
                         </div>
                         <h3 class="text-xl font-semibold text-gray-900 mb-2">Hiện tại chưa có vị trí tuyển dụng nào</h3>
                         <p class="text-gray-600 mb-6">Chúng tôi sẽ cập nhật thông tin tuyển dụng mới nhất tại đây.</p>
-                        <a href="<?php echo home_url('/tin-tuc'); ?>" class="inline-flex items-center bg-secondary text-white px-6 py-3 rounded-lg hover:bg-secondary-dark transition-colors">
+                        <a href="<?php echo home_url('/tin-tuc'); ?>" class="inline-flex items-center text-white px-6 py-3 rounded-lg transition-colors" style="background-color: <?php echo esc_attr($secondary_color); ?>;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
                             <span data-icon="arrow-left" data-size="16" class="mr-2"></span>
                             Quay lại trang tin tức
                         </a>
@@ -211,11 +217,11 @@ get_template_part('template-parts/hero');
     </div>
 
     <!-- Newsletter Signup -->
-    <div class="bg-primary/5 py-16">
+    <div class="py-16" style="background-color: <?php echo esc_attr($primary_color); ?>10;">
         <div class="container mx-auto px-4">
             <div class="max-w-2xl mx-auto text-center">
-                <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span data-icon="megaphone" data-size="32" class="text-primary"></span>
+                <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style="background-color: <?php echo esc_attr($primary_color); ?>10;">
+                    <span data-icon="megaphone" data-size="32" style="color: <?php echo esc_attr($primary_color); ?>;"></span>
                 </div>
                 <h3 class="text-2xl font-bold text-gray-900 mb-4">Đăng ký nhận thông báo tuyển dụng</h3>
                 <p class="text-gray-600 mb-8">
@@ -228,17 +234,19 @@ get_template_part('template-parts/hero');
 
                     <div>
                         <input name="name" type="text" required
-                               class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+                               class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-300"
+                               style="--tw-ring-color: <?php echo esc_attr($primary_color); ?>;"
                                placeholder="Họ và tên *" />
                     </div>
 
                     <div>
                         <input name="email" type="email" required
-                               class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+                               class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-300"
+                               style="--tw-ring-color: <?php echo esc_attr($primary_color); ?>;"
                                placeholder="Email *" />
                     </div>
 
-                    <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-dark transition-colors font-medium">
+                    <button type="submit" class="w-full text-white py-3 rounded-lg transition-colors font-medium" style="background-color: <?php echo esc_attr($primary_color); ?>;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
                         Đăng ký ngay
                     </button>
                 </form>

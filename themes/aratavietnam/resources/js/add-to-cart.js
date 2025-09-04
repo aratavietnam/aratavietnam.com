@@ -3,7 +3,8 @@
  * Handles AJAX add to cart with comprehensive feedback
  */
 
-import NotificationManager from './notifications.js';
+// Import will be handled by Vite build process
+// import NotificationManager from './notifications.js';
 
 class AddToCartManager {
     constructor() {
@@ -118,7 +119,7 @@ class AddToCartManager {
 
     async addToCartAjax(data) {
         const formData = new FormData();
-        formData.append('action', 'woocommerce_add_to_cart');
+        formData.append('action', 'arata_add_to_cart');
         formData.append('product_id', data.product_id);
         formData.append('quantity', data.quantity);
         
@@ -127,8 +128,8 @@ class AddToCartManager {
         }
 
         // Add nonce if available
-        if (window.wc_add_to_cart_params?.wc_ajax_nonce) {
-            formData.append('_wpnonce', window.wc_add_to_cart_params.wc_ajax_nonce);
+        if (window.wc_add_to_cart_params?.arata_ajax_nonce) {
+            formData.append('nonce', window.wc_add_to_cart_params.arata_ajax_nonce);
         }
 
         const response = await fetch(window.wc_add_to_cart_params?.ajax_url || '/wp-admin/admin-ajax.php', {
@@ -143,9 +144,17 @@ class AddToCartManager {
 
         const result = await response.text();
         
+        // Debug logging
+        console.log('AJAX Response:', result);
+        
         try {
-            return JSON.parse(result);
+            const parsed = JSON.parse(result);
+            console.log('Parsed Response:', parsed);
+            return parsed;
         } catch (e) {
+            console.error('JSON Parse Error:', e);
+            console.log('Raw Response:', result);
+            
             // Handle HTML response (typical WooCommerce behavior)
             if (result.includes('error') || result.includes('Error')) {
                 return { success: false, data: { message: 'Có lỗi xảy ra khi thêm sản phẩm' } };
@@ -183,27 +192,28 @@ class AddToCartManager {
 
     handleError(data) {
         const message = data?.message || 'Có lỗi xảy ra khi thêm sản phẩm';
+        const errorType = data?.type || 'generic';
         
-        if (message.includes('stock') || message.includes('hết hàng') || message.includes('out of stock')) {
-            this.handleOutOfStock();
-        } else if (message.includes('quantity') || message.includes('số lượng')) {
-            this.handleInvalidQuantity(message);
-        } else {
-            this.showError(message);
+        switch (errorType) {
+            case 'out_of_stock':
+                this.handleOutOfStock(message);
+                break;
+            case 'cart_full':
+                this.handleCartFull(data);
+                break;
+            case 'insufficient_stock':
+                this.handleInsufficientStock(data);
+                break;
+            default:
+                this.showError(message);
         }
     }
 
-    handleOutOfStock() {
+    handleOutOfStock(message) {
         window.notificationManager.error(
             'Sản phẩm đã hết hàng',
             {
-                description: 'Sản phẩm này hiện tại không còn hàng trong kho',
-                actions: [
-                    {
-                        text: 'Thông báo khi có hàng',
-                        onclick: 'this.closest(".transform").querySelector("button").click(); alert("Tính năng sẽ sớm được cập nhật!");'
-                    }
-                ]
+                description: message || 'Sản phẩm này hiện tại không còn hàng trong kho'
             }
         );
 
@@ -217,19 +227,49 @@ class AddToCartManager {
         }
     }
 
-    handleInvalidQuantity(message) {
+    handleCartFull(data) {
         window.notificationManager.warning(
-            'Số lượng không hợp lệ',
+            'Giỏ hàng đã đầy',
             {
-                description: message,
+                description: `${data.message} (${data.cart_quantity}/${data.stock_quantity})`,
                 actions: [
                     {
-                        text: 'Điều chỉnh',
-                        onclick: 'document.querySelector("[name=quantity]")?.focus(); window.notificationManager.remove(this.closest(".transform"));'
+                        text: 'Xem giỏ hàng',
+                        onclick: `window.location.href='${this.getCartUrl()}'`
                     }
                 ]
             }
         );
+    }
+
+    handleInsufficientStock(data) {
+        window.notificationManager.warning(
+            'Không đủ hàng trong kho',
+            {
+                description: data.message,
+                actions: [
+                    {
+                        text: `Thêm ${data.remaining}`,
+                        onclick: `this.updateQuantityAndAddToCart(${data.remaining}); window.notificationManager.remove(this.closest(".transform"));`
+                    },
+                    {
+                        text: 'Xem giỏ hàng',
+                        onclick: `window.location.href='${this.getCartUrl()}'`
+                    }
+                ]
+            }
+        );
+    }
+
+    updateQuantityAndAddToCart(quantity) {
+        const quantityInput = document.querySelector('[name="quantity"]');
+        if (quantityInput) {
+            quantityInput.value = quantity;
+            const form = quantityInput.closest('form');
+            if (form) {
+                this.handleAddToCart(form);
+            }
+        }
     }
 
     handleAddedToCart(data) {

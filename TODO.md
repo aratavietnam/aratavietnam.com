@@ -25,3 +25,4 @@
 
 lỗi menu ipad
 LIÊN HỆ BẤM lỗi khi bật litespeed
+fix settings trang trong admin

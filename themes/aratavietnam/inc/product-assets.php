@@ -87,8 +87,8 @@ add_filter('body_class', 'aratavietnam_product_body_classes');
  */
 function aratavietnam_product_css_variables() {
     if (function_exists('is_product') && (is_product() || (function_exists('is_shop') && (is_shop() || is_product_category() || is_product_tag())))) {
-        $primary_color = get_theme_mod('primary_color', '#3b82f6');
-        $secondary_color = get_theme_mod('secondary_color', '#10b981');
+        $primary_color = get_theme_mod('theme_primary_color', '#F55E25');
+        $secondary_color = get_theme_mod('theme_secondary_color', '#0066A6');
 
         echo "<style>:root { --primary-color: {$primary_color}; --secondary-color: {$secondary_color}; }</style>\n";
     }

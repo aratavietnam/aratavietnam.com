@@ -7,6 +7,12 @@ if (!defined('ABSPATH')) { exit; }
 
 get_header();
 
+// Get global colors from theme customizer
+$primary_color = get_theme_mod('theme_primary_color', '#F55E25');
+$secondary_color = get_theme_mod('theme_secondary_color', '#0066A6');
+$tertiary_color = get_theme_mod('theme_tertiary_color', '#FFB800');
+$background_color = get_theme_mod('theme_background_color', '#FFFFFF');
+
 
 // Hero
 $hero_title = 'Khuyến mãi';
@@ -18,12 +24,12 @@ $promo_page = get_pages(['meta_key' => '_wp_page_template', 'meta_value' => 'pag
 if (!empty($promo_page)) {
     $promo_page_id = $promo_page[0]->ID;
 
-    $saved_subtitle = get_post_meta($promo_page_id, 'arata_news_subtitle', true);
+    $saved_subtitle = get_post_meta($promo_page_id, 'arata_promotions_subtitle', true);
     if (!empty($saved_subtitle)) {
         $hero_subtitle = $saved_subtitle;
     }
 
-    $saved_description = get_post_meta($promo_page_id, 'arata_news_intro', true);
+    $saved_description = get_post_meta($promo_page_id, 'arata_promotions_intro', true);
     if (!empty($saved_description)) {
         $hero_description = $saved_description;
     }
@@ -54,9 +60,9 @@ get_template_part('template-parts/hero');
             <!-- Section Header -->
             <div class="text-center mb-12">
                 <div class="flex items-center justify-center mb-4">
-                    <div class="w-12 h-1 bg-primary rounded-full mr-4"></div>
-                    <span class="text-primary font-medium text-sm uppercase tracking-wider">Khuyến mãi đặc biệt</span>
-                    <div class="w-12 h-1 bg-primary rounded-full ml-4"></div>
+                    <div class="w-12 h-1 rounded-full mr-4" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
+                    <span class="font-medium text-sm uppercase tracking-wider" style="color: <?php echo esc_attr($primary_color); ?>;">Khuyến mãi đặc biệt</span>
+                    <div class="w-12 h-1 rounded-full ml-4" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
                 </div>
                 <h2 class="text-3xl font-bold text-gray-900 mb-6">Ưu đãi hiện tại</h2>
             </div>
@@ -75,7 +81,7 @@ get_template_part('template-parts/hero');
                         $conditions = get_post_meta(get_the_ID(), 'arata_promotion_conditions', true);
                         $products = get_post_meta(get_the_ID(), 'arata_promotion_products', true);
                         ?>
-                        <div class="bg-white rounded-lg border border-gray-200 hover:border-primary transition-colors duration-300 flex flex-col md:flex-row overflow-hidden">
+                        <div class="bg-white rounded-lg border border-gray-200 transition-colors duration-300 flex flex-col md:flex-row overflow-hidden" onmouseover="this.style.borderColor='<?php echo esc_attr($primary_color); ?>'" onmouseout="this.style.borderColor='rgb(229, 231, 235)'">
                             <!-- Image Column -->
                             <div class="md:w-1/3 lg:w-2/5 flex-shrink-0">
                                 <?php if (has_post_thumbnail()) : ?>
@@ -93,12 +99,12 @@ get_template_part('template-parts/hero');
                             <div class="p-6 flex-grow flex flex-col">
                                 <div class="flex items-start justify-between mb-4">
                                     <h3 class="text-xl font-semibold text-gray-900 flex-1">
-                                        <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
+                                        <a href="<?php the_permalink(); ?>" class="transition-colors" onmouseover="this.style.color='<?php echo esc_attr($primary_color); ?>'" onmouseout="this.style.color='rgb(17, 24, 39)'">
                                             <?php the_title(); ?>
                                         </a>
                                     </h3>
                                     <?php if ($discount): ?>
-                                        <span class="bg-primary text-white px-4 py-2 rounded-full text-sm font-bold ml-4 flex-shrink-0">
+                                        <span class="text-white px-4 py-2 rounded-full text-sm font-bold ml-4 flex-shrink-0" style="background-color: <?php echo esc_attr($primary_color); ?>;">
                                             <?php echo esc_html($discount); ?>
                                         </span>
                                     <?php endif; ?>
@@ -106,7 +112,7 @@ get_template_part('template-parts/hero');
 
                                 <?php if ($type) : ?>
                                     <div class="mb-3">
-                                        <span class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
+                                        <span class="inline-block px-3 py-1 rounded-full text-sm font-medium" style="background-color: <?php echo esc_attr($primary_color); ?>1a; color: <?php echo esc_attr($primary_color); ?>;">
                                             <?php
                                             // Define labels for promotion types
                                             $type_labels = array(
@@ -134,7 +140,7 @@ get_template_part('template-parts/hero');
                                 <?php endif; ?>
 
                                 <div class="pt-4 border-t border-gray-200 mt-auto">
-                                    <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm">
+                                    <a href="<?php the_permalink(); ?>" class="inline-flex items-center font-medium text-sm transition-colors" style="color: <?php echo esc_attr($primary_color); ?>;" onmouseover="this.style.color='<?php echo esc_attr($secondary_color); ?>'" onmouseout="this.style.color='<?php echo esc_attr($primary_color); ?>'">
                                         Xem chi tiết
                                         <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
                                     </a>
@@ -150,7 +156,7 @@ get_template_part('template-parts/hero');
                         </div>
                         <h3 class="text-xl font-semibold text-gray-900 mb-2">Hiện tại chưa có chương trình khuyến mãi nào</h3>
                         <p class="text-gray-600 mb-6">Chúng tôi sẽ cập nhật thông tin khuyến mãi mới nhất tại đây.</p>
-                        <a href="<?php echo home_url('/tin-tuc'); ?>" class="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors">
+                        <a href="<?php echo home_url('/tin-tuc'); ?>" class="inline-flex items-center text-white px-6 py-3 rounded-lg transition-colors" style="background-color: <?php echo esc_attr($primary_color); ?>;" onmouseover="this.style.backgroundColor='<?php echo esc_attr($secondary_color); ?>'" onmouseout="this.style.backgroundColor='<?php echo esc_attr($primary_color); ?>'">
                             <span data-icon="arrow-left" data-size="16" class="mr-2"></span>
                             Quay lại trang tin tức
                         </a>
@@ -176,11 +182,11 @@ get_template_part('template-parts/hero');
     </div>
 
     <!-- Newsletter Signup -->
-    <div class="bg-primary/5 py-16">
+    <div class="py-16" style="background-color: <?php echo esc_attr($primary_color); ?>0d;">
         <div class="container mx-auto px-4">
             <div class="max-w-2xl mx-auto text-center">
-                <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span data-icon="mail" data-size="32" class="text-primary"></span>
+                <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style="background-color: <?php echo esc_attr($primary_color); ?>1a;">
+                    <span data-icon="mail" data-size="32" style="color: <?php echo esc_attr($primary_color); ?>;"></span>
                 </div>
                 <h3 class="text-2xl font-bold text-gray-900 mb-4">Đăng ký nhận thông báo khuyến mãi</h3>
                 <p class="text-gray-600 mb-8">
@@ -193,17 +199,19 @@ get_template_part('template-parts/hero');
 
                     <div>
                         <input name="name" type="text" required
-                               class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+                               class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:border-transparent transition-all duration-300"
+                               style="--tw-ring-color: <?php echo esc_attr($primary_color); ?>;" onfocus="this.style.boxShadow='0 0 0 2px <?php echo esc_attr($primary_color); ?>40'" onblur="this.style.boxShadow='none'"
                                placeholder="Họ và tên *" />
                     </div>
 
                     <div>
                         <input name="email" type="email" required
-                               class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+                               class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:border-transparent transition-all duration-300"
+                               style="--tw-ring-color: <?php echo esc_attr($primary_color); ?>;" onfocus="this.style.boxShadow='0 0 0 2px <?php echo esc_attr($primary_color); ?>40'" onblur="this.style.boxShadow='none'"
                                placeholder="Email *" />
                     </div>
 
-                    <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-dark transition-colors font-medium">
+                    <button type="submit" class="w-full text-white py-3 rounded-lg transition-colors font-medium" style="background-color: <?php echo esc_attr($primary_color); ?>;" onmouseover="this.style.backgroundColor='<?php echo esc_attr($secondary_color); ?>'" onmouseout="this.style.backgroundColor='<?php echo esc_attr($primary_color); ?>'">
                         Đăng ký ngay
                     </button>
                 </form>

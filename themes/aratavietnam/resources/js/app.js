@@ -1344,7 +1344,7 @@ function initAboutGallery() {
         });
         lightbox.init();
     }).catch(error => {
-        console.error('Failed to load PhotoSwipeLightbox for about gallery', error);
+        // Failed to load PhotoSwipeLightbox for about gallery
     });
 }
 
