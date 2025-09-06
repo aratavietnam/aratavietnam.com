@@ -186,7 +186,7 @@ add_filter('script_loader_tag', function ($tag, $handle, $src) {
 function aratavietnam_enqueue_custom_scripts() {
     $version = wp_get_theme()->get('Version');
     // Enqueue scripts (using manifest for hashed filenames)
-    wp_enqueue_script('aratavietnam-app', get_template_directory_uri() . '/dist/app-CMBvUbCy.js', [], $version, true);
+    wp_enqueue_script('aratavietnam-app', get_template_directory_uri() . '/dist/app-CdtiypLP.js', [], $version, true);
 
     // Enqueue notification system globally
     wp_enqueue_script('aratavietnam-notifications', get_template_directory_uri() . '/dist/notifications-DX7Hjlbv.js', [], $version, true);
