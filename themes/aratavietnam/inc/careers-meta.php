@@ -11,11 +11,23 @@ if (!defined('ABSPATH')) { exit; }
  */
 function add_careers_meta_boxes() {
     global $post;
-    
-    // Only add meta box if this page uses careers template
+
+    // Add meta box for careers template page
     if ($post && get_page_template_slug($post->ID) === 'page-templates/careers.php') {
         add_meta_box(
             'careers_settings',
+            'Cài đặt trang Tuyển dụng',
+            'careers_settings_callback',
+            'page',
+            'normal',
+            'high'
+        );
+    }
+
+    // Also add meta box for the "tuyen-dung" page (for archive settings)
+    if ($post && $post->post_name === 'tuyen-dung') {
+        add_meta_box(
+            'careers_archive_settings',
             'Cài đặt trang Tuyển dụng',
             'careers_settings_callback',
             'page',
@@ -38,13 +50,13 @@ function careers_settings_callback($post) {
     $compact_hero = get_post_meta($post->ID, 'arata_compact_hero', true);
     $careers_subtitle = get_post_meta($post->ID, 'arata_careers_subtitle', true);
     $careers_intro = get_post_meta($post->ID, 'arata_careers_intro', true);
-    
+
     // Set defaults
     if ($show_hero === '') $show_hero = '1';
     if ($careers_subtitle === '') $careers_subtitle = 'Tuyển dụng';
     if ($careers_intro === '') $careers_intro = 'Khám phá cơ hội nghề nghiệp tại Arata Vietnam - nơi bạn có thể phát triển tài năng và xây dựng tương lai trong lĩnh vực hóa mỹ phẩm.';
     ?>
-    
+
     <table class="form-table">
         <tr>
             <th scope="row">
@@ -57,7 +69,7 @@ function careers_settings_callback($post) {
                 </label>
             </td>
         </tr>
-        
+
         <tr>
             <th scope="row">
                 <label for="arata_compact_hero">Chế độ Hero</label>
@@ -70,7 +82,7 @@ function careers_settings_callback($post) {
                 <p class="description">Hero nhỏ gọn sẽ có chiều cao thấp hơn và phù hợp cho trang nội dung.</p>
             </td>
         </tr>
-        
+
         <tr>
             <th scope="row">
                 <label for="arata_careers_subtitle">Tiêu đề phụ Hero</label>
@@ -80,7 +92,7 @@ function careers_settings_callback($post) {
                 <p class="description">Tiêu đề phụ hiển thị trong hero section</p>
             </td>
         </tr>
-        
+
         <tr>
             <th scope="row">
                 <label for="arata_careers_intro">Mô tả Hero</label>
@@ -91,7 +103,7 @@ function careers_settings_callback($post) {
             </td>
         </tr>
     </table>
-    
+
     <style>
         .form-table th {
             width: 200px;

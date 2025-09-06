@@ -39,7 +39,7 @@ add_action('init', function () {
         'menu_icon' => 'dashicons-admin-tools',
         'menu_position' => 27,
         'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'custom-fields', 'page-attributes'],
-        'has_archive' => false, // Disable default archive
+        'has_archive' => false,
         'rewrite' => ['slug' => 'dich-vu'],
         'show_in_rest' => true,
         'capability_type' => 'post',
@@ -47,28 +47,6 @@ add_action('init', function () {
         'show_in_nav_menus' => true,
     ]);
 });
-
-/**
- * Fix rewrite rules for service post type
- * Ensure archive page works correctly
- */
-add_action('init', function() {
-    // Remove conflicting rewrite rules first
-    remove_rewrite_tag('%service%');
-
-    add_rewrite_rule(
-        '^dich-vu/?$',
-        'index.php?pagename=dich-vu',
-        'top'
-    );
-
-    // Add custom rewrite rules for single service posts
-    add_rewrite_rule(
-        '^dich-vu/([^/]+)/?$',
-        'index.php?post_type=service&name=$matches[1]',
-        'top'
-    );
-}, 10);
 
 /**
  * Register Service Categories Taxonomy
@@ -89,8 +67,8 @@ add_action('init', function () {
     ];
 
     register_taxonomy('service_category', ['service'], [
-        'labels' => $labels,
         'hierarchical' => true,
+        'labels' => $labels,
         'show_ui' => true,
         'show_admin_column' => true,
         'query_var' => true,
@@ -100,55 +78,33 @@ add_action('init', function () {
 });
 
 /**
- * Register Service Features Taxonomy
+ * Add custom columns to Services admin list
  */
-add_action('init', function () {
-    $labels = [
-        'name' => __('Tính năng dịch vụ', 'aratavietnam'),
-        'singular_name' => __('Tính năng dịch vụ', 'aratavietnam'),
-        'search_items' => __('Tìm kiếm tính năng', 'aratavietnam'),
-        'all_items' => __('Tất cả tính năng', 'aratavietnam'),
-        'edit_item' => __('Sửa tính năng', 'aratavietnam'),
-        'update_item' => __('Cập nhật tính năng', 'aratavietnam'),
-        'add_new_item' => __('Thêm tính năng mới', 'aratavietnam'),
-        'new_item_name' => __('Tên tính năng mới', 'aratavietnam'),
-        'menu_name' => __('Tính năng dịch vụ', 'aratavietnam'),
-    ];
-
-    register_taxonomy('service_feature', ['service'], [
-        'labels' => $labels,
-        'hierarchical' => false,
-        'show_ui' => true,
-        'show_admin_column' => true,
-        'query_var' => true,
-        'rewrite' => ['slug' => 'tinh-nang-dich-vu'],
-        'show_in_rest' => true,
-    ]);
+add_filter('manage_service_posts_columns', function ($columns) {
+    $new_columns = [];
+    $new_columns['cb'] = $columns['cb'];
+    $new_columns['title'] = $columns['title'];
+    $new_columns['service_category'] = __('Danh mục', 'aratavietnam');
+    $new_columns['service_type'] = __('Loại dịch vụ', 'aratavietnam');
+    $new_columns['service_price'] = __('Giá', 'aratavietnam');
+    $new_columns['service_status'] = __('Trạng thái', 'aratavietnam');
+    $new_columns['menu_order'] = __('Thứ tự', 'aratavietnam');
+    $new_columns['date'] = $columns['date'];
+    return $new_columns;
 });
 
 /**
- * Customize admin columns for Services
+ * Populate custom columns
  */
-add_filter('manage_service_posts_columns', function ($columns) {
-    $new = [];
-    $new['cb'] = $columns['cb'] ?? '';
-    $new['title'] = __('Tên dịch vụ', 'aratavietnam');
-    $new['service_category'] = __('Danh mục', 'aratavietnam');
-    $new['service_type'] = __('Loại dịch vụ', 'aratavietnam');
-    $new['service_price'] = __('Giá dịch vụ', 'aratavietnam');
-    $new['service_status'] = __('Trạng thái', 'aratavietnam');
-    $new['menu_order'] = __('Thứ tự', 'aratavietnam');
-    $new['date'] = __('Ngày tạo', 'aratavietnam');
-    return $new;
-});
-
 add_action('manage_service_posts_custom_column', function ($column, $post_id) {
     switch ($column) {
         case 'service_category':
             $terms = get_the_terms($post_id, 'service_category');
             if ($terms && !is_wp_error($terms)) {
-                $term_names = array_map(function($term) { return $term->name; }, $terms);
-                echo esc_html(implode(', ', $term_names));
+                $term_names = array_map(function($term) {
+                    return '<a href="' . admin_url('edit.php?post_type=service&service_category=' . $term->slug) . '">' . $term->name . '</a>';
+                }, $terms);
+                echo implode(', ', $term_names);
             } else {
                 echo '—';
             }
@@ -163,7 +119,7 @@ add_action('manage_service_posts_custom_column', function ($column, $post_id) {
                 'training' => 'Đào tạo',
                 'custom' => 'Tùy chỉnh'
             ];
-            echo esc_html($type_labels[$type] ?? $type ?: '—');
+            echo $type_labels[$type] ?? '—';
             break;
         case 'service_price':
             $price = get_post_meta($post_id, 'arata_service_price', true);
@@ -282,6 +238,110 @@ add_action('add_meta_boxes', function () {
             'normal',
             'high'
         );
+
+        // Additional Services Page Settings
+        add_meta_box(
+            'arata_services_sections',
+            'Cài đặt Sections',
+            function($post) {
+                wp_nonce_field('arata_services_sections_nonce', 'arata_services_sections_nonce');
+
+                $show_services = get_post_meta($post->ID, 'arata_show_services', true);
+                $show_stats = get_post_meta($post->ID, 'arata_show_stats', true);
+                $show_why_choose = get_post_meta($post->ID, 'arata_show_why_choose', true);
+                $show_testimonials = get_post_meta($post->ID, 'arata_show_testimonials', true);
+
+                echo '<table class="form-table">';
+
+                // Show Services
+                echo '<tr>';
+                echo '<th><label for="arata_show_services">Hiển thị Dịch vụ</label></th>';
+                echo '<td>';
+                echo '<input type="checkbox" id="arata_show_services" name="arata_show_services" value="1" ' . checked($show_services !== '0', true, false) . ' />';
+                echo '<p class="description">Hiển thị danh sách dịch vụ</p>';
+                echo '</td>';
+                echo '</tr>';
+
+                // Show Stats
+                echo '<tr>';
+                echo '<th><label for="arata_show_stats">Hiển thị Thống kê</label></th>';
+                echo '<td>';
+                echo '<input type="checkbox" id="arata_show_stats" name="arata_show_stats" value="1" ' . checked($show_stats !== '0', true, false) . ' />';
+                echo '<p class="description">Hiển thị section thống kê (đã tắt trong code)</p>';
+                echo '</td>';
+                echo '</tr>';
+
+                // Show Why Choose Us
+                echo '<tr>';
+                echo '<th><label for="arata_show_why_choose">Hiển thị Tại sao chọn chúng tôi</label></th>';
+                echo '<td>';
+                echo '<input type="checkbox" id="arata_show_why_choose" name="arata_show_why_choose" value="1" ' . checked($show_why_choose !== '0', true, false) . ' />';
+                echo '<p class="description">Hiển thị section tại sao chọn (đã tắt trong code)</p>';
+                echo '</td>';
+                echo '</tr>';
+
+                // Show Testimonials
+                echo '<tr>';
+                echo '<th><label for="arata_show_testimonials">Hiển thị Đánh giá khách hàng</label></th>';
+                echo '<td>';
+                echo '<input type="checkbox" id="arata_show_testimonials" name="arata_show_testimonials" value="1" ' . checked($show_testimonials !== '0', true, false) . ' />';
+                echo '<p class="description">Hiển thị section đánh giá khách hàng (đã tắt trong code)</p>';
+                echo '</td>';
+                echo '</tr>';
+
+                echo '</table>';
+            },
+            'page',
+            'normal',
+            'default'
+        );
+
+        // Services Page Content Settings
+        add_meta_box(
+            'arata_services_content',
+            'Nội dung trang',
+            function($post) {
+                wp_nonce_field('arata_services_content_nonce', 'arata_services_content_nonce');
+
+                $featured_text = get_post_meta($post->ID, 'arata_services_featured_text', true);
+                $cta_text = get_post_meta($post->ID, 'arata_services_cta_text', true);
+                $cta_link = get_post_meta($post->ID, 'arata_services_cta_link', true);
+
+                echo '<table class="form-table">';
+
+                // Featured Text
+                echo '<tr>';
+                echo '<th><label for="arata_services_featured_text">Văn bản nổi bật</label></th>';
+                echo '<td>';
+                echo '<input type="text" id="arata_services_featured_text" name="arata_services_featured_text" value="' . esc_attr($featured_text) . '" class="regular-text" placeholder="VD: Cam kết chất lượng - Uy tín hàng đầu" />';
+                echo '<p class="description">Văn bản nổi bật hiển thị trên trang</p>';
+                echo '</td>';
+                echo '</tr>';
+
+                // CTA Text
+                echo '<tr>';
+                echo '<th><label for="arata_services_cta_text">Text nút CTA</label></th>';
+                echo '<td>';
+                echo '<input type="text" id="arata_services_cta_text" name="arata_services_cta_text" value="' . esc_attr($cta_text ?: 'Liên hệ tư vấn') . '" class="regular-text" placeholder="Liên hệ tư vấn" />';
+                echo '<p class="description">Text hiển thị trên nút call-to-action</p>';
+                echo '</td>';
+                echo '</tr>';
+
+                // CTA Link
+                echo '<tr>';
+                echo '<th><label for="arata_services_cta_link">Link nút CTA</label></th>';
+                echo '<td>';
+                echo '<input type="text" id="arata_services_cta_link" name="arata_services_cta_link" value="' . esc_attr($cta_link ?: '/lien-he') . '" class="regular-text" placeholder="/lien-he" />';
+                echo '<p class="description">Đường dẫn cho nút call-to-action</p>';
+                echo '</td>';
+                echo '</tr>';
+
+                echo '</table>';
+            },
+            'page',
+            'normal',
+            'default'
+        );
     }
 
     add_meta_box(
@@ -290,159 +350,91 @@ add_action('add_meta_boxes', function () {
         function ($post) {
             wp_nonce_field('arata_service_meta_save', 'arata_service_meta_nonce');
 
-            $fields = [
-                'arata_service_type' => [
-                    'label' => __('Loại dịch vụ', 'aratavietnam'),
-                    'type' => 'select',
-                    'options' => [
-                        'consultation' => 'Tư vấn',
-                        'implementation' => 'Triển khai',
-                        'maintenance' => 'Bảo trì',
-                        'support' => 'Hỗ trợ',
-                        'training' => 'Đào tạo',
-                        'custom' => 'Tùy chỉnh'
-                    ]
-                ],
-                'arata_service_price' => [
-                    'label' => __('Giá dịch vụ', 'aratavietnam'),
-                    'type' => 'text',
-                    'placeholder' => 'VD: 500,000 VNĐ'
-                ],
-                'arata_service_price_type' => [
-                    'label' => __('Kiểu giá', 'aratavietnam'),
-                    'type' => 'select',
-                    'options' => [
-                        'fixed' => 'Giá cố định',
-                        'hourly' => 'Theo giờ',
-                        'project' => 'Theo dự án',
-                        'free' => 'Miễn phí',
-                        'contact' => 'Liên hệ báo giá'
-                    ]
-                ],
-                'arata_service_status' => [
-                    'label' => __('Trạng thái', 'aratavietnam'),
-                    'type' => 'select',
-                    'options' => [
-                        'active' => 'Hoạt động',
-                        'inactive' => 'Tạm ngưng',
-                        'coming_soon' => 'Sắp ra mắt',
-                        'deprecated' => 'Ngừng cung cấp'
-                    ]
-                ],
-                'arata_service_duration' => [
-                    'label' => __('Thời gian thực hiện', 'aratavietnam'),
-                    'type' => 'text',
-                    'placeholder' => 'VD: 2-3 tuần, 1 tháng'
-                ],
-                'arata_service_features' => [
-                    'label' => __('Tính năng chính', 'aratavietnam'),
-                    'type' => 'textarea',
-                    'placeholder' => 'Liệt kê các tính năng chính của dịch vụ'
-                ],
-                'arata_service_benefits' => [
-                    'label' => __('Lợi ích', 'aratavietnam'),
-                    'type' => 'textarea',
-                    'placeholder' => 'Lợi ích khách hàng nhận được'
-                ],
-                'arata_service_process' => [
-                    'label' => __('Quy trình thực hiện', 'aratavietnam'),
-                    'type' => 'textarea',
-                    'placeholder' => 'Các bước thực hiện dịch vụ'
-                ],
-                'arata_service_requirements' => [
-                    'label' => __('Yêu cầu khách hàng', 'aratavietnam'),
-                    'type' => 'textarea',
-                    'placeholder' => 'Yêu cầu cần thiết từ khách hàng'
-                ],
-                'arata_service_deliverables' => [
-                    'label' => __('Sản phẩm đầu ra', 'aratavietnam'),
-                    'type' => 'textarea',
-                    'placeholder' => 'Những gì khách hàng nhận được'
-                ],
-                'arata_service_icon' => [
-                    'label' => __('Icon dịch vụ', 'aratavietnam'),
-                    'type' => 'text',
-                    'placeholder' => 'Tên icon từ Lucide (VD: settings, users, globe)'
-                ],
-                'arata_service_color' => [
-                    'label' => __('Màu sắc chủ đạo', 'aratavietnam'),
-                    'type' => 'select',
-                    'options' => [
-                        'primary' => 'Cam chính (#F55E25)',
-                        'secondary' => 'Xanh dương (#0066A6)',
-                        'tertiary' => 'Vàng cam (#FFAB14)',
-                        'success' => 'Xanh lá (#10B981)',
-                        'info' => 'Xanh thông tin (#3B82F6)'
-                    ]
-                ]
-            ];
+            $service_type = get_post_meta($post->ID, 'arata_service_type', true);
+            $service_price = get_post_meta($post->ID, 'arata_service_price', true);
+            $service_icon = get_post_meta($post->ID, 'arata_service_icon', true);
+            $service_color = get_post_meta($post->ID, 'arata_service_color', true);
 
             echo '<table class="form-table">';
-            foreach ($fields as $key => $field) {
-                $value = get_post_meta($post->ID, $key, true);
-                echo '<tr><th><label for="' . esc_attr($key) . '">' . esc_html($field['label']) . '</label></th><td>';
 
-                if ($field['type'] === 'select') {
-                    echo '<select id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" class="regular-text">';
-                    echo '<option value="">Chọn ' . strtolower($field['label']) . '</option>';
-                    foreach ($field['options'] as $opt_value => $opt_label) {
-                        echo '<option value="' . esc_attr($opt_value) . '"' . selected($value, $opt_value, false) . '>' . esc_html($opt_label) . '</option>';
-                    }
-                    echo '</select>';
-                } elseif ($field['type'] === 'textarea') {
-                    echo '<textarea id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" rows="3" class="large-text">' . esc_textarea($value) . '</textarea>';
-                } elseif ($field['type'] === 'checkbox') {
-                    echo '<input type="checkbox" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="1" ' . checked($value, '1', false) . ' />';
-                } else {
-                    echo '<input type="text" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="' . esc_attr($value) . '" class="regular-text" />';
-                }
-
-                echo '</td></tr>';
+            // Service Type
+            echo '<tr>';
+            echo '<th><label for="arata_service_type">Loại dịch vụ</label></th>';
+            echo '<td>';
+            echo '<select id="arata_service_type" name="arata_service_type">';
+            echo '<option value="">Chọn loại dịch vụ</option>';
+            $types = [
+                'consultation' => 'Tư vấn',
+                'implementation' => 'Triển khai',
+                'maintenance' => 'Bảo trì',
+                'support' => 'Hỗ trợ',
+                'training' => 'Đào tạo',
+                'custom' => 'Tùy chỉnh'
+            ];
+            foreach ($types as $value => $label) {
+                echo '<option value="' . esc_attr($value) . '" ' . selected($service_type, $value, false) . '>' . esc_html($label) . '</option>';
             }
+            echo '</select>';
+            echo '</td>';
+            echo '</tr>';
+
+            // Service Price
+            echo '<tr>';
+            echo '<th><label for="arata_service_price">Giá dịch vụ</label></th>';
+            echo '<td>';
+            echo '<input type="text" id="arata_service_price" name="arata_service_price" value="' . esc_attr($service_price) . '" class="regular-text" placeholder="VD: 5.000.000₫ hoặc Liên hệ" />';
+            echo '</td>';
+            echo '</tr>';
+
+            // Service Icon
+            echo '<tr>';
+            echo '<th><label for="arata_service_icon">Icon dịch vụ</label></th>';
+            echo '<td>';
+            echo '<input type="text" id="arata_service_icon" name="arata_service_icon" value="' . esc_attr($service_icon) . '" class="regular-text" placeholder="VD: settings, users, phone" />';
+            echo '<p class="description">Tên icon từ Lucide Icons</p>';
+            echo '</td>';
+            echo '</tr>';
+
+            // Service Color
+            echo '<tr>';
+            echo '<th><label for="arata_service_color">Màu chủ đạo</label></th>';
+            echo '<td>';
+            echo '<input type="color" id="arata_service_color" name="arata_service_color" value="' . esc_attr($service_color ?: '#F55E25') . '" />';
+            echo '</td>';
+            echo '</tr>';
+
             echo '</table>';
         },
         'service',
         'normal',
-        'default'
+        'high'
     );
-}); // Close add_action('add_meta_boxes') callback
+});
 
 /**
- * Save meta for Services
+ * Save service meta data
  */
-add_action('save_post_service', function($post_id) {
-    if (!isset($_POST['arata_service_meta_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['arata_service_meta_nonce']), 'arata_service_meta_save')) {
+add_action('save_post', function ($post_id) {
+    if (!isset($_POST['arata_service_meta_nonce']) || !wp_verify_nonce($_POST['arata_service_meta_nonce'], 'arata_service_meta_save')) {
         return;
     }
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) { return; }
-    if (!current_user_can('edit_post', $post_id)) { return; }
 
-    $keys = [
-        'arata_service_type',
-        'arata_service_price',
-        'arata_service_price_type',
-        'arata_service_status',
-        'arata_service_duration',
-        'arata_service_features',
-        'arata_service_benefits',
-        'arata_service_process',
-        'arata_service_requirements',
-        'arata_service_deliverables',
-        'arata_service_icon',
-        'arata_service_color'
-    ];
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
 
-    foreach ($keys as $key) {
-        if (isset($_POST[$key])) {
-            $value = is_string($_POST[$key]) ? wp_kses_post(wp_unslash($_POST[$key])) : '';
-            update_post_meta($post_id, $key, $value);
-        } else {
-            delete_post_meta($post_id, $key);
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    $fields = ['arata_service_type', 'arata_service_price', 'arata_service_icon', 'arata_service_color'];
+
+    foreach ($fields as $field) {
+        if (isset($_POST[$field])) {
+            update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
         }
     }
 });
-
-
 
 /**
  * Save meta for Services page - Hero settings
@@ -473,5 +465,56 @@ add_action('save_post', function($post_id) {
 
     if (isset($_POST['arata_services_intro'])) {
         update_post_meta($post_id, 'arata_services_intro', sanitize_textarea_field($_POST['arata_services_intro']));
+    }
+});
+
+/**
+ * Save meta for Services page - Sections settings
+ */
+add_action('save_post', function($post_id) {
+    if (!isset($_POST['arata_services_sections_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['arata_services_sections_nonce']), 'arata_services_sections_nonce')) {
+        return;
+    }
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    // Save sections settings
+    $sections = ['arata_show_services', 'arata_show_stats', 'arata_show_why_choose', 'arata_show_testimonials'];
+
+    foreach ($sections as $section) {
+        $value = isset($_POST[$section]) ? '1' : '0';
+        update_post_meta($post_id, $section, $value);
+    }
+});
+
+/**
+ * Save meta for Services page - Content settings
+ */
+add_action('save_post', function($post_id) {
+    if (!isset($_POST['arata_services_content_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['arata_services_content_nonce']), 'arata_services_content_nonce')) {
+        return;
+    }
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    // Save content settings
+    $content_fields = ['arata_services_featured_text', 'arata_services_cta_text', 'arata_services_cta_link'];
+
+    foreach ($content_fields as $field) {
+        if (isset($_POST[$field])) {
+            update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
+        }
     }
 });

@@ -28,13 +28,20 @@ $stats_projects = get_post_meta(get_the_ID(), 'arata_stats_projects', true) ?: '
 $stats_years = get_post_meta(get_the_ID(), 'arata_stats_years', true) ?: '5+';
 $stats_success_rate = get_post_meta(get_the_ID(), 'arata_stats_success_rate', true) ?: '98%';
 
+// Section visibility controls - same as blog page
+$show_hero = get_post_meta(get_the_ID(), 'arata_show_hero', true) !== '0'; // Default to true if not set
+$use_compact_hero = get_post_meta(get_the_ID(), 'arata_compact_hero', true) === '1'; // New compact option
+
 // Set hero variables
 set_query_var('title', get_the_title());
 set_query_var('subtitle', $hero_subtitle);
 set_query_var('description', $hero_description);
+set_query_var('compact_mode', $use_compact_hero);
 
-// Use the standard hero template
-get_template_part('template-parts/hero');
+// Show hero section if enabled
+if ($show_hero) {
+    get_template_part('template-parts/hero');
+}
 ?>
 
 <main id="site-content" class="bg-white">

@@ -24,7 +24,7 @@ require_once get_template_directory() . '/inc/blog-meta.php';
 require_once get_template_directory() . '/inc/careers-meta.php';
 require_once get_template_directory() . '/inc/promotions-meta.php';
 require_once get_template_directory() . '/inc/class-dropdown-walker.php';
-// // require_once get_template_directory() . '/inc/about-meta.php';
+require_once get_template_directory() . '/inc/about-meta.php';
 require_once get_template_directory() . '/inc/admin-columns.php';
 require_once get_template_directory() . '/inc/template-filters.php';
 require_once get_template_directory() . '/inc/upload-mimes.php';
@@ -582,8 +582,8 @@ add_action('add_meta_boxes_page', function($post) {
 
     if ($template === 'page-templates/about.php') {
         add_meta_box(
-            'arata_about_meta',
-            __('About Page Settings', 'aratavietnam'),
+            'arata_about_content_meta',
+            __('About Page Content Settings', 'aratavietnam'),
             function($post) {
                 wp_nonce_field('arata_about_meta_save', 'arata_about_meta_nonce');
 
