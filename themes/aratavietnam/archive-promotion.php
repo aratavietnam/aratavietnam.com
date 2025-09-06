@@ -42,41 +42,32 @@ if ($show_hero) {
     if ($use_compact_hero) {
         // Use compact hero inline
         ?>
-        <main id="site-content" class="min-h-[30vh] flex items-center" style="background-color: <?php echo esc_attr($background_color); ?>;">
-            <div class="container mx-auto px-4 py-16 text-center">
+        <!-- Compact Hero Section -->
+        <section class="py-16 text-center" style="background-color: <?php echo esc_attr($background_color); ?>;">
+            <div class="container mx-auto px-4">
                 <div class="max-w-2xl mx-auto">
-                    <h2 class="text-2xl font-semibold text-gray-900 mb-4"><?php echo esc_html($hero_subtitle); ?></h2>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-4"><?php echo esc_html($hero_subtitle); ?></h1>
                     <p class="text-gray-600 leading-relaxed">
                         <?php echo esc_html($hero_intro); ?>
                     </p>
                 </div>
             </div>
-            
-            <!-- Promotions Content Section -->
-            <div class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>;">
-                <div class="container mx-auto px-4">
+        </section>
         <?php
     } else {
         // Use full hero template part
         get_template_part('template-parts/hero');
-        ?>
-        <main id="site-content" class="bg-white">
-            <!-- Promotions Content Section -->
-            <div class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>;">
-                <div class="container mx-auto px-4">
-        <?php
     }
-} else {
-    ?>
-    <main id="site-content" class="bg-white">
-        <!-- Promotions Content Section -->
-        <div class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>;">
-            <div class="container mx-auto px-4">
-    <?php
 }
-?>
 
-<!-- Main Layout: Left (2/3) + Right (1/3) like blog -->
+// Start main content
+?>
+<main id="site-content" style="background-color: <?php echo esc_attr($background_color); ?>;">
+    <!-- Promotions Content Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+
+            <!-- Main Layout: Left (2/3) + Right (1/3) like blog -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
     <!-- Left Side: Promotions Grid (2/3) -->
@@ -97,7 +88,7 @@ if ($show_hero) {
                                 <a href="<?php the_permalink(); ?>">
                                     <?php the_post_thumbnail('medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300']); ?>
                                 </a>
-                                
+
                                 <!-- Discount Badge -->
                                 <?php if ($discount): ?>
                                     <div class="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
@@ -116,7 +107,7 @@ if ($show_hero) {
                                     </svg>
                                     <p class="text-gray-500 text-sm font-medium">Khuyến mãi đặc biệt</p>
                                 </div>
-                                
+
                                 <!-- Discount Badge -->
                                 <?php if ($discount): ?>
                                     <div class="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
@@ -166,7 +157,7 @@ if ($show_hero) {
                                         </svg>
                                         <?php echo get_the_date('d/m/Y'); ?>
                                     </div>
-                                    
+
                                     <!-- Expiry -->
                                     <?php if ($end_date): ?>
                                         <div class="flex items-center text-red-600">
@@ -177,7 +168,7 @@ if ($show_hero) {
                                         </div>
                                     <?php endif; ?>
                                 </div>
-                                
+
                                 <!-- Read More -->
                                 <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium">
                                     Xem chi tiết
@@ -270,7 +261,7 @@ if ($show_hero) {
                                             </svg>
                                         </div>
                                     <?php endif; ?>
-                                    
+
                                     <div class="flex-1 min-w-0">
                                         <h4 class="font-medium text-gray-900 text-sm line-clamp-2 group-hover:text-primary transition-colors">
                                             <?php the_title(); ?>
@@ -322,10 +313,8 @@ if ($show_hero) {
     </div>
 </div>
 
-                </div>
-            </div>
         </div>
-    </div>
+    </section>
 </main>
 
 <style>
