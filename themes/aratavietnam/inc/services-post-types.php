@@ -214,7 +214,7 @@ add_filter('manage_edit-service_sortable_columns', function ($columns) {
  */
 add_action('add_meta_boxes', function () {
     global $post;
-    
+
     // Only add Services hero meta box if this page uses services template
     if ($post && get_page_template_slug($post->ID) === 'page-templates/services.php') {
         // Services page hero meta box
@@ -223,14 +223,14 @@ add_action('add_meta_boxes', function () {
             'Cài đặt Hero Section',
             function($post) {
                 wp_nonce_field('arata_services_meta_nonce', 'arata_services_nonce');
-            
+
             $show_hero = get_post_meta($post->ID, 'arata_show_hero', true);
             $compact_hero = get_post_meta($post->ID, 'arata_compact_hero', true);
             $subtitle = get_post_meta($post->ID, 'arata_services_subtitle', true);
             $intro = get_post_meta($post->ID, 'arata_services_intro', true);
-            
+
             echo '<table class="form-table">';
-            
+
             // Show Hero checkbox
             echo '<tr>';
             echo '<th><label for="arata_show_hero">Hiển thị Hero Section</label></th>';
@@ -239,7 +239,7 @@ add_action('add_meta_boxes', function () {
             echo '<p class="description">Bỏ chọn để ẩn hero section</p>';
             echo '</td>';
             echo '</tr>';
-            
+
             // Compact Hero checkbox
             echo '<tr>';
             echo '<th><label for="arata_compact_hero">Sử dụng Hero gọn</label></th>';
@@ -248,7 +248,7 @@ add_action('add_meta_boxes', function () {
             echo '<p class="description">Sử dụng hero gọn nhẹ thay vì hero đầy đủ</p>';
             echo '</td>';
             echo '</tr>';
-            
+
             // Subtitle
             echo '<tr>';
             echo '<th><label for="arata_services_subtitle">Phụ đề Hero</label></th>';
@@ -257,7 +257,7 @@ add_action('add_meta_boxes', function () {
             echo '<p class="description">Phụ đề hiển thị trong hero section</p>';
             echo '</td>';
             echo '</tr>';
-            
+
             // Intro text
             echo '<tr>';
             echo '<th><label for="arata_services_intro">Mô tả Hero</label></th>';
@@ -266,7 +266,7 @@ add_action('add_meta_boxes', function () {
             echo '<p class="description">Mô tả hiển thị trong hero section</p>';
             echo '</td>';
             echo '</tr>';
-            
+
             echo '</table>';
             },
             'page',
@@ -433,67 +433,7 @@ add_action('save_post_service', function($post_id) {
     }
 });
 
-/**
- * Add meta boxes for Services page template
- */
-add_action('add_meta_boxes_page', function($post) {
-    $template = get_post_meta($post->ID, '_wp_page_template', true);
 
-    if ($template === 'page-templates/services.php') {
-        add_meta_box(
-            'arata_services_meta',
-            __('Cài đặt trang Dịch vụ', 'aratavietnam'),
-            function($post) {
-                $fields = [
-                    'arata_services_subtitle' => [
-                        'label' => __('Phụ đề Hero', 'aratavietnam'),
-                        'type' => 'text',
-                        'placeholder' => 'VD: Giải pháp toàn diện cho doanh nghiệp'
-                    ],
-                    'arata_services_intro' => [
-                        'label' => __('Mô tả ngắn', 'aratavietnam'),
-                        'type' => 'textarea',
-                        'placeholder' => 'Mô tả tổng quan về dịch vụ của công ty'
-                    ],
-                    'arata_services_featured_text' => [
-                        'label' => __('Văn bản nổi bật', 'aratavietnam'),
-                        'type' => 'text',
-                        'placeholder' => 'VD: Cam kết chất lượng - Uy tín hàng đầu'
-                    ],
-                    'arata_services_cta_text' => [
-                        'label' => __('Text nút CTA', 'aratavietnam'),
-                        'type' => 'text',
-                        'placeholder' => 'VD: Liên hệ tư vấn'
-                    ],
-                    'arata_services_cta_link' => [
-                        'label' => __('Link nút CTA', 'aratavietnam'),
-                        'type' => 'text',
-                        'placeholder' => 'VD: /lien-he hoặc #contact'
-                    ]
-                ];
-
-                wp_nonce_field('arata_services_meta_save', 'arata_services_meta_nonce');
-                echo '<table class="form-table">';
-                foreach ($fields as $key => $field) {
-                    $value = get_post_meta($post->ID, $key, true);
-                    echo '<tr><th><label for="' . esc_attr($key) . '">' . esc_html($field['label']) . '</label></th><td>';
-
-                    if ($field['type'] === 'textarea') {
-                        echo '<textarea id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" rows="3" class="large-text" placeholder="' . esc_attr($field['placeholder']) . '">' . esc_textarea($value) . '</textarea>';
-                    } else {
-                        echo '<input type="' . esc_attr($field['type']) . '" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" class="regular-text" value="' . esc_attr($value) . '" placeholder="' . esc_attr($field['placeholder']) . '" />';
-                    }
-
-                    echo '</td></tr>';
-                }
-                echo '</table>';
-            },
-            'page',
-            'normal',
-            'default'
-        );
-    }
-});
 
 /**
  * Save meta for Services page - Hero settings
@@ -502,72 +442,32 @@ add_action('save_post', function($post_id) {
     if (!isset($_POST['arata_services_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['arata_services_nonce']), 'arata_services_meta_nonce')) {
         return;
     }
-    
+
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
         return;
     }
-    
+
     if (!current_user_can('edit_post', $post_id)) {
         return;
     }
-    
+
     // Save hero settings
     $show_hero = isset($_POST['arata_show_hero']) ? '1' : '0';
     update_post_meta($post_id, 'arata_show_hero', $show_hero);
-    
+
     $compact_hero = isset($_POST['arata_compact_hero']) ? '1' : '0';
     update_post_meta($post_id, 'arata_compact_hero', $compact_hero);
-    
+
     if (isset($_POST['arata_services_subtitle'])) {
         update_post_meta($post_id, 'arata_services_subtitle', sanitize_text_field($_POST['arata_services_subtitle']));
     }
-    
+
     if (isset($_POST['arata_services_intro'])) {
         update_post_meta($post_id, 'arata_services_intro', sanitize_textarea_field($_POST['arata_services_intro']));
     }
 });
 
-/**
- * Add meta boxes for Services Page Template
- */
-add_action('add_meta_boxes', function () {
-    global $post;
-    
-    // Only add meta box if this page uses services template
-    if ($post && get_page_template_slug($post->ID) === 'page-templates/services.php') {
-        add_meta_box(
-            'arata_services_page_content',
-            __('Nội dung trang dịch vụ', 'aratavietnam'),
-            function ($post) {
-                wp_nonce_field('arata_services_page_content_save', 'arata_services_page_content_nonce');
 
-            $fields = [
-                // Section visibility controls
-                'arata_show_hero' => [
-                    'label' => __('Hiển thị Hero Section', 'aratavietnam'),
-                    'type' => 'checkbox',
-                    'default' => '1'
-                ],
-                'arata_show_services' => [
-                    'label' => __('Hiển thị Dịch vụ nổi bật', 'aratavietnam'),
-                    'type' => 'checkbox',
-                    'default' => '1'
-                ],
-                'arata_show_stats' => [
-                    'label' => __('Hiển thị Thống kê', 'aratavietnam'),
-                    'type' => 'checkbox',
-                    'default' => '1'
-                ],
-                'arata_show_why_choose' => [
-                    'label' => __('Hiển thị Tại sao chọn chúng tôi', 'aratavietnam'),
-                    'type' => 'checkbox',
-                    'default' => '1'
-                ],
-                'arata_show_testimonials' => [
-                    'label' => __('Hiển thị Đánh giá khách hàng', 'aratavietnam'),
-                    'type' => 'checkbox',
-                    'default' => '1'
-                ],
 
                 // Statistics section
                 'arata_stats_title' => [

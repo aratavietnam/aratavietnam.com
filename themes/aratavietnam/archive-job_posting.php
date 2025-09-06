@@ -119,52 +119,7 @@ get_header();
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div class="p-6">
-                    <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
-                        <span class="text-black text-lg font-bold"><?php echo wp_count_posts('job_posting')->publish; ?>+</span>
-                    </div>
-                    <h3 class="text-2xl font-bold text-black mb-2"><?php echo wp_count_posts('job_posting')->publish; ?>+</h3>
-                    <p class="text-gray-600">Vị trí tuyển dụng</p>
-                </div>
 
-                <div class="p-6">
-                    <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
-                        <span class="text-black text-lg font-bold">100%</span>
-                    </div>
-                    <h3 class="text-2xl font-bold text-black mb-2">100%</h3>
-                    <p class="text-gray-600">Môi trường chuyên nghiệp</p>
-                </div>
-
-                <div class="p-6">
-                    <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
-                        <span class="text-black text-lg font-bold">24/7</span>
-                    </div>
-                    <h3 class="text-2xl font-bold text-black mb-2">24/7</h3>
-                    <p class="text-gray-600">Hỗ trợ ứng viên</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="py-20 bg-black text-white">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-6">Sẵn sàng gia nhập đội ngũ?</h2>
-            <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">Khám phá cơ hội nghề nghiệp tuyệt vời và phát triển cùng Arata Vietnam</p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="<?php echo esc_url( home_url( '/lien-he' ) ); ?>" class="inline-flex items-center px-8 py-4 bg-white text-black font-semibold hover:bg-gray-100 transition-all duration-300 rounded-lg no-underline">
-                    Ứng tuyển ngay
-                </a>
-                <a href="<?php echo esc_url( home_url( '/gioi-thieu' ) ); ?>" class="inline-flex items-center px-8 py-4 border border-white text-white hover:bg-white hover:text-black transition-all duration-300 rounded-lg no-underline">
-                    Tìm hiểu về chúng tôi
-                </a>
-            </div>
-        </div>
-    </section>
 </main>
 
 <?php get_footer(); ?>

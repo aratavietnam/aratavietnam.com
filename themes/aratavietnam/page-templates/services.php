@@ -28,31 +28,6 @@ $cta_link = get_post_meta(get_the_ID(), 'arata_services_cta_link', true) ?: '/li
 $show_hero = get_post_meta(get_the_ID(), 'arata_show_hero', true) !== '0'; // Default to true if not set
 $use_compact_hero = get_post_meta(get_the_ID(), 'arata_compact_hero', true) === '1'; // New compact option
 $show_services = get_post_meta(get_the_ID(), 'arata_show_services', true) !== '0';
-$show_stats = get_post_meta(get_the_ID(), 'arata_show_stats', true) !== '0';
-$show_why_choose = get_post_meta(get_the_ID(), 'arata_show_why_choose', true) !== '0';
-$show_testimonials = get_post_meta(get_the_ID(), 'arata_show_testimonials', true) !== '0';
-
-// Statistics section fields
-$stats_title = get_post_meta(get_the_ID(), 'arata_stats_title', true) ?: 'Thống kê ấn tượng';
-$stats_subtitle = get_post_meta(get_the_ID(), 'arata_stats_subtitle', true) ?: 'Những con số thể hiện sự tin tưởng và hài lòng của khách hàng đối với dịch vụ của chúng tôi.';
-$stats_customers = get_post_meta(get_the_ID(), 'arata_stats_customers', true) ?: '500';
-$stats_projects = get_post_meta(get_the_ID(), 'arata_stats_projects', true) ?: '50';
-$stats_years = get_post_meta(get_the_ID(), 'arata_stats_years', true) ?: '5';
-$stats_success_rate = get_post_meta(get_the_ID(), 'arata_stats_success_rate', true) ?: '98';
-
-// Why Choose Us section fields
-$why_choose_title = get_post_meta(get_the_ID(), 'arata_why_choose_title', true) ?: 'Tại sao chọn Arata Vietnam?';
-$why_choose_subtitle = get_post_meta(get_the_ID(), 'arata_why_choose_subtitle', true) ?: 'Chúng tôi cam kết mang đến những giá trị tốt nhất cho khách hàng thông qua chất lượng dịch vụ và sự tận tâm.';
-$why_choose_quality_title = get_post_meta(get_the_ID(), 'arata_why_choose_quality_title', true) ?: 'Chất lượng hàng đầu';
-$why_choose_quality_desc = get_post_meta(get_the_ID(), 'arata_why_choose_quality_desc', true) ?: 'Cam kết cung cấp dịch vụ chất lượng cao với tiêu chuẩn Nhật Bản.';
-$why_choose_team_title = get_post_meta(get_the_ID(), 'arata_why_choose_team_title', true) ?: 'Đội ngũ chuyên nghiệp';
-$why_choose_team_desc = get_post_meta(get_the_ID(), 'arata_why_choose_team_desc', true) ?: 'Đội ngũ nhân viên giàu kinh nghiệm, được đào tạo bài bản.';
-$why_choose_service_title = get_post_meta(get_the_ID(), 'arata_why_choose_service_title', true) ?: 'Dịch vụ 24/7';
-$why_choose_service_desc = get_post_meta(get_the_ID(), 'arata_why_choose_service_desc', true) ?: 'Hỗ trợ khách hàng mọi lúc, mọi nơi với tinh thần phục vụ tận tâm.';
-
-// Testimonials section fields
-$testimonials_title = get_post_meta(get_the_ID(), 'arata_testimonials_title', true) ?: 'Khách hàng nói gì về chúng tôi';
-$testimonials_subtitle = get_post_meta(get_the_ID(), 'arata_testimonials_subtitle', true) ?: 'Những đánh giá chân thực từ khách hàng đã sử dụng dịch vụ của Arata Vietnam.';
 
 // Set hero variables
 set_query_var('title', get_the_title());
@@ -99,160 +74,96 @@ if ($show_hero) {
     <!-- Search and Filter Section -->
     <section class="py-8 bg-gray-50 border-b" style="background-color: <?php echo esc_attr($background_color); ?>">
         <div class="container mx-auto px-4">
-            <div class="flex flex-col lg:flex-row gap-6 items-center justify-between">
-                <div class="flex-1">
-                    <div class="relative max-w-md">
-                        <input type="text" id="service-search" placeholder="Tìm kiếm dịch vụ..."
-                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
-                        <span data-icon="search" data-size="20" class="absolute left-3 top-2.5 text-gray-400"></span>
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-md">
+                    <div class="relative">
+                        <input type="text" id="service-search" placeholder="Tìm kiếm dịch vụ..." class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span data-icon="search" data-size="20" class="text-gray-400"></span>
+                        </div>
                     </div>
                 </div>
-                <div class="flex flex-wrap gap-3">
-                    <button class="filter-btn active px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-colors" style="background-color: <?php echo esc_attr($primary_color); ?>; color: white;" data-filter="all">
+
+                <!-- Filter Buttons -->
+                <div class="flex flex-wrap gap-2">
+                    <button class="filter-btn px-4 py-2 rounded-lg font-medium transition-colors active" data-filter="all" style="background-color: <?php echo esc_attr($primary_color); ?>; color: white;">
                         Tất cả
                     </button>
                     <?php
                     $service_categories = get_terms([
                         'taxonomy' => 'service_category',
                         'hide_empty' => true,
-                        'parent' => 0
                     ]);
 
-                    if ($service_categories && !is_wp_error($service_categories)) :
-                        foreach ($service_categories as $category) : ?>
-                            <button class="filter-btn px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors" data-filter="<?php echo esc_attr($category->slug); ?>" style="border-color: <?php echo esc_attr($primary_color); ?>20;">
+                    if (!empty($service_categories) && !is_wp_error($service_categories)) :
+                        foreach ($service_categories as $category) :
+                            ?>
+                            <button class="filter-btn px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors" data-filter="<?php echo esc_attr($category->slug); ?>">
                                 <?php echo esc_html($category->name); ?>
                             </button>
-                        <?php endforeach;
-                    endif; ?>
+                            <?php
+                        endforeach;
+                    endif;
+                    ?>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Featured Services Section -->
+    <!-- Services Grid Section -->
     <?php if ($show_services) : ?>
-    <section class="py-16 scroll-animate" style="background: linear-gradient(135deg, <?php echo esc_attr($secondary_color); ?>08, <?php echo esc_attr($primary_color); ?>08);">
+    <section class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <div class="flex items-center justify-center mb-4">
-                    <div class="w-12 h-1 rounded-full mr-4" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
-                    <span class="font-medium text-sm uppercase tracking-wider" style="color: <?php echo esc_attr($primary_color); ?>;">Dịch vụ chính</span>
-                    <div class="w-12 h-1 rounded-full ml-4" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
-                </div>
-                <h2 class="text-4xl font-bold text-gray-900 mb-6"><?php echo esc_html($featured_text); ?></h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Chúng tôi tự hào mang đến những giải pháp tối ưu nhất cho khách hàng, đảm bảo chất lượng và hiệu quả trong mọi dự án.</p>
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Dịch vụ của chúng tôi</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Khám phá các dịch vụ chuyên nghiệp được thiết kế để đáp ứng mọi nhu cầu của bạn</p>
             </div>
 
-            <!-- Services Grid -->
-            <div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                <?php
-                // Get featured services (active services with menu_order)
-                $featured_services = new WP_Query([
-                    'post_type' => 'service',
-                    'posts_per_page' => 6,
-                    'meta_query' => [
-                        [
-                            'key' => 'arata_service_status',
-                            'value' => 'active',
-                            'compare' => '='
-                        ]
-                    ],
-                    'orderby' => 'menu_order',
-                    'order' => 'ASC'
-                ]);
+            <?php
+            $services_query = new WP_Query([
+                'post_type' => 'service',
+                'posts_per_page' => -1,
+                'post_status' => 'publish',
+                'orderby' => 'menu_order',
+                'order' => 'ASC'
+            ]);
 
-                if ($featured_services->have_posts()) :
-                    while ($featured_services->have_posts()) : $featured_services->the_post();
+            if ($services_query->have_posts()) : ?>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="services-grid">
+                    <?php while ($services_query->have_posts()) : $services_query->the_post();
                         $service_type = get_post_meta(get_the_ID(), 'arata_service_type', true);
                         $service_price = get_post_meta(get_the_ID(), 'arata_service_price', true);
-                        $service_price_type = get_post_meta(get_the_ID(), 'arata_service_price_type', true);
-                        $service_duration = get_post_meta(get_the_ID(), 'arata_service_duration', true);
                         $service_icon = get_post_meta(get_the_ID(), 'arata_service_icon', true) ?: 'settings';
-                        $service_color = get_post_meta(get_the_ID(), 'arata_service_color', true) ?: 'primary';
+                        $service_color = get_post_meta(get_the_ID(), 'arata_service_color', true) ?: $primary_color;
 
                         // Get service categories for filtering
                         $service_cats = get_the_terms(get_the_ID(), 'service_category');
-                        $category_slugs = '';
+                        $cat_slugs = [];
                         if ($service_cats && !is_wp_error($service_cats)) {
-                            $category_slugs = implode(' ', array_map(function($cat) { return $cat->slug; }, $service_cats));
+                            foreach ($service_cats as $cat) {
+                                $cat_slugs[] = $cat->slug;
+                            }
                         }
-
-                        // Define color classes
-                        $color_classes = [
-                            'primary' => 'bg-primary text-white',
-                            'secondary' => 'bg-secondary text-white',
-                            'tertiary' => 'bg-tertiary text-white',
-                            'success' => 'bg-success text-white',
-                            'info' => 'bg-info text-white'
-                        ];
-
-                        $icon_color_classes = [
-                            'primary' => 'text-primary',
-                            'secondary' => 'text-secondary',
-                            'tertiary' => 'text-tertiary',
-                            'success' => 'text-success',
-                            'info' => 'text-info'
-                        ];
-
-                        $border_color_classes = [
-                            'primary' => 'border-primary hover:border-primary/80',
-                            'secondary' => 'border-secondary hover:border-secondary/80',
-                            'tertiary' => 'border-tertiary hover:border-tertiary/80',
-                            'success' => 'border-success hover:border-success/80',
-                            'info' => 'border-info hover:border-info/80'
-                        ];
-
-                        $current_color_class = $color_classes[$service_color] ?? $color_classes['primary'];
-                        $current_icon_color = $icon_color_classes[$service_color] ?? $icon_color_classes['primary'];
-                        $current_border_color = $border_color_classes[$service_color] ?? $border_color_classes['primary'];
                         ?>
+                        <div class="service-card bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden group"
+                             data-title="<?php echo esc_attr(get_the_title()); ?>"
+                             data-categories="<?php echo esc_attr(implode(' ', $cat_slugs)); ?>">
 
-                        <div class="service-card group bg-white rounded-xl border-2 border-gray-200 hover:shadow-xl transition-all duration-300 overflow-hidden <?php echo $current_border_color; ?>"
-                             data-categories="<?php echo esc_attr($category_slugs); ?>"
-                             data-title="<?php echo esc_attr(get_the_title()); ?>">
-
-                            <!-- Service Featured Image -->
-                            <?php if (has_post_thumbnail()) : ?>
-                            <div class="w-full h-48 overflow-hidden">
-                                <?php the_post_thumbnail('medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300']); ?>
-                            </div>
-                            <?php endif; ?>
-
-                            <!-- Service Header -->
-                            <div class="p-6 border-b border-gray-100">
-                                <div class="flex items-start justify-between mb-4">
-                                    <div class="w-12 h-12 rounded-lg <?php echo $current_color_class; ?> flex items-center justify-center flex-shrink-0">
-                                        <span data-icon="<?php echo esc_attr($service_icon); ?>" data-size="24" class="text-white"></span>
+                            <!-- Service Image -->
+                            <div class="relative overflow-hidden h-48">
+                                <?php if (has_post_thumbnail()) : ?>
+                                    <?php the_post_thumbnail('medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300']); ?>
+                                <?php else : ?>
+                                    <div class="w-full h-full flex items-center justify-center" style="background: linear-gradient(135deg, <?php echo esc_attr($service_color); ?>20, <?php echo esc_attr($service_color); ?>10);">
+                                        <span data-icon="<?php echo esc_attr($service_icon); ?>" data-size="48" style="color: <?php echo esc_attr($service_color); ?>;"></span>
                                     </div>
-                                    <div class="text-right">
-                                        <?php if ($service_price_type === 'free') : ?>
-                                            <span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">Miễn phí</span>
-                                        <?php elseif ($service_price_type === 'contact') : ?>
-                                            <span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">Liên hệ</span>
-                                        <?php elseif ($service_price) : ?>
-                                            <span class="text-lg font-bold <?php echo $current_icon_color; ?>"><?php echo esc_html($service_price); ?></span>
-                                        <?php else : ?>
-                                            <span class="inline-block px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">Liên hệ</span>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
+                                <?php endif; ?>
 
-                                <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:<?php echo $current_icon_color; ?> transition-colors">
-                                    <a href="<?php the_permalink(); ?>" class="hover:underline"><?php the_title(); ?></a>
-                                </h3>
-
-                                <div class="text-sm text-gray-500 mb-3">
-                                    <?php if ($service_duration) : ?>
-                                        <span class="inline-flex items-center mr-4">
-                                            <span data-icon="clock" data-size="16" class="mr-1"></span>
-                                            <?php echo esc_html($service_duration); ?>
-                                        </span>
-                                    <?php endif; ?>
-
-                                    <?php if ($service_type) : ?>
-                                        <span class="inline-flex items-center">
-                                            <span data-icon="tag" data-size="16" class="mr-1"></span>
+                                <!-- Service Type Badge -->
+                                <?php if ($service_type) : ?>
+                                    <div class="absolute top-4 left-4">
+                                        <span class="inline-flex items-center px-3 py-1 text-white text-xs font-medium rounded-full" style="background-color: <?php echo esc_attr($service_color); ?>;">
                                             <?php
                                             $type_labels = [
                                                 'consultation' => 'Tư vấn',
@@ -262,44 +173,62 @@ if ($show_hero) {
                                                 'training' => 'Đào tạo',
                                                 'custom' => 'Tùy chỉnh'
                                             ];
-                                            echo esc_html($type_labels[$service_type] ?? $service_type);
+                                            echo esc_html($type_labels[$service_type] ?? ucfirst($service_type));
                                             ?>
                                         </span>
-                                    <?php endif; ?>
-                                </div>
+                                    </div>
+                                <?php endif; ?>
                             </div>
 
                             <!-- Service Content -->
                             <div class="p-6">
-                                <div class="text-gray-600 mb-4 line-clamp-3">
-                                    <?php
-                                    $excerpt = get_the_excerpt();
-                                    if (empty($excerpt)) {
-                                        $excerpt = wp_trim_words(get_the_content(), 20, '...');
-                                    }
-                                    echo $excerpt;
-                                    ?>
+                                <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors">
+                                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                </h3>
+
+                                <div class="text-gray-600 mb-4 leading-relaxed">
+                                    <?php echo wp_trim_words(get_the_excerpt() ?: get_the_content(), 20, '...'); ?>
                                 </div>
 
-                                <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-sm font-medium <?php echo $current_icon_color; ?> hover:underline group-hover:scale-105 transition-transform">
-                                    Xem chi tiết
-                                    <span data-icon="arrow-right" data-size="16" class="ml-1 group-hover:translate-x-1 transition-transform"></span>
-                                </a>
+                                <div class="flex items-center justify-between">
+                                    <?php if ($service_price) : ?>
+                                        <div class="text-lg font-semibold" style="color: <?php echo esc_attr($service_color); ?>;">
+                                            <?php echo esc_html($service_price); ?>
+                                        </div>
+                                    <?php else : ?>
+                                        <div class="text-lg font-semibold text-gray-500">
+                                            Liên hệ
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm group-hover:translate-x-1 transition-all duration-300">
+                                        Chi tiết
+                                        <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
-
-                    <?php endwhile;
-                    wp_reset_postdata();
-                else : ?>
-                    <div class="col-span-full text-center py-12">
-                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <span data-icon="package" data-size="32" class="text-gray-400"></span>
-                        </div>
-                        <h3 class="text-lg font-medium text-gray-900 mb-2">Chưa có dịch vụ nào</h3>
-                        <p class="text-gray-500">Vui lòng thêm các dịch vụ trong admin panel.</p>
+                    <?php endwhile; wp_reset_postdata(); ?>
+                </div>
+            <?php else : ?>
+                <div class="text-center py-16">
+                    <div class="text-gray-400 mb-4">
+                        <span data-icon="settings" data-size="64"></span>
                     </div>
-                <?php endif; ?>
-            </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Chưa có dịch vụ nào</h3>
+                    <p class="text-gray-600">Các dịch vụ sẽ được cập nhật sớm nhất có thể.</p>
+                </div>
+            <?php endif; ?>
+
+            <!-- Featured Text -->
+            <?php if (!empty($featured_text)) : ?>
+                <div class="text-center mt-16">
+                    <div class="inline-flex items-center px-6 py-3 rounded-full border-2" style="border-color: <?php echo esc_attr($primary_color); ?>; color: <?php echo esc_attr($primary_color); ?>;">
+                        <span data-icon="star" data-size="20" class="mr-2"></span>
+                        <span class="font-semibold"><?php echo esc_html($featured_text); ?></span>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <!-- CTA Button -->
             <div class="text-center">
@@ -312,207 +241,64 @@ if ($show_hero) {
     </section>
     <?php endif; ?>
 
-
-    <!-- Statistics Section -->
-    <?php if ($show_stats) : ?>
-    <section class="py-16 scroll-animate" style="background: linear-gradient(to right, <?php echo esc_attr($primary_color); ?>08, <?php echo esc_attr($secondary_color); ?>08);">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6"><?php echo esc_html($stats_title); ?></h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto"><?php echo esc_html($stats_subtitle); ?></p>
-            </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold mb-2" style="color: <?php echo esc_attr($primary_color); ?>;" data-count="<?php echo esc_attr($stats_customers); ?>"><?php echo esc_html($stats_customers); ?></div>
-                    <p class="text-gray-600 font-medium">+ Khách hàng hài lòng</p>
-                </div>
-                <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold mb-2" style="color: <?php echo esc_attr($secondary_color); ?>;" data-count="<?php echo esc_attr($stats_projects); ?>"><?php echo esc_html($stats_projects); ?></div>
-                    <p class="text-gray-600 font-medium">+ Dự án thành công</p>
-                </div>
-                <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold mb-2" style="color: <?php echo esc_attr($tertiary_color); ?>;" data-count="<?php echo esc_attr($stats_years); ?>"><?php echo esc_html($stats_years); ?></div>
-                    <p class="text-gray-600 font-medium">+ Năm kinh nghiệm</p>
-                </div>
-                <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold mb-2" style="color: <?php echo esc_attr($secondary_color); ?>;" data-count="<?php echo esc_attr($stats_success_rate); ?>"><?php echo esc_html($stats_success_rate); ?></div>
-                    <p class="text-gray-600 font-medium">% Tỷ lệ thành công</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <?php endif; ?>
-
-    <!-- Why Choose Us Section -->
-    <?php if ($show_why_choose) : ?>
-    <section class="py-16 bg-gray-50 scroll-animate">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6"><?php echo esc_html($why_choose_title); ?></h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto"><?php echo esc_html($why_choose_subtitle); ?></p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="text-center group">
-                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform" style="background-color: <?php echo esc_attr($primary_color); ?>10;">
-                        <span data-icon="award" data-size="32" style="color: <?php echo esc_attr($primary_color); ?>;"></span>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3"><?php echo esc_html($why_choose_quality_title); ?></h3>
-                    <p class="text-gray-600"><?php echo esc_html($why_choose_quality_desc); ?></p>
-                </div>
-
-                <div class="text-center group">
-                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform" style="background-color: <?php echo esc_attr($secondary_color); ?>10;">
-                        <span data-icon="users" data-size="32" style="color: <?php echo esc_attr($secondary_color); ?>;"></span>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3"><?php echo esc_html($why_choose_team_title); ?></h3>
-                    <p class="text-gray-600"><?php echo esc_html($why_choose_team_desc); ?></p>
-                </div>
-
-                <div class="text-center group">
-                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform" style="background-color: <?php echo esc_attr($tertiary_color); ?>10;">
-                        <span data-icon="clock" data-size="32" style="color: <?php echo esc_attr($tertiary_color); ?>;"></span>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3"><?php echo esc_html($why_choose_service_title); ?></h3>
-                    <p class="text-gray-600"><?php echo esc_html($why_choose_service_desc); ?></p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <?php endif; ?>
-
-    <!-- Testimonials Section -->
-    <?php if ($show_testimonials) : ?>
-    <section class="py-16 bg-white scroll-animate">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6"><?php echo esc_html($testimonials_title); ?></h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto"><?php echo esc_html($testimonials_subtitle); ?></p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <?php
-                $testimonial_colors = ['primary', 'secondary', 'tertiary'];
-                for ($i = 1; $i <= 3; $i++) {
-                    $name = get_post_meta(get_the_ID(), 'arata_testimonial_' . $i . '_name', true) ?: 'Khách hàng ' . $i;
-                    $position = get_post_meta(get_the_ID(), 'arata_testimonial_' . $i . '_position', true) ?: 'Chức vụ';
-                    $content = get_post_meta(get_the_ID(), 'arata_testimonial_' . $i . '_content', true) ?: 'Nội dung đánh giá';
-                    $color = $testimonial_colors[$i - 1];
-                ?>
-                <div class="bg-gray-50 p-6 rounded-xl">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 rounded-full flex items-center justify-center mr-4" style="background-color: <?php echo esc_attr(${$color . '_color'}); ?>10;">
-                            <span data-icon="user" data-size="24" style="color: <?php echo esc_attr(${$color . '_color'}); ?>;"></span>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-gray-900"><?php echo esc_html($name); ?></h4>
-                            <p class="text-sm text-gray-600"><?php echo esc_html($position); ?></p>
-                        </div>
-                    </div>
-                    <p class="text-gray-700 italic">"<?php echo esc_html($content); ?>"</p>
-                    <div class="flex text-yellow-400 mt-3">
-                        <span data-icon="star" data-size="16"></span>
-                        <span data-icon="star" data-size="16"></span>
-                        <span data-icon="star" data-size="16"></span>
-                        <span data-icon="star" data-size="16"></span>
-                        <span data-icon="star" data-size="16"></span>
-                    </div>
-                </div>
-                <?php } ?>
-            </div>
-        </div>
-    </section>
-    <?php endif; ?>
-
-
 </main>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('service-search');
-    const filterBtns = document.querySelectorAll('.filter-btn');
+    const filterButtons = document.querySelectorAll('.filter-btn');
     const serviceCards = document.querySelectorAll('.service-card');
 
     // Search functionality
-    searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            filterServices(searchTerm, getActiveFilter());
+        });
+    }
 
+    // Filter functionality
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Update active button
+            filterButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.backgroundColor = '';
+                btn.style.color = '';
+                btn.classList.add('bg-white', 'border', 'border-gray-300', 'text-gray-700');
+            });
+
+            this.classList.add('active');
+            this.style.backgroundColor = '<?php echo esc_js($primary_color); ?>';
+            this.style.color = 'white';
+            this.classList.remove('bg-white', 'border', 'border-gray-300', 'text-gray-700');
+
+            const filter = this.getAttribute('data-filter');
+            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            filterServices(searchTerm, filter);
+        });
+    });
+
+    function getActiveFilter() {
+        const activeButton = document.querySelector('.filter-btn.active');
+        return activeButton ? activeButton.getAttribute('data-filter') : 'all';
+    }
+
+    function filterServices(searchTerm, filter) {
         serviceCards.forEach(card => {
-            const title = card.dataset.title.toLowerCase();
-            const categories = card.dataset.categories;
+            const title = card.getAttribute('data-title').toLowerCase();
+            const categories = card.getAttribute('data-categories');
 
-            if (title.includes(searchTerm) || categories.includes(searchTerm)) {
+            const matchesSearch = !searchTerm || title.includes(searchTerm);
+            const matchesFilter = filter === 'all' || categories.includes(filter);
+
+            if (matchesSearch && matchesFilter) {
                 card.style.display = 'block';
             } else {
                 card.style.display = 'none';
             }
         });
-    });
-
-    // Filter functionality
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            // Remove active class from all buttons
-            filterBtns.forEach(b => b.classList.remove('active', 'bg-primary', 'text-white'));
-            filterBtns.forEach(b => b.classList.add('bg-white', 'border', 'border-gray-300', 'text-gray-700'));
-
-            // Add active class to clicked button
-            this.classList.add('active');
-            this.classList.remove('bg-white', 'border', 'border-gray-300', 'text-gray-700');
-            this.style.backgroundColor = '<?php echo esc_js($primary_color); ?>';
-            this.style.color = 'white';
-            this.style.borderColor = '<?php echo esc_js($primary_color); ?>';
-
-            const filter = this.dataset.filter;
-
-            serviceCards.forEach(card => {
-                if (filter === 'all' || card.dataset.categories.includes(filter)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-    });
-
-    // Animated counters
-    const counters = document.querySelectorAll('[data-count]');
-
-    const animateCounter = (counter) => {
-        const target = parseInt(counter.dataset.count);
-        const duration = 2000; // 2 seconds
-        const step = target / (duration / 16); // 60fps
-        let current = 0;
-
-        const timer = setInterval(() => {
-            current += step;
-            if (current >= target) {
-                current = target;
-                clearInterval(timer);
-            }
-            counter.textContent = Math.floor(current);
-        }, 16);
-    };
-
-    // Intersection Observer for counters
-    const observerOptions = {
-        threshold: 0.5,
-        rootMargin: '0px 0px -100px 0px'
-    };
-
-    const counterObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateCounter(entry.target);
-                counterObserver.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    counters.forEach(counter => {
-        counterObserver.observe(counter);
-    });
+    }
 });
 </script>
 

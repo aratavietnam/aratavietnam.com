@@ -184,7 +184,7 @@ get_template_part('template-parts/hero');
                     <?php if (!empty($tiktok_url)) : ?>
                         <a href="<?php echo esc_url($tiktok_url); ?>" target="_blank" rel="noopener noreferrer"
                            class="w-12 h-12 bg-secondary text-white rounded-full flex items-center justify-center hover:bg-secondary-dark transition-colors">
-                            <span data-icon="music" data-size="24"></span>
+                            <span data-icon="tiktok" data-size="24"></span>
                         </a>
                     <?php endif; ?>
 
@@ -192,8 +192,8 @@ get_template_part('template-parts/hero');
                     <?php if (!empty($shopee_url)) : ?>
                         <a href="<?php echo esc_url($shopee_url); ?>" target="_blank" rel="noopener noreferrer"
                            class="w-12 h-12 bg-secondary text-white rounded-full flex items-center justify-center hover:bg-secondary-dark transition-colors">
-                            <span data-icon="shopping-bag" data-size="24"></span>
-                        </a>e
+                            <span data-icon="shopee" data-size="24"></span>
+                        </a>
                     <?php endif; ?>
 
                     <!-- Website -->

@@ -6,17 +6,18 @@
 
 if (!defined('ABSPATH')) { exit; }
 
-/**
- * Add promotions page meta boxes
- */
+// Add meta box for promotions page settings
 function add_promotions_meta_boxes() {
     global $post;
-    
-    // Only add meta box if this page uses promotions template
-    if ($post && get_page_template_slug($post->ID) === 'page-templates/promotions.php') {
+
+    // Only add meta box if this page uses promotions template OR is the promotions archive page
+    $is_promotions_template = $post && get_page_template_slug($post->ID) === 'page-templates/promotions.php';
+    $is_promotions_archive = $post && $post->post_name === 'khuyen-mai';
+
+    if ($is_promotions_template || $is_promotions_archive) {
         add_meta_box(
             'promotions_settings',
-            'Cài đặt trang Khuyến mãi',
+            __('Cài đặt trang Khuyến mãi', 'aratavietnam'),
             'promotions_settings_callback',
             'page',
             'normal',
@@ -24,131 +25,126 @@ function add_promotions_meta_boxes() {
         );
     }
 }
-add_action('add_meta_boxes', 'add_promotions_meta_boxes');
 
 /**
  * Promotions settings meta box callback
  */
 function promotions_settings_callback($post) {
-    // Only show for pages using the promotions template
+    // Only show for pages using the promotions template or promotions archive page
     $page_template = get_page_template_slug($post->ID);
-    if ($page_template !== 'page-templates/promotions.php') {
-        echo '<p class="description">Meta box này chỉ hiển thị cho trang sử dụng template "Promotions Page".</p>';
+    $is_promotions_template = $page_template === 'page-templates/promotions.php';
+    $is_promotions_archive = $post->post_name === 'khuyen-mai';
+
+    if (!$is_promotions_template && !$is_promotions_archive) {
+        echo '<p>Meta fields này chỉ hiển thị cho trang sử dụng template "Promotions Page" hoặc trang khuyến mãi.</p>';
         return;
     }
 
-    // Add nonce for security
-    wp_nonce_field('promotions_settings_save', 'promotions_settings_nonce');
-    
+    wp_nonce_field('promotions_settings_nonce', 'promotions_settings_nonce');
+
     // Get current values
     $show_hero = get_post_meta($post->ID, 'arata_show_hero', true);
     $compact_hero = get_post_meta($post->ID, 'arata_compact_hero', true);
-    $promotions_subtitle = get_post_meta($post->ID, 'arata_promotions_subtitle', true);
-    $promotions_intro = get_post_meta($post->ID, 'arata_promotions_intro', true);
-    
-    // Default values
-    if ($promotions_subtitle === '') {
-        $promotions_subtitle = 'Ưu đãi đặc biệt từ Arata Vietnam';
-    }
-    if ($promotions_intro === '') {
-        $promotions_intro = 'Khám phá các chương trình khuyến mãi hấp dẫn và ưu đãi độc quyền từ Arata Vietnam.';
-    }
+    $hero_subtitle = get_post_meta($post->ID, 'arata_promotions_subtitle', true);
+    $hero_intro = get_post_meta($post->ID, 'arata_promotions_intro', true);
+
     ?>
-    
-    <table class="form-table">
+    <style>
+        .promotions-meta-table { width: 100%; }
+        .promotions-meta-table th { width: 200px; text-align: left; padding: 15px 10px 15px 0; vertical-align: top; }
+        .promotions-meta-table td { padding: 15px 0; }
+        .promotions-meta-table input[type="text"], .promotions-meta-table textarea { width: 100%; max-width: 500px; }
+        .promotions-meta-table textarea { height: 80px; }
+        .section-header {
+            background: #f0f0f1;
+            padding: 10px 15px;
+            margin: 20px -12px 15px -12px;
+            font-weight: 600;
+            border-left: 4px solid #2271b1;
+        }
+        .section-header:first-child { margin-top: 0; }
+    </style>
+
+    <div class="section-header">Cài đặt Hero Section</div>
+    <table class="promotions-meta-table">
         <tr>
-            <th scope="row">
-                <label for="arata_promotions_show_hero">Hiển thị Hero Section</label>
-            </th>
+            <th><label for="arata_promotions_show_hero">Hiển thị Hero Section</label></th>
             <td>
                 <label>
                     <input type="checkbox" id="arata_promotions_show_hero" name="arata_show_hero" value="1" <?php checked($show_hero, '1'); ?> />
-                    Bật hero section cho trang này
+                    Hiển thị phần hero trên trang khuyến mãi
                 </label>
             </td>
         </tr>
-        
         <tr>
-            <th scope="row">
-                <label for="arata_promotions_compact_hero">Hero Gọn</label>
-            </th>
+            <th><label for="arata_promotions_compact_hero">Chế độ Hero</label></th>
             <td>
                 <label>
                     <input type="checkbox" id="arata_promotions_compact_hero" name="arata_compact_hero" value="1" <?php checked($compact_hero, '1'); ?> />
-                    Sử dụng hero gọn (thấp hơn)
+                    Sử dụng hero nhỏ gọn (thay vì hero đầy đủ)
                 </label>
-                <p class="description">Hero gọn sẽ có chiều cao thấp hơn và phong cách tối giản</p>
-            </td>
-        </tr>
-        
-        <tr>
-            <th scope="row">
-                <label for="arata_promotions_subtitle">Phụ đề Hero</label>
-            </th>
-            <td>
-                <input type="text" id="arata_promotions_subtitle" name="arata_promotions_subtitle" value="<?php echo esc_attr($promotions_subtitle); ?>" class="large-text" />
-                <p class="description">Tiêu đề phụ hiển thị trong hero section</p>
-            </td>
-        </tr>
-        
-        <tr>
-            <th scope="row">
-                <label for="arata_promotions_intro">Giới thiệu Hero</label>
-            </th>
-            <td>
-                <textarea id="arata_promotions_intro" name="arata_promotions_intro" rows="3" class="large-text"><?php echo esc_textarea($promotions_intro); ?></textarea>
-                <p class="description">Mô tả ngắn hiển thị trong hero section</p>
+                <p class="description">Hero nhỏ gọn sẽ có chiều cao thấp hơn và thiết kế đơn giản</p>
             </td>
         </tr>
     </table>
-    
+
+    <div class="section-header">Nội dung Hero Section</div>
+    <table class="promotions-meta-table">
+        <tr>
+            <th><label for="arata_promotions_subtitle">Tiêu đề Hero</label></th>
+            <td>
+                <input type="text" id="arata_promotions_subtitle" name="arata_promotions_subtitle" value="<?php echo esc_attr($hero_subtitle); ?>" placeholder="Khuyến mãi" />
+                <p class="description">Tiêu đề hiển thị trong hero section</p>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="arata_promotions_intro">Mô tả Hero</label></th>
+            <td>
+                <textarea id="arata_promotions_intro" name="arata_promotions_intro" placeholder="Khám phá các chương trình khuyến mãi hấp dẫn..."><?php echo esc_textarea($hero_intro); ?></textarea>
+                <p class="description">Mô tả hiển thị dưới tiêu đề trong hero section</p>
+            </td>
+        </tr>
+    </table>
     <?php
 }
 
-/**
- * Save promotions settings
- */
 function save_promotions_settings($post_id) {
-    // Check if nonce is set
-    if (!isset($_POST['promotions_settings_nonce'])) {
-        return;
-    }
-    
     // Verify nonce
-    if (!wp_verify_nonce($_POST['promotions_settings_nonce'], 'promotions_settings_save')) {
-        return;
-    }
-    
-    // Check if user has permission to edit
-    if (!current_user_can('edit_post', $post_id)) {
-        return;
-    }
-    
-    // Check if this is an autosave
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+    if (!isset($_POST['promotions_settings_nonce']) || !wp_verify_nonce($_POST['promotions_settings_nonce'], 'promotions_settings_nonce')) {
         return;
     }
 
-    // Only save for pages using promotions template
-    $page_template = get_page_template_slug($post_id);
-    if ($page_template !== 'page-templates/promotions.php') {
+    // Check permissions
+    if (!current_user_can('edit_page', $post_id)) {
         return;
     }
-    
-    // Save hero settings
-    $show_hero = isset($_POST['arata_show_hero']) ? '1' : '0';
-    update_post_meta($post_id, 'arata_show_hero', $show_hero);
-    
-    $compact_hero = isset($_POST['arata_compact_hero']) ? '1' : '0';
-    update_post_meta($post_id, 'arata_compact_hero', $compact_hero);
-    
-    // Save promotions-specific content
-    if (isset($_POST['arata_promotions_subtitle'])) {
-        update_post_meta($post_id, 'arata_promotions_subtitle', sanitize_text_field($_POST['arata_promotions_subtitle']));
+
+    // Only save for pages using promotions template or archive page
+    $page_template = get_page_template_slug($post_id);
+    $post = get_post($post_id);
+    $is_promotions_template = $page_template === 'page-templates/promotions.php';
+    $is_promotions_archive = $post && $post->post_name === 'khuyen-mai';
+
+    if (!$is_promotions_template && !$is_promotions_archive) {
+        return;
     }
-    
-    if (isset($_POST['arata_promotions_intro'])) {
-        update_post_meta($post_id, 'arata_promotions_intro', sanitize_textarea_field($_POST['arata_promotions_intro']));
+
+    // Save checkbox fields
+    $checkbox_fields = ['arata_show_hero', 'arata_compact_hero'];
+    foreach ($checkbox_fields as $field) {
+        $value = isset($_POST[$field]) ? '1' : '0';
+        update_post_meta($post_id, $field, $value);
+    }
+
+    // Save text fields
+    $text_fields = ['arata_promotions_subtitle', 'arata_promotions_intro'];
+    foreach ($text_fields as $field) {
+        if (isset($_POST[$field])) {
+            update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
+        }
     }
 }
+
+// Hook the functions
+add_action('add_meta_boxes', 'add_promotions_meta_boxes');
 add_action('save_post', 'save_promotions_settings');

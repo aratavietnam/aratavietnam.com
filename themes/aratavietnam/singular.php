@@ -140,21 +140,7 @@ get_header();
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="py-20 bg-black text-white">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-6">Sẵn sàng bắt đầu?</h2>
-            <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">Khám phá thế giới nội dung đa dạng và thú vị ngay hôm nay</p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="<?php echo esc_url( home_url( '/?post_type=post' ) ); ?>" class="inline-flex items-center px-8 py-4 bg-white text-black font-semibold hover:bg-gray-100 transition-all duration-300 rounded-lg no-underline">
-                    Khám phá ngay
-                </a>
-                <a href="<?php echo esc_url( home_url( '/wp-admin' ) ); ?>" class="inline-flex items-center px-8 py-4 border border-white text-white hover:bg-white hover:text-black transition-all duration-300 rounded-lg no-underline">
-                    Quản trị website
-                </a>
-            </div>
-        </div>
-    </section>
+
 </main>
 
 <?php get_footer(); ?>
