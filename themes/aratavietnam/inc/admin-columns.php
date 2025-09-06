@@ -1,7 +1,7 @@
 <?php
 /**
  * Admin Columns - Featured Image Display
- * Thêm cột ảnh đại diện vào bảng danh sách bài viết trong WordPress admin
+ * Add featured image column to post list table in WordPress admin
  */
 
 add_action('admin_init', 'aratavietnam_add_featured_image_column_to_post_types');
@@ -16,7 +16,7 @@ function aratavietnam_add_featured_image_column_to_post_types() {
 }
 
 /**
- * Thêm cột ảnh đại diện vào đầu bảng
+ * Add featured image column to table header
  */
 function aratavietnam_add_featured_image_column($columns) {
     // Add featured image column for Posts
@@ -127,7 +127,7 @@ function aratavietnam_admin_columns_css() {
 }
 
 /**
- * Làm cho cột ảnh đại diện có thể sắp xếp (sortable)
+ * Make featured image column sortable
  */
 
 
@@ -137,7 +137,7 @@ function aratavietnam_make_featured_image_sortable($columns) {
 }
 
 /**
- * Xử lý sắp xếp theo ảnh đại diện
+ * Handle sorting by featured image
  */
 add_action('pre_get_posts', 'aratavietnam_featured_image_orderby');
 function aratavietnam_featured_image_orderby($query) {

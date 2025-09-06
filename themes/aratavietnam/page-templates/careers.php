@@ -1,31 +1,33 @@
 <?php
 /**
- * Template Name: Careers Page
+ * Template Name: Tuyển dụng
  * Template Post Type: page
- * Description: Careers page with job listings and application form
+ * Description: Trang tuyển dụng với layout 2 cột giống blog
  */
 
 if (!defined('ABSPATH')) { exit; }
 
 get_header();
 
-// Get global colors
+// Get customizer color settings
 $primary_color = get_theme_mod('theme_primary_color', '#F55E25');
 $secondary_color = get_theme_mod('theme_secondary_color', '#0066A6');
 $tertiary_color = get_theme_mod('theme_tertiary_color', '#FFAB14');
 $background_color = get_theme_mod('theme_background_color', '#ffffff');
 
-// Hero configuration
-$show_hero = get_post_meta(get_the_ID(), 'arata_show_hero', true) !== '0'; // Default to true if not set
-$use_compact_hero = get_post_meta(get_the_ID(), 'arata_compact_hero', true) === '1';
-$hero_subtitle = get_post_meta(get_the_ID(), 'arata_careers_subtitle', true) ?: 'Cơ hội nghề nghiệp tại Arata Vietnam';
-$hero_intro = get_post_meta(get_the_ID(), 'arata_careers_intro', true) ?: 'Gia nhập đội ngũ Arata Vietnam và phát triển sự nghiệp trong lĩnh vực hóa mỹ phẩm hàng đầu.';
+// Get page meta fields for hero customization
+$hero_subtitle = get_post_meta(get_the_ID(), 'arata_careers_subtitle', true) ?: 'Tuyển dụng';
+$hero_intro = get_post_meta(get_the_ID(), 'arata_careers_intro', true) ?: 'Khám phá cơ hội nghề nghiệp tại Arata Vietnam - nơi bạn có thể phát triển tài năng và xây dựng tương lai trong lĩnh vực hóa mỹ phẩm.';
 
-// Set hero variables if using full hero
-if ($show_hero && !$use_compact_hero) {
-    set_query_var('title', get_the_title());
-    set_query_var('subtitle', $hero_subtitle);
-}
+// Section visibility controls
+$show_hero = get_post_meta(get_the_ID(), 'arata_show_hero', true) !== '0'; // Default to true if not set
+$use_compact_hero = get_post_meta(get_the_ID(), 'arata_compact_hero', true) === '1'; // New compact option
+
+// Set hero variables
+set_query_var('title', get_the_title());
+set_query_var('subtitle', $hero_subtitle);
+set_query_var('description', $hero_intro);
+set_query_var('compact_mode', $use_compact_hero);
 
 if ($show_hero) {
     if ($use_compact_hero) {
@@ -49,7 +51,7 @@ if ($show_hero) {
         // Use full hero template part
         get_template_part('template-parts/hero');
         ?>
-        <main id="site-content" class="bg-white">
+        <main id="site-content" style="background-color: <?php echo esc_attr($background_color); ?>;">
             <!-- Careers Content Section -->
             <div class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>;">
                 <div class="container mx-auto px-4">
@@ -57,285 +59,244 @@ if ($show_hero) {
     }
 } else {
     ?>
-    <main id="site-content" class="bg-white">
+    <main id="site-content" style="background-color: <?php echo esc_attr($background_color); ?>;">
         <!-- Careers Content Section -->
         <div class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>;">
             <div class="container mx-auto px-4">
     <?php
 }
 ?>
-                <!-- Page Content -->
-                <article id="post-<?php the_ID(); ?>" <?php post_class('prose max-w-none mb-12'); ?>>
-                    <div class="entry-content">
+
+<!-- Main Careers Layout: Left (6 jobs horizontal) + Right (sidebar vertical) -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+                <!-- Left Side: 6 Job Postings in Horizontal Layout (2 rows x 3 columns) -->
+                <div class="lg:col-span-2">
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                         <?php
-                        while (have_posts()) : the_post();
-                            the_content();
-                        endwhile;
+                        $job_posts = new WP_Query([
+                            'post_type' => 'job_posting',
+                            'posts_per_page' => 6,
+                            'post_status' => 'publish'
+                        ]);
+
+                        if ($job_posts->have_posts()) :
+                            while ($job_posts->have_posts()) : $job_posts->the_post();
+                                ?>
+                                <article class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
+                                    <?php if (has_post_thumbnail()): ?>
+                                        <div class="aspect-video overflow-hidden">
+                                            <a href="<?php the_permalink(); ?>">
+                                                <?php the_post_thumbnail('medium', ['class' => 'w-full h-full object-cover hover:scale-105 transition-transform duration-300']); ?>
+                                            </a>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="aspect-video bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
+                                            <div class="text-center">
+                                                <span data-icon="briefcase" data-size="32" class="text-gray-400 mb-2"></span>
+                                                <p class="text-gray-500 text-sm">Arata Vietnam</p>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <div class="p-4">
+                                        <!-- Meta info -->
+                                        <div class="flex items-center text-xs text-gray-500 mb-3">
+                                            <span data-icon="calendar" data-size="14" class="mr-1"></span>
+                                            <?php echo get_the_date('d/m/Y'); ?>
+                                            
+                                            <?php
+                                            $location = get_post_meta(get_the_ID(), 'job_location', true);
+                                            if ($location): ?>
+                                                <span class="mx-2">•</span>
+                                                <span data-icon="map-pin" data-size="14" class="mr-1"></span>
+                                                <?php echo esc_html($location); ?>
+                                            <?php endif; ?>
+                                        </div>
+
+                                        <!-- Job Title -->
+                                        <h3 class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">
+                                            <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors">
+                                                <?php the_title(); ?>
+                                            </a>
+                                        </h3>
+
+                                        <!-- Job Description (Excerpt) -->
+                                        <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                                            <?php
+                                            $excerpt = get_the_excerpt();
+                                            if (empty($excerpt)) {
+                                                $excerpt = wp_trim_words(get_the_content(), 20);
+                                            }
+                                            echo esc_html($excerpt);
+                                            ?>
+                                        </p>
+
+                                        <!-- Job Type & Salary -->
+                                        <div class="flex items-center justify-between mb-4">
+                                            <?php
+                                            $job_type = get_post_meta(get_the_ID(), 'job_type', true);
+                                            $salary = get_post_meta(get_the_ID(), 'job_salary', true);
+                                            ?>
+                                            
+                                            <?php if ($job_type): ?>
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                    <?php echo esc_html($job_type); ?>
+                                                </span>
+                                            <?php endif; ?>
+                                            
+                                            <?php if ($salary): ?>
+                                                <span class="text-primary font-semibold text-sm">
+                                                    <?php echo esc_html($salary); ?>
+                                                </span>
+                                            <?php endif; ?>
+                                        </div>
+
+                                        <!-- View details link -->
+                                        <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm">
+                                            Xem chi tiết
+                                            <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
+                                        </a>
+                                    </div>
+                                </article>
+                                <?php
+                            endwhile;
+                            wp_reset_postdata();
+                        else:
+                            ?>
+                            <div class="col-span-full text-center py-12">
+                                <div class="text-gray-400 mb-4">
+                                    <span data-icon="briefcase" data-size="48"></span>
+                                </div>
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">Chưa có tin tuyển dụng nào</h3>
+                                <p class="text-gray-600">Hãy quay lại sau để xem những cơ hội nghề nghiệp mới nhất tại Arata Vietnam.</p>
+                            </div>
+                            <?php
+                        endif;
                         ?>
                     </div>
-                </article>
-                <!-- Section Header -->
-                <div class="text-center mb-12">
-                    <div class="flex items-center justify-center mb-4">
-                        <div class="w-12 h-1 rounded-full mr-4" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
-                        <span class="font-medium text-sm uppercase tracking-wider" style="color: <?php echo esc_attr($primary_color); ?>;">Cơ hội nghề nghiệp</span>
-                        <div class="w-12 h-1 rounded-full ml-4" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
-                    </div>
-                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Vị trí tuyển dụng</h2>
-                    <p class="text-gray-600 max-w-2xl mx-auto">
-                        Gia nhập đội ngũ Arata Vietnam và phát triển sự nghiệp trong lĩnh vực hóa mỹ phẩm hàng đầu.
-                    </p>
-                </div>
 
-                <!-- Job Listings -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-                <?php
-                $jobs = new WP_Query([
-                    'post_type' => 'job_posting',
-                    'posts_per_page' => -1,
-                    'post_status' => 'publish',
-                    'meta_query' => [
-                        'relation' => 'OR',
-                        [
-                            'key' => 'arata_job_deadline',
-                            'value' => date('Y-m-d'),
-                            'compare' => '>=',
-                            'type' => 'DATE'
-                        ],
-                        [
-                            'key' => 'arata_job_deadline',
-                            'compare' => 'NOT EXISTS'
-                        ]
-                    ]
-                ]);
+                    <!-- Pagination -->
+                    <?php if ($job_posts->max_num_pages > 1): ?>
+                        <div class="mt-12 flex justify-center">
+                            <div class="flex items-center space-x-2">
+                                <?php
+                                $current_page = max(1, get_query_var('paged'));
+                                $total_pages = $job_posts->max_num_pages;
 
-                if ($jobs->have_posts()) :
-                    while ($jobs->have_posts()) : $jobs->the_post();
-                        $department = get_post_meta(get_the_ID(), 'arata_job_department', true);
-                        $location = get_post_meta(get_the_ID(), 'arata_job_location', true);
-                        $type = get_post_meta(get_the_ID(), 'arata_job_type', true);
-                        $level = get_post_meta(get_the_ID(), 'arata_job_level', true);
-                        $salary = get_post_meta(get_the_ID(), 'arata_job_salary', true);
-                        $deadline = get_post_meta(get_the_ID(), 'arata_job_deadline', true);
-
-                        $type_labels = [
-                            'full_time' => 'Toàn thời gian',
-                            'part_time' => 'Bán thời gian',
-                            'contract' => 'Hợp đồng',
-                            'internship' => 'Thực tập',
-                            'freelance' => 'Freelance'
-                        ];
-
-                        $level_labels = [
-                            'intern' => 'Thực tập sinh',
-                            'fresher' => 'Nhân viên mới',
-                            'junior' => 'Nhân viên',
-                            'senior' => 'Nhân viên cao cấp',
-                            'lead' => 'Trưởng nhóm',
-                            'manager' => 'Quản lý',
-                            'director' => 'Giám đốc'
-                        ];
-                        ?>
-                        <div class="bg-white rounded-lg p-6 border border-gray-200 transition-colors duration-300" style="border-color: <?php echo esc_attr($secondary_color); ?>;" onmouseover="this.style.borderColor='<?php echo esc_attr($secondary_color); ?>'" onmouseout="this.style.borderColor='#E5E7EB'">
-                            <div class="flex items-start justify-between mb-4">
-                                <h3 class="text-xl font-semibold text-gray-900 flex-1">
-                                    <a href="<?php the_permalink(); ?>" class="transition-colors" style="color: inherit;" onmouseover="this.style.color='<?php echo esc_attr($primary_color); ?>'" onmouseout="this.style.color='inherit'">
-                                        <?php the_title(); ?>
+                                // Previous button
+                                if ($current_page > 1): ?>
+                                    <a href="<?php echo get_pagenum_link($current_page - 1); ?>" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                                        Trước
                                     </a>
-                                </h3>
-                                <?php if ($type): ?>
-                                    <span class="px-3 py-1 rounded-full text-xs font-medium ml-4" style="background-color: <?php echo esc_attr($primary_color); ?>10; color: <?php echo esc_attr($primary_color); ?>;">
-                                        <?php echo esc_html($type_labels[$type] ?? $type); ?>
-                                    </span>
+                                <?php endif;
+
+                                // Page numbers
+                                for ($i = 1; $i <= $total_pages; $i++): ?>
+                                    <a href="<?php echo get_pagenum_link($i); ?>" class="px-4 py-2 text-sm font-medium <?php echo ($i == $current_page) ? 'text-white bg-primary border-primary' : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50'; ?> border rounded-lg">
+                                        <?php echo $i; ?>
+                                    </a>
+                                <?php endfor;
+
+                                // Next button
+                                if ($current_page < $total_pages): ?>
+                                    <a href="<?php echo get_pagenum_link($current_page + 1); ?>" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                                        Sau
+                                    </a>
                                 <?php endif; ?>
                             </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
 
-                            <div class="space-y-3 mb-4 text-sm text-gray-600">
-                                <?php if ($department): ?>
-                                    <div class="flex items-center">
-                                        <span data-icon="building" data-size="16" class="mr-2 text-gray-400"></span>
-                                        <span class="font-medium">Phòng ban:</span>
-                                        <span class="ml-1"><?php echo esc_html($department); ?></span>
-                                    </div>
-                                <?php endif; ?>
+                <!-- Right Side: Vertical Sidebar -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-xl p-6 sticky top-8 shadow-sm">
+                        <h3 class="text-xl font-bold text-gray-900 mb-6 pb-3 border-b border-gray-200">
+                            Thông tin tuyển dụng
+                        </h3>
 
-                                <?php if ($location): ?>
-                                    <div class="flex items-center">
-                                        <span data-icon="map-pin" data-size="16" class="mr-2 text-gray-400"></span>
-                                        <span class="font-medium">Địa điểm:</span>
-                                        <span class="ml-1"><?php echo esc_html($location); ?></span>
-                                    </div>
-                                <?php endif; ?>
-
-                                <?php if ($level): ?>
-                                    <div class="flex items-center">
-                                        <span data-icon="trending-up" data-size="16" class="mr-2 text-gray-400"></span>
-                                        <span class="font-medium">Cấp bậc:</span>
-                                        <span class="ml-1"><?php echo esc_html($level_labels[$level] ?? $level); ?></span>
-                                    </div>
-                                <?php endif; ?>
-
-                                <?php if ($salary): ?>
-                                    <div class="flex items-center">
-                                        <span data-icon="dollar-sign" data-size="16" class="mr-2 text-gray-400"></span>
-                                        <span class="font-medium">Mức lương:</span>
-                                        <span class="ml-1"><?php echo esc_html($salary); ?></span>
-                                    </div>
-                                <?php endif; ?>
-
-                                <?php if ($deadline): ?>
-                                    <div class="flex items-center text-red-600">
-                                        <span data-icon="calendar" data-size="16" class="mr-2"></span>
-                                        <span class="font-medium">Hạn nộp:</span>
-                                        <span class="ml-1"><?php echo date('d/m/Y', strtotime($deadline)); ?></span>
-                                    </div>
-                                <?php endif; ?>
+                        <div class="space-y-6">
+                            <!-- Company Benefits -->
+                            <div>
+                                <h4 class="font-semibold text-gray-800 mb-3 flex items-center">
+                                    <span data-icon="heart" data-size="16" class="mr-2 text-primary"></span>
+                                    Phúc lợi nhân viên
+                                </h4>
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    <li class="flex items-start">
+                                        <span data-icon="check" data-size="14" class="mr-2 text-green-500 mt-0.5 flex-shrink-0"></span>
+                                        Lương tháng 13, thưởng hiệu suất
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span data-icon="check" data-size="14" class="mr-2 text-green-500 mt-0.5 flex-shrink-0"></span>
+                                        Bảo hiểm sức khỏe toàn diện
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span data-icon="check" data-size="14" class="mr-2 text-green-500 mt-0.5 flex-shrink-0"></span>
+                                        Đào tạo & phát triển sự nghiệp
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span data-icon="check" data-size="14" class="mr-2 text-green-500 mt-0.5 flex-shrink-0"></span>
+                                        Môi trường làm việc hiện đại
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span data-icon="check" data-size="14" class="mr-2 text-green-500 mt-0.5 flex-shrink-0"></span>
+                                        Team building định kỳ
+                                    </li>
+                                </ul>
                             </div>
 
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-3"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
+                            <!-- Contact Info -->
+                            <div>
+                                <h4 class="font-semibold text-gray-800 mb-3 flex items-center">
+                                    <span data-icon="phone" data-size="16" class="mr-2 text-primary"></span>
+                                    Liên hệ HR
+                                </h4>
+                                <div class="space-y-2 text-sm text-gray-600">
+                                    <p class="flex items-center">
+                                        <span data-icon="mail" data-size="14" class="mr-2 text-gray-400"></span>
+                                        hr@aratavietnam.com
+                                    </p>
+                                    <p class="flex items-center">
+                                        <span data-icon="phone" data-size="14" class="mr-2 text-gray-400"></span>
+                                        (028) 1234 5678
+                                    </p>
+                                </div>
+                            </div>
 
-                            <div class="flex items-center justify-between">
-                                <a href="<?php the_permalink(); ?>" class="font-medium text-sm transition-colors" style="color: <?php echo esc_attr($primary_color); ?>;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-                                    Xem chi tiết →
+                            <!-- Quick Apply -->
+                            <div class="border-t border-gray-200 pt-4">
+                                <a href="mailto:hr@aratavietnam.com" class="inline-flex items-center text-primary hover:text-primary-dark font-medium text-sm">
+                                    Gửi CV ngay
+                                    <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
                                 </a>
-                                <button onclick="openApplicationModal('<?php echo esc_js(get_the_title()); ?>')" class="text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" style="background-color: <?php echo esc_attr($primary_color); ?>;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-                                    Ứng tuyển ngay
-                                </button>
                             </div>
-                        </div>
-                        <?php
-                    endwhile;
-                    wp_reset_postdata();
-                else:
-                    ?>
-                    <div class="col-span-3 text-center py-12">
-                        <div class="text-gray-400 mb-4">
-                            <span data-icon="briefcase" data-size="48"></span>
-                        </div>
-                        <h3 class="text-lg font-medium text-gray-900 mb-2">Hiện tại chưa có vị trí tuyển dụng</h3>
-                        <p class="text-gray-600 mb-6">Chúng tôi sẽ cập nhật các vị trí tuyển dụng mới trong thời gian tới.</p>
-                        <button onclick="openApplicationModal('Ứng tuyển tự do')" class="text-white px-6 py-3 rounded-lg font-medium transition-colors" style="background-color: <?php echo esc_attr($primary_color); ?>;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-                            Gửi hồ sơ tự do
-                        </button>
-                    </div>
-                    <?php
-                endif;
-                ?>
-                </div>
-
-                <!-- Why Join Us Section -->
-                <div class="bg-white rounded-lg p-8 shadow-sm border border-gray-200">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Tại sao chọn Arata Vietnam?</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="text-center">
-                            <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: <?php echo esc_attr($primary_color); ?>10;">
-                                <span data-icon="users" data-size="32" style="color: <?php echo esc_attr($primary_color); ?>;"></span>
-                            </div>
-                            <h4 class="font-semibold text-gray-900 mb-2">Môi trường chuyên nghiệp</h4>
-                            <p class="text-gray-600 text-sm">Làm việc cùng đội ngũ chuyên gia giàu kinh nghiệm trong lĩnh vực hóa mỹ phẩm.</p>
-                        </div>
-                        <div class="text-center">
-                            <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: <?php echo esc_attr($secondary_color); ?>10;">
-                                <span data-icon="trending-up" data-size="32" style="color: <?php echo esc_attr($secondary_color); ?>;"></span>
-                            </div>
-                            <h4 class="font-semibold text-gray-900 mb-2">Cơ hội phát triển</h4>
-                            <p class="text-gray-600 text-sm">Nhiều cơ hội thăng tiến và phát triển kỹ năng trong môi trường năng động.</p>
-                        </div>
-                        <div class="text-center">
-                            <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background-color: <?php echo esc_attr($tertiary_color); ?>10;">
-                                <span data-icon="heart" data-size="32" style="color: <?php echo esc_attr($tertiary_color); ?>;"></span>
-                            </div>
-                            <h4 class="font-semibold text-gray-900 mb-2">Phúc lợi hấp dẫn</h4>
-                            <p class="text-gray-600 text-sm">Chế độ đãi ngộ cạnh tranh và các phúc lợi đặc biệt cho nhân viên.</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </main>
-
-<!-- Application Modal -->
-<div id="applicationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div class="p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-bold text-gray-900">Ứng tuyển vị trí</h3>
-                <button onclick="closeApplicationModal()" class="text-gray-400 hover:text-gray-600">
-                    <span data-icon="x" data-size="24"></span>
-                </button>
-            </div>
-
-            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" enctype="multipart/form-data" class="space-y-4">
-                <input type="hidden" name="action" value="arata_job_application_submit" />
-                <?php wp_nonce_field('arata_job_application_submit', 'arata_job_application_nonce'); ?>
-                <input type="hidden" id="applicationPosition" name="position" value="" />
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="applicant_name" class="block text-sm font-medium text-gray-700 mb-1">Họ và tên *</label>
-                        <input id="applicant_name" name="name" type="text" required class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
-                    </div>
-
-                    <div>
-                        <label for="applicant_email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
-                        <input id="applicant_email" name="email" type="email" required class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
-                    </div>
-                </div>
-
-                <div>
-                    <label for="applicant_phone" class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại *</label>
-                    <input id="applicant_phone" name="phone" type="tel" required class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
-                </div>
-
-                <div>
-                    <label for="applicant_cv" class="block text-sm font-medium text-gray-700 mb-1">CV (PDF, DOC, DOCX) *</label>
-                    <input id="applicant_cv" name="cv" type="file" accept=".pdf,.doc,.docx" required class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
-                </div>
-
-                <div>
-                    <label for="applicant_cover_letter" class="block text-sm font-medium text-gray-700 mb-1">Thư xin việc</label>
-                    <textarea id="applicant_cover_letter" name="cover_letter" rows="4" class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Chia sẻ về bản thân và lý do bạn muốn gia nhập Arata Vietnam..."></textarea>
-                </div>
-
-                <div class="flex items-center justify-end space-x-4 pt-4">
-                    <button type="button" onclick="closeApplicationModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800">
-                        Hủy
-                    </button>
-                    <button type="submit" class="text-white px-6 py-2 rounded-lg transition-colors" style="background-color: <?php echo esc_attr($primary_color); ?>;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-                        Gửi hồ sơ
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
-
-<script>
-function openApplicationModal(position) {
-    document.getElementById('applicationPosition').value = position;
-    document.getElementById('applicationModal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeApplicationModal() {
-    document.getElementById('applicationModal').classList.add('hidden');
-    document.body.style.overflow = 'auto';
-}
-
-// Close modal when clicking outside
-document.getElementById('applicationModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeApplicationModal();
-    }
-});
-</script>
+</main>
 
 <style>
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 .line-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+.sticky {
+    position: sticky;
 }
 </style>
 

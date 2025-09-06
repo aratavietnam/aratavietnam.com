@@ -1,7 +1,7 @@
 <?php
 /**
  * Blog Page Meta Fields
- * 
+ *
  * Add meta fields for blog page customization similar to services page
  */
 
@@ -9,14 +9,19 @@ if (!defined('ABSPATH')) { exit; }
 
 // Add meta box for blog page settings
 function add_blog_meta_boxes() {
-    add_meta_box(
-        'blog_settings',
-        __('Cài đặt trang Blog', 'aratavietnam'),
-        'blog_settings_callback',
-        'page',
-        'normal',
-        'high'
-    );
+    global $post;
+    
+    // Only add meta box if this page uses blog template
+    if ($post && get_page_template_slug($post->ID) === 'page-templates/blog.php') {
+        add_meta_box(
+            'blog_settings',
+            __('Cài đặt trang Blog', 'aratavietnam'),
+            'blog_settings_callback',
+            'page',
+            'normal',
+            'high'
+        );
+    }
 }
 
 function blog_settings_callback($post) {
@@ -28,13 +33,13 @@ function blog_settings_callback($post) {
     }
 
     wp_nonce_field('blog_settings_nonce', 'blog_settings_nonce');
-    
+
     // Get current values
     $show_hero = get_post_meta($post->ID, 'arata_show_hero', true);
     $compact_hero = get_post_meta($post->ID, 'arata_compact_hero', true);
     $hero_subtitle = get_post_meta($post->ID, 'arata_blog_subtitle', true);
     $hero_intro = get_post_meta($post->ID, 'arata_blog_intro', true);
-    
+
     ?>
     <style>
         .blog-meta-table { width: 100%; }
@@ -42,11 +47,11 @@ function blog_settings_callback($post) {
         .blog-meta-table td { padding: 15px 0; }
         .blog-meta-table input[type="text"], .blog-meta-table textarea { width: 100%; max-width: 500px; }
         .blog-meta-table textarea { height: 80px; }
-        .section-header { 
-            background: #f0f0f1; 
-            padding: 10px 15px; 
-            margin: 20px -12px 15px -12px; 
-            font-weight: 600; 
+        .section-header {
+            background: #f0f0f1;
+            padding: 10px 15px;
+            margin: 20px -12px 15px -12px;
+            font-weight: 600;
             border-left: 4px solid #2271b1;
         }
         .section-header:first-child { margin-top: 0; }
@@ -55,19 +60,19 @@ function blog_settings_callback($post) {
     <div class="section-header">Cài đặt Hero Section</div>
     <table class="blog-meta-table">
         <tr>
-            <th><label for="arata_show_hero">Hiển thị Hero Section</label></th>
+            <th><label for="arata_blog_show_hero">Hiển thị Hero Section</label></th>
             <td>
                 <label>
-                    <input type="checkbox" id="arata_show_hero" name="arata_show_hero" value="1" <?php checked($show_hero, '1'); ?> />
+                    <input type="checkbox" id="arata_blog_show_hero" name="arata_show_hero" value="1" <?php checked($show_hero, '1'); ?> />
                     Hiển thị phần hero trên trang blog
                 </label>
             </td>
         </tr>
         <tr>
-            <th><label for="arata_compact_hero">Chế độ Hero</label></th>
+            <th><label for="arata_blog_compact_hero">Chế độ Hero</label></th>
             <td>
                 <label>
-                    <input type="checkbox" id="arata_compact_hero" name="arata_compact_hero" value="1" <?php checked($compact_hero, '1'); ?> />
+                    <input type="checkbox" id="arata_blog_compact_hero" name="arata_compact_hero" value="1" <?php checked($compact_hero, '1'); ?> />
                     Sử dụng hero nhỏ gọn (thay vì hero đầy đủ)
                 </label>
                 <p class="description">Hero nhỏ gọn sẽ có chiều cao thấp hơn và thiết kế đơn giản</p>

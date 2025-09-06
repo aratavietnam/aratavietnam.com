@@ -1,8 +1,8 @@
 <?php
 /**
  * Custom Post Types for News Section
- * - Promotions (Khuyến mãi)
- * - Job Postings (Tuyển dụng)
+ * - Promotions
+ * - Job Postings
  *
  * @package ArataVietnam
  */

@@ -207,18 +207,6 @@ add_action('add_meta_boxes_page', function($post) {
             'id'    => 'arata_news_meta',
             'title' => __('Cài đặt trang Tin tức', 'aratavietnam'),
         ],
-        'page-templates/promotions.php' => [
-            'id'    => 'arata_promotions_meta',
-            'title' => __('Cài đặt trang Khuyến mãi', 'aratavietnam'),
-        ],
-        'page-templates/careers.php' => [
-            'id'    => 'arata_careers_meta',
-            'title' => __('Cài đặt trang Tuyển dụng', 'aratavietnam'),
-        ],
-        'page-templates/blog.php' => [
-            'id'    => 'arata_blog_meta',
-            'title' => __('Cài đặt trang Blog', 'aratavietnam'),
-        ],
     ];
 
     if (isset($template_settings[$template])) {

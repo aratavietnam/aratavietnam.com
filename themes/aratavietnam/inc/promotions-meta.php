@@ -10,14 +10,19 @@ if (!defined('ABSPATH')) { exit; }
  * Add promotions page meta boxes
  */
 function add_promotions_meta_boxes() {
-    add_meta_box(
-        'promotions_settings',
-        'Cài đặt trang Khuyến mãi',
-        'promotions_settings_callback',
-        'page',
-        'normal',
-        'high'
-    );
+    global $post;
+    
+    // Only add meta box if this page uses promotions template
+    if ($post && get_page_template_slug($post->ID) === 'page-templates/promotions.php') {
+        add_meta_box(
+            'promotions_settings',
+            'Cài đặt trang Khuyến mãi',
+            'promotions_settings_callback',
+            'page',
+            'normal',
+            'high'
+        );
+    }
 }
 add_action('add_meta_boxes', 'add_promotions_meta_boxes');
 
@@ -25,6 +30,13 @@ add_action('add_meta_boxes', 'add_promotions_meta_boxes');
  * Promotions settings meta box callback
  */
 function promotions_settings_callback($post) {
+    // Only show for pages using the promotions template
+    $page_template = get_page_template_slug($post->ID);
+    if ($page_template !== 'page-templates/promotions.php') {
+        echo '<p class="description">Meta box này chỉ hiển thị cho trang sử dụng template "Promotions Page".</p>';
+        return;
+    }
+
     // Add nonce for security
     wp_nonce_field('promotions_settings_save', 'promotions_settings_nonce');
     
@@ -46,11 +58,11 @@ function promotions_settings_callback($post) {
     <table class="form-table">
         <tr>
             <th scope="row">
-                <label for="arata_show_hero">Hiển thị Hero Section</label>
+                <label for="arata_promotions_show_hero">Hiển thị Hero Section</label>
             </th>
             <td>
                 <label>
-                    <input type="checkbox" id="arata_show_hero" name="arata_show_hero" value="1" <?php checked($show_hero, '1'); ?> />
+                    <input type="checkbox" id="arata_promotions_show_hero" name="arata_show_hero" value="1" <?php checked($show_hero, '1'); ?> />
                     Bật hero section cho trang này
                 </label>
             </td>
@@ -58,11 +70,11 @@ function promotions_settings_callback($post) {
         
         <tr>
             <th scope="row">
-                <label for="arata_compact_hero">Hero Gọn</label>
+                <label for="arata_promotions_compact_hero">Hero Gọn</label>
             </th>
             <td>
                 <label>
-                    <input type="checkbox" id="arata_compact_hero" name="arata_compact_hero" value="1" <?php checked($compact_hero, '1'); ?> />
+                    <input type="checkbox" id="arata_promotions_compact_hero" name="arata_compact_hero" value="1" <?php checked($compact_hero, '1'); ?> />
                     Sử dụng hero gọn (thấp hơn)
                 </label>
                 <p class="description">Hero gọn sẽ có chiều cao thấp hơn và phong cách tối giản</p>
@@ -114,6 +126,12 @@ function save_promotions_settings($post_id) {
     
     // Check if this is an autosave
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    // Only save for pages using promotions template
+    $page_template = get_page_template_slug($post_id);
+    if ($page_template !== 'page-templates/promotions.php') {
         return;
     }
     

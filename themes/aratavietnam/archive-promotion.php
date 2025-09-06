@@ -1,223 +1,170 @@
 <?php
 /**
- * Archive template for promotion custom post type
+ * Promotion Archive Template - Based on home.php blog structure
  */
 
-if (!defined('ABSPATH')) { exit; }
-
 get_header();
-
-// Get global colors from theme customizer
-$primary_color = get_theme_mod('theme_primary_color', '#F55E25');
-$secondary_color = get_theme_mod('theme_secondary_color', '#0066A6');
-$tertiary_color = get_theme_mod('theme_tertiary_color', '#FFB800');
-$background_color = get_theme_mod('theme_background_color', '#FFFFFF');
-
-
-// Hero
-$hero_title = 'Khuyến mãi';
-$hero_subtitle = 'Ưu đãi đặc biệt từ Arata Vietnam'; // Default subtitle
-$hero_description = ''; // Default description
-
-// Find the Promotions settings page to get the hero settings
-$promo_page = get_pages(['meta_key' => '_wp_page_template', 'meta_value' => 'page-templates/promotions.php', 'number' => 1]);
-if (!empty($promo_page)) {
-    $promo_page_id = $promo_page[0]->ID;
-
-    $saved_subtitle = get_post_meta($promo_page_id, 'arata_promotions_subtitle', true);
-    if (!empty($saved_subtitle)) {
-        $hero_subtitle = $saved_subtitle;
-    }
-
-    $saved_description = get_post_meta($promo_page_id, 'arata_promotions_intro', true);
-    if (!empty($saved_description)) {
-        $hero_description = $saved_description;
-    }
-}
-
-set_query_var('title', $hero_title);
-set_query_var('subtitle', $hero_subtitle);
-set_query_var('description', $hero_description);
-get_template_part('template-parts/hero');
 ?>
 
-<main id="site-content" class="bg-white">
-    <?php
-    $archive_description = get_the_archive_description();
-    if ($archive_description) :
-    ?>
-    <!-- Page Content -->
-    <div class="container mx-auto px-4 py-12">
-        <div class="prose max-w-none mb-12">
-            <?php echo $archive_description; ?>
-        </div>
-    </div>
-    <?php endif; ?>
-
-    <!-- Promotions Section -->
-    <div class="bg-gray-50 py-16">
-        <div class="container mx-auto px-4">
-            <!-- Section Header -->
-            <div class="text-center mb-12">
-                <div class="flex items-center justify-center mb-4">
-                    <div class="w-12 h-1 rounded-full mr-4" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
-                    <span class="font-medium text-sm uppercase tracking-wider" style="color: <?php echo esc_attr($primary_color); ?>;">Khuyến mãi đặc biệt</span>
-                    <div class="w-12 h-1 rounded-full ml-4" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
+<main id="site-content" class="min-h-screen bg-white">
+    <!-- Compact Hero Section -->
+    <section class="relative bg-gradient-to-br from-primary via-secondary to-tertiary text-white">
+        <div class="absolute inset-0 bg-black/20"></div>
+        <div class="relative container mx-auto px-4 py-12 sm:py-16">
+            <div class="text-center">
+                <!-- Elegant brand indicator -->
+                <div class="inline-flex items-center mb-4">
+                    <div class="w-6 h-0.5 bg-white/60 rounded-full mr-3"></div>
+                    <span class="text-white/80 font-medium text-xs uppercase tracking-widest">Arata Vietnam</span>
+                    <div class="w-6 h-0.5 bg-white/60 rounded-full ml-3"></div>
                 </div>
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">Ưu đãi hiện tại</h2>
+
+                <!-- Compact title -->
+                <h1 class="text-3xl sm:text-5xl font-bold mb-4 leading-tight">
+                    Khuyến mãi
+                </h1>
+
+                <!-- Smaller description -->
+                <p class="text-lg sm:text-xl mb-6 text-white/90 leading-relaxed max-w-2xl mx-auto">
+                    Khám phá các chương trình khuyến mãi hấp dẫn và ưu đãi độc quyền từ Arata Vietnam
+                </p>
+
+                <!-- Compact buttons -->
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <a href="#promotions" class="inline-flex items-center px-6 py-3 bg-white text-primary font-semibold hover:bg-gray-100 transition-all duration-300 rounded-lg no-underline text-sm">
+                        Khám phá ngay
+                    </a>
+                    <a href="<?php echo esc_url( home_url( '/lien-he' ) ); ?>" class="inline-flex items-center px-6 py-3 border border-white/30 text-white hover:bg-white hover:text-primary transition-all duration-300 rounded-lg no-underline text-sm">
+                        Liên hệ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Promotions Section -->
+    <section id="promotions" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold text-black mb-4">Khuyến mãi nổi bật</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Khám phá những chương trình khuyến mãi hấp dẫn và thú vị nhất từ chúng tôi</p>
             </div>
 
-            <!-- Promotions Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
-                <?php
-                if (have_posts()) :
-                    while (have_posts()) : the_post();
-                        // Get meta fields from news-meta-fields.php
-                        $type = get_post_meta(get_the_ID(), 'arata_promotion_type', true);
-                        $discount = get_post_meta(get_the_ID(), 'arata_promotion_discount', true);
-                        $code = get_post_meta(get_the_ID(), 'arata_promotion_code', true);
-                        $start_date = get_post_meta(get_the_ID(), 'arata_promotion_start_date', true);
-                        $end_date = get_post_meta(get_the_ID(), 'arata_promotion_end_date', true);
-                        $conditions = get_post_meta(get_the_ID(), 'arata_promotion_conditions', true);
-                        $products = get_post_meta(get_the_ID(), 'arata_promotion_products', true);
-                        ?>
-                        <div class="bg-white rounded-lg border border-gray-200 transition-colors duration-300 flex flex-col md:flex-row overflow-hidden" onmouseover="this.style.borderColor='<?php echo esc_attr($primary_color); ?>'" onmouseout="this.style.borderColor='rgb(229, 231, 235)'">
-                            <!-- Image Column -->
-                            <div class="md:w-1/3 lg:w-2/5 flex-shrink-0">
-                                <?php if (has_post_thumbnail()) : ?>
-                                    <a href="<?php the_permalink(); ?>" class="block h-full aspect-video md:aspect-auto">
-                                        <?php the_post_thumbnail('medium_large', ['class' => 'w-full h-full object-cover']); ?>
-                                    </a>
+            <?php if ( have_posts() ) : ?>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <?php while ( have_posts() ) : the_post(); ?>
+                        <article class="group bg-white border border-gray-200 hover:border-gray-400 transition-all duration-300 rounded-xl overflow-hidden">
+                            <div class="relative overflow-hidden">
+                                <?php if ( has_post_thumbnail() ) : ?>
+                                    <?php the_post_thumbnail( 'medium_large', [ 'class' => 'w-full h-48 object-cover' ] ); ?>
                                 <?php else : ?>
-                                    <div class="h-full bg-gray-100 flex items-center justify-center aspect-video md:aspect-auto">
-                                        <span data-icon="gift" data-size="32" class="text-gray-400"></span>
+                                    <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                                        <span class="text-gray-400 text-sm">Không có ảnh</span>
                                     </div>
                                 <?php endif; ?>
+
+                                <!-- Category Badge -->
+                                <div class="absolute top-4 left-4">
+                                    <span class="inline-flex items-center px-3 py-1 bg-white text-black text-xs font-medium rounded-full border border-gray-200">
+                                        Khuyến mãi
+                                    </span>
+                                </div>
                             </div>
 
-                            <!-- Content Column -->
-                            <div class="p-6 flex-grow flex flex-col">
-                                <div class="flex items-start justify-between mb-4">
-                                    <h3 class="text-xl font-semibold text-gray-900 flex-1">
-                                        <a href="<?php the_permalink(); ?>" class="transition-colors" onmouseover="this.style.color='<?php echo esc_attr($primary_color); ?>'" onmouseout="this.style.color='rgb(17, 24, 39)'">
-                                            <?php the_title(); ?>
-                                        </a>
-                                    </h3>
-                                    <?php if ($discount): ?>
-                                        <span class="text-white px-4 py-2 rounded-full text-sm font-bold ml-4 flex-shrink-0" style="background-color: <?php echo esc_attr($primary_color); ?>;">
-                                            <?php echo esc_html($discount); ?>
-                                        </span>
-                                    <?php endif; ?>
-                                </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold text-black mb-3 group-hover:text-gray-600 transition-colors duration-300">
+                                    <a href="<?php the_permalink(); ?>" class="no-underline hover:underline"><?php the_title(); ?></a>
+                                </h3>
 
-                                <?php if ($type) : ?>
-                                    <div class="mb-3">
-                                        <span class="inline-block px-3 py-1 rounded-full text-sm font-medium" style="background-color: <?php echo esc_attr($primary_color); ?>1a; color: <?php echo esc_attr($primary_color); ?>;">
-                                            <?php
-                                            // Define labels for promotion types
-                                            $type_labels = array(
-                                                'percentage' => 'Giảm theo phần trăm',
-                                                'fixed' => 'Giảm số tiền cố định',
-                                                'buy_get' => 'Mua X tặng Y',
-                                                'free_shipping' => 'Miễn phí vận chuyển',
-                                                'bundle' => 'Combo sản phẩm'
-                                            );
-                                            echo isset($type_labels[$type]) ? $type_labels[$type] : $type;
-                                            ?>
-                                        </span>
-                                    </div>
-                                <?php endif; ?>
+                                <p class="text-gray-600 mb-4 leading-relaxed">
+                                    <?php echo esc_html( wp_strip_all_tags( get_the_excerpt() ?: 'Khám phá chương trình khuyến mãi thú vị này ngay bây giờ!' ) ); ?>
+                                </p>
 
-                                <div class="prose text-sm text-gray-600 mb-6 flex-grow">
-                                    <?php the_excerpt(); ?>
-                                </div>
+                                <div class="flex items-center justify-between">
+                                    <time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>" class="text-sm text-gray-500">
+                                        <?php echo esc_html( get_the_date( 'd/m/Y' ) ); ?>
+                                    </time>
 
-                                <?php if ($start_date && $end_date): ?>
-                                    <div class="flex items-center text-sm text-gray-600 mb-4">
-                                        <span data-icon="calendar" data-size="16" class="text-gray-400 mr-2"></span>
-                                        <strong>Thời gian:</strong>&nbsp;<span>Từ <?php echo date('d/m/Y', strtotime($start_date)); ?> đến <?php echo date('d/m/Y', strtotime($end_date)); ?></span>
-                                    </div>
-                                <?php endif; ?>
-
-                                <div class="pt-4 border-t border-gray-200 mt-auto">
-                                    <a href="<?php the_permalink(); ?>" class="inline-flex items-center font-medium text-sm transition-colors" style="color: <?php echo esc_attr($primary_color); ?>;" onmouseover="this.style.color='<?php echo esc_attr($secondary_color); ?>'" onmouseout="this.style.color='<?php echo esc_attr($primary_color); ?>'">
-                                        Xem chi tiết
-                                        <span data-icon="arrow-right" data-size="16" class="ml-1"></span>
+                                    <a href="<?php the_permalink(); ?>" class="inline-flex items-center text-black hover:text-gray-600 font-medium text-sm group-hover:translate-x-1 transition-all duration-300 no-underline">
+                                        Đọc tiếp
                                     </a>
                                 </div>
                             </div>
-                        </div>
-                    <?php endwhile;
-                else:
-                    ?>
-                    <div class="lg:col-span-2 text-center py-12">
-                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <span data-icon="gift" data-size="32" class="text-gray-400"></span>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Hiện tại chưa có chương trình khuyến mãi nào</h3>
-                        <p class="text-gray-600 mb-6">Chúng tôi sẽ cập nhật thông tin khuyến mãi mới nhất tại đây.</p>
-                        <a href="<?php echo home_url('/tin-tuc'); ?>" class="inline-flex items-center text-white px-6 py-3 rounded-lg transition-colors" style="background-color: <?php echo esc_attr($primary_color); ?>;" onmouseover="this.style.backgroundColor='<?php echo esc_attr($secondary_color); ?>'" onmouseout="this.style.backgroundColor='<?php echo esc_attr($primary_color); ?>'">
-                            <span data-icon="arrow-left" data-size="16" class="mr-2"></span>
-                            Quay lại trang tin tức
-                        </a>
-                    </div>
-                <?php endif; ?>
-            </div>
+                        </article>
+                    <?php endwhile; wp_reset_postdata(); ?>
+                </div>
 
-            <!-- Pagination -->
-            <?php if (get_next_posts_link() || get_previous_posts_link()): ?>
-                <div class="flex justify-center">
-                    <nav class="flex space-x-2">
-                        <?php
-                        echo paginate_links([
-                            'prev_text' => '<span data-icon="chevron-left" data-size="16"></span> Trước',
-                            'next_text' => 'Sau <span data-icon="chevron-right" data-size="16"></span>',
-                            'class' => 'px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors'
-                        ]);
-                        ?>
-                    </nav>
+                <!-- Pagination -->
+                <div class="mt-12">
+                    <?php
+                    the_posts_pagination(array(
+                        'prev_text' => '<span class="mr-2">&laquo;</span> Trang trước',
+                        'next_text' => 'Trang sau <span class="ml-2">&raquo;</span>',
+                        'screen_reader_text' => ' ',
+                        'before_page_number' => '<span class="inline-flex items-center justify-center w-10 h-10">',
+                        'after_page_number'  => '</span>',
+                    ));
+                    ?>
+                </div>
+
+            <?php else : ?>
+                <div class="text-center py-16">
+                    <div class="w-24 h-24 mx-auto mb-6 bg-gray-200 rounded-full flex items-center justify-center">
+                        <span class="text-gray-400 text-sm">Không có khuyến mãi</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-black mb-2">Chưa có chương trình khuyến mãi nào</h3>
+                    <p class="text-gray-600">Hãy quay lại sau để xem các ưu đãi mới nhất!</p>
                 </div>
             <?php endif; ?>
         </div>
-    </div>
+    </section>
 
-    <!-- Newsletter Signup -->
-    <div class="py-16" style="background-color: <?php echo esc_attr($primary_color); ?>0d;">
+    <!-- Stats Section -->
+    <section class="py-16 bg-white">
         <div class="container mx-auto px-4">
-            <div class="max-w-2xl mx-auto text-center">
-                <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style="background-color: <?php echo esc_attr($primary_color); ?>1a;">
-                    <span data-icon="mail" data-size="32" style="color: <?php echo esc_attr($primary_color); ?>;"></span>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="p-6">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
+                        <span class="text-black text-lg font-bold"><?php echo wp_count_posts('promotion')->publish; ?>+</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-black mb-2"><?php echo wp_count_posts('promotion')->publish; ?>+</h3>
+                    <p class="text-gray-600">Chương trình khuyến mãi</p>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-4">Đăng ký nhận thông báo khuyến mãi</h3>
-                <p class="text-gray-600 mb-8">
-                    Nhận thông tin về các chương trình khuyến mãi và ưu đãi đặc biệt từ Arata Vietnam.
-                </p>
 
-                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="max-w-md mx-auto space-y-4">
-                    <input type="hidden" name="action" value="arata_newsletter_submit" />
-                    <?php wp_nonce_field('arata_newsletter_submit', 'arata_newsletter_nonce'); ?>
-
-                    <div>
-                        <input name="name" type="text" required
-                               class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:border-transparent transition-all duration-300"
-                               style="--tw-ring-color: <?php echo esc_attr($primary_color); ?>;" onfocus="this.style.boxShadow='0 0 0 2px <?php echo esc_attr($primary_color); ?>40'" onblur="this.style.boxShadow='none'"
-                               placeholder="Họ và tên *" />
+                <div class="p-6">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
+                        <span class="text-black text-lg font-bold">100%</span>
                     </div>
+                    <h3 class="text-2xl font-bold text-black mb-2">100%</h3>
+                    <p class="text-gray-600">Ưu đãi chính hãng</p>
+                </div>
 
-                    <div>
-                        <input name="email" type="email" required
-                               class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:border-transparent transition-all duration-300"
-                               style="--tw-ring-color: <?php echo esc_attr($primary_color); ?>;" onfocus="this.style.boxShadow='0 0 0 2px <?php echo esc_attr($primary_color); ?>40'" onblur="this.style.boxShadow='none'"
-                               placeholder="Email *" />
+                <div class="p-6">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
+                        <span class="text-black text-lg font-bold">24/7</span>
                     </div>
-
-                    <button type="submit" class="w-full text-white py-3 rounded-lg transition-colors font-medium" style="background-color: <?php echo esc_attr($primary_color); ?>;" onmouseover="this.style.backgroundColor='<?php echo esc_attr($secondary_color); ?>'" onmouseout="this.style.backgroundColor='<?php echo esc_attr($primary_color); ?>'">
-                        Đăng ký ngay
-                    </button>
-                </form>
+                    <h3 class="text-2xl font-bold text-black mb-2">24/7</h3>
+                    <p class="text-gray-600">Hỗ trợ khách hàng</p>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-black text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-6">Đừng bỏ lỡ ưu đãi!</h2>
+            <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">Đăng ký ngay để nhận thông báo về các chương trình khuyến mãi mới nhất</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="<?php echo esc_url( home_url( '/lien-he' ) ); ?>" class="inline-flex items-center px-8 py-4 bg-white text-black font-semibold hover:bg-gray-100 transition-all duration-300 rounded-lg no-underline">
+                    Liên hệ ngay
+                </a>
+                <a href="<?php echo esc_url( home_url( '/shop' ) ); ?>" class="inline-flex items-center px-8 py-4 border border-white text-white hover:bg-white hover:text-black transition-all duration-300 rounded-lg no-underline">
+                    Mua sắm ngay
+                </a>
+            </div>
+        </div>
+    </section>
 </main>
 
 <?php get_footer(); ?>

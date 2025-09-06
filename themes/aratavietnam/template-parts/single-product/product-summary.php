@@ -33,21 +33,21 @@ global $product;
         <div class="flex items-center space-x-4 mb-6">
             <label for="quantity_<?php echo esc_attr( $product->get_id() ); ?>" class="font-semibold text-gray-700">Số lượng:</label>
             <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-                <button type="button" class="quantity-minus px-3 py-2 bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-inset" 
+                <button type="button" class="quantity-minus px-3 py-2 bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-inset"
                         data-min="<?php echo apply_filters( 'woocommerce_quantity_input_min', $product->get_min_purchase_quantity(), $product ); ?>">
                     <span class="text-lg font-medium">−</span>
                 </button>
-                <input type="number" 
-                       id="quantity_<?php echo esc_attr( $product->get_id() ); ?>" 
-                       class="quantity w-16 px-3 py-2 text-center border-0 focus:ring-2 focus:ring-primary focus:ring-inset focus:outline-none" 
-                       step="1" 
-                       min="<?php echo apply_filters( 'woocommerce_quantity_input_min', $product->get_min_purchase_quantity(), $product ); ?>" 
-                       max="<?php echo apply_filters( 'woocommerce_quantity_input_max', $product->get_max_purchase_quantity(), $product ); ?>" 
-                       name="quantity" 
-                       value="<?php echo isset( $_POST['quantity'] ) ? wc_stock_amount( wp_unslash( $_POST['quantity'] ) ) : $product->get_min_purchase_quantity(); ?>" 
-                       title="Số lượng" 
+                <input type="number"
+                       id="quantity_<?php echo esc_attr( $product->get_id() ); ?>"
+                       class="quantity w-16 px-3 py-2 text-center border-0 focus:ring-2 focus:ring-primary focus:ring-inset focus:outline-none"
+                       step="1"
+                       min="<?php echo apply_filters( 'woocommerce_quantity_input_min', $product->get_min_purchase_quantity(), $product ); ?>"
+                       max="<?php echo apply_filters( 'woocommerce_quantity_input_max', $product->get_max_purchase_quantity(), $product ); ?>"
+                       name="quantity"
+                       value="<?php echo isset( $_POST['quantity'] ) ? wc_stock_amount( wp_unslash( $_POST['quantity'] ) ) : $product->get_min_purchase_quantity(); ?>"
+                       title="Số lượng"
                        inputmode="numeric">
-                <button type="button" class="quantity-plus px-3 py-2 bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-inset" 
+                <button type="button" class="quantity-plus px-3 py-2 bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-inset"
                         data-max="<?php echo apply_filters( 'woocommerce_quantity_input_max', $product->get_max_purchase_quantity(), $product ); ?>">
                     <span class="text-lg font-medium">+</span>
                 </button>
@@ -57,7 +57,7 @@ global $product;
         <!-- Stock Quantity Display -->
         <?php if ($product->managing_stock() && $product->get_stock_quantity() !== null) : ?>
             <div class="mb-4 text-sm text-gray-600">
-                <?php 
+                <?php
                 $stock_quantity = $product->get_stock_quantity();
                 if ($stock_quantity > 0) :
                 ?>
@@ -89,10 +89,10 @@ global $product;
         <?php endif; ?>
 
         <div class="flex flex-col sm:flex-row gap-3">
-            <button 
-                type="submit" 
-                name="add-to-cart" 
-                value="<?php echo esc_attr($product->get_id()); ?>" 
+            <button
+                type="submit"
+                name="add-to-cart"
+                value="<?php echo esc_attr($product->get_id()); ?>"
                 data-product-id="<?php echo esc_attr($product->get_id()); ?>"
                 data-product-title="<?php echo esc_attr($product->get_name()); ?>"
                 class="flex-1 bg-primary text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-dark transition-colors duration-300 flex items-center justify-center disabled:opacity-75 disabled:cursor-not-allowed"
@@ -107,12 +107,68 @@ global $product;
             $shopee_link = get_post_meta($product->get_id(), '_arata_shopee_link', true);
             if (!empty($shopee_link)) :
             ?>
-                <a href="<?php echo esc_url($shopee_link); ?>" target="_blank" rel="noopener noreferrer"
+                <button id="shopee-redirect-btn" data-shopee-url="<?php echo esc_url($shopee_link); ?>"
                    class="flex-1 bg-orange-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-orange-600 transition-colors duration-300 flex items-center justify-center">
                     <img src="<?php echo get_template_directory_uri(); ?>/assets/images/shopee-icon.svg" alt="Shopee" class="w-4 h-4 mr-2" style="filter: brightness(0) invert(1);">
                     Mua trên Shopee
-                </a>
+                </button>
             <?php endif; ?>
+
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const shopeeBtn = document.getElementById('shopee-redirect-btn');
+                if (shopeeBtn) {
+                    shopeeBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const shopeeUrl = this.dataset.shopeeUrl;
+
+                        if (window.ArataNotifications) {
+                            let countdown = 3;
+                            const notificationId = window.ArataNotifications.show({
+                                type: 'info',
+                                title: 'Đang chuyển hướng đến Shopee...',
+                                message: `Bạn sẽ được chuyển đến trang Shopee trong ${countdown} giây.`,
+                                duration: 3500,
+                                actions: [
+                                    {
+                                        text: 'Hủy',
+                                        action: () => {
+                                            clearInterval(countdownInterval);
+                                            clearTimeout(redirectTimeout);
+                                        }
+                                    }
+                                ]
+                            });
+
+                            const countdownInterval = setInterval(() => {
+                                countdown--;
+                                if (countdown > 0) {
+                                    const notification = document.querySelector(`[data-notification-id="${notificationId}"]`);
+                                    if (notification) {
+                                        const messageEl = notification.querySelector('.notification-message');
+                                        if (messageEl) {
+                                            messageEl.textContent = `Bạn sẽ được chuyển đến trang Shopee trong ${countdown} giây.`;
+                                        }
+                                    }
+                                } else {
+                                    clearInterval(countdownInterval);
+                                }
+                            }, 1000);
+
+                            const redirectTimeout = setTimeout(() => {
+                                window.open(shopeeUrl, '_blank', 'noopener,noreferrer');
+                                clearInterval(countdownInterval);
+                            }, 3000);
+                        } else {
+                            // Fallback if notification system not available
+                            setTimeout(() => {
+                                window.open(shopeeUrl, '_blank', 'noopener,noreferrer');
+                            }, 0);
+                        }
+                    });
+                }
+            });
+            </script>
         </div>
 
         <?php do_action('woocommerce_after_add_to_cart_button'); ?>
@@ -167,14 +223,6 @@ global $product;
     <div class="flex items-center gap-3">
         <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(get_permalink()); ?>" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300">
             <span data-icon="facebook" data-size="20"></span>
-
-        </a>
-
-        <a href="https://pinterest.com/pin/create/button/?url=<?php echo urlencode(get_permalink()); ?>&media=<?php echo urlencode(get_the_post_thumbnail_url()); ?>&description=<?php echo urlencode(get_the_title()); ?>" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center hover:bg-red-600 hover:text-white transition-all duration-300">
-            <span data-icon="pinterest" data-size="20"></span>
-        </a>
-        <a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo urlencode(get_permalink()); ?>&title=<?php echo urlencode(get_the_title()); ?>" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center hover:bg-blue-700 hover:text-white transition-all duration-300">
-            <span data-icon="linkedin" data-size="20"></span>
         </a>
         <button id="copy-product-link" class="w-10 h-10 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center hover:bg-gray-800 hover:text-white transition-all duration-300" data-link="<?php echo esc_url(get_permalink()); ?>">
             <span data-icon="link-2" data-size="20"></span>
@@ -202,35 +250,35 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     window.arataQuantityControlsInitialized = true;
-    
+
     function initQuantityControls() {
         // Find elements using vanilla JavaScript
-        const quantityInput = document.querySelector('input[name="quantity"]') || 
-                             document.querySelector('.quantity') || 
+        const quantityInput = document.querySelector('input[name="quantity"]') ||
+                             document.querySelector('.quantity') ||
                              document.querySelector('input[type="number"]');
         const minusButton = document.querySelector('.quantity-minus');
         const plusButton = document.querySelector('.quantity-plus');
-        
+
         if (quantityInput && minusButton && plusButton) {
             // Check if already initialized
             if (quantityInput.dataset.quantityInitialized) {
                 return;
             }
             quantityInput.dataset.quantityInitialized = 'true';
-            
+
             const minValue = parseInt(quantityInput.getAttribute('min')) || 1;
             const maxValue = parseInt(quantityInput.getAttribute('max')) || 999;
-            
+
             // Minus button functionality
             function handleMinusClick(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                
+
                 let currentValue = parseInt(quantityInput.value) || minValue;
                 if (currentValue > minValue) {
                     currentValue--;
                     quantityInput.value = currentValue;
-                    
+
                     // Trigger change events
                     const changeEvent = new Event('change', { bubbles: true });
                     const inputEvent = new Event('input', { bubbles: true });
@@ -239,17 +287,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 return false;
             }
-            
+
             // Plus button functionality
             function handlePlusClick(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                
+
                 let currentValue = parseInt(quantityInput.value) || minValue;
                 if (currentValue < maxValue) {
                     currentValue++;
                     quantityInput.value = currentValue;
-                    
+
                     // Trigger change events
                     const changeEvent = new Event('change', { bubbles: true });
                     const inputEvent = new Event('input', { bubbles: true });
@@ -258,15 +306,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 return false;
             }
-            
+
             // Add event listeners with once option to prevent duplicates
             minusButton.addEventListener('click', handleMinusClick, { once: false });
             plusButton.addEventListener('click', handlePlusClick, { once: false });
-            
+
             // Store handlers for potential cleanup
             minusButton._arataHandler = handleMinusClick;
             plusButton._arataHandler = handlePlusClick;
-            
+
             // Validate input on change
             if (!quantityInput.dataset.inputInitialized) {
                 quantityInput.addEventListener('input', function() {
@@ -277,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         this.value = maxValue;
                     }
                 });
-                
+
                 // Prevent manual input of invalid characters
                 quantityInput.addEventListener('keypress', function(e) {
                     // Allow: backspace, delete, tab, escape, enter
@@ -294,23 +342,23 @@ document.addEventListener('DOMContentLoaded', function() {
                         e.preventDefault();
                     }
                 });
-                
+
                 quantityInput.dataset.inputInitialized = 'true';
             }
-            
+
             // Quantity controls initialized successfully
         } else {
             // Quantity controls not found
         }
     }
-    
+
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initQuantityControls);
     } else {
         initQuantityControls();
     }
-    
+
     // Also initialize after a short delay to ensure all elements are loaded
     setTimeout(initQuantityControls, 500);
 })();

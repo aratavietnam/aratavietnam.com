@@ -11,19 +11,26 @@ if (!defined('ABSPATH')) { exit; }
 
 get_header();
 
-// Get page meta fields
-$hero_subtitle = get_post_meta(get_the_ID(), 'arata_services_subtitle', true) ?: 'Giải pháp toàn diện cho doanh nghiệp';
+// Get customizer color settings
+$primary_color = get_theme_mod('theme_primary_color', '#F55E25');
+$secondary_color = get_theme_mod('theme_secondary_color', '#0066A6');
+$tertiary_color = get_theme_mod('theme_tertiary_color', '#FFAB14');
+$background_color = get_theme_mod('theme_background_color', '#ffffff');
+
+// Get page meta fields for hero customization
+$hero_subtitle = get_post_meta(get_the_ID(), 'arata_services_subtitle', true) ?: 'Dịch vụ';
 $hero_intro = get_post_meta(get_the_ID(), 'arata_services_intro', true) ?: 'Chúng tôi cung cấp các dịch vụ chất lượng cao với đội ngũ chuyên nghiệp và kinh nghiệm nhiều năm trong lĩnh vực hóa mỹ phẩm Nhật Bản.';
 $featured_text = get_post_meta(get_the_ID(), 'arata_services_featured_text', true) ?: 'Cam kết chất lượng - Uy tín hàng đầu';
 $cta_text = get_post_meta(get_the_ID(), 'arata_services_cta_text', true) ?: 'Liên hệ tư vấn';
 $cta_link = get_post_meta(get_the_ID(), 'arata_services_cta_link', true) ?: '/lien-he';
 
 // Section visibility controls
-$show_hero = get_post_meta(get_the_ID(), 'arata_show_hero', true) === '1';
-$show_services = get_post_meta(get_the_ID(), 'arata_show_services', true) === '1';
-$show_stats = get_post_meta(get_the_ID(), 'arata_show_stats', true) === '1';
-$show_why_choose = get_post_meta(get_the_ID(), 'arata_show_why_choose', true) === '1';
-$show_testimonials = get_post_meta(get_the_ID(), 'arata_show_testimonials', true) === '1';
+$show_hero = get_post_meta(get_the_ID(), 'arata_show_hero', true) !== '0'; // Default to true if not set
+$use_compact_hero = get_post_meta(get_the_ID(), 'arata_compact_hero', true) === '1'; // New compact option
+$show_services = get_post_meta(get_the_ID(), 'arata_show_services', true) !== '0';
+$show_stats = get_post_meta(get_the_ID(), 'arata_show_stats', true) !== '0';
+$show_why_choose = get_post_meta(get_the_ID(), 'arata_show_why_choose', true) !== '0';
+$show_testimonials = get_post_meta(get_the_ID(), 'arata_show_testimonials', true) !== '0';
 
 // Statistics section fields
 $stats_title = get_post_meta(get_the_ID(), 'arata_stats_title', true) ?: 'Thống kê ấn tượng';
@@ -51,15 +58,46 @@ $testimonials_subtitle = get_post_meta(get_the_ID(), 'arata_testimonials_subtitl
 set_query_var('title', get_the_title());
 set_query_var('subtitle', $hero_subtitle);
 set_query_var('description', $hero_intro);
+set_query_var('compact_mode', $use_compact_hero);
+
 if ($show_hero) {
-    get_template_part('template-parts/hero');
+    if ($use_compact_hero) {
+        // Use compact hero inline
+        ?>
+        <section class="relative border-b border-gray-100" style="background-color: <?php echo esc_attr($background_color); ?>; margin-top: -5px;">
+            <div class="relative container mx-auto px-4 py-8 sm:py-12">
+                <div class="max-w-3xl mx-auto text-center">
+                    <!-- Compact title indicator -->
+                    <div class="inline-flex items-center mb-3">
+                        <div class="w-8 h-0.5 rounded-full mr-3" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
+                        <span class="font-medium text-xs uppercase tracking-widest" style="color: <?php echo esc_attr($primary_color); ?>;"><?php echo esc_html($hero_subtitle); ?></span>
+                        <div class="w-8 h-0.5 rounded-full ml-3" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
+                    </div>
+
+                    <!-- Smaller, more elegant title -->
+                    <h1 class="text-2xl sm:text-4xl font-bold text-gray-900 leading-tight mb-4">
+                        <?php echo esc_html(get_the_title()); ?>
+                    </h1>
+
+                    <!-- Compact description -->
+                    <p class="text-base sm:text-lg text-gray-600 leading-relaxed max-w-xl mx-auto">
+                        <?php echo esc_html($hero_intro); ?>
+                    </p>
+                </div>
+            </div>
+        </section>
+        <?php
+    } else {
+        // Use full hero template part
+        get_template_part('template-parts/hero');
+    }
 }
 ?>
 
-<main id="site-content" class="bg-white">
+<main id="site-content" class="bg-white" style="background-color: <?php echo esc_attr($background_color); ?>; <?php echo $show_hero && !$use_compact_hero ? '' : 'margin-top: -5px;'; ?>">
 
     <!-- Search and Filter Section -->
-    <section class="py-8 bg-gray-50 border-b">
+    <section class="py-8 bg-gray-50 border-b" style="background-color: <?php echo esc_attr($background_color); ?>">
         <div class="container mx-auto px-4">
             <div class="flex flex-col lg:flex-row gap-6 items-center justify-between">
                 <div class="flex-1">
@@ -70,7 +108,7 @@ if ($show_hero) {
                     </div>
                 </div>
                 <div class="flex flex-wrap gap-3">
-                    <button class="filter-btn active px-4 py-2 rounded-lg bg-primary text-white font-medium hover:bg-primary/90 transition-colors" data-filter="all">
+                    <button class="filter-btn active px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-colors" style="background-color: <?php echo esc_attr($primary_color); ?>; color: white;" data-filter="all">
                         Tất cả
                     </button>
                     <?php
@@ -82,7 +120,7 @@ if ($show_hero) {
 
                     if ($service_categories && !is_wp_error($service_categories)) :
                         foreach ($service_categories as $category) : ?>
-                            <button class="filter-btn px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors" data-filter="<?php echo esc_attr($category->slug); ?>">
+                            <button class="filter-btn px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors" data-filter="<?php echo esc_attr($category->slug); ?>" style="border-color: <?php echo esc_attr($primary_color); ?>20;">
                                 <?php echo esc_html($category->name); ?>
                             </button>
                         <?php endforeach;
@@ -94,13 +132,13 @@ if ($show_hero) {
 
     <!-- Featured Services Section -->
     <?php if ($show_services) : ?>
-    <section class="py-16 bg-gradient-to-br from-secondary/5 to-primary/5 scroll-animate">
+    <section class="py-16 scroll-animate" style="background: linear-gradient(135deg, <?php echo esc_attr($secondary_color); ?>08, <?php echo esc_attr($primary_color); ?>08);">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
                 <div class="flex items-center justify-center mb-4">
-                    <div class="w-12 h-1 bg-primary rounded-full mr-4"></div>
-                    <span class="text-primary font-medium text-sm uppercase tracking-wider">Dịch vụ chính</span>
-                    <div class="w-12 h-1 bg-primary rounded-full ml-4"></div>
+                    <div class="w-12 h-1 rounded-full mr-4" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
+                    <span class="font-medium text-sm uppercase tracking-wider" style="color: <?php echo esc_attr($primary_color); ?>;">Dịch vụ chính</span>
+                    <div class="w-12 h-1 rounded-full ml-4" style="background-color: <?php echo esc_attr($primary_color); ?>;"></div>
                 </div>
                 <h2 class="text-4xl font-bold text-gray-900 mb-6"><?php echo esc_html($featured_text); ?></h2>
                 <p class="text-xl text-gray-600 max-w-3xl mx-auto">Chúng tôi tự hào mang đến những giải pháp tối ưu nhất cho khách hàng, đảm bảo chất lượng và hiệu quả trong mọi dự án.</p>
@@ -265,7 +303,7 @@ if ($show_hero) {
 
             <!-- CTA Button -->
             <div class="text-center">
-                <a href="<?php echo esc_url($cta_link); ?>" class="inline-flex items-center px-8 py-4 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+                <a href="<?php echo esc_url($cta_link); ?>" class="inline-flex items-center px-8 py-4 text-white font-semibold rounded-lg hover:opacity-90 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300" style="background-color: <?php echo esc_attr($primary_color); ?>">
                     <span data-icon="phone" data-size="20" class="mr-2"></span>
                     <?php echo esc_html($cta_text); ?>
                 </a>
@@ -277,7 +315,7 @@ if ($show_hero) {
 
     <!-- Statistics Section -->
     <?php if ($show_stats) : ?>
-    <section class="py-16 bg-gradient-to-r from-primary/5 to-secondary/5 scroll-animate">
+    <section class="py-16 scroll-animate" style="background: linear-gradient(to right, <?php echo esc_attr($primary_color); ?>08, <?php echo esc_attr($secondary_color); ?>08);">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
                 <h2 class="text-3xl font-bold text-gray-900 mb-6"><?php echo esc_html($stats_title); ?></h2>
@@ -286,19 +324,19 @@ if ($show_hero) {
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold text-primary mb-2" data-count="<?php echo esc_attr($stats_customers); ?>"><?php echo esc_html($stats_customers); ?></div>
+                    <div class="text-4xl md:text-5xl font-bold mb-2" style="color: <?php echo esc_attr($primary_color); ?>;" data-count="<?php echo esc_attr($stats_customers); ?>"><?php echo esc_html($stats_customers); ?></div>
                     <p class="text-gray-600 font-medium">+ Khách hàng hài lòng</p>
                 </div>
                 <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold text-secondary mb-2" data-count="<?php echo esc_attr($stats_projects); ?>"><?php echo esc_html($stats_projects); ?></div>
+                    <div class="text-4xl md:text-5xl font-bold mb-2" style="color: <?php echo esc_attr($secondary_color); ?>;" data-count="<?php echo esc_attr($stats_projects); ?>"><?php echo esc_html($stats_projects); ?></div>
                     <p class="text-gray-600 font-medium">+ Dự án thành công</p>
                 </div>
                 <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold text-tertiary mb-2" data-count="<?php echo esc_attr($stats_years); ?>"><?php echo esc_html($stats_years); ?></div>
+                    <div class="text-4xl md:text-5xl font-bold mb-2" style="color: <?php echo esc_attr($tertiary_color); ?>;" data-count="<?php echo esc_attr($stats_years); ?>"><?php echo esc_html($stats_years); ?></div>
                     <p class="text-gray-600 font-medium">+ Năm kinh nghiệm</p>
                 </div>
                 <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold text-success mb-2" data-count="<?php echo esc_attr($stats_success_rate); ?>"><?php echo esc_html($stats_success_rate); ?></div>
+                    <div class="text-4xl md:text-5xl font-bold mb-2" style="color: <?php echo esc_attr($secondary_color); ?>;" data-count="<?php echo esc_attr($stats_success_rate); ?>"><?php echo esc_html($stats_success_rate); ?></div>
                     <p class="text-gray-600 font-medium">% Tỷ lệ thành công</p>
                 </div>
             </div>
@@ -317,24 +355,24 @@ if ($show_hero) {
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div class="text-center group">
-                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                        <span data-icon="award" data-size="32" class="text-primary"></span>
+                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform" style="background-color: <?php echo esc_attr($primary_color); ?>10;">
+                        <span data-icon="award" data-size="32" style="color: <?php echo esc_attr($primary_color); ?>;"></span>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 mb-3"><?php echo esc_html($why_choose_quality_title); ?></h3>
                     <p class="text-gray-600"><?php echo esc_html($why_choose_quality_desc); ?></p>
                 </div>
 
                 <div class="text-center group">
-                    <div class="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                        <span data-icon="users" data-size="32" class="text-secondary"></span>
+                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform" style="background-color: <?php echo esc_attr($secondary_color); ?>10;">
+                        <span data-icon="users" data-size="32" style="color: <?php echo esc_attr($secondary_color); ?>;"></span>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 mb-3"><?php echo esc_html($why_choose_team_title); ?></h3>
                     <p class="text-gray-600"><?php echo esc_html($why_choose_team_desc); ?></p>
                 </div>
 
                 <div class="text-center group">
-                    <div class="w-16 h-16 bg-tertiary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                        <span data-icon="clock" data-size="32" class="text-tertiary"></span>
+                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform" style="background-color: <?php echo esc_attr($tertiary_color); ?>10;">
+                        <span data-icon="clock" data-size="32" style="color: <?php echo esc_attr($tertiary_color); ?>;"></span>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 mb-3"><?php echo esc_html($why_choose_service_title); ?></h3>
                     <p class="text-gray-600"><?php echo esc_html($why_choose_service_desc); ?></p>
@@ -364,8 +402,8 @@ if ($show_hero) {
                 ?>
                 <div class="bg-gray-50 p-6 rounded-xl">
                     <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-<?php echo $color; ?>/10 rounded-full flex items-center justify-center mr-4">
-                            <span data-icon="user" data-size="24" class="text-<?php echo $color; ?>"></span>
+                        <div class="w-12 h-12 rounded-full flex items-center justify-center mr-4" style="background-color: <?php echo esc_attr(${$color . '_color'}); ?>10;">
+                            <span data-icon="user" data-size="24" style="color: <?php echo esc_attr(${$color . '_color'}); ?>;"></span>
                         </div>
                         <div>
                             <h4 class="font-semibold text-gray-900"><?php echo esc_html($name); ?></h4>
@@ -420,8 +458,11 @@ document.addEventListener('DOMContentLoaded', function() {
             filterBtns.forEach(b => b.classList.add('bg-white', 'border', 'border-gray-300', 'text-gray-700'));
 
             // Add active class to clicked button
-            this.classList.add('active', 'bg-primary', 'text-white');
+            this.classList.add('active');
             this.classList.remove('bg-white', 'border', 'border-gray-300', 'text-gray-700');
+            this.style.backgroundColor = '<?php echo esc_js($primary_color); ?>';
+            this.style.color = 'white';
+            this.style.borderColor = '<?php echo esc_js($primary_color); ?>';
 
             const filter = this.dataset.filter;
 

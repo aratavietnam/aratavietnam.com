@@ -21,11 +21,11 @@ $use_compact_hero = get_post_meta(get_the_ID(), 'arata_compact_hero', true) === 
 $hero_subtitle = get_post_meta(get_the_ID(), 'arata_promotions_subtitle', true) ?: 'Ưu đãi đặc biệt từ Arata Vietnam';
 $hero_intro = get_post_meta(get_the_ID(), 'arata_promotions_intro', true) ?: 'Khám phá các chương trình khuyến mãi hấp dẫn và ưu đãi độc quyền từ Arata Vietnam.';
 
-// Set hero variables if using full hero
-if ($show_hero && !$use_compact_hero) {
-    set_query_var('title', get_the_title());
-    set_query_var('subtitle', $hero_subtitle);
-}
+// Set hero variables
+set_query_var('title', get_the_title());
+set_query_var('subtitle', $hero_subtitle);
+set_query_var('description', $hero_intro);
+set_query_var('compact_mode', $use_compact_hero);
 
 if ($show_hero) {
     if ($use_compact_hero) {
@@ -49,7 +49,7 @@ if ($show_hero) {
         // Use full hero template part
         get_template_part('template-parts/hero');
         ?>
-        <main id="site-content" class="bg-white">
+        <main id="site-content" style="background-color: <?php echo esc_attr($background_color); ?>;">
             <!-- Promotions Content Section -->
             <div class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>;">
                 <div class="container mx-auto px-4">
@@ -57,7 +57,7 @@ if ($show_hero) {
     }
 } else {
     ?>
-    <main id="site-content" class="bg-white">
+    <main id="site-content" style="background-color: <?php echo esc_attr($background_color); ?>;">
         <!-- Promotions Content Section -->
         <div class="py-16" style="background-color: <?php echo esc_attr($background_color); ?>;">
             <div class="container mx-auto px-4">

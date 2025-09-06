@@ -806,19 +806,19 @@ function initCart() {
       if (cartData.items && cartData.items.length > 0) {
         cartData.items.forEach(item => {
           cartHTML += `
-                        <div class="flex items-center space-x-3 p-3 border-b border-gray-100">
+                        <div class="flex items-start space-x-3 p-3 border-b border-gray-100">
                             <a href="${item.url}" class="flex-shrink-0">
                                 <img src="${item.image || '/wp-content/themes/aratavietnam/assets/images/placeholder.jpg'}"
                                      alt="${item.name}"
-                                     class="w-12 h-12 object-cover rounded">
+                                     class="w-10 h-10 object-cover rounded">
                             </a>
-                            <div class="flex-1 min-w-0">
-                                <a href="${item.url}" class="text-sm font-medium text-gray-900 truncate hover:text-primary">${item.name}</a>
-                                <p class="text-xs text-gray-500">Số lượng: ${item.quantity}</p>
-                                <p class="text-sm font-medium text-primary">${item.price}</p>
+                            <div class="flex-1 min-w-0 overflow-hidden">
+                                <a href="${item.url}" class="block text-xs font-medium text-gray-900 hover:text-primary leading-tight mb-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.name}</a>
+                                <p class="text-xs text-gray-500 mb-1">SL: ${item.quantity}</p>
+                                <p class="text-xs font-medium text-primary">${item.price}</p>
                             </div>
-                            <button class="remove-item text-gray-400 hover:text-red-500 p-1" data-key="${item.key}">
-                                <span data-icon="close" data-size="16" data-class="w-4 h-4"></span>
+                            <button class="remove-item text-gray-400 hover:text-red-500 p-1 flex-shrink-0" data-key="${item.key}">
+                                <span data-icon="close" data-size="12" data-class="w-3 h-3"></span>
                             </button>
                         </div>
                     `

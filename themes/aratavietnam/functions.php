@@ -52,7 +52,7 @@ add_action('init', 'aratavietnam_load_textdomain');
 function aratavietnam_register_page_templates($templates) {
     $templates['page-templates/news.php'] = 'News Page';
     $templates['page-templates/promotions.php'] = 'Promotions Page';
-    $templates['page-templates/careers.php'] = 'Careers Page';
+    $templates['page-templates/careers.php'] = 'Tuyển dụng';
     $templates['page-templates/blog.php'] = 'Blog Page';
     $templates['page-templates/contact.php'] = 'Contact Page';
     $templates['page-templates/services.php'] = 'Services Page';
@@ -186,7 +186,7 @@ add_filter('script_loader_tag', function ($tag, $handle, $src) {
 function aratavietnam_enqueue_custom_scripts() {
     $version = wp_get_theme()->get('Version');
     // Enqueue scripts (using manifest for hashed filenames)
-    wp_enqueue_script('aratavietnam-app', get_template_directory_uri() . '/dist/app-BQpr0Ux-.js', [], $version, true);
+    wp_enqueue_script('aratavietnam-app', get_template_directory_uri() . '/dist/app-BxA492tz.js', [], $version, true);
 
     // Enqueue notification system globally
     wp_enqueue_script('aratavietnam-notifications', get_template_directory_uri() . '/dist/notifications-DX7Hjlbv.js', [], $version, true);
@@ -753,21 +753,21 @@ if (!function_exists('arata_get_meta_value')) {
     }
 }
 
-// Translate WooCommerce single product tabs
-add_filter('woocommerce_product_tabs', 'aratavietnam_translate_product_tabs', 98);
-function aratavietnam_translate_product_tabs($tabs) {
+// Rename the product tabs to Vietnamese and remove additional_information tab
+add_filter('woocommerce_product_tabs', 'aratavietnam_rename_tabs', 98);
+function aratavietnam_rename_tabs($tabs) {
     if (isset($tabs['description'])) {
         $tabs['description']['title'] = __('Mô tả sản phẩm', 'aratavietnam');
     }
     if (isset($tabs['reviews'])) {
         $tabs['reviews']['title'] = __('Đánh giá', 'aratavietnam');
     }
+    // Remove additional_information tab
     if (isset($tabs['additional_information'])) {
-        $tabs['additional_information']['title'] = __('Thông tin bổ sung', 'aratavietnam');
+        unset($tabs['additional_information']);
     }
     return $tabs;
 }
-
 
 // Remove the heading from the description tab
 add_filter('woocommerce_product_description_heading', '__return_null');
