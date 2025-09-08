@@ -174,6 +174,9 @@ function aratavietnam_color_customizer($wp_customize) {
         'section' => 'aratavietnam_color_section',
         'priority' => 23,
     )));
+
+    // Service Colors - REMOVED: Now using system colors (Primary, Secondary, Tertiary)
+    // Service type colors are now mapped directly to theme primary colors in services.php
 }
 add_action('customize_register', 'aratavietnam_color_customizer');
 
@@ -242,6 +245,9 @@ function aratavietnam_color_customizer_preview_js() {
                 $('#colophon').css('background', 'linear-gradient(135deg, ' + newval + ' 0%, ' + newval + ' 100%)');
             });
         });
+
+        // Service Colors - REMOVED: Now using system colors
+        // Service type colors update automatically with theme primary/secondary/tertiary colors
 
     })(jQuery);
     </script>

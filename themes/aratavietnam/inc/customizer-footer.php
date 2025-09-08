@@ -170,6 +170,20 @@ function aratavietnam_footer_customizer($wp_customize) {
         'priority' => 16,
     ));
 
+    // Footer Logo
+    $wp_customize->add_setting('footer_logo', array(
+        'default' => '',
+        'sanitize_callback' => 'absint',
+        'transport' => 'postMessage',
+    ));
+    $wp_customize->add_control(new WP_Customize_Media_Control($wp_customize, 'footer_logo', array(
+        'label' => __('Footer Logo', 'aratavietnam'),
+        'description' => __('Upload a logo for the footer (different from header logo)', 'aratavietnam'),
+        'section' => 'aratavietnam_footer_section',
+        'mime_type' => 'image',
+        'priority' => 17,
+    )));
+
     // Social Media Divider
     $wp_customize->add_setting('social_media_divider', array(
         'sanitize_callback' => 'sanitize_text_field',

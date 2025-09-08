@@ -7,9 +7,20 @@
 
 if (!defined('ABSPATH')) { exit; }
 
+// Prevent fatal errors
+if (!function_exists('add_action')) {
+    return;
+}
+
 // Add meta box for about page settings
 function add_about_meta_boxes() {
+    // Only run in admin
+    if (!is_admin()) {
+        return;
+    }
+    
     global $post;
+    
     
     // Only add meta box if this page uses about template
     if ($post && get_page_template_slug($post->ID) === 'page-templates/about.php') {
@@ -101,6 +112,7 @@ function about_hero_settings_callback($post) {
 }
 
 function save_about_hero_settings($post_id) {
+    
     // Verify nonce
     if (!isset($_POST['about_hero_settings_nonce']) || !wp_verify_nonce($_POST['about_hero_settings_nonce'], 'about_hero_settings_nonce')) {
         return;
@@ -140,3 +152,138 @@ function save_about_hero_settings($post_id) {
 // Hook the functions
 add_action('add_meta_boxes', 'add_about_meta_boxes');
 add_action('save_post', 'save_about_hero_settings');
+
+// Add section settings meta box
+function add_about_sections_meta_boxes() {
+    // Only run in admin
+    if (!is_admin()) {
+        return;
+    }
+    
+    global $post;
+    
+    
+    // Only add meta box if this page uses about template
+    if ($post && get_page_template_slug($post->ID) === 'page-templates/about.php') {
+        add_meta_box(
+            'arata_about_sections',
+            'Cài đặt Sections',
+            'about_sections_callback',
+            'page',
+            'normal',
+            'default'
+        );
+    }
+}
+
+function about_sections_callback($post) {
+    // Only show for pages using the about template
+    $page_template = get_page_template_slug($post->ID);
+    if ($page_template !== 'page-templates/about.php') {
+        echo '<p>Meta fields này chỉ hiển thị cho trang sử dụng template "About Page".</p>';
+        return;
+    }
+
+    wp_nonce_field('arata_about_sections_nonce', 'arata_about_sections_nonce');
+
+    $show_company_intro = get_post_meta($post->ID, 'arata_show_company_intro', true);
+    $show_history = get_post_meta($post->ID, 'arata_show_history', true);
+    $show_mission = get_post_meta($post->ID, 'arata_show_mission', true);
+    $show_values = get_post_meta($post->ID, 'arata_show_values', true);
+    $show_commitment = get_post_meta($post->ID, 'arata_show_commitment', true);
+    $show_social_links = get_post_meta($post->ID, 'arata_show_social_links', true);
+
+    echo '<table class="form-table">';
+
+    // Show Company Intro
+    echo '<tr>';
+    echo '<th><label for="arata_show_company_intro">Hiển thị Giới thiệu công ty</label></th>';
+    echo '<td>';
+    echo '<input type="checkbox" id="arata_show_company_intro" name="arata_show_company_intro" value="1" ' . checked($show_company_intro !== '0', true, false) . ' />';
+    echo '<p class="description">Hiển thị section giới thiệu công ty</p>';
+    echo '</td>';
+    echo '</tr>';
+
+    // Show History
+    echo '<tr>';
+    echo '<th><label for="arata_show_history">Hiển thị Lịch sử & Thành tựu</label></th>';
+    echo '<td>';
+    echo '<input type="checkbox" id="arata_show_history" name="arata_show_history" value="1" ' . checked($show_history !== '0', true, false) . ' />';
+    echo '<p class="description">Hiển thị section lịch sử và thành tựu</p>';
+    echo '</td>';
+    echo '</tr>';
+
+    // Show Mission
+    echo '<tr>';
+    echo '<th><label for="arata_show_mission">Hiển thị Sứ mệnh & Tầm nhìn</label></th>';
+    echo '<td>';
+    echo '<input type="checkbox" id="arata_show_mission" name="arata_show_mission" value="1" ' . checked($show_mission !== '0', true, false) . ' />';
+    echo '<p class="description">Hiển thị section sứ mệnh và tầm nhìn</p>';
+    echo '</td>';
+    echo '</tr>';
+
+    // Show Values
+    echo '<tr>';
+    echo '<th><label for="arata_show_values">Hiển thị Giá trị cốt lõi</label></th>';
+    echo '<td>';
+    echo '<input type="checkbox" id="arata_show_values" name="arata_show_values" value="1" ' . checked($show_values !== '0', true, false) . ' />';
+    echo '<p class="description">Hiển thị section giá trị cốt lõi</p>';
+    echo '</td>';
+    echo '</tr>';
+
+    // Show Commitment
+    echo '<tr>';
+    echo '<th><label for="arata_show_commitment">Hiển thị Cam kết chất lượng</label></th>';
+    echo '<td>';
+    echo '<input type="checkbox" id="arata_show_commitment" name="arata_show_commitment" value="1" ' . checked($show_commitment !== '0', true, false) . ' />';
+    echo '<p class="description">Hiển thị section cam kết chất lượng</p>';
+    echo '</td>';
+    echo '</tr>';
+
+    // Show Social Links
+    echo '<tr>';
+    echo '<th><label for="arata_show_social_links">Hiển thị Mạng xã hội</label></th>';
+    echo '<td>';
+    echo '<input type="checkbox" id="arata_show_social_links" name="arata_show_social_links" value="1" ' . checked($show_social_links !== '0', true, false) . ' />';
+    echo '<p class="description">Hiển thị section liên kết mạng xã hội</p>';
+    echo '</td>';
+    echo '</tr>';
+
+    echo '</table>';
+}
+
+function save_about_sections_settings($post_id) {
+    // Verify nonce
+    if (!isset($_POST['arata_about_sections_nonce']) || !wp_verify_nonce($_POST['arata_about_sections_nonce'], 'arata_about_sections_nonce')) {
+        return;
+    }
+
+    // Check permissions
+    if (!current_user_can('edit_page', $post_id)) {
+        return;
+    }
+
+    // Only save for pages using about template
+    $page_template = get_page_template_slug($post_id);
+    if ($page_template !== 'page-templates/about.php') {
+        return;
+    }
+
+    // Save checkbox fields
+    $checkbox_fields = [
+        'arata_show_company_intro',
+        'arata_show_history',
+        'arata_show_mission',
+        'arata_show_values',
+        'arata_show_commitment',
+        'arata_show_social_links'
+    ];
+    foreach ($checkbox_fields as $field) {
+        $value = isset($_POST[$field]) ? '1' : '0';
+        update_post_meta($post_id, $field, $value);
+    }
+}
+
+// Hook the section functions
+add_action('add_meta_boxes', 'add_about_sections_meta_boxes');
+add_action('save_post', 'save_about_sections_settings');

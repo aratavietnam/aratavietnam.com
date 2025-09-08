@@ -2,6 +2,10 @@
 /**
  * Homepage All Products Section - Horizontal Slider
  */
+
+// Get global colors
+$primary_color = get_theme_mod('arata_primary_color', '#0066A6');
+$secondary_color = get_theme_mod('arata_secondary_color', '#F55E25');
 ?>
 
 <!-- All Products Section -->

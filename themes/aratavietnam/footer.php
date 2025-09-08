@@ -12,13 +12,13 @@ $tertiary_color = get_theme_mod('theme_tertiary_color', '#FFAB14');
     <div class="container mx-auto px-4 py-12">
         <div>
             <!-- Footer Content -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 mb-12 lg:items-start">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-12 lg:items-start">
 
                 <!-- Company Information (Mobile: Second, Desktop: First) -->
-                <div class="text-left space-y-4 order-2 lg:order-1">
+                <div class="text-left space-y-4 order-2 lg:order-1 lg:col-span-3">
                     <!-- Company Name -->
                     <div class="mb-3">
-                        <h3 class="text-xl font-bold text-white mb-2">
+                        <h3 class="text-lg font-bold text-white mb-2">
                             <?php echo esc_html(get_theme_mod('footer_company_name', 'Công ty TNHH Arata Việt Nam')); ?>
                         </h3>
                         <div class="w-16 h-1 rounded-full" style="background: #FFAB14;"></div>
@@ -67,21 +67,27 @@ $tertiary_color = get_theme_mod('theme_tertiary_color', '#FFAB14');
                 </div>
 
                 <!-- Logo + Description + Social Media (Mobile: First, Desktop: Middle) -->
-                <div class="text-left lg:text-center space-y-5 order-1 lg:order-2">
+                <div class="text-left lg:text-center space-y-5 order-1 lg:order-2 lg:col-span-6">
                     <!-- Logo -->
                     <div class="mb-5">
                         <?php
+                        $footer_logo_id = get_theme_mod('footer_logo');
                         $custom_logo_id = get_theme_mod('custom_logo');
                         $logo_url = get_template_directory_uri() . '/assets/images/logo.png';
 
-                        if ($custom_logo_id) {
+                        // Priority: Footer Logo > Custom Logo > Default Logo
+                        if ($footer_logo_id) {
+                            echo wp_get_attachment_image($footer_logo_id, 'full', false, array(
+                                'class' => 'h-16 w-auto lg:mx-auto',
+                                'alt' => get_bloginfo('name')
+                            ));
+                        } elseif ($custom_logo_id) {
                             echo wp_get_attachment_image($custom_logo_id, 'full', false, array(
                                 'class' => 'h-16 w-auto lg:mx-auto',
-                                'alt' => get_bloginfo('name'),
-                                'style' => 'filter: brightness(0) invert(1);'
+                                'alt' => get_bloginfo('name')
                             ));
                         } elseif (file_exists(get_template_directory() . '/assets/images/logo.png')) {
-                            echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr(get_bloginfo('name')) . '" class="h-16 w-auto lg:mx-auto" style="filter: brightness(0) invert(1);">';
+                            echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr(get_bloginfo('name')) . '" class="h-16 w-auto lg:mx-auto">';
                         } else {
                             echo '<div class="text-2xl font-bold text-white">' . get_bloginfo('name') . '</div>';
                         }
@@ -138,53 +144,105 @@ $tertiary_color = get_theme_mod('theme_tertiary_color', '#FFAB14');
                 </div>
 
                 <!-- Customer Service (Mobile: Third, Desktop: Third) -->
-                <div class="text-left space-y-6 order-3 lg:order-3">
-                    <div>
-                        <h4 class="text-xl font-bold mb-2 text-white"><?php echo esc_html(get_theme_mod('footer_service_title', 'Dịch vụ khách hàng')); ?></h4>
+                <div class="order-3 lg:order-3 lg:col-span-3">
+                    <!-- Mobile Version: Left Aligned -->
+                    <div class="text-left space-y-6 lg:hidden">
+                        <h4 class="text-lg font-bold text-white mb-2" lang="vi">
+                            <?php echo esc_html(get_theme_mod('footer_service_title', 'Liên kết nhanh')); ?>
+                        </h4>
                         <div class="w-16 h-1 rounded-full mb-6" style="background-color: <?php echo esc_attr($tertiary_color); ?>;"></div>
+
+                        <!-- Menu columns -->
+                        <div class="grid grid-cols-1 gap-4">
+                            <!-- Menu 1 -->
+                            <nav class="text-left">
+                                <?php
+                                wp_nav_menu(array(
+                                    'theme_location' => 'footer-menu-1',
+                                    'menu_class' => 'footer-menu-links space-y-2',
+                                    'container' => false,
+                                    'fallback_cb' => function() {
+                                        echo '<ul class="footer-menu-links space-y-2">';
+                                        echo '<li><a href="' . esc_url(home_url('/')) . '">Trang chủ</a></li>';
+                                        echo '<li><a href="' . esc_url(home_url('/san-pham')) . '">Sản phẩm</a></li>';
+                                        echo '<li><a href="' . esc_url(home_url('/ve-arata')) . '">Về Arata</a></li>';
+                                        echo '</ul>';
+                                    },
+                                    'link_before' => '',
+                                    'link_after' => '',
+                                ));
+                                ?>
+                            </nav>
+
+                            <!-- Menu 2 - Only show if menu has items -->
+                            <?php
+                            $menu2_items = wp_get_nav_menu_items('footer-menu-2');
+                            if ($menu2_items && count($menu2_items) > 0) :
+                            ?>
+                            <nav class="text-left">
+                                <?php
+                                wp_nav_menu(array(
+                                    'theme_location' => 'footer-menu-2',
+                                    'menu_class' => 'footer-menu-links space-y-2',
+                                    'container' => false,
+                                    'fallback_cb' => '__return_empty_string',
+                                    'link_before' => '',
+                                    'link_after' => '',
+                                ));
+                                ?>
+                            </nav>
+                            <?php endif; ?>
+                        </div>
                     </div>
 
-                    <!-- Menu columns -->
-                    <div class="grid grid-cols-2 gap-4">
-                        <!-- Menu 1 -->
-                        <nav>
-                            <?php
-                            wp_nav_menu(array(
-                                'theme_location' => 'footer-menu-1',
-                                'menu_class' => 'footer-menu-links space-y-2',
-                                'container' => false,
-                                'fallback_cb' => function() {
-                                    echo '<ul class="footer-menu-links space-y-2">';
-                                    echo '<li><a href="' . esc_url(home_url('/')) . '">Trang chủ</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/san-pham')) . '">Sản phẩm</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/ve-arata')) . '">Về Arata</a></li>';
-                                    echo '</ul>';
-                                },
-                                'link_before' => '',
-                                'link_after' => '',
-                            ));
-                            ?>
-                        </nav>
+                    <!-- Desktop Version: Right Aligned -->
+                    <div class="hidden lg:block text-right space-y-6">
+                        <h4 class="text-lg font-bold text-white mb-2" lang="vi" style="text-align: right !important;">
+                            <?php echo esc_html(get_theme_mod('footer_service_title', 'Liên kết nhanh')); ?>
+                        </h4>
+                        <div class="w-16 h-1 rounded-full mb-6" style="background-color: <?php echo esc_attr($tertiary_color); ?>; margin-left: auto; margin-right: 0;"></div>
 
-                        <!-- Menu 2 -->
-                        <nav>
+                        <!-- Menu columns -->
+                        <div class="grid grid-cols-1 gap-4">
+                            <!-- Menu 1 -->
+                            <nav style="text-align: right !important;">
+                                <?php
+                                wp_nav_menu(array(
+                                    'theme_location' => 'footer-menu-1',
+                                    'menu_class' => 'footer-menu-links space-y-2',
+                                    'container' => false,
+                                    'fallback_cb' => function() {
+                                        echo '<ul class="footer-menu-links space-y-2" style="text-align: right !important;">';
+                                        echo '<li style="text-align: right !important;"><a href="' . esc_url(home_url('/')) . '">Trang chủ</a></li>';
+                                        echo '<li style="text-align: right !important;"><a href="' . esc_url(home_url('/san-pham')) . '">Sản phẩm</a></li>';
+                                        echo '<li style="text-align: right !important;"><a href="' . esc_url(home_url('/ve-arata')) . '">Về Arata</a></li>';
+                                        echo '</ul>';
+                                    },
+                                    'link_before' => '',
+                                    'link_after' => '',
+                                ));
+                                ?>
+                            </nav>
+
+                            <!-- Menu 2 - Only show if menu has items -->
                             <?php
-                            wp_nav_menu(array(
-                                'theme_location' => 'footer-menu-2',
-                                'menu_class' => 'footer-menu-links space-y-2',
-                                'container' => false,
-                                'fallback_cb' => function() {
-                                    echo '<ul class="footer-menu-links space-y-2">';
-                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-doi-tra')) . '">Chính sách đổi trả</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/chinh-sach-bao-mat')) . '">Chính sách bảo mật</a></li>';
-                                    echo '<li><a href="' . esc_url(home_url('/dieu-khoan-dich-vu')) . '">Điều khoản dịch vụ</a></li>';
-                                    echo '</ul>';
-                                },
-                                'link_before' => '',
-                                'link_after' => '',
-                            ));
+                            $menu2_items = wp_get_nav_menu_items('footer-menu-2');
+                            if ($menu2_items && count($menu2_items) > 0) :
                             ?>
-                        </nav>
+                            <nav style="text-align: right !important;">
+                                <?php
+                                wp_nav_menu(array(
+                                    'theme_location' => 'footer-menu-2',
+                                    'menu_class' => 'footer-menu-links space-y-2',
+                                    'container' => false,
+                                    'fallback_cb' => '__return_empty_string',
+                                    'link_before' => '',
+                                    'link_after' => '',
+                                ));
+                                ?>
+                            </nav>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -334,6 +392,111 @@ document.addEventListener('DOMContentLoaded', function() {
 .dropdown-item.has-submenu {
     position: relative !important;
 }
+
+/* Footer alignment fixes */
+@media (min-width: 1024px) {
+    /* Force right alignment for Customer Service section */
+    .text-right {
+        text-align: right !important;
+    }
+    
+    /* Customer Service section desktop version */
+    .hidden.lg\:block .text-right,
+    .hidden.lg\:block .text-right > * {
+        text-align: right !important;
+    }
+    
+    /* Specific overrides for menu items */
+    .hidden.lg\:block .text-right h4 {
+        text-align: right !important;
+        display: block !important;
+        margin-left: auto !important;
+        margin-right: 0 !important;
+    }
+    
+    .hidden.lg\:block .text-right .w-16 {
+        margin-left: auto !important;
+        margin-right: 0 !important;
+    }
+    
+    /* Force right alignment for all menu containers in desktop version */
+    .hidden.lg\:block .text-right nav,
+    .hidden.lg\:block .text-right .footer-menu-links,
+    .hidden.lg\:block .text-right .footer-menu-links ul,
+    .hidden.lg\:block .text-right .footer-menu-links ol,
+    .hidden.lg\:block .text-right .footer-menu-links li {
+        text-align: right !important;
+        direction: rtl; /* Use RTL for better right alignment */
+        padding-right: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    /* Keep content LTR but aligned right */
+    .hidden.lg\:block .text-right .footer-menu-links li {
+        direction: ltr;
+        text-align: right !important;
+        display: block !important;
+        width: 100%;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+    }
+    
+    /* Specific link styling */
+    .hidden.lg\:block .text-right .footer-menu-links li a,
+    .hidden.lg\:block .text-right .menu-item a {
+        text-align: right !important;
+        display: block !important;
+        width: 100%;
+        padding-right: 0 !important;
+        margin-right: 0 !important;
+        text-align: right !important;
+    }
+    
+    /* Override any inline styles from WordPress */
+    .hidden.lg\:block .text-right nav[style*="text-align"] {
+        text-align: right !important;
+    }
+    
+    .hidden.lg\:block .text-right ul[style*="text-align"] {
+        text-align: right !important;
+    }
+    
+    .hidden.lg\:block .text-right li[style*="text-align"] {
+        text-align: right !important;
+    }
+    
+    /* Ensure menu items are block level */
+    .hidden.lg\:block .text-right .menu-item {
+        display: block !important;
+        text-align: right !important;
+        clear: both;
+        float: none;
+    }
+    
+    /* Remove any left spacing */
+    .hidden.lg\:block .text-right .footer-menu-links,
+    .hidden.lg\:block .text-right .footer-menu-links ul {
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+    }
+    
+    /* Specific fix for colophon order-3 section */
+    #colophon .order-3 nav ul,
+    #colophon .order-3 nav ul li {
+        text-align: right !important;
+        justify-content: flex-end !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
+    }
+    
+    #colophon .order-3 nav ul li a {
+        text-align: right !important;
+        display: block !important;
+        width: 100%;
+    }
+}
+
 
 </style>
 

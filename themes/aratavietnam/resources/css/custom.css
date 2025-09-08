@@ -1320,6 +1320,32 @@ a:where(:not(.wp-element-button)) {
   }
 }
 
+/* Tablet Header Fixes */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Header adjustments for tablets */
+  .site-header .container {
+    max-width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Adjust logo size for tablets */
+  .custom-logo {
+    max-height: 2.5rem;
+    max-width: 8rem;
+  }
+  
+  /* Hide desktop navigation on tablets */
+  .main-navigation {
+    display: none !important;
+  }
+  
+  /* Show mobile menu button on tablets */
+  .menu-toggle {
+    display: flex !important;
+  }
+}
+
 @media (max-width: 480px) {
   .back-to-top-btn {
     bottom: 10px;
@@ -1328,4 +1354,18 @@ a:where(:not(.wp-element-button)) {
     width: 32px;
     height: 32px;
   }
+}
+
+/* Fix for auth form loading spinner */
+.hidden.loading-spinner,
+.loading-spinner.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+.loading-spinner:not(.hidden) {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }

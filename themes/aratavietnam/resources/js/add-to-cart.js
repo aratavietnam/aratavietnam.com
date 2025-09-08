@@ -144,16 +144,11 @@ class AddToCartManager {
 
         const result = await response.text();
         
-        // Debug logging
-        console.log('AJAX Response:', result);
-        
         try {
             const parsed = JSON.parse(result);
-            console.log('Parsed Response:', parsed);
             return parsed;
         } catch (e) {
             console.error('JSON Parse Error:', e);
-            console.log('Raw Response:', result);
             
             // Handle HTML response (typical WooCommerce behavior)
             if (result.includes('error') || result.includes('Error')) {

@@ -2,6 +2,10 @@
 /**
  * Homepage Partners Section
  */
+
+// Get global colors
+$primary_color = get_theme_mod('arata_primary_color', '#0066A6');
+$secondary_color = get_theme_mod('arata_secondary_color', '#F55E25');
 ?>
 
 <!-- Partners Section -->
@@ -21,16 +25,16 @@
             if (empty($title_part1)) {
                 $title_part1 = 'Đối tác';
             }
-            if (empty($title_part2)) {
-                $title_part2 = '& Thương hiệu';
-            }
+            // Remove fallback for title_part2 to keep it empty
             if (empty($section_description)) {
                 $section_description = 'Chúng tôi tự hào hợp tác với các thương hiệu hóa mỹ phẩm hàng đầu từ Nhật Bản';
             }
             ?>
             <h2 class="text-4xl font-bold text-gray-900 mb-4">
                 <span class="text-secondary"><?php echo esc_html($title_part1); ?></span>
-                <span class="text-primary"><?php echo esc_html($title_part2); ?></span>
+                <?php if (!empty($title_part2)) : ?>
+                    <span class="text-primary"><?php echo esc_html($title_part2); ?></span>
+                <?php endif; ?>
             </h2>
             <p class="text-base sm:text-lg text-gray-600 mx-auto">
                 <?php echo esc_html($section_description); ?>
@@ -64,7 +68,7 @@
                                     <?php if (has_post_thumbnail($partner_post->ID)) : ?>
                                         <img src="<?php echo get_the_post_thumbnail_url($partner_post->ID, 'medium'); ?>"
                                              alt="<?php echo esc_attr(get_the_title($partner_post->ID)); ?>"
-                                             class="max-w-full max-h-full object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
+                                             class="max-w-full max-h-full object-contain transition-transform duration-300 hover:scale-110" />
                                     <?php endif; ?>
                                 </div>
                             <?php endforeach; ?>
@@ -77,7 +81,7 @@
                                     <?php if (has_post_thumbnail($partner_post->ID)) : ?>
                                         <img src="<?php echo get_the_post_thumbnail_url($partner_post->ID, 'medium'); ?>"
                                              alt="<?php echo esc_attr(get_the_title($partner_post->ID)); ?>"
-                                             class="max-w-full max-h-full object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
+                                             class="max-w-full max-h-full object-contain transition-transform duration-300 hover:scale-110" />
                                     <?php endif; ?>
                                 </div>
                             <?php endforeach; ?>
@@ -99,7 +103,7 @@
                                     <?php if (has_post_thumbnail($partner_post->ID)) : ?>
                                         <img src="<?php echo get_the_post_thumbnail_url($partner_post->ID, 'medium'); ?>"
                                              alt="<?php echo esc_attr(get_the_title($partner_post->ID)); ?>"
-                                             class="max-w-full max-h-full object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
+                                             class="max-w-full max-h-full object-contain transition-transform duration-300 hover:scale-110" />
                                     <?php endif; ?>
                                 </div>
                             <?php endforeach; ?>
@@ -112,7 +116,7 @@
                                     <?php if (has_post_thumbnail($partner_post->ID)) : ?>
                                         <img src="<?php echo get_the_post_thumbnail_url($partner_post->ID, 'medium'); ?>"
                                              alt="<?php echo esc_attr(get_the_title($partner_post->ID)); ?>"
-                                             class="max-w-full max-h-full object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
+                                             class="max-w-full max-h-full object-contain transition-transform duration-300 hover:scale-110" />
                                     <?php endif; ?>
                                 </div>
                             <?php endforeach; ?>

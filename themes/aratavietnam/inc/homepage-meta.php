@@ -13,7 +13,7 @@ function arata_add_homepage_meta_box() {
     if (get_current_screen()->id === 'page' && isset($_GET['post']) && (int)$_GET['post'] === (int)$front_page_id) {
         add_meta_box(
             'arata_homepage_settings',
-            'Homepage Banner Settings',
+            'Homepage Settings',
             'arata_homepage_meta_box_callback',
             'page',
             'normal',
@@ -27,106 +27,247 @@ add_action('add_meta_boxes', 'arata_add_homepage_meta_box');
 function arata_homepage_meta_box_callback($post) {
     wp_nonce_field('arata_homepage_save_meta_box_data', 'arata_homepage_meta_box_nonce');
 
-    // Marquee text field
+    // Get current values
+    $show_hero = get_post_meta($post->ID, 'arata_show_hero', true);
+    $compact_hero = get_post_meta($post->ID, 'arata_compact_hero', true);
+    $hero_subtitle = get_post_meta($post->ID, 'arata_homepage_subtitle', true);
+    $hero_intro = get_post_meta($post->ID, 'arata_homepage_intro', true);
+    
+    // Section toggles
+    $show_marquee = get_post_meta($post->ID, 'arata_show_marquee', true);
+    $show_featured_products = get_post_meta($post->ID, 'arata_show_featured_products', true);
+    $show_all_products = get_post_meta($post->ID, 'arata_show_all_products', true);
+    $show_about = get_post_meta($post->ID, 'arata_show_about', true);
+    $show_partners = get_post_meta($post->ID, 'arata_show_partners', true);
+    
+    // Marquee text
     $marquee_text = get_post_meta($post->ID, '_marquee_text', true);
 
-    // Slide 1 fields
+    // Hero slide fields
     $slide1_type = get_post_meta($post->ID, '_slide1_type', true) ?: 'image';
     $slide1_image = get_post_meta($post->ID, '_slide1_image', true);
     $slide1_video = get_post_meta($post->ID, '_slide1_video', true);
-
-    // Slide 2 fields
     $slide2_type = get_post_meta($post->ID, '_slide2_type', true) ?: 'image';
     $slide2_image = get_post_meta($post->ID, '_slide2_image', true);
     $slide2_video = get_post_meta($post->ID, '_slide2_video', true);
-
-    // Slide 3 fields
     $slide3_type = get_post_meta($post->ID, '_slide3_type', true) ?: 'image';
     $slide3_image = get_post_meta($post->ID, '_slide3_image', true);
     $slide3_video = get_post_meta($post->ID, '_slide3_video', true);
 
-    // HTML for the meta box
     ?>
+    <style>
+        .homepage-meta-table { width: 100%; }
+        .homepage-meta-table th { width: 200px; text-align: left; padding: 15px 10px 15px 0; vertical-align: top; }
+        .homepage-meta-table td { padding: 15px 0; }
+        .homepage-meta-table input[type="text"], .homepage-meta-table textarea { width: 100%; max-width: 500px; }
+        .homepage-meta-table textarea { height: 80px; }
+        .section-header {
+            background: #f0f0f1;
+            padding: 10px 15px;
+            margin: 20px -12px 15px -12px;
+            font-weight: 600;
+            border-left: 4px solid #2271b1;
+        }
+        .section-header:first-child { margin-top: 0; }
+        .homepage-meta-tabs { margin-top: 20px; }
+        .homepage-meta-tabs ul.tab-links { list-style: none; padding: 0; margin: 0; border-bottom: 1px solid #ddd; }
+        .homepage-meta-tabs ul.tab-links li { display: inline-block; margin: 0 0 -1px 0; padding: 0; }
+        .homepage-meta-tabs ul.tab-links li a { display: block; padding: 10px 15px; text-decoration: none; border: 1px solid #ddd; border-bottom: none; background: #f9f9f9; }
+        .homepage-meta-tabs ul.tab-links li.active a { background: #fff; border-bottom: 1px solid #fff; margin-bottom: -1px; }
+        .homepage-meta-tabs .tab-content { padding: 15px 0; }
+        .homepage-meta-tabs .tab { display: none; }
+        .homepage-meta-tabs .tab.active { display: block; }
+    </style>
+
+    <div class="section-header">Cài đặt Hero Section</div>
+    <table class="homepage-meta-table">
+        <tr>
+            <th><label for="arata_show_hero">Hiển thị Hero Section</label></th>
+            <td>
+                <label>
+                    <input type="checkbox" id="arata_show_hero" name="arata_show_hero" value="1" <?php checked($show_hero, '1'); ?> />
+                    Hiển thị phần hero trên trang chủ
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="arata_compact_hero">Chế độ Hero</label></th>
+            <td>
+                <label>
+                    <input type="checkbox" id="arata_compact_hero" name="arata_compact_hero" value="1" <?php checked($compact_hero, '1'); ?> />
+                    Sử dụng hero nhỏ gọn (thay vì hero đầy đủ)
+                </label>
+                <p class="description">Hero nhỏ gọn sẽ có chiều cao thấp hơn và thiết kế đơn giản</p>
+            </td>
+        </tr>
+    </table>
+
+    <div class="section-header">Nội dung Hero Section</div>
+    <table class="homepage-meta-table">
+        <tr>
+            <th><label for="arata_homepage_subtitle">Tiêu đề Hero</label></th>
+            <td>
+                <input type="text" id="arata_homepage_subtitle" name="arata_homepage_subtitle" value="<?php echo esc_attr($hero_subtitle); ?>" placeholder="Trang chủ" />
+                <p class="description">Tiêu đề hiển thị trong hero section</p>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="arata_homepage_intro">Mô tả Hero</label></th>
+            <td>
+                <textarea id="arata_homepage_intro" name="arata_homepage_intro" placeholder="Chào mừng bạn đến với Arata Vietnam..."><?php echo esc_textarea($hero_intro); ?></textarea>
+                <p class="description">Mô tả hiển thị dưới tiêu đề trong hero section</p>
+            </td>
+        </tr>
+    </table>
+
+    <div class="section-header">Cài đặt các Section</div>
+    <table class="homepage-meta-table">
+        <tr>
+            <th><label for="arata_show_marquee">Hiển thị Marquee</label></th>
+            <td>
+                <label>
+                    <input type="checkbox" id="arata_show_marquee" name="arata_show_marquee" value="1" <?php checked($show_marquee, '1'); ?> />
+                    Hiển thị phần marquee text chạy
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="arata_show_featured_products">Hiển thị Sản phẩm nổi bật</label></th>
+            <td>
+                <label>
+                    <input type="checkbox" id="arata_show_featured_products" name="arata_show_featured_products" value="1" <?php checked($show_featured_products, '1'); ?> />
+                    Hiển thị section sản phẩm nổi bật
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="arata_show_all_products">Hiển thị Tất cả sản phẩm</label></th>
+            <td>
+                <label>
+                    <input type="checkbox" id="arata_show_all_products" name="arata_show_all_products" value="1" <?php checked($show_all_products, '1'); ?> />
+                    Hiển thị section tất cả sản phẩm
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="arata_show_about">Hiển thị Giới thiệu</label></th>
+            <td>
+                <label>
+                    <input type="checkbox" id="arata_show_about" name="arata_show_about" value="1" <?php checked($show_about, '1'); ?> />
+                    Hiển thị section giới thiệu về Arata
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="arata_show_partners">Hiển thị Đối tác</label></th>
+            <td>
+                <label>
+                    <input type="checkbox" id="arata_show_partners" name="arata_show_partners" value="1" <?php checked($show_partners, '1'); ?> />
+                    Hiển thị section đối tác
+                </label>
+            </td>
+        </tr>
+    </table>
+
+    <div class="section-header">Cài đặt Marquee Text</div>
+    <table class="homepage-meta-table">
+        <tr>
+            <th><label for="marquee_text">Nội dung Marquee</label></th>
+            <td>
+                <input type="text" id="marquee_text" name="marquee_text" value="<?php echo esc_attr($marquee_text); ?>" placeholder="ARATA - NHÀ PHÂN PHỐI HÓA MỸ PHẨM HÀNG ĐẦU NHẬT BẢN" />
+                <p class="description">Text sẽ chạy liên tục từ phải sang trái</p>
+            </td>
+        </tr>
+    </table>
+
+    <div class="section-header">Cài đặt Hero Slides</div>
     <div class="homepage-meta-tabs">
         <ul class="tab-links">
-            <li class="active"><a href="#marquee">Marquee Text</a></li>
-            <li><a href="#slide1">Slide 1</a></li>
+            <li class="active"><a href="#slide1">Slide 1</a></li>
             <li><a href="#slide2">Slide 2</a></li>
             <li><a href="#slide3">Slide 3</a></li>
         </ul>
 
         <div class="tab-content">
-            <!-- Marquee Text Content -->
-            <div id="marquee" class="tab active">
-                <h4>Marquee Running Text Settings</h4>
-                <p>
-                    <label><strong>Running Text:</strong></label>
-                    <input type="text" name="marquee_text" value="<?php echo esc_attr($marquee_text); ?>" class="widefat" placeholder="ARATA - NHÀ PHÂN PHỐI HÓA MỸ PHẨM HÀNG ĐẦU NHẬT BẢN" />
-                    <em>Text sẽ chạy liên tục từ phải sang trái dưới hero banner</em>
-                </p>
+            <div id="slide1" class="tab active">
+                <table class="homepage-meta-table">
+                    <tr>
+                        <th><label for="slide1_type">Loại</label></th>
+                        <td>
+                            <select id="slide1_type" name="slide1_type">
+                                <option value="image" <?php selected($slide1_type, 'image'); ?>>Hình ảnh</option>
+                                <option value="video" <?php selected($slide1_type, 'video'); ?>>Video</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="slide1_image">Hình ảnh</label></th>
+                        <td>
+                            <input type="text" id="slide1_image" name="slide1_image" value="<?php echo esc_attr($slide1_image); ?>" class="widefat" />
+                            <button class="button upload_image_button">Upload Image</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="slide1_video">Video URL (MP4)</label></th>
+                        <td>
+                            <input type="text" id="slide1_video" name="slide1_video" value="<?php echo esc_attr($slide1_video); ?>" class="widefat" />
+                        </td>
+                    </tr>
+                </table>
             </div>
 
-            <!-- Slide 1 Content -->
-            <div id="slide1" class="tab">
-                <h4>Slide 1 Settings</h4>
-                <p>
-                    <label>Type:</label>
-                    <select name="slide1_type">
-                        <option value="image" <?php selected($slide1_type, 'image'); ?>>Image</option>
-                        <option value="video" <?php selected($slide1_type, 'video'); ?>>Video</option>
-                    </select>
-                </p>
-                <p>
-                    <label>Image:</label>
-                    <input type="text" name="slide1_image" value="<?php echo esc_attr($slide1_image); ?>" class="widefat" />
-                    <button class="button upload_image_button">Upload Image</button>
-                </p>
-                <p>
-                    <label>Video URL (MP4):</label>
-                    <input type="text" name="slide1_video" value="<?php echo esc_attr($slide1_video); ?>" class="widefat" />
-                </p>
-            </div>
-
-            <!-- Slide 2 Content -->
             <div id="slide2" class="tab">
-                <h4>Slide 2 Settings</h4>
-                <p>
-                    <label>Type:</label>
-                    <select name="slide2_type">
-                        <option value="image" <?php selected($slide2_type, 'image'); ?>>Image</option>
-                        <option value="video" <?php selected($slide2_type, 'video'); ?>>Video</option>
-                    </select>
-                </p>
-                <p>
-                    <label>Image:</label>
-                    <input type="text" name="slide2_image" value="<?php echo esc_attr($slide2_image); ?>" class="widefat" />
-                    <button class="button upload_image_button">Upload Image</button>
-                </p>
-                <p>
-                    <label>Video URL (MP4):</label>
-                    <input type="text" name="slide2_video" value="<?php echo esc_attr($slide2_video); ?>" class="widefat" />
-                </p>
+                <table class="homepage-meta-table">
+                    <tr>
+                        <th><label for="slide2_type">Loại</label></th>
+                        <td>
+                            <select id="slide2_type" name="slide2_type">
+                                <option value="image" <?php selected($slide2_type, 'image'); ?>>Hình ảnh</option>
+                                <option value="video" <?php selected($slide2_type, 'video'); ?>>Video</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="slide2_image">Hình ảnh</label></th>
+                        <td>
+                            <input type="text" id="slide2_image" name="slide2_image" value="<?php echo esc_attr($slide2_image); ?>" class="widefat" />
+                            <button class="button upload_image_button">Upload Image</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="slide2_video">Video URL (MP4)</label></th>
+                        <td>
+                            <input type="text" id="slide2_video" name="slide2_video" value="<?php echo esc_attr($slide2_video); ?>" class="widefat" />
+                        </td>
+                    </tr>
+                </table>
             </div>
 
-            <!-- Slide 3 Content -->
             <div id="slide3" class="tab">
-                <h4>Slide 3 Settings</h4>
-                <p>
-                    <label>Type:</label>
-                    <select name="slide3_type">
-                        <option value="image" <?php selected($slide3_type, 'image'); ?>>Image</option>
-                        <option value="video" <?php selected($slide3_type, 'video'); ?>>Video</option>
-                    </select>
-                </p>
-                <p>
-                    <label>Image:</label>
-                    <input type="text" name="slide3_image" value="<?php echo esc_attr($slide3_image); ?>" class="widefat" />
-                    <button class="button upload_image_button">Upload Image</button>
-                </p>
-                <p>
-                    <label>Video URL (MP4):</label>
-                    <input type="text" name="slide3_video" value="<?php echo esc_attr($slide3_video); ?>" class="widefat" />
-                </p>
+                <table class="homepage-meta-table">
+                    <tr>
+                        <th><label for="slide3_type">Loại</label></th>
+                        <td>
+                            <select id="slide3_type" name="slide3_type">
+                                <option value="image" <?php selected($slide3_type, 'image'); ?>>Hình ảnh</option>
+                                <option value="video" <?php selected($slide3_type, 'video'); ?>>Video</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="slide3_image">Hình ảnh</label></th>
+                        <td>
+                            <input type="text" id="slide3_image" name="slide3_image" value="<?php echo esc_attr($slide3_image); ?>" class="widefat" />
+                            <button class="button upload_image_button">Upload Image</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="slide3_video">Video URL (MP4)</label></th>
+                        <td>
+                            <input type="text" id="slide3_video" name="slide3_video" value="<?php echo esc_attr($slide3_video); ?>" class="widefat" />
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
@@ -148,32 +289,89 @@ function arata_homepage_save_meta_box_data($post_id) {
         return;
     }
 
+    // Save hero settings
+    $hero_checkbox_fields = ['arata_show_hero', 'arata_compact_hero'];
+    foreach ($hero_checkbox_fields as $field) {
+        $value = isset($_POST[$field]) ? '1' : '0';
+        update_post_meta($post_id, $field, $value);
+    }
+
+    // Save hero content fields
+    $hero_text_fields = ['arata_homepage_subtitle', 'arata_homepage_intro'];
+    foreach ($hero_text_fields as $field) {
+        if (isset($_POST[$field])) {
+            update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
+        }
+    }
+
+    // Save section toggles
+    $section_fields = ['arata_show_marquee', 'arata_show_featured_products', 'arata_show_all_products', 'arata_show_about', 'arata_show_partners'];
+    foreach ($section_fields as $field) {
+        $value = isset($_POST[$field]) ? '1' : '0';
+        update_post_meta($post_id, $field, $value);
+    }
+
     // Save Marquee text
     if (isset($_POST['marquee_text'])) {
         update_post_meta($post_id, '_marquee_text', sanitize_text_field($_POST['marquee_text']));
     }
 
     // Save Slide 1 data
-    update_post_meta($post_id, '_slide1_type', sanitize_text_field($_POST['slide1_type']));
-    update_post_meta($post_id, '_slide1_image', sanitize_text_field($_POST['slide1_image']));
-    update_post_meta($post_id, '_slide1_video', sanitize_text_field($_POST['slide1_video']));
+    if (isset($_POST['slide1_type'])) {
+        update_post_meta($post_id, '_slide1_type', sanitize_text_field($_POST['slide1_type']));
+    }
+    if (isset($_POST['slide1_image'])) {
+        update_post_meta($post_id, '_slide1_image', sanitize_text_field($_POST['slide1_image']));
+    }
+    if (isset($_POST['slide1_video'])) {
+        update_post_meta($post_id, '_slide1_video', sanitize_text_field($_POST['slide1_video']));
+    }
 
     // Save Slide 2 data
-    update_post_meta($post_id, '_slide2_type', sanitize_text_field($_POST['slide2_type']));
-    update_post_meta($post_id, '_slide2_image', sanitize_text_field($_POST['slide2_image']));
-    update_post_meta($post_id, '_slide2_video', sanitize_text_field($_POST['slide2_video']));
+    if (isset($_POST['slide2_type'])) {
+        update_post_meta($post_id, '_slide2_type', sanitize_text_field($_POST['slide2_type']));
+    }
+    if (isset($_POST['slide2_image'])) {
+        update_post_meta($post_id, '_slide2_image', sanitize_text_field($_POST['slide2_image']));
+    }
+    if (isset($_POST['slide2_video'])) {
+        update_post_meta($post_id, '_slide2_video', sanitize_text_field($_POST['slide2_video']));
+    }
 
     // Save Slide 3 data
-    update_post_meta($post_id, '_slide3_type', sanitize_text_field($_POST['slide3_type']));
-    update_post_meta($post_id, '_slide3_image', sanitize_text_field($_POST['slide3_image']));
-    update_post_meta($post_id, '_slide3_video', sanitize_text_field($_POST['slide3_video']));
+    if (isset($_POST['slide3_type'])) {
+        update_post_meta($post_id, '_slide3_type', sanitize_text_field($_POST['slide3_type']));
+    }
+    if (isset($_POST['slide3_image'])) {
+        update_post_meta($post_id, '_slide3_image', sanitize_text_field($_POST['slide3_image']));
+    }
+    if (isset($_POST['slide3_video'])) {
+        update_post_meta($post_id, '_slide3_video', sanitize_text_field($_POST['slide3_video']));
+    }
 }
 add_action('save_post', 'arata_homepage_save_meta_box_data');
 
-// Enqueue scripts for media uploader
+// Enqueue scripts for media uploader and tabs
 function arata_homepage_admin_scripts() {
     wp_enqueue_media();
     wp_enqueue_script('arata-homepage-admin-js', get_template_directory_uri() . '/assets/js/homepage-admin.js', ['jquery'], null, true);
+    
+    // Add inline script for tab functionality
+    wp_add_inline_script('arata-homepage-admin-js', '
+        jQuery(document).ready(function($) {
+            // Tab functionality
+            $(".homepage-meta-tabs ul.tab-links li a").click(function(e) {
+                e.preventDefault();
+                var tab_id = $(this).attr("href");
+                
+                $(".homepage-meta-tabs ul.tab-links li").removeClass("active");
+                $(".homepage-meta-tabs .tab").removeClass("active");
+                
+                $(this).parent().addClass("active");
+                $(tab_id).addClass("active");
+            });
+        });
+    ');
 }
 add_action('admin_enqueue_scripts', 'arata_homepage_admin_scripts');
 

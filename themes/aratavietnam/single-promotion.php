@@ -203,6 +203,68 @@ $terms = get_post_meta(get_the_ID(), 'arata_promotion_terms', true);
                                 Mua sắm ngay
                             </a>
                         </div>
+
+                        <!-- Promotion Signup Form -->
+                        <div class="mt-6 pt-6 border-t border-gray-200">
+                            <button onclick="togglePromotionSignupForm()" class="inline-flex items-center justify-center w-full py-3 px-4 bg-secondary text-white rounded-lg hover:bg-secondary-dark transition-colors font-medium">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                </svg>
+                                Đăng ký nhận khuyến mãi
+                            </button>
+
+                            <div id="promotionSignupForm" class="hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                <h4 class="text-md font-bold text-gray-900 mb-3">Nhận thông báo khi có khuyến mãi mới</h4>
+                                
+                                <?php if (isset($_GET['promotion_signup'])): ?>
+                                    <?php 
+                                    $status = sanitize_text_field($_GET['promotion_signup']);
+                                    if ($status === 'success'): ?>
+                                        <div class="mb-3 p-3 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">
+                                            <strong>Thành công!</strong> Bạn đã đăng ký nhận khuyến mãi.
+                                        </div>
+                                    <?php elseif ($status === 'exists'): ?>
+                                        <div class="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-800 text-sm">
+                                            <strong>Thông báo:</strong> Email này đã đăng ký cho khuyến mãi này rồi.
+                                        </div>
+                                    <?php elseif ($status === 'error'): ?>
+                                        <div class="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
+                                            <strong>Lỗi:</strong> Vui lòng điền đầy đủ thông tin.
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+
+                                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="space-y-3">
+                                    <input type="hidden" name="action" value="arata_promotion_signup_submit" />
+                                    <input type="hidden" name="promotion_id" value="<?php echo get_the_ID(); ?>" />
+                                    <input type="hidden" name="promotion_code" value="<?php echo esc_attr($code); ?>" />
+                                    <?php wp_nonce_field('arata_promotion_signup_submit', 'arata_promotion_signup_nonce'); ?>
+
+                                    <div>
+                                        <input type="text" name="name" required 
+                                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
+                                               placeholder="Họ và tên của bạn" />
+                                    </div>
+
+                                    <div>
+                                        <input type="email" name="email" required 
+                                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
+                                               placeholder="Nhập email của bạn" />
+                                    </div>
+
+                                    <div>
+                                        <input type="tel" name="phone" 
+                                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
+                                               placeholder="Số điện thoại (tùy chọn)" />
+                                    </div>
+
+                                    <button type="submit" class="w-full bg-secondary text-white py-2 px-4 rounded-lg hover:bg-secondary-dark transition-colors font-medium text-sm">
+                                        Đăng ký ngay
+                                    </button>
+                                </form>
+
+                              </div>
+                        </div>
                     </div>
 
                     <!-- Related Promotions -->
@@ -316,6 +378,19 @@ function copyToClipboard(text) {
             document.body.removeChild(toast);
         }, 2000);
     });
+}
+
+function togglePromotionSignupForm() {
+    const form = document.getElementById('promotionSignupForm');
+    const button = event.target.closest('button');
+    
+    if (form.classList.contains('hidden')) {
+        form.classList.remove('hidden');
+        button.innerHTML = '<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Đóng form đăng ký';
+    } else {
+        form.classList.add('hidden');
+        button.innerHTML = '<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>Đăng ký nhận khuyến mãi';
+    }
 }
 </script>
 

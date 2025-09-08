@@ -80,29 +80,6 @@ add_action('init', function () {
     ]);
 });
 
-/**
- * Register Newsletter Subscriptions Post Type (for promotion form)
- */
-add_action('init', function () {
-    $labels = [
-        'name' => __('Đăng ký khuyến mãi', 'aratavietnam'),
-        'singular_name' => __('Đăng ký khuyến mãi', 'aratavietnam'),
-        'menu_name' => __('Đăng ký KM', 'aratavietnam'),
-        'search_items' => __('Tìm kiếm đăng ký', 'aratavietnam'),
-    ];
-
-    register_post_type('newsletter_sub', [
-        'labels' => $labels,
-        'public' => false,
-        'show_ui' => true,
-        'show_in_menu' => true,
-        'menu_icon' => 'dashicons-email-alt',
-        'supports' => ['title'],
-        'capability_type' => 'post',
-        'has_archive' => false,
-        'show_in_rest' => false,
-    ]);
-});
 
 /**
  * Register Job Applications Post Type (for career form)
@@ -121,6 +98,30 @@ add_action('init', function () {
         'show_ui' => true,
         'show_in_menu' => true,
         'menu_icon' => 'dashicons-portfolio',
+        'supports' => ['title'],
+        'capability_type' => 'post',
+        'has_archive' => false,
+        'show_in_rest' => false,
+    ]);
+});
+
+/**
+ * Register Promotion Signups Post Type (for promotion form)
+ */
+add_action('init', function () {
+    $labels = [
+        'name' => __('Đăng ký nhận KM', 'aratavietnam'),
+        'singular_name' => __('Đăng ký nhận KM', 'aratavietnam'),
+        'menu_name' => __('Đăng ký nhận KM', 'aratavietnam'),
+        'search_items' => __('Tìm kiếm đăng ký KM', 'aratavietnam'),
+    ];
+
+    register_post_type('promotion_signup', [
+        'labels' => $labels,
+        'public' => false,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'menu_icon' => 'dashicons-star-filled',
         'supports' => ['title'],
         'capability_type' => 'post',
         'has_archive' => false,
@@ -249,6 +250,36 @@ add_action('add_meta_boxes', function () {
             <?php
         },
         'job_application',
+        'normal',
+        'high'
+    );
+});
+
+/**
+ * Add meta boxes for Promotion Signups
+ */
+add_action('add_meta_boxes', function () {
+    add_meta_box(
+        'promotion_signup_details',
+        __('Chi tiết đăng ký KM', 'aratavietnam'),
+        function ($post) {
+            $name = get_post_meta($post->ID, 'arata_signup_name', true);
+            $email = get_post_meta($post->ID, 'arata_signup_email', true);
+            $phone = get_post_meta($post->ID, 'arata_signup_phone', true);
+            $promotion_id = get_post_meta($post->ID, 'arata_signup_promotion_id', true);
+            $promotion_code = get_post_meta($post->ID, 'arata_signup_promotion_code', true);
+            $promotion_title = $promotion_id ? get_the_title($promotion_id) : '';
+            ?>
+            <table class="form-table">
+                <tr><th><?php _e('Họ tên', 'aratavietnam'); ?></th><td><?php echo esc_html($name); ?></td></tr>
+                <tr><th><?php _e('Email', 'aratavietnam'); ?></th><td><?php echo esc_html($email); ?></td></tr>
+                <tr><th><?php _e('Điện thoại', 'aratavietnam'); ?></th><td><?php echo esc_html($phone); ?></td></tr>
+                <tr><th><?php _e('Chương trình KM', 'aratavietnam'); ?></th><td><?php echo esc_html($promotion_title); ?></td></tr>
+                <tr><th><?php _e('Mã khuyến mãi', 'aratavietnam'); ?></th><td><?php echo esc_html($promotion_code); ?></td></tr>
+            </table>
+            <?php
+        },
+        'promotion_signup',
         'normal',
         'high'
     );

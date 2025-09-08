@@ -13,73 +13,6 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Handle Newsletter Subscription
- */
-function arata_handle_newsletter_submission() {
-    if (!isset($_POST['arata_newsletter_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['arata_newsletter_nonce']), 'arata_newsletter_submit')) {
-        wp_die(__('Security check failed.', 'aratavietnam'));
-    }
-
-    $referer = isset($_POST['_wp_http_referer']) ? esc_url_raw(wp_unslash($_POST['_wp_http_referer'])) : home_url('/');
-
-    $name = isset($_POST['name']) ? sanitize_text_field(wp_unslash($_POST['name'])) : '';
-    $email = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
-    $phone = isset($_POST['phone']) ? sanitize_text_field(wp_unslash($_POST['phone'])) : '';
-    $interests = isset($_POST['interests']) ? array_map('sanitize_text_field', wp_unslash($_POST['interests'])) : [];
-
-    if (empty($name) || empty($email)) {
-        wp_safe_redirect(add_query_arg('newsletter', 'error', $referer));
-        exit;
-    }
-
-    // Check if email already exists
-    $existing = get_posts([
-        'post_type' => 'newsletter_sub',
-        'meta_query' => [
-            [
-                'key' => 'arata_subscriber_email',
-                'value' => $email,
-                'compare' => '='
-            ]
-        ],
-        'posts_per_page' => 1
-    ]);
-
-    if (!empty($existing)) {
-        wp_safe_redirect(add_query_arg('newsletter', 'exists', $referer));
-        exit;
-    }
-
-    $post_id = wp_insert_post([
-        'post_type' => 'newsletter_sub',
-        'post_status' => 'publish',
-        'post_title' => sprintf(__('Newsletter subscription: %s (%s)', 'aratavietnam'), $name, $email),
-    ]);
-
-    if (is_wp_error($post_id) || !$post_id) {
-        wp_safe_redirect(add_query_arg('newsletter', 'error', $referer));
-        exit;
-    }
-
-    update_post_meta($post_id, 'arata_subscriber_name', $name);
-    update_post_meta($post_id, 'arata_subscriber_email', $email);
-    update_post_meta($post_id, 'arata_subscriber_phone', $phone);
-    update_post_meta($post_id, 'arata_subscriber_interests', implode(', ', $interests));
-
-    // Send notification email to admin
-    $admin_email = get_option('admin_email');
-    $subject = sprintf(__('New newsletter subscription: %s', 'aratavietnam'), $name);
-    $body = sprintf("Tên: %s\nEmail: %s\nĐiện thoại: %s\nSở thích: %s", $name, $email, $phone, implode(', ', $interests));
-    wp_mail($admin_email, $subject, $body);
-
-    wp_safe_redirect(add_query_arg('newsletter', 'success', $referer));
-    exit;
-}
-
-add_action('admin_post_nopriv_arata_newsletter_submit', 'arata_handle_newsletter_submission');
-add_action('admin_post_arata_newsletter_submit', 'arata_handle_newsletter_submission');
-
-/**
  * Handle Job Application Submission
  */
 function arata_handle_job_application() {
@@ -95,8 +28,9 @@ function arata_handle_job_application() {
     $job_id = isset($_POST['job_id']) ? absint($_POST['job_id']) : 0;
     $cover_letter = isset($_POST['cover_letter']) ? wp_kses_post(wp_unslash($_POST['cover_letter'])) : '';
 
-    if (empty($name) || empty($email) || empty($phone) || empty($job_id)) {
-        wp_safe_redirect(add_query_arg('job_application', 'error', $referer));
+    // Check required fields including CV file
+    if (empty($name) || empty($email) || empty($phone) || empty($job_id) || empty($_FILES['cv']['name'])) {
+        wp_safe_redirect(add_query_arg('application_error', '1', $referer));
         exit;
     }
 
@@ -110,7 +44,7 @@ function arata_handle_job_application() {
     ]);
 
     if (is_wp_error($post_id) || !$post_id) {
-        wp_safe_redirect(add_query_arg('job_application', 'error', $referer));
+        wp_safe_redirect(add_query_arg('application_error', '1', $referer));
         exit;
     }
 
@@ -122,7 +56,17 @@ function arata_handle_job_application() {
 
     // Handle CV upload
     if (!empty($_FILES['cv']) && $_FILES['cv']['error'] === UPLOAD_ERR_OK) {
-        $upload = wp_handle_upload($_FILES['cv'], ['test_form' => false]);
+        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        $upload = wp_handle_upload($_FILES['cv'], [
+            'test_form' => false,
+            'mimes' => [
+                'pdf' => 'application/pdf',
+                'doc' => 'application/msword',
+                'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            ],
+            'test_size' => 5 * 1024 * 1024 // 5MB limit
+        ]);
+        
         if (!isset($upload['error'])) {
             update_post_meta($post_id, 'arata_applicant_cv', $upload['url']);
         }
@@ -131,10 +75,29 @@ function arata_handle_job_application() {
     // Send notification email to admin
     $admin_email = get_option('admin_email');
     $subject = sprintf(__('New job application: %s - %s', 'aratavietnam'), $name, $position);
-    $body = sprintf("Tên: %s\nEmail: %s\nĐiện thoại: %s\nVị trí: %s\n\nThư xin việc:\n%s", $name, $email, $phone, $position, wp_strip_all_tags($cover_letter));
-    wp_mail($admin_email, $subject, $body);
+    $body = sprintf(
+        "Tên: %s\nEmail: %s\nĐiện thoại: %s\nVị trí: %s\n\nThư xin việc:\n%s\n\nXem chi tiết: %s",
+        $name,
+        $email,
+        $phone,
+        $position,
+        wp_strip_all_tags($cover_letter),
+        get_edit_post_link($post_id)
+    );
+    
+    $headers = ['Content-Type: text/plain; charset=UTF-8'];
+    wp_mail($admin_email, $subject, $body, $headers);
 
-    wp_safe_redirect(add_query_arg('job_application', 'success', $referer));
+    // Send confirmation email to applicant
+    $applicant_subject = sprintf(__('Cảm ơn bạn đã ứng tuyển tại Arata Vietnam', 'aratavietnam'));
+    $applicant_body = sprintf(
+        "Chào %s,\n\nCảm ơn bạn đã ứng tuyển vị trí %s tại Arata Vietnam.\n\nChúng tôi đã nhận được hồ sơ của bạn và sẽ xem xét trong thời gian sớm nhất. Nếu hồ sơ của bạn phù hợp, chúng tôi sẽ liên hệ với bạn để sắp xếp phỏng vấn.\n\nTrân trọng,\nĐội ngũ Tuyển dụng\nArata Vietnam",
+        $name,
+        $position
+    );
+    wp_mail($email, $applicant_subject, $applicant_body, $headers);
+
+    wp_safe_redirect(add_query_arg('application_success', '1', $referer));
     exit;
 }
 
@@ -142,35 +105,100 @@ add_action('admin_post_nopriv_arata_job_application_submit', 'arata_handle_job_a
 add_action('admin_post_arata_job_application_submit', 'arata_handle_job_application');
 
 /**
- * Customize admin columns for Newsletter Subscriptions
+ * Handle Promotion Signup Submission
  */
-add_filter('manage_newsletter_sub_posts_columns', function ($columns) {
-    $new = [];
-    $new['cb'] = $columns['cb'] ?? '';
-    $new['title'] = __('Tên', 'aratavietnam');
-    $new['email'] = __('Email', 'aratavietnam');
-    $new['phone'] = __('Điện thoại', 'aratavietnam');
-    $new['interests'] = __('Sở thích', 'aratavietnam');
-    $new['date'] = __('Ngày đăng ký', 'aratavietnam');
-    return $new;
-});
-
-add_action('manage_newsletter_sub_posts_custom_column', function ($column, $post_id) {
-    switch ($column) {
-        case 'email':
-            $email = get_post_meta($post_id, 'arata_subscriber_email', true);
-            echo esc_html($email);
-            break;
-        case 'phone':
-            $phone = get_post_meta($post_id, 'arata_subscriber_phone', true);
-            echo esc_html($phone);
-            break;
-        case 'interests':
-            $interests = get_post_meta($post_id, 'arata_subscriber_interests', true);
-            echo esc_html($interests);
-            break;
+function arata_handle_promotion_signup_submission() {
+    if (!isset($_POST['arata_promotion_signup_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['arata_promotion_signup_nonce']), 'arata_promotion_signup_submit')) {
+        wp_die(__('Security check failed.', 'aratavietnam'));
     }
-}, 10, 2);
+
+    $referer = isset($_POST['_wp_http_referer']) ? esc_url_raw(wp_unslash($_POST['_wp_http_referer'])) : home_url('/');
+
+    $name = isset($_POST['name']) ? sanitize_text_field(wp_unslash($_POST['name'])) : '';
+    $email = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
+    $phone = isset($_POST['phone']) ? sanitize_text_field(wp_unslash($_POST['phone'])) : '';
+    $promotion_id = isset($_POST['promotion_id']) ? absint($_POST['promotion_id']) : 0;
+    $promotion_code = isset($_POST['promotion_code']) ? sanitize_text_field(wp_unslash($_POST['promotion_code'])) : '';
+
+    if (empty($name) || empty($email) || empty($promotion_id)) {
+        wp_safe_redirect(add_query_arg('promotion_signup', 'error', $referer));
+        exit;
+    }
+
+    // Check if email already exists for this promotion
+    $existing = get_posts([
+        'post_type' => 'promotion_signup',
+        'meta_query' => [
+            'relation' => 'AND',
+            [
+                'key' => 'arata_signup_email',
+                'value' => $email,
+                'compare' => '='
+            ],
+            [
+                'key' => 'arata_signup_promotion_id',
+                'value' => $promotion_id,
+                'compare' => '='
+            ]
+        ],
+        'posts_per_page' => 1
+    ]);
+
+    if (!empty($existing)) {
+        wp_safe_redirect(add_query_arg('promotion_signup', 'exists', $referer));
+        exit;
+    }
+
+    $post_id = wp_insert_post([
+        'post_type' => 'promotion_signup',
+        'post_status' => 'publish',
+        'post_title' => sprintf(__('Promotion signup: %s - %s', 'aratavietnam'), $name, $email),
+    ]);
+
+    if (is_wp_error($post_id) || !$post_id) {
+        wp_safe_redirect(add_query_arg('promotion_signup', 'error', $referer));
+        exit;
+    }
+
+    update_post_meta($post_id, 'arata_signup_name', $name);
+    update_post_meta($post_id, 'arata_signup_email', $email);
+    update_post_meta($post_id, 'arata_signup_phone', $phone);
+    update_post_meta($post_id, 'arata_signup_promotion_id', $promotion_id);
+    update_post_meta($post_id, 'arata_signup_promotion_code', $promotion_code);
+
+    // Send notification email to admin
+    $admin_email = get_option('admin_email');
+    $promotion_title = get_the_title($promotion_id);
+    $subject = sprintf(__('New promotion signup: %s', 'aratavietnam'), $name);
+    $body = sprintf(
+        "Tên: %s\nEmail: %s\nĐiện thoại: %s\nKhuyến mãi: %s\nMã khuyến mãi: %s\n\nXem chi tiết: %s",
+        $name,
+        $email,
+        $phone,
+        $promotion_title,
+        $promotion_code,
+        get_edit_post_link($post_id)
+    );
+    
+    $headers = ['Content-Type: text/plain; charset=UTF-8'];
+    wp_mail($admin_email, $subject, $body, $headers);
+
+    // Send confirmation email to user
+    $user_subject = sprintf(__('Đăng ký nhận khuyến mãi thành công!', 'aratavietnam'));
+    $user_body = sprintf(
+        "Chào %s,\n\nCảm ơn bạn đã đăng ký nhận khuyến mãi \"%s\" từ Arata Vietnam.\n\nChúng tôi đã ghi nhận thông tin của bạn và sẽ gửi các thông tin cập nhật về chương trình khuyến mãi này đến email của bạn.\n\nMã khuyến mãi của bạn: %s\n\nTrân trọng,\nĐội ngũ Arata Vietnam",
+        $name,
+        $promotion_title,
+        $promotion_code
+    );
+    wp_mail($email, $user_subject, $user_body, $headers);
+
+    wp_safe_redirect(add_query_arg('promotion_signup', 'success', $referer));
+    exit;
+}
+
+add_action('admin_post_nopriv_arata_promotion_signup_submit', 'arata_handle_promotion_signup_submission');
+add_action('admin_post_arata_promotion_signup_submit', 'arata_handle_promotion_signup_submission');
 
 /**
  * Customize admin columns for Job Applications
@@ -208,6 +236,47 @@ add_action('manage_job_application_posts_custom_column', function ($column, $pos
             } else {
                 echo 'Chưa có';
             }
+            break;
+    }
+}, 10, 2);
+
+/**
+ * Customize admin columns for Promotion Signups
+ */
+add_filter('manage_promotion_signup_posts_columns', function ($columns) {
+    $new = [];
+    $new['cb'] = $columns['cb'] ?? '';
+    $new['title'] = __('Tên', 'aratavietnam');
+    $new['email'] = __('Email', 'aratavietnam');
+    $new['phone'] = __('Điện thoại', 'aratavietnam');
+    $new['promotion'] = __('Chương trình KM', 'aratavietnam');
+    $new['code'] = __('Mã KM', 'aratavietnam');
+    $new['date'] = __('Ngày đăng ký', 'aratavietnam');
+    return $new;
+});
+
+add_action('manage_promotion_signup_posts_custom_column', function ($column, $post_id) {
+    switch ($column) {
+        case 'email':
+            $email = get_post_meta($post_id, 'arata_signup_email', true);
+            echo esc_html($email);
+            break;
+        case 'phone':
+            $phone = get_post_meta($post_id, 'arata_signup_phone', true);
+            echo esc_html($phone);
+            break;
+        case 'promotion':
+            $promotion_id = get_post_meta($post_id, 'arata_signup_promotion_id', true);
+            if ($promotion_id) {
+                $title = get_the_title($promotion_id);
+                echo '<a href="' . get_edit_post_link($promotion_id) . '" target="_blank">' . esc_html($title) . '</a>';
+            } else {
+                echo 'Chưa xác định';
+            }
+            break;
+        case 'code':
+            $code = get_post_meta($post_id, 'arata_signup_promotion_code', true);
+            echo esc_html($code ?: 'Chưa có');
             break;
     }
 }, 10, 2);

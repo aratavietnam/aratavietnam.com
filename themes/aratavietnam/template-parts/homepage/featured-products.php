@@ -2,21 +2,21 @@
 /**
  * Homepage Featured Products Section
  */
+
+// Get global colors
+$primary_color = get_theme_mod('arata_primary_color', '#0066A6');
+$secondary_color = get_theme_mod('arata_secondary_color', '#F55E25');
 ?>
 
 <!-- Featured Products Section -->
-<section id="featured-products" class="py-20 scroll-animate" style="background-color: oklch(0.95 0.04 254.65);">
+<section id="featured-products" class="py-20 scroll-animate bg-gray-50">
     <div class="container mx-auto px-4 text-center">
         <?php
         // Get custom content for the section header
         $front_page_id = get_option('page_on_front');
-        $section_title = get_post_meta($front_page_id, '_featured_products_title', true);
         $section_description = get_post_meta($front_page_id, '_featured_products_description', true);
 
         // Fallback to default text if not set
-        if (empty($section_title)) {
-            $section_title = 'SẢN PHẨM NỔI BẬT';
-        }
         if (empty($section_description)) {
             $section_description = 'Khám phá những sản phẩm hóa mỹ phẩm chất lượng cao được nhập khẩu trực tiếp từ Nhật Bản';
         }
@@ -38,8 +38,8 @@
             }
             ?>
             <h2 class="text-4xl font-bold mb-4">
-                <span class="text-gray-700"><?php echo esc_html($title_part1); ?></span>
-                <span style="color: oklch(0.55 0.16 254.65);"><?php echo esc_html($title_part2); ?></span>
+                <span style="color: <?php echo esc_attr($primary_color); ?>;"><?php echo esc_html($title_part1); ?></span>
+                <span style="color: <?php echo esc_attr($secondary_color); ?>;"><?php echo esc_html($title_part2); ?></span>
             </h2>
 
             <!-- Compact description -->

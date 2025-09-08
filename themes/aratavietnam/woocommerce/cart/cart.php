@@ -13,14 +13,6 @@ defined('ABSPATH') || exit;
 
 do_action('woocommerce_before_cart'); ?>
 
-<?php
-// Hero section
-$hero_title = 'Giỏ hàng';
-$hero_subtitle = 'Kiểm tra và hoàn tất đơn hàng của bạn';
-set_query_var('title', $hero_title);
-set_query_var('subtitle', $hero_subtitle);
-get_template_part('template-parts/hero');
-?>
 
 <main id="site-content" class="bg-white">
     <div class="container mx-auto px-4 py-10">

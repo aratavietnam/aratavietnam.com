@@ -12,22 +12,10 @@ if (!defined('ABSPATH')) { exit; }
 function add_careers_meta_boxes() {
     global $post;
 
-    // Add meta box for careers template page
-    if ($post && get_page_template_slug($post->ID) === 'page-templates/careers.php') {
+    // Add meta box for careers template page OR the "tuyen-dung" page (for archive settings)
+    if ($post && (get_page_template_slug($post->ID) === 'page-templates/careers.php' || $post->post_name === 'tuyen-dung')) {
         add_meta_box(
             'careers_settings',
-            'Cài đặt trang Tuyển dụng',
-            'careers_settings_callback',
-            'page',
-            'normal',
-            'high'
-        );
-    }
-
-    // Also add meta box for the "tuyen-dung" page (for archive settings)
-    if ($post && $post->post_name === 'tuyen-dung') {
-        add_meta_box(
-            'careers_archive_settings',
             'Cài đặt trang Tuyển dụng',
             'careers_settings_callback',
             'page',
@@ -42,7 +30,16 @@ add_action('add_meta_boxes', 'add_careers_meta_boxes');
  * Careers meta box callback
  */
 function careers_settings_callback($post) {
-    // Add nonce for security
+    // Only show for pages using the careers template or careers archive page
+    $page_template = get_page_template_slug($post->ID);
+    $is_careers_template = $page_template === 'page-templates/careers.php';
+    $is_careers_archive = $post->post_name === 'tuyen-dung';
+
+    if (!$is_careers_template && !$is_careers_archive) {
+        echo '<p>Meta fields này chỉ hiển thị cho trang sử dụng template "Careers Page" hoặc trang tuyển dụng.</p>';
+        return;
+    }
+
     wp_nonce_field('careers_meta_nonce', 'careers_meta_nonce');
 
     // Get current values
@@ -53,15 +50,30 @@ function careers_settings_callback($post) {
 
     // Set defaults
     if ($show_hero === '') $show_hero = '1';
-    if ($careers_subtitle === '') $careers_subtitle = 'Tuyển dụng';
-    if ($careers_intro === '') $careers_intro = 'Khám phá cơ hội nghề nghiệp tại Arata Vietnam - nơi bạn có thể phát triển tài năng và xây dựng tương lai trong lĩnh vực hóa mỹ phẩm.';
+    if ($careers_subtitle === '') $careers_subtitle = 'Cơ hội nghề nghiệp tuyệt vời tại Arata Vietnam';
+    if ($careers_intro === '') $careers_intro = 'Gia nhập đội ngũ Arata Vietnam và phát triển sự nghiệp trong lĩnh vực hóa mỹ phẩm hàng đầu.';
     ?>
 
-    <table class="form-table">
+    <style>
+        .careers-meta-table { width: 100%; }
+        .careers-meta-table th { width: 200px; text-align: left; padding: 15px 10px 15px 0; vertical-align: top; }
+        .careers-meta-table td { padding: 15px 0; }
+        .careers-meta-table input[type="text"], .careers-meta-table textarea { width: 100%; max-width: 500px; }
+        .careers-meta-table textarea { height: 80px; }
+        .section-header {
+            background: #f0f0f1;
+            padding: 10px 15px;
+            margin: 20px -12px 15px -12px;
+            font-weight: 600;
+            border-left: 4px solid #2271b1;
+        }
+        .section-header:first-child { margin-top: 0; }
+    </style>
+
+    <div class="section-header">Cài đặt Hero Section</div>
+    <table class="careers-meta-table">
         <tr>
-            <th scope="row">
-                <label for="arata_show_hero">Hiển thị Hero Section</label>
-            </th>
+            <th><label for="arata_show_hero">Hiển thị Hero Section</label></th>
             <td>
                 <label>
                     <input type="checkbox" id="arata_show_hero" name="arata_show_hero" value="1" <?php checked($show_hero, '1'); ?> />
@@ -69,11 +81,8 @@ function careers_settings_callback($post) {
                 </label>
             </td>
         </tr>
-
         <tr>
-            <th scope="row">
-                <label for="arata_compact_hero">Chế độ Hero</label>
-            </th>
+            <th><label for="arata_compact_hero">Chế độ Hero</label></th>
             <td>
                 <label>
                     <input type="checkbox" id="arata_compact_hero" name="arata_compact_hero" value="1" <?php checked($compact_hero, '1'); ?> />
@@ -82,41 +91,25 @@ function careers_settings_callback($post) {
                 <p class="description">Hero nhỏ gọn sẽ có chiều cao thấp hơn và phù hợp cho trang nội dung.</p>
             </td>
         </tr>
+    </table>
 
+    <div class="section-header">Nội dung Hero Section</div>
+    <table class="careers-meta-table">
         <tr>
-            <th scope="row">
-                <label for="arata_careers_subtitle">Tiêu đề phụ Hero</label>
-            </th>
+            <th><label for="arata_careers_subtitle">Tiêu đề phụ Hero</label></th>
             <td>
-                <input type="text" id="arata_careers_subtitle" name="arata_careers_subtitle" value="<?php echo esc_attr($careers_subtitle); ?>" class="regular-text" />
+                <input type="text" id="arata_careers_subtitle" name="arata_careers_subtitle" value="<?php echo esc_attr($careers_subtitle); ?>" placeholder="Cơ hội nghề nghiệp tuyệt vời tại Arata Vietnam" />
                 <p class="description">Tiêu đề phụ hiển thị trong hero section</p>
             </td>
         </tr>
-
         <tr>
-            <th scope="row">
-                <label for="arata_careers_intro">Mô tả Hero</label>
-            </th>
+            <th><label for="arata_careers_intro">Mô tả Hero</label></th>
             <td>
-                <textarea id="arata_careers_intro" name="arata_careers_intro" rows="4" class="large-text"><?php echo esc_textarea($careers_intro); ?></textarea>
+                <textarea id="arata_careers_intro" name="arata_careers_intro" placeholder="Gia nhập đội ngũ Arata Vietnam..."><?php echo esc_textarea($careers_intro); ?></textarea>
                 <p class="description">Mô tả chi tiết hiển thị trong hero section</p>
             </td>
         </tr>
     </table>
-
-    <style>
-        .form-table th {
-            width: 200px;
-        }
-        .form-table td {
-            padding: 15px 10px;
-        }
-        .form-table .description {
-            margin-top: 5px;
-            color: #666;
-            font-style: italic;
-        }
-    </style>
     <?php
 }
 
@@ -124,37 +117,39 @@ function careers_settings_callback($post) {
  * Save careers meta box data
  */
 function save_careers_meta_box_data($post_id) {
-    // Check if our nonce is set
-    if (!isset($_POST['careers_meta_nonce'])) {
+    // Verify nonce
+    if (!isset($_POST['careers_meta_nonce']) || !wp_verify_nonce($_POST['careers_meta_nonce'], 'careers_meta_nonce')) {
         return;
     }
 
-    // Verify that the nonce is valid
-    if (!wp_verify_nonce($_POST['careers_meta_nonce'], 'careers_meta_nonce')) {
+    // Check permissions
+    if (!current_user_can('edit_page', $post_id)) {
         return;
     }
 
-    // If this is an autosave, don't do anything
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+    // Only save for pages using careers template or archive page
+    $page_template = get_page_template_slug($post_id);
+    $post = get_post($post_id);
+    $is_careers_template = $page_template === 'page-templates/careers.php';
+    $is_careers_archive = $post && $post->post_name === 'tuyen-dung';
+
+    if (!$is_careers_template && !$is_careers_archive) {
         return;
     }
 
-    // Check the user's permissions
-    if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
-        if (!current_user_can('edit_page', $post_id)) {
-            return;
+    // Save checkbox fields
+    $checkbox_fields = ['arata_show_hero', 'arata_compact_hero'];
+    foreach ($checkbox_fields as $field) {
+        $value = isset($_POST[$field]) ? '1' : '0';
+        update_post_meta($post_id, $field, $value);
+    }
+
+    // Save text fields
+    $text_fields = ['arata_careers_subtitle', 'arata_careers_intro'];
+    foreach ($text_fields as $field) {
+        if (isset($_POST[$field])) {
+            update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
         }
     }
-
-    // Sanitize and save the data
-    $show_hero = isset($_POST['arata_show_hero']) ? '1' : '0';
-    $compact_hero = isset($_POST['arata_compact_hero']) ? '1' : '0';
-    $careers_subtitle = sanitize_text_field($_POST['arata_careers_subtitle']);
-    $careers_intro = sanitize_textarea_field($_POST['arata_careers_intro']);
-
-    update_post_meta($post_id, 'arata_show_hero', $show_hero);
-    update_post_meta($post_id, 'arata_compact_hero', $compact_hero);
-    update_post_meta($post_id, 'arata_careers_subtitle', $careers_subtitle);
-    update_post_meta($post_id, 'arata_careers_intro', $careers_intro);
 }
 add_action('save_post', 'save_careers_meta_box_data');

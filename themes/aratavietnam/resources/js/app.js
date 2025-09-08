@@ -1360,6 +1360,11 @@ document.addEventListener('DOMContentLoaded', function () {
   monitorFontPerformance();
   initContactFormConfirmation();
   initAboutGallery();
+  
+  // Initialize Lucide icons
+  if (window.ArataIcons) {
+    window.ArataIcons.init();
+  }
 });
 
 // Initialize navigation when window loads (fallback)

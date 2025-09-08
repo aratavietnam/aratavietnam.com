@@ -35,7 +35,7 @@ add_action('add_meta_boxes', function() {
                     $options = [
                         'percentage' => 'Giảm theo phần trăm',
                         'fixed' => 'Giảm số tiền cố định',
-                        'buy_get' => 'Mua X tặng Y',
+                        'buyget' => 'Mua X tặng Y',
                         'free_shipping' => 'Miễn phí vận chuyển',
                         'bundle' => 'Combo sản phẩm'
                     ];
@@ -71,15 +71,15 @@ add_action('add_meta_boxes', function() {
         __('Thông tin tuyển dụng', 'aratavietnam'),
         function($post) {
             $fields = [
-                'arata_job_department' => __('Phòng ban', 'aratavietnam'),
-                'arata_job_location' => __('Địa điểm làm việc', 'aratavietnam'),
-                'arata_job_type' => __('Loại hình công việc', 'aratavietnam'),
-                'arata_job_level' => __('Cấp bậc', 'aratavietnam'),
-                'arata_job_salary' => __('Mức lương', 'aratavietnam'),
-                'arata_job_deadline' => __('Hạn nộp hồ sơ', 'aratavietnam'),
-                'arata_job_requirements' => __('Yêu cầu ứng viên', 'aratavietnam'),
-                'arata_job_benefits' => __('Quyền lợi', 'aratavietnam'),
-                'arata_job_contact' => __('Thông tin liên hệ', 'aratavietnam'),
+                'job_department' => __('Phòng ban', 'aratavietnam'),
+                'job_location' => __('Địa điểm làm việc', 'aratavietnam'),
+                'job_type' => __('Loại hình công việc', 'aratavietnam'),
+                'job_level' => __('Cấp bậc', 'aratavietnam'),
+                'job_salary' => __('Mức lương', 'aratavietnam'),
+                'job_deadline' => __('Hạn nộp hồ sơ', 'aratavietnam'),
+                'job_requirements' => __('Yêu cầu ứng viên', 'aratavietnam'),
+                'job_benefits' => __('Quyền lợi', 'aratavietnam'),
+                'job_contact' => __('Thông tin liên hệ', 'aratavietnam'),
             ];
 
             wp_nonce_field('arata_job_meta_save', 'arata_job_meta_nonce');
@@ -88,7 +88,7 @@ add_action('add_meta_boxes', function() {
                 $value = get_post_meta($post->ID, $key, true);
                 echo '<tr><th><label for="' . esc_attr($key) . '">' . esc_html($label) . '</label></th><td>';
 
-                if ($key === 'arata_job_type') {
+                if ($key === 'job_type') {
                     $options = [
                         'full_time' => 'Toàn thời gian',
                         'part_time' => 'Bán thời gian',
@@ -102,7 +102,7 @@ add_action('add_meta_boxes', function() {
                         echo '<option value="' . esc_attr($opt_value) . '"' . selected($value, $opt_value, false) . '>' . esc_html($opt_label) . '</option>';
                     }
                     echo '</select>';
-                } elseif ($key === 'arata_job_level') {
+                } elseif ($key === 'job_level') {
                     $options = [
                         'intern' => 'Thực tập sinh',
                         'fresher' => 'Nhân viên mới',
@@ -118,9 +118,9 @@ add_action('add_meta_boxes', function() {
                         echo '<option value="' . esc_attr($opt_value) . '"' . selected($value, $opt_value, false) . '>' . esc_html($opt_label) . '</option>';
                     }
                     echo '</select>';
-                } elseif ($key === 'arata_job_deadline') {
+                } elseif ($key === 'job_deadline') {
                     echo '<input type="date" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" class="regular-text" value="' . esc_attr($value) . '" />';
-                } elseif (in_array($key, ['arata_job_requirements', 'arata_job_benefits', 'arata_job_contact'])) {
+                } elseif (in_array($key, ['job_requirements', 'job_benefits', 'job_contact'])) {
                     echo '<textarea id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" rows="4" class="large-text">' . esc_textarea($value) . '</textarea>';
                 } else {
                     echo '<input type="text" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" class="regular-text" value="' . esc_attr($value) . '" />';
@@ -175,15 +175,15 @@ add_action('save_post_job_posting', function($post_id) {
     if (!current_user_can('edit_post', $post_id)) { return; }
 
     $keys = [
-        'arata_job_department',
-        'arata_job_location',
-        'arata_job_type',
-        'arata_job_level',
-        'arata_job_salary',
-        'arata_job_deadline',
-        'arata_job_requirements',
-        'arata_job_benefits',
-        'arata_job_contact',
+        'job_department',
+        'job_location',
+        'job_type',
+        'job_level',
+        'job_salary',
+        'job_deadline',
+        'job_requirements',
+        'job_benefits',
+        'job_contact',
     ];
     foreach ($keys as $key) {
         if (isset($_POST[$key])) {

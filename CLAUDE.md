@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Architecture
 
-Containerized WordPress e-commerce site for Arata Vietnam (Japanese cosmetics distributor) using TailPress framework with modern build tools and Vietnamese localization.
+Containerized WordPress e-commerce site for Arata Vietnam (Japanese cosmetics distributor) using TailPress framework with modern build tools and comprehensive Vietnamese localization.
 
 ### Core Stack
 - **WordPress**: Latest with WooCommerce + comprehensive Vietnamese translations
@@ -37,12 +37,30 @@ docker-compose exec wp-cli wp db export backup.sql --allow-root
 ./scripts/create-news-content.sh         # Generate sample news content
 ./scripts/fix-docker-permissions.sh      # Fix file permissions
 
-# Development utility scripts (35+ total - use LS to explore)
+# Development utility scripts (55+ total - explore with ls scripts/)
 ./scripts/setup-woocommerce.sh          # WooCommerce configuration
 ./scripts/create-demo-products.sh       # Sample product data
 ./scripts/update-product-images.sh      # Batch product image updates
+./scripts/update-all-pages-images.sh    # Update featured images for all pages
+./scripts/update-homepage-images.sh     # Update homepage section images
+./scripts/update-promotions-services-images.sh  # Update promotions and services images
 
-# No linting/testing commands - pure WordPress development environment
+# SEO and content optimization scripts
+./scripts/bulk-update-*.php            # Bulk update focus keywords for SEO
+./scripts/fix-product-images.sh        # Fix product image URLs and attributes
+./scripts/check_missing_thumbnails.sh  # Check for missing featured images
+
+# Site structure and menu scripts
+./scripts/create-*.sh                  # Create various page types and content
+./scripts/fix-menu-*.sh                # Fix navigation menu structure
+./scripts/setup-*.sh                   # Setup various site components
+
+# Build verification and asset management
+./scripts/verify-build.sh              # Verify all built assets and functions
+
+# Docker-specific scripts
+./scripts/update-page-featured-images-docker.sh     # Update images using Docker
+./scripts/update-page-images-docker-improved.sh     # Improved Docker image updates
 ```
 
 ### Access Points
@@ -51,7 +69,7 @@ docker-compose exec wp-cli wp db export backup.sql --allow-root
 - **Vite Dev Server**: http://localhost:3000 (HMR for development)
 - **Database**: MySQL on port 3306 (wordpress/wordpress_password)
 
-**Note**: The README.md shows port 8000, but docker-compose.yml actually uses port 8080. The README is outdated.
+**Note**: The README.md incorrectly shows port 8000, but docker-compose.yml actually uses port 8080. All documentation should reference port 8080.
 
 ## Theme Architecture
 
@@ -97,6 +115,7 @@ The theme follows TailPress conventions with modular architecture:
 - `upload-mimes.php` - File upload type restrictions (includes SVG support with security)
 - `template-filters.php` - Template modification hooks
 - `class-dropdown-walker.php` - Custom navigation walker
+- `asset-management.php` - Automated asset hash detection utilities
 
 ### Custom Post Types & Features
 - **Post Types**: News, Services, Job Postings, Partners (with rich meta fields)
@@ -112,6 +131,8 @@ The theme follows TailPress conventions with modular architecture:
   - `notifications.js` (notification system)
   - `add-to-cart.js` (WooCommerce integration)
   - `product-single.js` (product page features)
+  - `app.css` (main stylesheet)
+  - `editor-style.css` (WordPress editor styles)
 - **Development**: Port 3000, CORS enabled, `aratavietnam.test` origin
 - **Production**: Manifest generation, hashed filenames, module script tags
 - **Tailwind CSS v4**: Integrated via `@tailwindcss/vite` plugin
@@ -128,6 +149,7 @@ The theme follows TailPress conventions with modular architecture:
 **Dependencies (package.json):**
 - **UI Components**: Lucide icons (0.540.0), Swiper gallery (11.0.5), PhotoSwipe lightbox (5.4.3)
 - **Build System**: Vite (6.3.2), Tailwind CSS (4.0.0) with @tailwindcss/vite plugin
+- **Browser Automation**: Puppeteer (24.19.0) for testing and web scraping
 
 ## Asset Management & Build System
 
@@ -138,15 +160,35 @@ The theme follows TailPress conventions with modular architecture:
 - **Module Script Tags**: `type="module"` automatically applied to theme scripts
 
 ### Hashed Asset Management
-**⚠️ CRITICAL BUILD STEP**: The build system generates hashed filenames that must be manually updated in `functions.php:189-202` after every `npm run build`. The build will work but assets won't load without this manual update.
+**⚠️ CRITICAL BUILD STEP**: The build system generates hashed filenames that must be manually updated in `functions.php:189-203` after every `npm run build`. The build will work but assets won't load without this manual update.
+
+**Automated Asset Management**
+The `asset-management.php` module provides helper functions to eliminate manual hash updates:
+
+```php
+// Automatically detect and enqueue assets
+aratavietnam_enqueue_asset('aratavietnam-app', 'app', ['jquery'], null, true);
+aratavietnam_enqueue_asset('aratavietnam-notifications', 'notifications');
+aratavietnam_enqueue_style_asset('aratavietnam-app-css', 'app');
+
+// Debug all available assets
+$assets = aratavietnam_get_all_assets();
+error_log(print_r($assets, true));
+```
 
 ```php
 // REQUIRED: After npm run build, update these hashed filenames in functions.php
-wp_enqueue_script('aratavietnam-app', get_template_directory_uri() . '/dist/app-BxA492tz.js'
-wp_enqueue_style('aratavietnam-app', get_template_directory_uri() . '/dist/app-C8h4Kx7L.css'
+wp_enqueue_script('aratavietnam-app', get_template_directory_uri() . '/dist/app-CdtiypLP.js',
+wp_enqueue_script('aratavietnam-notifications', get_template_directory_uri() . '/dist/notifications-DX7Hjlbv.js',
+wp_enqueue_script('aratavietnam-add-to-cart', get_template_directory_uri() . '/dist/add-to-cart-DOaesbe3.js',
+wp_enqueue_script('aratavietnam-product-single', get_template_directory_uri() . '/dist/product-single-DWIbL6ns.js',
 ```
 
-**Build Workflow**: `npm run build` → Check manifest.json → Update functions.php:189-202 → Test asset loading
+**Build Workflow**: 
+1. `npm run build` → Generate hashed assets
+2. `./scripts/verify-build.sh` → Verify all assets built correctly
+3. Either update hashes manually in functions.php:189-203 OR use automated functions
+4. Test asset loading in browser
 
 ### Brand & Localization
 - **Colors**: Primary #F55E25, Secondary #0066A6, Tertiary #FFAB14
@@ -198,7 +240,10 @@ Custom search endpoint `/wp-json/aratavietnam/v1/search` with featured image sup
 - **Security Enhancement**: SVG upload support with security validation in `upload-mimes.php`
 - **Code Cleanup**: Vietnamese comments removed, console.log statements cleaned up
 - **Asset Optimization**: Versioned script enqueuing for better cache management
-- **Template Consolidation**: Single post type templates consolidated for maintainability
+- **Template Consolidation**: Single post type templates (job_posting, promotion) consolidated into their respective single template files for simplified maintenance
+- **Navigation Structure**: Menu scripts organized for better site structure management
+- **Hero Section Settings**: Added hero section customization for About page matching Blog page structure
+- **Asset Management**: Added `asset-management.php` module with utilities for automatic hash detection to eliminate manual updates after builds
 
 ### Testing & Debugging
 - **Query Monitor**: Available in admin bar for database queries and performance
@@ -209,12 +254,36 @@ Custom search endpoint `/wp-json/aratavietnam/v1/search` with featured image sup
 - **Error Logs**: Check `/uploads/wc-logs/` for WooCommerce errors and fatal errors
 
 ### Project Management
-- **Scripts Directory**: 35+ utility scripts for content management, image updates, database operations, and SEO updates
+- **Scripts Directory**: 55+ utility scripts for content management, image updates, database operations, and SEO updates
 - **Content Management**: Automated scripts for creating demo products, news content, and page structure
-- **Image Processing**: Bulk image update scripts for products, posts, and promotions
+- **Image Processing**: Bulk image update scripts for products, posts, promotions, and homepage sections
 - **Database Tools**: Scripts for SEO updates, permission fixes, and WordPress configuration
+- **Docker-specific Tools**: Specialized scripts for managing image updates and featured images in Docker environment
 
 ### PHP Autoloading
 - **PSR-4**: Namespace `AraVietnam\\` maps to `src/` directory (composer.json)
 - **TailPress Framework**: v5.0.4 loaded via Composer with Jetpack autoloader
 - **Manual Includes**: All functionality explicitly required in functions.php:8-42
+
+## Important Development Notes
+
+### Theme Location Correction
+The actual theme is located at `themes/aratavietnam/` (not `themes/tailpress/` as mentioned in README.md). The README contains outdated path references.
+
+### Port Configuration
+- **Actual Frontend Port**: 8080 (docker-compose.yml)
+- **README Port**: 8000 (incorrect)
+- **Vite Dev Server**: 3000
+- **Database**: 3306
+
+### Asset Build Process
+After running `npm run build`, you MUST update the hashed filenames in `functions.php:189-203`. The build generates new hashes each time, and assets will not load without this manual update step.
+
+### Docker Development
+For detailed Docker setup instructions, troubleshooting, and advanced configuration, see `docs/DOCKER-DEVELOPMENT.md`.
+
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.

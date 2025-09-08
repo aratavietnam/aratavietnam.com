@@ -76,11 +76,11 @@ if ($show_hero) {
                         <?php
                         if (have_posts()) :
                             while (have_posts()) : the_post();
-                                $job_type = get_post_meta(get_the_ID(), 'arata_job_type', true);
-                                $job_location = get_post_meta(get_the_ID(), 'arata_job_location', true);
-                                $job_salary = get_post_meta(get_the_ID(), 'arata_job_salary', true);
-                                $job_deadline = get_post_meta(get_the_ID(), 'arata_job_deadline', true);
-                                $job_experience = get_post_meta(get_the_ID(), 'arata_job_experience', true);
+                                $job_type = get_post_meta(get_the_ID(), 'job_type', true);
+                                $job_location = get_post_meta(get_the_ID(), 'job_location', true);
+                                $job_salary = get_post_meta(get_the_ID(), 'job_salary', true);
+                                $job_deadline = get_post_meta(get_the_ID(), 'job_deadline', true);
+                                $job_experience = get_post_meta(get_the_ID(), 'job_experience', true);
                                 ?>
                                 <article class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100">
                                     <!-- Featured Image -->
@@ -90,16 +90,7 @@ if ($show_hero) {
                                                 <?php the_post_thumbnail('medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300']); ?>
                                             </a>
 
-                                            <!-- Job Type Badge -->
-                                            <?php if ($job_type): ?>
-                                                <div class="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
-                                                    <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m-8 0V6a2 2 0 00-2 2v6"></path>
-                                                    </svg>
-                                                    <?php echo esc_html($job_type); ?>
-                                                </div>
-                                            <?php endif; ?>
-                                        </div>
+                                                                                    </div>
                                     <?php else: ?>
                                         <div class="aspect-video bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center relative">
                                             <div class="text-center">
@@ -109,16 +100,7 @@ if ($show_hero) {
                                                 <p class="text-gray-500 text-sm font-medium">Cơ hội việc làm</p>
                                             </div>
 
-                                            <!-- Job Type Badge -->
-                                            <?php if ($job_type): ?>
-                                                <div class="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
-                                                    <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m-8 0V6a2 2 0 00-2 2v6"></path>
-                                                    </svg>
-                                                    <?php echo esc_html($job_type); ?>
-                                                </div>
-                                            <?php endif; ?>
-                                        </div>
+                                                                                    </div>
                                     <?php endif; ?>
 
                                     <!-- Content -->
@@ -232,42 +214,6 @@ if ($show_hero) {
 
                 <!-- Right Side: Sidebar (1/3) -->
                 <div class="lg:col-span-1">
-                    <!-- Job Categories -->
-                    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6">
-                        <div class="flex items-center mb-6 pb-3 border-b border-gray-200">
-                            <svg class="w-5 h-5 text-primary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14-7l2 2-2 2m2-2H9m10 0V9M5 19l2-2m-2 2l2-2m-2 2h6m-6 0v-2"></path>
-                            </svg>
-                            <h3 class="text-lg font-bold text-gray-900">Danh mục việc làm</h3>
-                        </div>
-
-                        <div class="space-y-3">
-                            <?php
-                            $job_types = ['Toàn thời gian', 'Bán thời gian', 'Thực tập', 'Freelance', 'Remote'];
-                            foreach ($job_types as $type) {
-                                $count = get_posts([
-                                    'post_type' => 'job_posting',
-                                    'meta_query' => [
-                                        [
-                                            'key' => 'arata_job_type',
-                                            'value' => $type,
-                                            'compare' => '='
-                                        ]
-                                    ],
-                                    'posts_per_page' => -1,
-                                    'fields' => 'ids'
-                                ]);
-                                ?>
-                                <div class="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-gray-50 transition-colors">
-                                    <span class="text-gray-700"><?php echo esc_html($type); ?></span>
-                                    <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full"><?php echo count($count); ?></span>
-                                </div>
-                                <?php
-                            }
-                            ?>
-                        </div>
-                    </div>
-
                     <!-- Recent Jobs -->
                     <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                         <div class="flex items-center mb-6 pb-3 border-b border-gray-200">
@@ -289,8 +235,8 @@ if ($show_hero) {
 
                             if ($recent_jobs->have_posts()) :
                                 while ($recent_jobs->have_posts()) : $recent_jobs->the_post();
-                                    $job_location = get_post_meta(get_the_ID(), 'arata_job_location', true);
-                                    $job_type = get_post_meta(get_the_ID(), 'arata_job_type', true);
+                                    $job_location = get_post_meta(get_the_ID(), 'job_location', true);
+                                    $job_type = get_post_meta(get_the_ID(), 'job_type', true);
                                     ?>
                                     <div class="group">
                                         <a href="<?php the_permalink(); ?>" class="block hover:bg-gray-50 p-3 rounded-lg transition-colors duration-200">

@@ -28,7 +28,7 @@ $header_background_color = get_theme_mod('theme_header_background_color', '#ffff
 		<div class="container mx-auto px-4">
 			<div class="flex items-center justify-between py-4">
 				<!-- Logo -->
-				<div class="site-branding flex items-center flex-shrink-0 mr-6">
+				<div class="site-branding flex items-center flex-shrink-0 mr-6 self-center">
 					<?php
 					// Display logo
 					$custom_logo_id = get_theme_mod('custom_logo');
@@ -38,14 +38,14 @@ $header_background_color = get_theme_mod('theme_header_background_color', '#ffff
 						// Use custom logo if set
 						echo '<a href="' . esc_url(home_url('/')) . '" class="custom-logo-link flex items-center" rel="home">';
 						echo wp_get_attachment_image($custom_logo_id, 'full', false, array(
-							'class' => 'custom-logo h-10 w-auto max-w-40',
+							'class' => 'custom-logo h-8 w-auto max-w-none',
 							'alt' => get_bloginfo('name'),
 						));
 						echo '</a>';
 					} elseif (file_exists(get_template_directory() . '/assets/images/logo.png')) {
 						// Use default logo
 						echo '<a href="' . esc_url(home_url('/')) . '" class="custom-logo-link flex items-center" rel="home">';
-						echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr(get_bloginfo('name')) . '" class="custom-logo h-10 w-auto max-w-40">';
+						echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr(get_bloginfo('name')) . '" class="custom-logo h-8 w-auto max-w-none">';
 						echo '</a>';
 					} else {
 						// Fallback to text logo
@@ -67,7 +67,7 @@ $header_background_color = get_theme_mod('theme_header_background_color', '#ffff
 				</div>
 
 				<!-- Navigation Menu - Desktop (ngay sau logo) -->
-				<nav id="site-navigation" class="main-navigation hidden sm:block mr-auto">
+				<nav id="site-navigation" class="main-navigation hidden lg:block mr-auto">
 					<?php
 					wp_nav_menu(
 						array(
@@ -85,7 +85,26 @@ $header_background_color = get_theme_mod('theme_header_background_color', '#ffff
 				<!-- Search Box & Actions -->
 				<div class="header-right flex items-center space-x-3">
 					<!-- Search Box -->
-					<div class="search-container hidden md:flex relative">
+					<div class="search-container hidden md:flex lg:hidden relative mr-4">
+						<div class="relative">
+							<input
+								type="search"
+								id="header-search-tablet"
+								placeholder="Tìm kiếm..."
+								class="w-40 pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+								autocomplete="off"
+							>
+							<div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+								<svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+									<circle cx="11" cy="11" r="8"></circle>
+									<path d="m21 21-4.35-4.35"></path>
+								</svg>
+							</div>
+						</div>
+					</div>
+
+					<!-- Desktop Search Box -->
+					<div class="search-container hidden lg:flex relative">
 						<div class="relative">
 							<input
 								type="search"
@@ -101,13 +120,12 @@ $header_background_color = get_theme_mod('theme_header_background_color', '#ffff
 								</svg>
 							</div>
 						</div>
-
 					</div>
 
 					<!-- Action Icons -->
 					<div class="action-icons flex items-center space-x-2">
 						<!-- Mobile Search Toggle -->
-						<button class="search-toggle-mobile md:hidden p-2 text-gray-800 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300" aria-label="Tìm kiếm">
+						<button class="search-toggle-mobile lg:hidden p-2 text-gray-800 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300" aria-label="Tìm kiếm">
 							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
 								<circle cx="11" cy="11" r="8"></circle>
 								<path d="m21 21-4.35-4.35"></path>
@@ -161,7 +179,7 @@ $header_background_color = get_theme_mod('theme_header_background_color', '#ffff
 						<?php endif; ?>
 
 						<!-- Mobile Menu Toggle -->
-						<button class="menu-toggle sm:hidden p-2 text-gray-800 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300 ml-2" aria-controls="primary-menu" aria-expanded="false" aria-label="Menu">
+						<button class="menu-toggle lg:hidden p-2 text-gray-800 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300 ml-2" aria-controls="primary-menu" aria-expanded="false" aria-label="Menu">
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
 								<line x1="4" x2="20" y1="6" y2="6"></line>
 								<line x1="4" x2="20" y1="12" y2="12"></line>
@@ -175,7 +193,7 @@ $header_background_color = get_theme_mod('theme_header_background_color', '#ffff
 		</div>
 
 		<!-- Mobile Navigation -->
-		<nav id="primary-navigation" class="mobile-navigation sm:hidden hidden bg-white border-t border-gray-200 shadow-lg">
+		<nav id="primary-navigation" class="mobile-navigation lg:hidden hidden bg-white border-t border-gray-200 shadow-lg">
 			<div class="px-4 py-6">
 				<?php
 				wp_nav_menu(

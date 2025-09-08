@@ -9,6 +9,12 @@ if (!defined('ABSPATH')) { exit; }
 
 get_header();
 
+// Get global colors like blog page
+$primary_color = get_theme_mod('theme_primary_color', '#F55E25');
+$secondary_color = get_theme_mod('theme_secondary_color', '#0066A6');
+$tertiary_color = get_theme_mod('theme_tertiary_color', '#FFAB14');
+$background_color = get_theme_mod('theme_background_color', '#ffffff');
+
 // Get page meta fields
 $hero_subtitle = get_post_meta(get_the_ID(), 'arata_about_subtitle', true) ?: 'Chuyên gia hóa mỹ phẩm Nhật Bản tại Việt Nam';
 $hero_description = get_post_meta(get_the_ID(), 'arata_about_description', true) ?: 'Arata Vietnam tự hào là đối tác tin cậy trong lĩnh vực hóa mỹ phẩm, mang đến những sản phẩm chất lượng cao và dịch vụ chuyên nghiệp.';
@@ -29,8 +35,17 @@ $stats_years = get_post_meta(get_the_ID(), 'arata_stats_years', true) ?: '5+';
 $stats_success_rate = get_post_meta(get_the_ID(), 'arata_stats_success_rate', true) ?: '98%';
 
 // Section visibility controls - same as blog page
-$show_hero = get_post_meta(get_the_ID(), 'arata_show_hero', true) !== '0'; // Default to true if not set
+$show_hero_setting = get_post_meta(get_the_ID(), 'arata_show_hero', true);
+$show_hero = $show_hero_setting !== '0'; // Default to true if not set or empty
 $use_compact_hero = get_post_meta(get_the_ID(), 'arata_compact_hero', true) === '1'; // New compact option
+
+// About page sections visibility
+$show_company_intro = get_post_meta(get_the_ID(), 'arata_show_company_intro', true) !== '0'; // Default to true
+$show_history = get_post_meta(get_the_ID(), 'arata_show_history', true) !== '0'; // Default to true
+$show_mission = get_post_meta(get_the_ID(), 'arata_show_mission', true) !== '0'; // Default to true
+$show_values = get_post_meta(get_the_ID(), 'arata_show_values', true) !== '0'; // Default to true
+$show_commitment = get_post_meta(get_the_ID(), 'arata_show_commitment', true) !== '0'; // Default to true
+$show_social_links = get_post_meta(get_the_ID(), 'arata_show_social_links', true) !== '0'; // Default to true
 
 // Set hero variables
 set_query_var('title', get_the_title());
@@ -84,7 +99,7 @@ if ($show_hero) {
                         $commitment = get_post_meta(get_the_ID(), 'arata_about_commitment', true);
                         ?>
 
-                        <?php if ($company_intro) : ?>
+                        <?php if ($company_intro && $show_company_intro) : ?>
                             <section class="mb-8 scroll-animate">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Giới thiệu công ty</h2>
                                 <div class="bg-white rounded-lg p-6 shadow-sm">
@@ -95,7 +110,7 @@ if ($show_hero) {
                             </section>
                         <?php endif; ?>
 
-                        <?php if ($history) : ?>
+                        <?php if ($history && $show_history) : ?>
                             <section class="mb-8 scroll-animate">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Lịch sử & Thành tựu</h2>
                                 <div class="bg-white rounded-lg p-6 shadow-sm">
@@ -106,7 +121,7 @@ if ($show_hero) {
                             </section>
                         <?php endif; ?>
 
-                        <?php if ($mission) : ?>
+                        <?php if ($mission && $show_mission) : ?>
                             <section class="mb-8 scroll-animate">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Sứ mệnh & Tầm nhìn</h2>
                                 <div class="bg-white rounded-lg p-6 shadow-sm">
@@ -117,7 +132,7 @@ if ($show_hero) {
                             </section>
                         <?php endif; ?>
 
-                        <?php if ($values) : ?>
+                        <?php if ($values && $show_values) : ?>
                             <section class="mb-8 scroll-animate">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Giá trị cốt lõi</h2>
                                 <div class="bg-white rounded-lg p-6 shadow-sm">
@@ -128,7 +143,7 @@ if ($show_hero) {
                             </section>
                         <?php endif; ?>
 
-                        <?php if ($commitment) : ?>
+                        <?php if ($commitment && $show_commitment) : ?>
                             <section class="mb-8 scroll-animate">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Cam kết chất lượng</h2>
                                 <div class="bg-white rounded-lg p-6 shadow-sm">
@@ -153,7 +168,8 @@ if ($show_hero) {
         </div>
     </section>
 
-    <!-- Social Links Section - Theo brief -->
+    <!-- Social Links Section - Theo section visibility -->
+    <?php if ($show_social_links) : ?>
     <section class="py-12 bg-white">
         <div class="container mx-auto px-4">
                         <div class="text-center">
@@ -214,6 +230,7 @@ if ($show_hero) {
             </div>
         </div>
     </section>
+    <?php endif; ?>
 </main>
 
 <?php get_footer(); ?>

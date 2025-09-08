@@ -76,7 +76,8 @@ const iconRegistry = {
 
   // Additional icons for services page
   'award': '<circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>',
-  'users': '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="m22 21-2-2a4 4 0 0 0-4-4H12"></path><circle cx="16" cy="7" r="4"></circle>'
+  'users': '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="m22 21-2-2a4 4 0 0 0-4-4H12"></path><circle cx="16" cy="7" r="4"></circle>',
+  'truck': '<rect x="1" y="3" width="15" height="13" rx="2" ry="2"></rect><path d="M16 8h3l4 4v4h-3"></path><circle cx="5.5" cy="18.5" r="1.5"></circle><circle cx="18.5" cy="18.5" r="1.5"></circle>'
 };
 
 /**
@@ -136,6 +137,7 @@ export function initializeIcons() {
     const size = placeholder.getAttribute('data-size') || 24;
     const className = placeholder.getAttribute('data-class') || '';
     const strokeWidth = placeholder.getAttribute('data-stroke') || 2;
+    const fill = placeholder.getAttribute('fill');
 
     const icon = createIcon(iconName, {
       size: parseInt(size),
@@ -144,6 +146,18 @@ export function initializeIcons() {
     });
 
     if (icon) {
+      // Handle fill attribute for solid icons like star
+      if (fill) {
+        icon.setAttribute('fill', fill);
+        // For filled icons, remove stroke
+        if (fill !== 'none') {
+          icon.removeAttribute('stroke');
+          icon.removeAttribute('stroke-width');
+          icon.removeAttribute('stroke-linecap');
+          icon.removeAttribute('stroke-linejoin');
+        }
+      }
+      
       // Clear placeholder content and add icon
       placeholder.innerHTML = '';
       placeholder.appendChild(icon);

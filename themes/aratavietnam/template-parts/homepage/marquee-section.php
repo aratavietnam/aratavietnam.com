@@ -7,10 +7,8 @@
 $front_page_id = get_option('page_on_front');
 $marquee_text = get_post_meta($front_page_id, '_marquee_text', true);
 
-// Default text if not set
-if (empty($marquee_text)) {
-    $marquee_text = 'ARATA - NHÀ PHÂN PHỐI HÓA MỸ PHẨM HÀNG ĐẦU NHẬT BẢN';
-}
+// Only show if marquee text is set
+if (!empty($marquee_text)) :
 ?>
 
 <!-- Marquee Section -->
@@ -108,3 +106,4 @@ if (empty($marquee_text)) {
     transform-style: preserve-3d;
 }
 </style>
+<?php endif; ?>

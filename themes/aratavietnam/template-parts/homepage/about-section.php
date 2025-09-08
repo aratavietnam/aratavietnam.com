@@ -2,10 +2,14 @@
 /**
  * Homepage About Arata Section
  */
+
+// Get global colors
+$primary_color = get_theme_mod('arata_primary_color', '#0066A6');
+$secondary_color = get_theme_mod('arata_secondary_color', '#F55E25');
 ?>
 
 <!-- About Arata Section -->
-<section class="py-16 scroll-animate" style="background-color: oklch(0.95 0.04 254.65);">
+<section class="py-16 scroll-animate" style="background-color: <?php echo esc_attr($primary_color); ?>10;">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
@@ -73,7 +77,7 @@
                     ?>
                     <h2 class="text-4xl font-bold mb-6">
                         <span class="text-gray-700"><?php echo esc_html($title_part1); ?></span>
-                        <span style="color: oklch(0.55 0.16 254.65);"><?php echo esc_html($title_part2); ?></span>
+                        <span style="color: <?php echo esc_attr($primary_color); ?>;"><?php echo esc_html($title_part2); ?></span>
                     </h2>
                 </div>
 
@@ -90,7 +94,7 @@
                 <!-- CTA Button -->
                 <div class="pt-4">
                     <a href="<?php echo home_url('/ve-arata-vietnam'); ?>"
-                       class="inline-flex items-center px-6 py-3 border font-semibold rounded-lg transition-all duration-300 hover:bg-blue-500 hover:text-white" style="border-color: oklch(0.55 0.16 254.65); color: oklch(0.55 0.16 254.65);">
+                       class="inline-flex items-center px-6 py-3 border font-semibold rounded-lg transition-all duration-300 hover:bg-blue-500 hover:text-white" style="border-color: <?php echo esc_attr($primary_color); ?>; color: <?php echo esc_attr($primary_color); ?>;">
                         Tìm hiểu thêm
                         <span data-icon="arrow-right" data-size="16" class="ml-2"></span>
                     </a>
@@ -99,6 +103,85 @@
         </div>
     </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const aboutSlider = document.querySelector('#about-gallery');
+    const navButtons = document.querySelectorAll('.about-slider-nav');
+    
+    if (!aboutSlider || navButtons.length !== 2) return;
+    
+    const slides = aboutSlider.querySelectorAll('.about-slide');
+    const slideWidth = slides[0]?.offsetWidth + 16; // width + gap
+    let currentIndex = 0;
+    let autoSlideInterval;
+    
+    function updateSlider() {
+        const maxIndex = Math.max(0, slides.length - 2); // Show 2 slides at a time
+        currentIndex = Math.max(0, Math.min(currentIndex, maxIndex));
+        aboutSlider.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+        
+        // Update button states
+        navButtons.forEach(btn => {
+            const direction = btn.dataset.direction;
+            if (direction === 'prev') {
+                btn.disabled = currentIndex === 0;
+            } else {
+                btn.disabled = currentIndex >= maxIndex;
+            }
+        });
+    }
+    
+    function nextSlide() {
+        currentIndex++;
+        updateSlider();
+    }
+    
+    function prevSlide() {
+        currentIndex--;
+        updateSlider();
+    }
+    
+    function startAutoSlide() {
+        autoSlideInterval = setInterval(nextSlide, 3000);
+    }
+    
+    function stopAutoSlide() {
+        clearInterval(autoSlideInterval);
+    }
+    
+    // Navigation button events
+    navButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const direction = btn.dataset.direction;
+            if (direction === 'next') {
+                nextSlide();
+            } else {
+                prevSlide();
+            }
+            stopAutoSlide();
+            startAutoSlide();
+        });
+    });
+    
+    // Initialize
+    updateSlider();
+    startAutoSlide();
+    
+    // Pause on hover
+    const sliderWrapper = document.querySelector('.about-slider-wrapper');
+    sliderWrapper.addEventListener('mouseenter', stopAutoSlide);
+    sliderWrapper.addEventListener('mouseleave', startAutoSlide);
+    
+    // Handle window resize
+    window.addEventListener('resize', () => {
+        const newSlideWidth = slides[0]?.offsetWidth + 16;
+        if (newSlideWidth !== slideWidth) {
+            updateSlider();
+        }
+    });
+});
+</script>
 
 <style>
 .about-slider-track {

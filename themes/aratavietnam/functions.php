@@ -25,6 +25,7 @@ require_once get_template_directory() . '/inc/careers-meta.php';
 require_once get_template_directory() . '/inc/promotions-meta.php';
 require_once get_template_directory() . '/inc/class-dropdown-walker.php';
 require_once get_template_directory() . '/inc/about-meta.php';
+require_once get_template_directory() . '/inc/about-new-meta.php';
 require_once get_template_directory() . '/inc/admin-columns.php';
 require_once get_template_directory() . '/inc/template-filters.php';
 require_once get_template_directory() . '/inc/upload-mimes.php';
@@ -39,6 +40,8 @@ require_once get_template_directory() . '/inc/homepage-meta.php';
 
 require_once get_template_directory() . '/inc/product-policies-meta.php';
 require_once get_template_directory() . '/inc/partner-post-type.php';
+require_once get_template_directory() . '/inc/asset-management.php';
+require_once get_template_directory() . '/inc/remove-service-colors.php';
 
 /**
  * Load theme textdomain
@@ -172,6 +175,38 @@ function aratavietnam_after_setup_theme() {
         'flex-height' => true,
         'flex-width' => true,
     ));
+
+    // Add WordPress editor color palette support
+    add_theme_support('editor-color-palette', array(
+        array(
+            'name' => __('Primary', 'aratavietnam'),
+            'slug' => 'primary',
+            'color' => get_theme_mod('theme_primary_color', '#F55E25'),
+        ),
+        array(
+            'name' => __('Secondary', 'aratavietnam'),
+            'slug' => 'secondary',
+            'color' => get_theme_mod('theme_secondary_color', '#0066A6'),
+        ),
+        array(
+            'name' => __('Tertiary', 'aratavietnam'),
+            'slug' => 'tertiary',
+            'color' => get_theme_mod('theme_tertiary_color', '#FFAB14'),
+        ),
+        array(
+            'name' => __('White', 'aratavietnam'),
+            'slug' => 'white',
+            'color' => '#ffffff',
+        ),
+        array(
+            'name' => __('Black', 'aratavietnam'),
+            'slug' => 'black',
+            'color' => '#000000',
+        ),
+    ));
+
+    // Add support for custom gradients
+    add_theme_support('editor-gradient-preset');
 }
 add_action('after_setup_theme', 'aratavietnam_after_setup_theme');
 
@@ -185,20 +220,21 @@ add_filter('script_loader_tag', function ($tag, $handle, $src) {
 
 function aratavietnam_enqueue_custom_scripts() {
     $version = wp_get_theme()->get('Version');
-    // Enqueue scripts (using manifest for hashed filenames)
-    wp_enqueue_script('aratavietnam-app', get_template_directory_uri() . '/dist/app-CdtiypLP.js', [], $version, true);
+    
+    // Enqueue main app script globally
+    aratavietnam_enqueue_asset('aratavietnam-app', 'app', [], $version, true);
 
     // Enqueue notification system globally
-    wp_enqueue_script('aratavietnam-notifications', get_template_directory_uri() . '/dist/notifications-DX7Hjlbv.js', [], $version, true);
+    aratavietnam_enqueue_asset('aratavietnam-notifications', 'notifications', [], $version, true);
 
     // Enqueue add-to-cart functionality on relevant pages
     if (is_shop() || is_product_category() || is_product_tag() || is_product() || is_woocommerce()) {
-        wp_enqueue_script('aratavietnam-add-to-cart', get_template_directory_uri() . '/dist/add-to-cart-DOaesbe3.js', ['aratavietnam-notifications'], $version, true);
+        aratavietnam_enqueue_asset('aratavietnam-add-to-cart', 'add-to-cart', ['aratavietnam-notifications'], $version, true);
     }
 
     // Enqueue product-specific scripts on single product pages
     if (is_product()) {
-        wp_enqueue_script('aratavietnam-product-single', get_template_directory_uri() . '/dist/product-single-DWIbL6ns.js', ['aratavietnam-app', 'aratavietnam-add-to-cart'], $version, true);
+        aratavietnam_enqueue_asset('aratavietnam-product-single', 'product-single', ['aratavietnam-app', 'aratavietnam-add-to-cart'], $version, true);
     }
 }
 add_action('wp_enqueue_scripts', 'aratavietnam_enqueue_custom_scripts');
@@ -544,6 +580,44 @@ function aratavietnam_localize_theme_data() {
     ));
 }
 add_action('wp_enqueue_scripts', 'aratavietnam_localize_theme_data');
+
+/**
+ * Output theme colors as inline CSS
+ */
+function aratavietnam_output_theme_colors() {
+    $primary_color = get_theme_mod('theme_primary_color', '#F55E25');
+    $secondary_color = get_theme_mod('theme_secondary_color', '#0066A6');
+    $tertiary_color = get_theme_mod('theme_tertiary_color', '#FFAB14');
+    $background_color = get_theme_mod('theme_background_color', '#ffffff');
+    $header_background_color = get_theme_mod('theme_header_background_color', '#ffffff');
+    $footer_background_color = get_theme_mod('theme_footer_background_color', '#0066A6');
+    
+    ?>
+    <style>
+        :root {
+            --theme-primary-color: <?php echo esc_attr($primary_color); ?>;
+            --theme-secondary-color: <?php echo esc_attr($secondary_color); ?>;
+            --theme-tertiary-color: <?php echo esc_attr($tertiary_color); ?>;
+            --theme-background-color: <?php echo esc_attr($background_color); ?>;
+            --theme-header-background-color: <?php echo esc_attr($header_background_color); ?>;
+            --theme-footer-background-color: <?php echo esc_attr($footer_background_color); ?>;
+        }
+        
+        body {
+            background-color: <?php echo esc_attr($background_color); ?>;
+        }
+        
+        #masthead {
+            background-color: <?php echo esc_attr($header_background_color); ?>;
+        }
+        
+        #colophon {
+            background: linear-gradient(135deg, <?php echo esc_attr($footer_background_color); ?> 0%, <?php echo esc_attr($footer_background_color); ?> 100%);
+        }
+    </style>
+    <?php
+}
+add_action('wp_head', 'aratavietnam_output_theme_colors', 10);
 
 /**
  * Add cache busting to theme assets
