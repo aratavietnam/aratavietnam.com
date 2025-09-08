@@ -33,13 +33,12 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
                     <div class="lg:col-span-2">
                         <div class="bg-white rounded-lg border border-gray-100 overflow-hidden">
                             <div class="px-6 py-4 border-b border-gray-100">
-                                <h2 class="text-lg font-semibold text-gray-900">Thông tin thanh toán</h2>
+                                <!-- <h2 class="text-lg font-semibold text-gray-900">Thông tin thanh toán</h2> -->
                             </div>
 
                             <div class="p-6 space-y-6">
                                 <!-- Billing Details -->
                                 <div>
-                                    <h3 class="text-base font-semibold text-gray-900 mb-4">Thông tin thanh toán</h3>
                                     <?php do_action('woocommerce_checkout_billing'); ?>
                                 </div>
 
