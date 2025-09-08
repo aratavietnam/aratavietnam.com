@@ -44,32 +44,32 @@ services:
     networks:
       - wordpress_network
 
-  # WP CLI
-  wp-cli:
-    depends_on:
-      - db
-      - wordpress
-    build:
-      context: .
-      dockerfile: wp-cli.Dockerfile
-    container_name: wordpress_cli
-    user: "0:0"
-    environment:
-      WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: wordpress_password
-      WORDPRESS_DB_NAME: wordpress
-    volumes:
-      - wordpress_data:/var/www/html
-      - ./themes:/var/www/html/wp-content/themes
-      - ./plugins:/var/www/html/wp-content/plugins
-      - ./uploads:/var/www/html/wp-content/uploads
-      - ./wp-cli-setup.sh:/wp-cli-setup.sh
-      - /tmp/aratavietnam_images:/tmp/aratavietnam_images
-      - ./scripts:/scripts
-    networks:
-      - wordpress_network
-    command: sh -c "sleep 30 && chmod +x /wp-cli-setup.sh && /wp-cli-setup.sh"
+  # WP CLI - Commented out as not needed for frontend development
+  # wp-cli:
+  #   depends_on:
+  #     - db
+  #     - wordpress
+  #   build:
+  #     context: .
+  #     dockerfile: wp-cli.Dockerfile
+  #   container_name: wordpress_cli
+  #   user: "0:0"
+  #   environment:
+  #     WORDPRESS_DB_HOST: db:3306
+  #     WORDPRESS_DB_USER: wordpress
+  #     WORDPRESS_DB_PASSWORD: wordpress_password
+  #     WORDPRESS_DB_NAME: wordpress
+  #   volumes:
+  #     - wordpress_data:/var/www/html
+  #     - ./themes:/var/www/html/wp-content/themes
+  #     - ./plugins:/var/www/html/wp-content/plugins
+  #     - ./uploads:/var/www/html/wp-content/uploads
+  #     - ./wp-cli-setup.sh:/wp-cli-setup.sh
+  #     - /tmp/aratavietnam_images:/tmp/aratavietnam_images
+  #     - ./scripts:/scripts
+  #   networks:
+  #     - wordpress_network
+  #   command: sh -c "sleep 30 && chmod +x /wp-cli-setup.sh && /wp-cli-setup.sh"
 
 volumes:
   db_data:

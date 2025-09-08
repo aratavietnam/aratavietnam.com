@@ -14,7 +14,7 @@ defined('ABSPATH') || exit;
 do_action('woocommerce_before_cart'); ?>
 
 
-<main id="site-content" class="bg-white">
+<main id="site-content">
     <div class="container mx-auto px-4 py-10">
         <form class="woocommerce-cart-form" action="<?php echo esc_url(wc_get_cart_url()); ?>" method="post">
             <?php do_action('woocommerce_before_cart_table'); ?>
@@ -24,7 +24,7 @@ do_action('woocommerce_before_cart'); ?>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <!-- Cart Items -->
                     <div class="lg:col-span-2">
-                        <div class="bg-white rounded-lg border border-gray-100 overflow-hidden">
+                        <div class="rounded-lg border border-gray-100 overflow-hidden">
                             <!-- Cart Header -->
                             <div class="px-6 py-4 border-b border-gray-100">
                                 <h2 class="text-lg font-semibold text-gray-900">Sản phẩm trong giỏ hàng</h2>
@@ -177,7 +177,7 @@ do_action('woocommerce_before_cart'); ?>
 
                     <!-- Cart Summary -->
                     <div class="lg:col-span-1">
-                        <div class="bg-white rounded-lg border border-gray-100">
+                        <div class="rounded-lg border border-gray-100">
                             <!-- Summary Header -->
                             <div class="px-6 py-4 border-b border-gray-100">
                                 <h3 class="text-base font-semibold text-gray-900">Tổng đơn hàng</h3>
@@ -265,7 +265,7 @@ do_action('woocommerce_before_cart'); ?>
                 <!-- Empty Cart -->
                 <div class="text-center py-14">
                     <div class="max-w-md mx-auto">
-                        <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-5">
+                        <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5">
                             <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <circle cx="8" cy="21" r="1"></circle>
                                 <circle cx="19" cy="21" r="1"></circle>

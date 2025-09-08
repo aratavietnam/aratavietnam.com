@@ -20,9 +20,3 @@
 - Product catalog structure
 - Footer social media iconsrm
 - Template parts optimization
-
-
-
-lỗi menu ipad
-LIÊN HỆ BẤM lỗi khi bật litespeed
-fix settings trang trong admin

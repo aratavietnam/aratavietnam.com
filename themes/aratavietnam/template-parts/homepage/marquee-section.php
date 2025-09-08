@@ -3,12 +3,20 @@
  * Homepage Marquee Section - Running Text
  */
 
-// Get homepage ID and marquee text setting
+// Get homepage settings
 $front_page_id = get_option('page_on_front');
+$show_marquee = get_post_meta($front_page_id, 'arata_marquee_show', true);
 $marquee_text = get_post_meta($front_page_id, '_marquee_text', true);
 
-// Only show if marquee text is set
-if (!empty($marquee_text)) :
+// Only show if marquee is enabled
+if ($show_marquee === '0') {
+    return;
+}
+
+// Default text if not set
+if (empty($marquee_text)) {
+    $marquee_text = 'ARATA - NHÀ PHÂN PHỐI HÓA MỸ PHẨM HÀNG ĐẦU NHẬT BẢN';
+}
 ?>
 
 <!-- Marquee Section -->
@@ -106,4 +114,3 @@ if (!empty($marquee_text)) :
     transform-style: preserve-3d;
 }
 </style>
-<?php endif; ?>

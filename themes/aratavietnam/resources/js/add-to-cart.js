@@ -77,7 +77,6 @@ class AddToCartManager {
             }
 
         } catch (error) {
-            console.error('Add to cart error:', error);
             this.showError('Có lỗi xảy ra khi thêm sản phẩm');
         } finally {
             this.setLoadingState(button, false);
@@ -110,7 +109,6 @@ class AddToCartManager {
             }
 
         } catch (error) {
-            console.error('Add to cart error:', error);
             this.showError('Có lỗi xảy ra khi thêm sản phẩm');
         } finally {
             this.setLoadingState(button, false);
@@ -148,7 +146,6 @@ class AddToCartManager {
             const parsed = JSON.parse(result);
             return parsed;
         } catch (e) {
-            console.error('JSON Parse Error:', e);
             
             // Handle HTML response (typical WooCommerce behavior)
             if (result.includes('error') || result.includes('Error')) {
@@ -345,7 +342,7 @@ class AddToCartManager {
                 this.triggerEvent('arata_cart_updated', result.data);
             }
         } catch (error) {
-            console.error('Failed to update cart count:', error);
+            // Silently fail - cart count update is not critical
         }
     }
 

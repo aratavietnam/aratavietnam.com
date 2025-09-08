@@ -135,7 +135,7 @@ $header_background_color = get_theme_mod('theme_header_background_color', '#ffff
 						<!-- Account -->
 						<?php if (is_user_logged_in()) : ?>
 							<div class="relative group">
-								<button class="account-toggle p-2 text-gray-800 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300" aria-label="Tài khoản">
+								<button class="user-account-btn p-2 text-gray-800 hover:text-primary hover:bg-gray-100 rounded-lg transition-all duration-300" aria-label="Tài khoản" style="pointer-events: none;">
 									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
 										<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
 										<circle cx="12" cy="7" r="4"></circle>
@@ -148,7 +148,7 @@ $header_background_color = get_theme_mod('theme_header_background_color', '#ffff
 										<p class="text-xs text-gray-500"><?php echo wp_get_current_user()->user_email; ?></p>
 									</div>
 									<div class="py-1">
-										<a href="<?php echo esc_url(get_edit_user_link()); ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Thông tin cá nhân</a>
+										<a href="<?php echo esc_url(arata_get_account_page_url()); ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Thông tin tài khoản</a>
 										<a href="<?php echo esc_url(wp_logout_url(home_url())); ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Đăng xuất</a>
 									</div>
 								</div>
@@ -249,7 +249,7 @@ $header_background_color = get_theme_mod('theme_header_background_color', '#ffff
 				<!-- Mobile Actions -->
 				<div class="flex items-center justify-center space-x-8 mt-6 pt-6 border-t border-gray-200">
 					<?php if (is_user_logged_in()) : ?>
-						<a href="<?php echo esc_url(get_edit_user_link()); ?>" class="flex flex-col items-center space-y-1 text-gray-600 hover:text-primary transition-colors duration-200">
+						<a href="<?php echo esc_url(arata_get_account_page_url()); ?>" class="flex flex-col items-center space-y-1 text-gray-600 hover:text-primary transition-colors duration-200">
 							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
 								<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
 								<circle cx="12" cy="7" r="4"></circle>

@@ -272,7 +272,7 @@ function arata_add_contact_popup_script() {
                         window.initContactPopup();
                         return;
                     } catch (e) {
-                        console.warn('initContactPopup failed:', e);
+                        // Silently continue if initContactPopup fails
                     }
                 }
                 

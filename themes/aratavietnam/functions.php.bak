@@ -30,8 +30,6 @@ require_once get_template_directory() . '/inc/template-filters.php';
 require_once get_template_directory() . '/inc/upload-mimes.php';
 require_once get_template_directory() . '/inc/auth-handler.php';
 require_once get_template_directory() . '/inc/job-application-handler.php';
-require_once get_template_directory() . '/inc/user-profile-meta.php';
-require_once get_template_directory() . '/inc/account-management.php';
 require_once get_template_directory() . '/inc/services-post-types.php';
 require_once get_template_directory() . '/inc/product-assets.php';
 require_once get_template_directory() . '/inc/product-brand-taxonomy.php';
@@ -45,21 +43,6 @@ require_once get_template_directory() . '/inc/asset-management.php';
 require_once get_template_directory() . '/inc/payment-methods.php';
 
 /**
- * Get account page URL
- */
-function arata_get_account_page_url() {
-    // Check if we have a dedicated account page
-    $account_page = get_page_by_path('tai-khoan');
-    
-    if ($account_page) {
-        return get_permalink($account_page->ID);
-    }
-    
-    // Fallback to WordPress admin profile
-    return get_edit_user_link();
-}
-
-/**
  * Load theme textdomain
  */
 function aratavietnam_load_textdomain() {
@@ -69,7 +52,6 @@ add_action('init', 'aratavietnam_load_textdomain');
 
 // Register custom page templates
 function aratavietnam_register_page_templates($templates) {
-    $templates['page-templates/homepage.php'] = 'Homepage';
     $templates['page-templates/news.php'] = 'News Page';
     $templates['page-templates/promotions.php'] = 'Promotions Page';
     $templates['page-templates/careers.php'] = 'Tuyển dụng';
@@ -253,17 +235,6 @@ function aratavietnam_enqueue_custom_scripts() {
     if (is_product()) {
         aratavietnam_enqueue_asset('aratavietnam-product-single', 'product-single', ['aratavietnam-app', 'aratavietnam-add-to-cart'], $version, true);
     }
-
-    // Enqueue account management scripts on account page
-    if (is_page_template('page-templates/account.php') || is_page('tai-khoan') || has_shortcode('arata_account_page', get_post()->post_content)) {
-        aratavietnam_enqueue_asset('aratavietnam-account-management', 'account-management', ['aratavietnam-app', 'aratavietnam-notifications'], $version, true);
-        
-        // Localize account management data
-        wp_localize_script('aratavietnam-account-management', 'arataAccountData', array(
-            'ajaxUrl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('arata_account_nonce'),
-        ));
-    }
 }
 add_action('wp_enqueue_scripts', 'aratavietnam_enqueue_custom_scripts');
 
@@ -331,18 +302,18 @@ add_filter('wc_add_to_cart_message_html', function($message, $products){
 add_filter('woocommerce_checkout_fields', function($fields) {
     // Billing fields
     if (isset($fields['billing'])) {
-        $fields['billing']['billing_email']['label'] = 'Địa chỉ email';
+        $fields['billing']['billing_email']['label'] = 'Địa chỉ email *';
         $fields['billing']['billing_email']['placeholder'] = 'Nhập địa chỉ email của bạn';
 
-        $fields['billing']['billing_first_name']['label'] = 'Tên';
+        $fields['billing']['billing_first_name']['label'] = 'Tên *';
         $fields['billing']['billing_first_name']['placeholder'] = 'Nhập tên của bạn';
 
-        $fields['billing']['billing_last_name']['label'] = 'Họ';
+        $fields['billing']['billing_last_name']['label'] = 'Họ *';
         $fields['billing']['billing_last_name']['placeholder'] = 'Nhập họ của bạn';
 
-        $fields['billing']['billing_country']['label'] = 'Quốc gia / Vùng';
+        $fields['billing']['billing_country']['label'] = 'Quốc gia / Vùng *';
 
-        $fields['billing']['billing_address_1']['label'] = 'Địa chỉ đường';
+        $fields['billing']['billing_address_1']['label'] = 'Địa chỉ đường *';
         $fields['billing']['billing_address_1']['placeholder'] = 'Số nhà và tên đường';
 
         $fields['billing']['billing_address_2']['label'] = 'Căn hộ, suite, đơn vị, v.v. (tùy chọn)';
@@ -351,7 +322,7 @@ add_filter('woocommerce_checkout_fields', function($fields) {
         $fields['billing']['billing_postcode']['label'] = 'Mã bưu điện / ZIP (tùy chọn)';
         $fields['billing']['billing_postcode']['placeholder'] = 'Nhập mã bưu điện';
 
-        $fields['billing']['billing_city']['label'] = 'Thành phố / Thị xã';
+        $fields['billing']['billing_city']['label'] = 'Thành phố / Thị xã *';
         $fields['billing']['billing_city']['placeholder'] = 'Nhập tên thành phố';
 
         $fields['billing']['billing_phone']['label'] = 'Số điện thoại (tùy chọn)';
@@ -360,13 +331,13 @@ add_filter('woocommerce_checkout_fields', function($fields) {
 
     // Shipping fields
     if (isset($fields['shipping'])) {
-        $fields['shipping']['shipping_first_name']['label'] = 'Tên';
-        $fields['shipping']['shipping_last_name']['label'] = 'Họ';
-        $fields['shipping']['shipping_country']['label'] = 'Quốc gia / Vùng';
-        $fields['shipping']['shipping_address_1']['label'] = 'Địa chỉ đường';
+        $fields['shipping']['shipping_first_name']['label'] = 'Tên *';
+        $fields['shipping']['shipping_last_name']['label'] = 'Họ *';
+        $fields['shipping']['shipping_country']['label'] = 'Quốc gia / Vùng *';
+        $fields['shipping']['shipping_address_1']['label'] = 'Địa chỉ đường *';
         $fields['shipping']['shipping_address_2']['label'] = 'Căn hộ, suite, đơn vị, v.v. (tùy chọn)';
         $fields['shipping']['shipping_postcode']['label'] = 'Mã bưu điện / ZIP (tùy chọn)';
-        $fields['shipping']['shipping_city']['label'] = 'Thành phố / Thị xã';
+        $fields['shipping']['shipping_city']['label'] = 'Thành phố / Thị xã *';
     }
 
     // Order notes
@@ -401,7 +372,7 @@ add_filter('gettext', function($translation, $text, $domain) {
             case 'Total':
                 return 'Tổng cộng';
             case 'Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.':
-                return 'Dữ liệu cá nhân của bạn sẽ được sử dụng để xử lý đơn hàng, hỗ trợ trải nghiệm của bạn trên website này và cho các mục đích khác được mô tả trong chính sách riêng tư của chúng tôi.';
+                return 'Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.';
             case 'Sorry, it seems that there are no available payment methods. Please contact us if you require assistance or wish to make alternate arrangements.':
                 return 'Sorry, it seems that there are no available payment methods. Please contact us if you require assistance or wish to make alternate arrangements.';
         }
@@ -409,31 +380,10 @@ add_filter('gettext', function($translation, $text, $domain) {
     return $translation;
 }, 10, 3);
 
-// Completely hide privacy policy text on checkout page
-add_filter('woocommerce_checkout_privacy_policy_text', '__return_false');
-
-// Also hide the entire privacy policy container
-add_action('wp_head', function() {
-    ?>
-    <style>
-        .woocommerce-privacy-policy-text {
-            display: none !important;
-        }
-    </style>
-    <?php
-});
-
 // WooCommerce: Order review table headers translation
 add_filter('woocommerce_cart_item_name', function($name, $cart_item, $cart_item_key) {
     return $name;
 }, 10, 3);
-
-// Initialize WooCommerce cart before header
-add_action('wp_head', function() {
-    if (class_exists('WooCommerce') && !WC()->cart) {
-        wc_load_cart();
-    }
-}, 5);
 
 // WooCommerce: Checkout text translations
 add_filter('woocommerce_checkout_privacy_policy_text', function($text) {
@@ -696,146 +646,176 @@ function arata_admin_styles() {
 }
 add_action('admin_enqueue_scripts', 'arata_admin_styles');
 
-// Inject CSS to fix dropdown arrows on checkout page
-function arata_fix_checkout_dropdown_arrows() {
-    // Only apply on checkout page
-    if (is_checkout()) :
+
+
+// --- Start of About Page Meta Box Code (Restored) ---
+
+add_action('add_meta_boxes_page', function($post) {
+    $template = get_post_meta($post->ID, '_wp_page_template', true);
+
+    if ($template === 'page-templates/about.php') {
+        add_meta_box(
+            'arata_about_content_meta',
+            __('About Page Content Settings', 'aratavietnam'),
+            function($post) {
+                wp_nonce_field('arata_about_meta_save', 'arata_about_meta_nonce');
+
+                // Field definitions
+                $content_fields = [
+                    'arata_about_company_intro' => __('Company Introduction', 'aratavietnam'),
+                    'arata_about_history' => __('History & Achievements', 'aratavietnam'),
+                    'arata_about_mission' => __('Mission & Vision', 'aratavietnam'),
+                    'arata_about_values' => __('Core Values', 'aratavietnam'),
+                    'arata_about_commitment' => __('Quality Commitment', 'aratavietnam'),
+                ];
+                $image_fields = [
+                    'arata_about_left_image' => __('Left Image', 'aratavietnam'),
+                    'arata_about_right_image' => __('Right Image', 'aratavietnam'),
+                ];
+
+                // Tabs HTML
+                echo '<div class="arata-about-meta-tabs">';
+                echo '<nav class="nav-tab-wrapper"><a href="#content-tab" class="nav-tab nav-tab-active">Content</a><a href="#images-tab" class="nav-tab">Images</a></nav>';
+
+                // Content Tab
+                echo '<div id="content-tab" class="tab-content active"><table class="form-table">';
+                foreach ($content_fields as $key => $label) {
+                    $value = get_post_meta($post->ID, $key, true);
+                    echo '<tr><th><label for="' . esc_attr($key) . '">' . esc_html($label) . '</label></th><td>';
+                    echo '<textarea id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" rows="5" class="large-text">' . esc_textarea($value) . '</textarea>';
+                    echo '<p class="description">You can use HTML tags for formatting.</p>';
+                    echo '</td></tr>';
+                }
+                echo '</table></div>';
+
+                // Images Tab
+                echo '<div id="images-tab" class="tab-content"><table class="form-table">';
+                foreach ($image_fields as $key => $label) {
+                    $value = get_post_meta($post->ID, $key, true);
+                    echo '<tr><th><label for="' . esc_attr($key) . '">' . esc_html($label) . '</label></th><td>';
+                    echo arata_about_image_uploader($key, $value);
+                    echo '</td></tr>';
+                }
+                echo '</table></div>';
+
+                echo '</div>'; // Close tabs container
+                ?>
+                <script>
+                jQuery(document).ready(function($) {
+                    $('.nav-tab').click(function(e) {
+                        e.preventDefault();
+                        var target = $(this).attr('href');
+                        $('.nav-tab').removeClass('nav-tab-active');
+                        $(this).addClass('nav-tab-active');
+                        $('.tab-content').removeClass('active');
+                        $(target).addClass('active');
+                    });
+                });
+                </script>
+                <style>
+                .arata-about-meta-tabs .nav-tab-wrapper { margin-bottom: 20px; }
+                .tab-content { display: none; }
+                .tab-content.active { display: block; }
+                </style>
+                <?php
+            },
+            'page',
+            'normal',
+            'high'
+        );
+    }
+});
+
+
+// Helper function to create an image uploader
+function arata_about_image_uploader($name, $value = '') {
+    $image_url = $value ? wp_get_attachment_image_url($value, 'thumbnail') : '';
+    ob_start();
     ?>
-    <style>
-        /* CRITICAL FIX: Remove dropdown arrows from ALL text inputs on checkout page */
-        /* Maximum specificity override */
-        html body.woocommerce-checkout input[type="text"],
-        html body.woocommerce-checkout input[type="email"],
-        html body.woocommerce-checkout input[type="tel"],
-        html body.woocommerce-checkout input[type="password"],
-        html body.woocommerce-checkout input[type="number"],
-        html body.woocommerce-checkout input[type="search"],
-        html body.woocommerce-checkout input[type="url"],
-        html body.woocommerce-checkout input[type="date"],
-        html body.woocommerce-checkout input[type="month"],
-        html body.woocommerce-checkout input[type="week"],
-        html body.woocommerce-checkout input[type="time"],
-        html body.woocommerce-checkout input[type="datetime"],
-        html body.woocommerce-checkout input[type="datetime-local"],
-        html body.woocommerce-checkout input[type="color"],
-        html body.woocommerce-checkout textarea,
-        html body.woocommerce-checkout .input-text,
-        html body.woocommerce-checkout .form-control,
-        html body.woocommerce-checkout .woocommerce-input-wrapper input,
-        html body.woocommerce-checkout .woocommerce-form-row input,
-        html body.woocommerce-checkout .woocommerce-billing-fields input,
-        html body.woocommerce-checkout .woocommerce-shipping-fields input,
-        html body.woocommerce-checkout .woocommerce-additional-fields input,
-        html body.woocommerce-checkout #billing_first_name,
-        html body.woocommerce-checkout #billing_last_name,
-        html body.woocommerce-checkout #billing_company,
-        html body.woocommerce-checkout #billing_address_1,
-        html body.woocommerce-checkout #billing_address_2,
-        html body.woocommerce-checkout #billing_city,
-        html body.woocommerce-checkout #billing_postcode,
-        html body.woocommerce-checkout #billing_phone,
-        html body.woocommerce-checkout #billing_email,
-        html body.woocommerce-checkout #shipping_first_name,
-        html body.woocommerce-checkout #shipping_last_name,
-        html body.woocommerce-checkout #shipping_company,
-        html body.woocommerce-checkout #shipping_address_1,
-        html body.woocommerce-checkout #shipping_address_2,
-        html body.woocommerce-checkout #shipping_city,
-        html body.woocommerce-checkout #shipping_postcode,
-        html body.woocommerce-checkout #account_username,
-        html body.woocommerce-checkout #account_password,
-        html body.woocommerce-checkout #order_comments {
-            /* CRITICAL: Override any dropdown appearance */
-            appearance: auto !important;
-            -webkit-appearance: auto !important;
-            -moz-appearance: auto !important;
-            -ms-appearance: auto !important;
-            
-            /* Remove any background images that might create dropdown arrows */
-            background-image: none !important;
-            background-image: url() !important;
-            background-image: initial !important;
-            
-            /* Reset background properties */
-            background-repeat: initial !important;
-            background-position: initial !important;
-            background-size: initial !important;
-            background-origin: initial !important;
-            background-clip: initial !important;
-            background-attachment: initial !important;
-            
-            /* Ensure normal padding */
-            padding-right: 0.75rem !important;
-            padding-left: 0.75rem !important;
-            
-            /* Override any Select2 or other plugin styling */
-            background-color: rgba(255, 255, 255, 0.9) !important;
-            
-            /* Border styling */
-            border: 1px solid rgba(0, 0, 0, 0.1) !important;
-            border-radius: 8px !important;
-        }
-        
-        /* Override any inline styles or JavaScript-added styles */
-        html body.woocommerce-checkout input[type="text"][style*="background"],
-        html body.woocommerce-checkout input[type="email"][style*="background"],
-        html body.woocommerce-checkout input[type="tel"][style*="background"],
-        html body.woocommerce-checkout textarea[style*="background"] {
-            background-image: none !important;
-            appearance: auto !important;
-            -webkit-appearance: auto !important;
-        }
-        
-        /* Special case for Select2 converted fields - ensure they don't affect text inputs */
-        html body.woocommerce-checkout .select2-container input[type="text"],
-        html body.woocommerce-checkout .select2-search__field[type="text"],
-        html body.woocommerce-checkout .select2-selection__rendered {
-            appearance: none !important;
-            background: transparent !important;
-            border: none !important;
-            padding: 0 !important;
-        }
-        
-        /* Ensure only actual select elements have dropdown arrows */
-        html body.woocommerce-checkout select,
-        html body.woocommerce-checkout .select2-selection--single {
-            appearance: none !important;
-            -webkit-appearance: none !important;
-            -moz-appearance: none !important;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7280' d='M6 8L0 2h12z'/%3E%3C/svg%3E") !important;
-            background-repeat: no-repeat !important;
-            background-position: right 1rem center !important;
-            padding-right: 2.5rem !important;
-        }
-        
-        /* Force override any browser default dropdown styling */
-        @supports (-webkit-appearance: none) {
-            html body.woocommerce-checkout input[type="text"],
-            html body.woocommerce-checkout input[type="email"],
-            html body.woocommerce-checkout input[type="tel"],
-            html body.woocommerce-checkout textarea {
-                -webkit-appearance: auto !important;
-                background-image: none !important;
-            }
-        }
-        
-        @supports (-moz-appearance: none) {
-            html body.woocommerce-checkout input[type="text"],
-            html body.woocommerce-checkout input[type="email"],
-            html body.woocommerce-checkout input[type="tel"],
-            html body.woocommerce-checkout textarea {
-                -moz-appearance: auto !important;
-                background-image: none !important;
-            }
-        }
-    </style>
+    <div class="arata-image-uploader">
+        <input type="hidden" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>">
+        <div class="image-preview" style="margin-bottom: 10px; min-height: 100px; border: 1px dashed #ccc; background: #f7f7f7; text-align: center;">
+            <?php if ($image_url): ?>
+                <img src="<?php echo esc_url($image_url); ?>" style="max-width: 100%; height: auto;">
+            <?php else: ?>
+                <p style="padding: 10px; color: #888;"><?php _e('No image selected', 'aratavietnam'); ?></p>
+            <?php endif; ?>
+        </div>
+        <button type="button" class="button button-primary select-image-btn"><?php _e('Select Image', 'aratavietnam'); ?></button>
+        <button type="button" class="button remove-image-btn" style="<?php echo $value ? '' : 'display:none;'; ?>"><?php _e('Remove Image', 'aratavietnam'); ?></button>
+    </div>
     <?php
-    endif;
+    return ob_get_clean();
 }
-add_action('wp_head', 'arata_fix_checkout_dropdown_arrows', 999);
 
+// Enqueue script for media uploader
+add_action('admin_enqueue_scripts', function($hook) {
+    if ($hook === 'post.php' || $hook === 'post-new.php') {
+        wp_enqueue_media();
+        wp_add_inline_script('media-editor', "
+            jQuery(document).ready(function($) {
+                $(document).on('click', '.select-image-btn', function(e) {
+                    e.preventDefault();
+                    var button = $(this);
+                    var uploaderContainer = button.closest('.arata-image-uploader');
+                    var mediaUploader = wp.media({
+                        title: 'Select Image',
+                        button: { text: 'Use this image' },
+                        multiple: false
+                    });
 
+                    mediaUploader.on('select', function() {
+                        var attachment = mediaUploader.state().get('selection').first().toJSON();
+                        uploaderContainer.find('input[type=hidden]').val(attachment.id);
+                        var thumbnailUrl = attachment.sizes && attachment.sizes.thumbnail ? attachment.sizes.thumbnail.url : attachment.url;
+                        uploaderContainer.find('.image-preview').html('<img src=\"' + thumbnailUrl + '\" style=\"max-width: 100%; height: auto;\">');
+                        uploaderContainer.find('.remove-image-btn').show();
+                    });
 
+                    mediaUploader.open();
+                });
+
+                $(document).on('click', '.remove-image-btn', function(e) {
+                    e.preventDefault();
+                    var button = $(this);
+                    var uploaderContainer = button.closest('.arata-image-uploader');
+                    uploaderContainer.find('input[type=hidden]').val('');
+                    uploaderContainer.find('.image-preview').html('<p style=\"padding: 10px; color: #888;\">No image selected</p>');
+                    button.hide();
+                });
+            });
+        ");
+    }
+});
+
+// Save meta
+add_action('save_post_page', function($post_id) {
+    if (!isset($_POST['arata_about_meta_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['arata_about_meta_nonce']), 'arata_about_meta_save')) {
+        return;
+    }
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) { return; }
+    if (!current_user_can('edit_page', $post_id)) { return; }
+
+    $keys = [
+        'arata_about_company_intro',
+        'arata_about_history',
+        'arata_about_mission',
+        'arata_about_values',
+        'arata_about_commitment',
+        'arata_about_left_image',
+        'arata_about_right_image',
+    ];
+
+    foreach ($keys as $key) {
+        if (isset($_POST[$key])) {
+            update_post_meta($post_id, $key, wp_kses_post(wp_unslash($_POST[$key])));
+        } else {
+            delete_post_meta($post_id, $key);
+        }
+    }
+});
+
+// --- End of About Page Meta Box Code (Restored) ---
 
 
 // Helper function to get post meta with a default value.
@@ -881,10 +861,5 @@ function arata_get_image_url_by_id() {
     wp_send_json_error();
 }
 add_action('wp_ajax_get_image_url_by_id', 'arata_get_image_url_by_id');
-
-// Remove shortcode comments from output
-add_filter('the_content', function($content) {
-    return preg_replace('/<!-- wp:shortcode -->.*?<!-- \/wp:shortcode -->/s', '', $content);
-}, 20);
 
 

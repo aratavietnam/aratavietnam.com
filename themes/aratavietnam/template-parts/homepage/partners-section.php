@@ -3,10 +3,23 @@
  * Homepage Partners Section
  */
 
+// Get homepage settings
+$front_page_id = get_option('page_on_front');
+$show_partners = get_post_meta($front_page_id, 'arata_partners_show', true);
+
+// Only show if section is enabled
+if ($show_partners === '0') {
+    return;
+}
+
 // Get global colors
 $primary_color = get_theme_mod('arata_primary_color', '#0066A6');
 $secondary_color = get_theme_mod('arata_secondary_color', '#F55E25');
 $background_color = get_theme_mod('theme_background_color', '#ffffff');
+
+// Get custom content for the section header
+$partners_title = get_post_meta($front_page_id, 'arata_partners_title', true) ?: 'Đối Tác';
+$section_description = get_post_meta($front_page_id, '_partners_description', true) ?: 'Chúng tôi tự hào hợp tác với các thương hiệu hóa mỹ phẩm hàng đầu từ Nhật Bản';
 ?>
 
 <!-- Partners Section -->
@@ -14,28 +27,8 @@ $background_color = get_theme_mod('theme_background_color', '#ffffff');
     <div class="container mx-auto px-4">
         <!-- Section Header -->
         <div class="text-center mb-16">
-
-            <?php
-            // Get custom content for the section header
-            $front_page_id = get_option('page_on_front');
-            $title_part1 = get_post_meta($front_page_id, '_partners_title_part1', true);
-            $title_part2 = get_post_meta($front_page_id, '_partners_title_part2', true);
-            $section_description = get_post_meta($front_page_id, '_partners_description', true);
-
-            // Fallback to default text if not set
-            if (empty($title_part1)) {
-                $title_part1 = 'Đối tác';
-            }
-            // Remove fallback for title_part2 to keep it empty
-            if (empty($section_description)) {
-                $section_description = 'Chúng tôi tự hào hợp tác với các thương hiệu hóa mỹ phẩm hàng đầu từ Nhật Bản';
-            }
-            ?>
             <h2 class="text-4xl font-bold text-gray-900 mb-4">
-                <span class="text-secondary"><?php echo esc_html($title_part1); ?></span>
-                <?php if (!empty($title_part2)) : ?>
-                    <span class="text-primary"><?php echo esc_html($title_part2); ?></span>
-                <?php endif; ?>
+                <span style="color: <?php echo esc_attr($secondary_color); ?>;"><?php echo esc_html($partners_title); ?></span>
             </h2>
             <p class="text-base sm:text-lg text-gray-600 mx-auto">
                 <?php echo esc_html($section_description); ?>

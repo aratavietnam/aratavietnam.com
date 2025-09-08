@@ -31,10 +31,13 @@ class Arata_Auth_Handler {
      * This is a more reliable method than wp_localize_script for timing issues.
      */
     public function print_auth_data_script() {
+        $current_user = wp_get_current_user();
         $auth_data = array(
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('arata_auth_nonce'),
             'isLoggedIn' => is_user_logged_in(),
+            'currentUser' => is_user_logged_in() ? $current_user->display_name : '',
+            'currentUserEmail' => is_user_logged_in() ? $current_user->user_email : '',
             'messages' => array(
                 'requiredField' => __('Trường này là bắt buộc.', 'aratavietnam'),
                 'invalidEmail' => __('Email không hợp lệ.', 'aratavietnam'),

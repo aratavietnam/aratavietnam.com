@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Bind account button to show login popup
   function bindAccountButton() {
-    const accountButton = document.querySelector('.account-toggle');
+    const accountButton = document.querySelector('.account-toggle:not(.user-account-btn)');
     if (!accountButton) return;
 
     // Store the event handler function so we can remove it later
@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Disable account button click after login
   function disableAccountButtonClick() {
-    const accountButton = document.querySelector('.account-toggle');
+    const accountButton = document.querySelector('.account-toggle:not(.user-account-btn)');
     if (accountButton && window.accountButtonHandler) {
       accountButton.removeEventListener('click', window.accountButtonHandler);
       window.accountButtonHandler = null;
@@ -367,6 +367,18 @@ document.addEventListener('DOMContentLoaded', function () {
             if (type === 'login' || type === 'register') {
               // Update the account button to show user dropdown instead of login popup
               updateAccountButtonAfterLogin(data.data.user);
+              
+              // Refresh WooCommerce cart fragments if available
+              if (typeof wc_add_to_cart_params !== 'undefined' && typeof jQuery !== 'undefined') {
+                jQuery(document.body).trigger('wc_fragment_refresh');
+              }
+              
+              // Also refresh the mini cart widget if it exists
+              const cartCount = document.querySelector('.cart-count');
+              if (cartCount && typeof wc_add_to_cart_params !== 'undefined') {
+                // Force a cart update by triggering the appropriate event
+                jQuery(document.body).trigger('added_to_cart');
+              }
             }
             // Don't reload the page, just close the popup
             closePopup();
@@ -540,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <p class="text-xs text-gray-500">${user.email}</p>
           </div>
           <div class="py-1">
-            <a href="/wp-admin/profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Thông tin cá nhân</a>
+            <a href="/tai-khoan" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Thông tin tài khoản</a>
             <a href="/wp-login.php?action=logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Đăng xuất</a>
           </div>
         </div>
@@ -564,20 +576,13 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = this.href;
       });
     }
-
-    // Handle profile link click
-    const profileLink = document.querySelector('a[href*="profile.php"]');
-    if (profileLink) {
-      profileLink.addEventListener('click', function (e) {
-        e.preventDefault();
-        // Redirect to profile URL
-        window.location.href = this.href;
-      });
-    }
   }
 
 
 
-  // Initialize the popup logic
-  initAuthPopup();
+  
+  // Initialize the popup logic only if user is not logged in
+  if (!arataAuth.isLoggedIn) {
+    initAuthPopup();
+  }
 });

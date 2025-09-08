@@ -16,7 +16,7 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
 }
 ?>
 
-<main id="site-content" class="bg-white">
+<main id="site-content">
     <div class="container mx-auto px-4 py-10">
         <!-- Hero Section -->
         <div class="text-center mb-10">

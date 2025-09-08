@@ -1,183 +1,183 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+File này cung cấp hướng dẫn cho Claude Code (claude.ai/code) khi làm việc với repository này.
 
-## Project Architecture
+## Kiến trúc Dự án
 
-Containerized WordPress e-commerce site for Arata Vietnam (Japanese cosmetics distributor) using TailPress framework with modern build tools and comprehensive Vietnamese localization.
+Website thương mại điện tử WordPress được container hóa cho Arata Vietnam (Nhà phân phối mỹ phẩm Nhật Bản) sử dụng framework TailPress với các công cụ xây dựng hiện đại và bản địa hóa tiếng Việt toàn diện.
 
-### Core Stack
-- **WordPress**: Latest with WooCommerce + comprehensive Vietnamese translations
-- **TailPress Framework v5.0.4**: WordPress theme framework with Tailwind CSS v4
-- **Vite 6.3+**: Module bundler with HMR, ES6 modules, hashed asset names
-- **Docker**: MySQL 8.0, WordPress, WP CLI with automated setup
-- **PHP 8.0.2+**: Modern PHP with PSR-4 autoloading
+### Stack Công nghệ Chính
+- **WordPress**: Phiên bản mới nhất với WooCommerce + bản dịch tiếng Việt toàn diện
+- **TailPress Framework v5.0.4**: WordPress theme framework với Tailwind CSS v4
+- **Vite 6.3+**: Module bundler với HMR, ES6 modules, hashed asset names
+- **Docker**: MySQL 8.0, WordPress, WP CLI với thiết lập tự động
+- **PHP 8.0.2+**: PHP hiện đại với PSR-4 autoloading
 
-## Development Commands
+## Lệnh Phát Triển
 
 ```bash
-# Environment (from project root)
-docker-compose up -d                    # Start all services
-docker-compose logs -f wp-cli          # Monitor WordPress setup
-docker-compose down                    # Stop services
-docker-compose down -v && docker-compose up -d  # Full reset with data cleanup
+# Môi trường (từ thư mục gốc dự án)
+docker-compose up -d                    # Khởi động tất cả dịch vụ
+docker-compose logs -f wp-cli          # Giám sát thiết lập WordPress
+docker-compose down                    # Dừng tất cả dịch vụ
+docker-compose down -v && docker-compose up -d  # Đặt lại hoàn toàn với dữ liệu mới
 
-# Theme development (from themes/aratavietnam/)
-npm run dev                           # Vite dev server (port 3000) with HMR
-npm run build                         # Production build with versioning & hashed filenames
+# Phát triển theme (từ themes/aratavietnam/)
+npm run dev                           # Vite dev server (cổng 3000) với HMR
+npm run build                         # Build production với phiên bản & hashed filenames
 composer install                     # PHP dependencies (TailPress framework)
 
-# WordPress CLI operations
+# Thao tác WordPress CLI
 docker-compose exec wp-cli wp --allow-root [command]
 docker-compose exec wp-cli wp post list --allow-root
 docker-compose exec wp-cli wp db export backup.sql --allow-root
 
-# Content management scripts (from project root)
-./scripts/create-website-structure.sh    # Create basic pages
-./scripts/create-news-content.sh         # Generate sample news content
-./scripts/fix-docker-permissions.sh      # Fix file permissions
+# Scripts quản lý nội dung (từ thư mục gốc)
+./scripts/create-website-structure.sh    # Tạo các trang cơ bản
+./scripts/create-news-content.sh         # Tạo nội dung tin tức mẫu
+./scripts/fix-docker-permissions.sh      # Sửa quyền file
 
-# Development utility scripts (55+ total - explore with ls scripts/)
-./scripts/setup-woocommerce.sh          # WooCommerce configuration
-./scripts/create-demo-products.sh       # Sample product data
-./scripts/update-product-images.sh      # Batch product image updates
-./scripts/update-all-pages-images.sh    # Update featured images for all pages
-./scripts/update-homepage-images.sh     # Update homepage section images
-./scripts/update-promotions-services-images.sh  # Update promotions and services images
+# Scripts tiện ích phát triển (55+ tổng - khám phá với ls scripts/)
+./scripts/setup-woocommerce.sh          # Cấu hình WooCommerce
+./scripts/create-demo-products.sh       # Dữ liệu sản phẩm mẫu
+./scripts/update-product-images.sh      # Cập nhật hàng loạt hình ảnh sản phẩm
+./scripts/update-all-pages-images.sh    # Cập nhật featured images cho tất cả trang
+./scripts/update-homepage-images.sh     # Cập nhật hình ảnh các phần homepage
+./scripts/update-promotions-services-images.sh  # Cập nhật hình ảnh khuyến mãi và dịch vụ
 
-# SEO and content optimization scripts
-./scripts/bulk-update-*.php            # Bulk update focus keywords for SEO
-./scripts/fix-product-images.sh        # Fix product image URLs and attributes
-./scripts/check_missing_thumbnails.sh  # Check for missing featured images
+# Scripts SEO và tối ưu hóa nội dung
+./scripts/bulk-update-*.php            # Cập nhật hàng loạt focus keywords cho SEO
+./scripts/fix-product-images.sh        # Sửa URLs và thuộc tính hình ảnh sản phẩm
+./scripts/check_missing_thumbnails.sh  # Kiểm tra featured images bị thiếu
 
-# Site structure and menu scripts
-./scripts/create-*.sh                  # Create various page types and content
-./scripts/fix-menu-*.sh                # Fix navigation menu structure
-./scripts/setup-*.sh                   # Setup various site components
+# Scripts cấu trúc site và menu
+./scripts/create-*.sh                  # Tạo các loại trang và nội dung khác nhau
+./scripts/fix-menu-*.sh                # Sửa cấu trúc menu điều hướng
+./scripts/setup-*.sh                   # Thiết lập các thành phần site khác nhau
 
-# Build verification and asset management
-./scripts/verify-build.sh              # Verify all built assets and functions
+# Xác minh build và quản lý assets
+./scripts/verify-build.sh              # Xác minh tất cả assets và functions đã build
 
-# Docker-specific scripts
-./scripts/update-page-featured-images-docker.sh     # Update images using Docker
-./scripts/update-page-images-docker-improved.sh     # Improved Docker image updates
+# Scripts riêng cho Docker
+./scripts/update-page-featured-images-docker.sh     # Cập nhật hình ảnh sử dụng Docker
+./scripts/update-page-images-docker-improved.sh     # Cập nhật hình ảnh Docker cải tiến
 ```
 
-### Access Points
+### Điểm Truy Cập
 - **Frontend**: http://localhost:8080
 - **Admin**: http://localhost:8080/wp-admin (admin/admin123)
-- **Vite Dev Server**: http://localhost:3000 (HMR for development)
-- **Database**: MySQL on port 3306 (wordpress/wordpress_password)
+- **Vite Dev Server**: http://localhost:3000 (HMR cho phát triển)
+- **Database**: MySQL trên cổng 3306 (wordpress/wordpress_password)
 
-**Note**: The README.md incorrectly shows port 8000, but docker-compose.yml actually uses port 8080. All documentation should reference port 8080.
+**Lưu ý**: README.md hiển thị sai cổng 8000, nhưng docker-compose.yml thực tế sử dụng cổng 8080. Tất cả tài liệu nên tham chiếu đến cổng 8080.
 
-## Theme Architecture
+## Kiến trúc Theme
 
-### TailPress Framework Integration
-The theme follows TailPress conventions with modular architecture:
+### Tích hợp TailPress Framework
+Theme tuân theo các quy ước của TailPress với kiến trúc modular:
 
-- **Entry Point**: `functions.php` → `aratavietnam()` function initializes framework
+- **Điểm vào**: `functions.php` → hàm `aratavietnam()` khởi tạo framework
 - **Asset Pipeline**: `resources/` → Vite compilation → `dist/` output
-- **Modular System**: All functionality organized in `inc/` directory modules
-- **Template System**: Component-based with `template-parts/` organization
+- **Hệ thống Module**: Tất cả chức năng được tổ chức trong các module thư mục `inc/`
+- **Hệ thống Template**: Component-based với tổ chức `template-parts/`
 
-### Core Modules (inc/ directory)
+### Các Module Chính (thư mục inc)
 
-**Core Framework:**
-- `woocommerce.php` - E-commerce functionality + Vietnamese translations
-- `fonts-vietnamese.php` - Vietnamese typography optimization
-- `favicon-pwa.php` - Site identity and PWA configuration
-- `logo-branding.php` - Site branding and identity
-- `customizer-colors.php` + `customizer-footer.php` - WordPress Customizer extensions
+**Framework Chính:**
+- `woocommerce.php` - Chức năng thương mại điện tử + bản dịch tiếng Việt
+- `fonts-vietnamese.php` - Tối ưu hóa typography tiếng Việt
+- `favicon-pwa.php` - Định danh site và cấu hình PWA
+- `logo-branding.php` - Thương hiệu và định danh site
+- `customizer-colors.php` + `customizer-footer.php` - Mở rộng WordPress Customizer
 
-**Content Management:**
-- `news-post-types.php` + `news-meta-fields.php` + `news-forms.php` - News/blog system
-- `services-post-types.php` + `services-meta.php` - Services custom post type with meta
-- `partner-post-type.php` - Partners management
-- `contact-form.php` + `contact-meta.php` + `contact-config.php` - Contact system
+**Quản lý Nội dung:**
+- `news-post-types.php` + `news-meta-fields.php` + `news-forms.php` - Hệ thống tin tức/blog
+- `services-post-types.php` + `services-meta.php` - Custom post type dịch vụ với meta
+- `partner-post-type.php` - Quản lý đối tác
+- `contact-form.php` + `contact-meta.php` + `contact-config.php` - Hệ thống liên hệ
 
-**E-commerce:**
-- `product-brand-taxonomy.php` - Product brand taxonomy
-- `product-filters.php` - Advanced product filtering
-- `product-assets.php` - Product-specific asset loading
-- `product-policies-meta.php` - Product policy management
+**Thương mại điện tử:**
+- `product-brand-taxonomy.php` - Taxonomy thương hiệu sản phẩm
+- `product-filters.php` - Bộ lọc sản phẩm nâng cao
+- `product-assets.php` - Tải asset riêng cho sản phẩm
+- `product-policies-meta.php` - Quản lý chính sách sản phẩm
 
-**Page Templates & Meta:**
-- `*-meta.php` files - Admin meta boxes for different page types
+**Templates Trang & Meta:**
+- Các file `*-meta.php` - Admin meta boxes cho các loại trang khác nhau
 - `shop-meta.php`, `blog-meta.php`, `careers-meta.php`, `promotions-meta.php`, `homepage-meta.php`, `services-meta.php`
 
-**Authentication & Applications:**
-- `auth-handler.php` - User authentication system
-- `job-application-handler.php` - Career applications processing
+**Xác thực & Ứng dụng:**
+- `auth-handler.php` - Hệ thống xác thực người dùng
+- `job-application-handler.php` - Xử lý ứng tuyển việc làm
 
-**Admin & Development:**
-- `admin-columns.php` - Custom admin column configurations
-- `upload-mimes.php` - File upload type restrictions (includes SVG support with security)
-- `template-filters.php` - Template modification hooks
-- `class-dropdown-walker.php` - Custom navigation walker
-- `asset-management.php` - Automated asset hash detection utilities
+**Admin & Phát triển:**
+- `admin-columns.php` - Cấu hình cột admin tùy chỉnh
+- `upload-mimes.php` - Hạn chế loại file upload (bao gồm hỗ trợ SVG với bảo mật)
+- `template-filters.php` - Hooks sửa đổi template
+- `class-dropdown-walker.php` - Navigation walker tùy chỉnh
+- `asset-management.php` - Tiện ích phát hiện hash asset tự động
 
-### Custom Post Types & Features
-- **Post Types**: News, Services, Job Postings, Partners (with rich meta fields)
-- **WooCommerce Integration**: Full Vietnamese localization, custom checkout flow
-- **Page Templates**: Specialized templates for News, Promotions, Careers, Contact, Services, About
-- **REST API**: Custom search endpoint `/wp-json/aratavietnam/v1/search` with featured images
-- **JavaScript Modules**: Modern ES6 modules with dynamic imports
+### Custom Post Types & Tính năng
+- **Post Types**: Tin tức, Dịch vụ, Tuyển dụng, Đối tác (với các meta field phong phú)
+- **Tích hợp WooCommerce**: Bản địa hóa tiếng Việt đầy đủ, quy trình checkout tùy chỉnh
+- **Page Templates**: Templates chuyên dụng cho Tin tức, Khuyến mãi, Tuyển dụng, Liên hệ, Dịch vụ, Giới thiệu
+- **REST API**: Endpoint tìm kiếm tùy chỉnh `/wp-json/aratavietnam/v1/search` với featured images
+- **JavaScript Modules**: ES6 modules hiện đại với dynamic imports
 
-### Vite Build System
-**Configuration** (`vite.config.mjs`):
-- **Entry Points**: Multiple JS modules + CSS files
-  - `app.js` (main application)
-  - `notifications.js` (notification system)
-  - `add-to-cart.js` (WooCommerce integration)
-  - `product-single.js` (product page features)
-  - `app.css` (main stylesheet)
-  - `editor-style.css` (WordPress editor styles)
-- **Development**: Port 3000, CORS enabled, `aratavietnam.test` origin
-- **Production**: Manifest generation, hashed filenames, module script tags
-- **Tailwind CSS v4**: Integrated via `@tailwindcss/vite` plugin
+### Hệ thống Build Vite
+**Cấu hình** (`vite.config.mjs`):
+- **Entry Points**: Nhiều JS modules + CSS files
+  - `app.js` (ứng dụng chính)
+  - `notifications.js` (hệ thống thông báo)
+  - `add-to-cart.js` (tích hợp WooCommerce)
+  - `product-single.js` (tính năng trang sản phẩm)
+  - `app.css` (stylesheet chính)
+  - `editor-style.css` (styles WordPress editor)
+- **Phát triển**: Cổng 3000, CORS enabled, origin `aratavietnam.test`
+- **Production**: Tạo manifest, hashed filenames, module script tags
+- **Tailwind CSS v4**: Tích hợp qua plugin `@tailwindcss/vite`
 
-### JavaScript Architecture
-**Modern ES6 Module System:**
-- **Main App (`app.js`)**: Entry point importing icons, popups, fonts; Vietnamese font loading detection
-- **Product Features**: Gallery (PhotoSwipe + Swiper), variants, add-to-cart with conditional loading
-- **Contact System (`contact-popup.js`)**: Modal popups with form validation
-- **Auth System (`auth-popup.js`)**: Authentication popups and handlers
-- **Notification System (`notifications.js`)**: Toast notifications for user feedback
-- **Icon System (`icons.js`)**: Lucide icons with dynamic imports and caching
+### Kiến trúc JavaScript
+**Hệ thống ES6 Module Hiện đại:**
+- **Main App (`app.js`)**: Entry point import icons, popups, fonts; phát hiện tải font tiếng Việt
+- **Tính năng Sản phẩm**: Gallery (PhotoSwipe + Swiper), variants, add-to-cart với tải có điều kiện
+- **Hệ thống Liên hệ (`contact-popup.js`)**: Modal popups với validation form
+- **Hệ thống Xác thực (`auth-popup.js`)**: Authentication popups và handlers
+- **Hệ thống Thông báo (`notifications.js`)**: Toast notifications cho phản hồi người dùng
+- **Hệ thống Icon (`icons.js`)**: Lucide icons với dynamic imports và caching
 
 **Dependencies (package.json):**
 - **UI Components**: Lucide icons (0.540.0), Swiper gallery (11.0.5), PhotoSwipe lightbox (5.4.3)
-- **Build System**: Vite (6.3.2), Tailwind CSS (4.0.0) with @tailwindcss/vite plugin
-- **Browser Automation**: Puppeteer (24.19.0) for testing and web scraping
+- **Build System**: Vite (6.3.2), Tailwind CSS (4.0.0) với plugin @tailwindcss/vite
+- **Browser Automation**: Puppeteer (24.19.0) cho testing và web scraping
 
-## Asset Management & Build System
+## Quản lý Asset & Hệ thống Build
 
-### TailPress Integration Pattern
-- **Framework Entry**: `functions.php:84` → `aratavietnam()` function initializes TailPress
-- **Vite Compiler**: Custom `ViteCompiler` with `aratavietnam` handle for cache management
-- **Conditional Assets**: Product-specific JS only loads on `is_product()` pages
-- **Module Script Tags**: `type="module"` automatically applied to theme scripts
+### Mẫu Tích hợp TailPress
+- **Framework Entry**: `functions.php:84` → hàm `aratavietnam()` khởi tạo TailPress
+- **Vite Compiler**: `ViteCompiler` tùy chỉnh với handle `aratavietnam` cho quản lý cache
+- **Conditional Assets**: JS riêng cho sản phẩm chỉ tải trên các trang `is_product()`
+- **Module Script Tags**: `type="module"` tự động áp dụng cho theme scripts
 
-### Hashed Asset Management
-**⚠️ CRITICAL BUILD STEP**: The build system generates hashed filenames that must be manually updated in `functions.php:189-203` after every `npm run build`. The build will work but assets won't load without this manual update.
+### Quản lý Hashed Asset
+**⚠️ BƯỚC BUILD QUAN TRỌNG**: Hệ thống build tạo ra hashed filenames phải được cập nhật thủ công trong `functions.php:189-203` sau mỗi lần `npm run build`. Build sẽ hoạt động nhưng assets sẽ không tải nếu không có bước cập nhật thủ công này.
 
-**Automated Asset Management**
-The `asset-management.php` module provides helper functions to eliminate manual hash updates:
+**Quản lý Asset Tự động**
+Module `asset-management.php` cung cấp các hàm helper để loại bỏ cập nhật hash thủ công:
 
 ```php
-// Automatically detect and enqueue assets
+// Tự động phát hiện và enqueue assets
 aratavietnam_enqueue_asset('aratavietnam-app', 'app', ['jquery'], null, true);
 aratavietnam_enqueue_asset('aratavietnam-notifications', 'notifications');
 aratavietnam_enqueue_style_asset('aratavietnam-app-css', 'app');
 
-// Debug all available assets
+// Debug tất cả assets có sẵn
 $assets = aratavietnam_get_all_assets();
 error_log(print_r($assets, true));
 ```
 
 ```php
-// REQUIRED: After npm run build, update these hashed filenames in functions.php
+// BẮT BUỘC: Sau npm run build, cập nhật các hashed filenames này trong functions.php
 wp_enqueue_script('aratavietnam-app', get_template_directory_uri() . '/dist/app-CdtiypLP.js',
 wp_enqueue_script('aratavietnam-notifications', get_template_directory_uri() . '/dist/notifications-DX7Hjlbv.js',
 wp_enqueue_script('aratavietnam-add-to-cart', get_template_directory_uri() . '/dist/add-to-cart-DOaesbe3.js',
@@ -185,99 +185,99 @@ wp_enqueue_script('aratavietnam-product-single', get_template_directory_uri() . 
 ```
 
 **Build Workflow**: 
-1. `npm run build` → Generate hashed assets
-2. `./scripts/verify-build.sh` → Verify all assets built correctly
-3. Either update hashes manually in functions.php:189-203 OR use automated functions
-4. Test asset loading in browser
+1. `npm run build` → Tạo hashed assets
+2. `./scripts/verify-build.sh` → Xác minh tất cả assets đã build đúng
+3. Cập nhật hashes thủ công trong functions.php:189-203 HOẶC sử dụng hàm tự động
+4. Kiểm tra tải asset trong trình duyệt
 
-### Brand & Localization
-- **Colors**: Primary #F55E25, Secondary #0066A6, Tertiary #FFAB14
-- **Typography**: Inter font with Vietnamese fallbacks and loading detection
-- **Timezone**: Asia/Ho_Chi_Minh
-- **Language**: Comprehensive Vietnamese translations for WooCommerce checkout flow
+### Thương hiệu & Bản địa hóa
+- **Màu sắc**: Primary #F55E25, Secondary #0066A6, Tertiary #FFAB14
+- **Typography**: Font Inter với fallbacks tiếng Việt và phát hiện tải
+- **Múi giờ**: Asia/Ho_Chi_Minh
+- **Ngôn ngữ**: Bản dịch tiếng Việt toàn diện cho quy trình checkout WooCommerce
 
-## Key Architectural Patterns
+## Các Mẫu Kiến trúc Chính
 
-### Modular PHP Architecture
-All functionality is organized in `/inc/` modules with specific naming patterns:
-- `*-post-types.php`: Custom post type registration
-- `*-meta-fields.php` + `*-meta.php`: Admin meta box systems
-- `*-forms.php`: Frontend form handlers
-- `contact-*`: Three-file contact system (form, meta, config)
+### Kiến trúc PHP Modular
+Tất cả chức năng được tổ chức trong các module `/inc/` với các mẫu đặt tên cụ thể:
+- `*-post-types.php`: Đăng ký custom post type
+- `*-meta-fields.php` + `*-meta.php`: Hệ thống admin meta box
+- `*-forms.php`: Xử lý form frontend
+- `contact-*`: Hệ thống liên hệ ba file (form, meta, config)
 
-### Template System Integration
-- **Page Templates**: `page-templates/*.php` registered via `functions.php:52-62`
-- **Template Parts**: Component-based in `template-parts/` directory
-- **Force Recognition**: Custom template loader at `functions.php:65-82`
-- **Recent Refactoring**: Template parts for single post types (job_posting, promotion) have been consolidated into their respective single template files for simplified maintenance
+### Tích hợp Hệ thống Template
+- **Page Templates**: `page-templates/*.php` đăng ký qua `functions.php:52-62`
+- **Template Parts**: Component-based trong thư mục `template-parts/`
+- **Force Recognition**: Custom template loader tại `functions.php:65-82`
+- **Tái cấu trúc gần đây**: Template parts cho single post types (job_posting, promotion) đã được hợp nhất vào các single template file tương ứng để bảo trì đơn giản hóa
 
-### Vietnamese E-commerce Localization
-Comprehensive Vietnamese translations implemented via WordPress filters in `functions.php:267-416`, covering:
-- Checkout field labels and placeholders
-- WooCommerce UI text and messages
-- Order review sections and button text
-- Privacy policy and legal text
+### Bản địa hóa Thương mại điện tử Tiếng Việt
+Bản dịch tiếng Việt toàn diện được thực hiện qua WordPress filters trong `functions.php:267-416`, bao gồm:
+- Labels và placeholders của trường checkout
+- Text và messages UI WooCommerce
+- Các phần review đơn hàng và text button
+- Chính sách bảo mật và văn bản pháp lý
 
-### REST API Extensions
-Custom search endpoint `/wp-json/aratavietnam/v1/search` with featured image support implemented at `functions.php:438-530`.
+### Mở rộng REST API
+Endpoint tìm kiếm tùy chỉnh `/wp-json/aratavietnam/v1/search` với hỗ trợ featured image được thực hiện tại `functions.php:438-530`.
 
-## Development Workflow
+## Quy trình Phát triển
 
-### Starting Development
-1. **Environment**: `docker-compose up -d` → Wait for wp-cli logs to complete
-2. **Theme Dev**: `cd themes/aratavietnam && npm run dev` (HMR on port 3000)
-3. **Asset Building**: `npm run build` → Update hashed filenames in functions.php:189-202
-4. **Database**: Use WP CLI via docker-compose exec wp-cli wp [command] --allow-root
+### Bắt đầu Phát triển
+1. **Môi trường**: `docker-compose up -d` → Chờ wp-cli logs hoàn thành
+2. **Phát triển Theme**: `cd themes/aratavietnam && npm run dev` (HMR trên cổng 3000)
+3. **Xây dựng Asset**: `npm run build` → Cập nhật hashed filenames trong functions.php:189-202
+4. **Database**: Sử dụng WP CLI qua docker-compose exec wp-cli wp [command] --allow-root
 
-### Common Development Tasks
-- **Add New Module**: Create in `/inc/`, add to functions.php includes (lines 8-42)
-- **New Page Template**: Create in `page-templates/`, register in functions.php:52-62
-- **Custom Post Type**: Follow pattern: `*-post-types.php` + `*-meta-fields.php` + `*-meta.php`
-- **Frontend JavaScript**: Add to vite.config.mjs input array, use ES6 modules with dynamic imports
-- **Vietnamese Content**: Use existing translation filters in functions.php:267-416
+### Nhiệm vụ Phát triển Phổ biến
+- **Thêm Module Mới**: Tạo trong `/inc/`, thêm vào functions.php includes (dòng 8-42)
+- **Page Template Mới**: Tạo trong `page-templates/`, đăng ký trong functions.php:52-62
+- **Custom Post Type**: Theo mẫu: `*-post-types.php` + `*-meta-fields.php` + `*-meta.php`
+- **Frontend JavaScript**: Thêm vào mảng input vite.config.mjs, sử dụng ES6 modules với dynamic imports
+- **Nội dung Tiếng Việt**: Sử dụng các translation filters có sẵn trong functions.php:267-416
 
-### Recent Codebase Improvements
-- **Security Enhancement**: SVG upload support with security validation in `upload-mimes.php`
-- **Code Cleanup**: Vietnamese comments removed, console.log statements cleaned up
-- **Asset Optimization**: Versioned script enqueuing for better cache management
-- **Template Consolidation**: Single post type templates (job_posting, promotion) consolidated into their respective single template files for simplified maintenance
-- **Navigation Structure**: Menu scripts organized for better site structure management
-- **Hero Section Settings**: Added hero section customization for About page matching Blog page structure
-- **Asset Management**: Added `asset-management.php` module with utilities for automatic hash detection to eliminate manual updates after builds
+### Cải tiến Codebase Gần đây
+- **Cải tiến Bảo mật**: Hỗ trợ upload SVG với validation bảo mật trong `upload-mimes.php`
+- **Dọn dẹp Code**: Xóa bình luận tiếng Việt, dọn dẹp các câu lệnh console.log
+- **Tối ưu hóa Asset**: Enqueuing script có phiên bản để quản lý cache tốt hơn
+- **Hợp nhất Template**: Single post type templates (job_posting, promotion) được hợp nhất vào các single template file tương ứng để bảo trì đơn giản hóa
+- **Cấu trúc Điều hướng**: Scripts menu được tổ chức để quản lý cấu trúc site tốt hơn
+- **Cài đặt Hero Section**: Thêm tùy chỉnh hero section cho trang Giới thiệu khớp với cấu trúc trang Blog
+- **Quản lý Asset**: Thêm module `asset-management.php` với các tiện ích phát hiện hash tự động để loại bỏ cập nhật thủ công sau các build
 
 ### Testing & Debugging
-- **Query Monitor**: Available in admin bar for database queries and performance
-- **Debug Bar**: Development debugging toolbar (installed by wp-cli-setup.sh)
-- **WP CLI**: Use for content management, database operations, and testing
-- **Vite HMR**: Instant CSS/JS updates during development via localhost:3000
-- **Asset Issues**: Check Vite manifest.json and functions.php hashed filename alignment
-- **Error Logs**: Check `/uploads/wc-logs/` for WooCommerce errors and fatal errors
+- **Query Monitor**: Có sẵn trong admin bar cho database queries và performance
+- **Debug Bar**: Development debugging toolbar (được cài đặt bởi wp-cli-setup.sh)
+- **WP CLI**: Sử dụng cho quản lý nội dung, thao tác database, và testing
+- **Vite HMR**: Cập nhật CSS/JS tức thì trong quá trình phát triển qua localhost:3000
+- **Vấn đề Asset**: Kiểm tra Vite manifest.json và căn chỉnh hashed filename functions.php
+- **Error Logs**: Kiểm tra `/uploads/wc-logs/` cho các lỗi WooCommerce và fatal errors
 
-### Project Management
-- **Scripts Directory**: 55+ utility scripts for content management, image updates, database operations, and SEO updates
-- **Content Management**: Automated scripts for creating demo products, news content, and page structure
-- **Image Processing**: Bulk image update scripts for products, posts, promotions, and homepage sections
-- **Database Tools**: Scripts for SEO updates, permission fixes, and WordPress configuration
-- **Docker-specific Tools**: Specialized scripts for managing image updates and featured images in Docker environment
+### Quản lý Dự án
+- **Thư mục Scripts**: 55+ utility scripts cho quản lý nội dung, cập nhật hình ảnh, thao tác database, và cập nhật SEO
+- **Quản lý Nội dung**: Scripts tự động để tạo demo products, nội dung tin tức, và cấu trúc trang
+- **Xử lý Hình ảnh**: Scripts cập nhật hình ảnh hàng loạt cho products, posts, promotions, và các phần homepage
+- **Công cụ Database**: Scripts cho cập nhật SEO, sửa quyền, và cấu hình WordPress
+- **Công cụ riêng cho Docker**: Scripts chuyên dụng để quản lý cập nhật hình ảnh và featured images trong môi trường Docker
 
 ### PHP Autoloading
-- **PSR-4**: Namespace `AraVietnam\\` maps to `src/` directory (composer.json)
-- **TailPress Framework**: v5.0.4 loaded via Composer with Jetpack autoloader
-- **Manual Includes**: All functionality explicitly required in functions.php:8-42
+- **PSR-4**: Namespace `AraVietnam\\` ánh xạ đến thư mục `src/` (composer.json)
+- **TailPress Framework**: v5.0.4 được tải qua Composer với Jetpack autoloader
+- **Manual Includes**: Tất cả chức năng được require rõ ràng trong functions.php:8-42
 
-## Important Development Notes
+## Ghi chú Phát triển Quan trọng
 
-### Theme Location Correction
-The actual theme is located at `themes/aratavietnam/` (not `themes/tailpress/` as mentioned in README.md). The README contains outdated path references.
+### Sửa chữa Vị trí Theme
+Theme thực tế nằm tại `themes/aratavietnam/` (không phải `themes/tailpress/` như được đề cập trong README.md). README chứa các tham chiếu đường dẫn đã lỗi thời.
 
-### Port Configuration
-- **Actual Frontend Port**: 8080 (docker-compose.yml)
-- **README Port**: 8000 (incorrect)
+### Cấu hình Cổng
+- **Cổng Frontend Thực tế**: 8080 (docker-compose.yml)
+- **Cổng README**: 8000 (sai)
 - **Vite Dev Server**: 3000
 - **Database**: 3306
 
-### Asset Build Process
-After running `npm run build`, you MUST update the hashed filenames in `functions.php:189-203`. The build generates new hashes each time, and assets will not load without this manual update step.
+### Quy trình Build Asset
+Sau khi chạy `npm run build`, bạn PHẢI cập nhật các hashed filenames trong `functions.php:189-203`. Build tạo ra các hash mới mỗi lần, và assets sẽ không tải nếu không có bước cập nhật thủ công này.
 
-### Docker Development
-For detailed Docker setup instructions, troubleshooting, and advanced configuration, see `docs/DOCKER-DEVELOPMENT.md`.
+### Phát triển Docker
+Để biết hướng dẫn thiết lập Docker chi tiết, khắc phục sự cố, và cấu hình nâng cao, xem `docs/DOCKER-DEVELOPMENT.md`.

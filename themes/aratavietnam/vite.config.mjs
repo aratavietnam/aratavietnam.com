@@ -13,13 +13,14 @@ export default defineConfig(({ command }) => {
         },
         build: {
             manifest: true,
-            outDir: 'dist',
+            outDir: 'themes/aratavietnam/dist',
             rollupOptions: {
                 input: [
                     'resources/js/app.js',
                     'resources/js/notifications.js',
                     'resources/js/add-to-cart.js',
                     'resources/js/product-single.js',
+                    'resources/js/account-management.js',
                     'resources/css/app.css',
                     'resources/css/editor-style.css'
                 ],

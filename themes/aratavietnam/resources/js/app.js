@@ -1,9 +1,6 @@
 // Import Lucide Icons
 import './icons.js';
 
-// Import Contact Popup
-import './contact-popup.js';
-
 // Import Auth Popup
 import './auth-popup.js';
 // Import Swiper and PhotoSwipe for product gallery
@@ -1347,6 +1344,76 @@ function initAboutGallery() {
     });
 }
 
+// Fix dropdown arrows on text inputs in checkout form
+function fixInputDropdownArrows() {
+  // Only run on checkout page
+  if (!document.body.classList.contains('woocommerce-checkout')) {
+    return;
+  }
+  
+  // Function to remove dropdown styling from inputs
+  const removeDropdownStyling = (input) => {
+    if (!input) return;
+    
+    // Reset appearance properties
+    input.style.appearance = 'auto';
+    input.style.webkitAppearance = 'auto';
+    input.style.mozAppearance = 'auto';
+    
+    // Remove any background images
+    input.style.backgroundImage = 'none';
+    input.style.backgroundRepeat = 'initial';
+    input.style.backgroundPosition = 'initial';
+    
+    // Reset padding
+    input.style.paddingRight = '0.75rem';
+    input.style.paddingLeft = '0.75rem';
+  };
+  
+  // Get all text inputs on the checkout page
+  const textInputs = document.querySelectorAll(
+    'input[type="text"], input[type="email"], input[type="tel"], input[type="password"], ' +
+    'input[type="number"], input[type="search"], textarea, .input-text'
+  );
+  
+  // Apply fixes to all text inputs
+  textInputs.forEach(removeDropdownStyling);
+  
+  // Also watch for dynamically added inputs (Select2, etc.)
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        // Check if added node is an input or contains inputs
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          if (node.matches('input[type="text"], input[type="email"], input[type="tel"], textarea, .input-text')) {
+            removeDropdownStyling(node);
+          } else {
+            // Check child elements
+            const inputs = node.querySelectorAll(
+              'input[type="text"], input[type="email"], input[type="tel"], textarea, .input-text'
+            );
+            inputs.forEach(removeDropdownStyling);
+          }
+        }
+      });
+    });
+  });
+  
+  // Start observing the document for added inputs
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+  
+  // Run the fix again after a short delay to catch any late-loading elements
+  setTimeout(() => {
+    const allInputs = document.querySelectorAll(
+      'input[type="text"], input[type="email"], input[type="tel"], textarea, .input-text'
+    );
+    allInputs.forEach(removeDropdownStyling);
+  }, 1000);
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   detectFontLoading();
   optimizeVietnameseText();
@@ -1364,6 +1431,9 @@ document.addEventListener('DOMContentLoaded', function () {
   if (window.ArataIcons) {
     window.ArataIcons.init();
   }
+  
+  // Fix dropdown arrows on text inputs
+  fixInputDropdownArrows();
 });
 
 // Initialize navigation when window loads (fallback)

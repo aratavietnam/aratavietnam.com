@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (checkbox) checkbox.checked = true;
         });
       } catch (e) {
-        console.warn('Error parsing saved brand filters:', e);
+        // Silently continue if no saved filters
       }
     }
   }
