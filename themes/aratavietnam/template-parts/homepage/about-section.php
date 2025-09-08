@@ -9,7 +9,7 @@ $secondary_color = get_theme_mod('arata_secondary_color', '#F55E25');
 ?>
 
 <!-- About Arata Section -->
-<section class="py-16 scroll-animate" style="background-color: <?php echo esc_attr($primary_color); ?>10;">
+<section class="py-16 scroll-animate" style="background-color: <?php echo esc_attr($background_color); ?>;">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 

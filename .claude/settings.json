@@ -1,0 +1,41 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/format.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "permissions": {
+    "allow": [
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Bash(git:*)",
+      "Bash(npm:*)",
+      "Bash(node:*)",
+      "LS(*)",
+      "Glob(*)",
+      "Grep(*)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "cleanupPeriodDays": 30,
+  "includeCoAuthoredBy": true,
+  "env": {
+    "CLAUDE_PROJECT_TYPE": "fullstack",
+    "CLAUDE_AUTO_DETECT": "react:frontend,express:backend,vite:frontend,docker:devops",
+    "CLAUDE_COMPACT_THRESHOLD": "70",
+    "CLAUDE_FORCE_COMPACT_THRESHOLD": "90",
+    "CLAUDE_EMERGENCY_THRESHOLD": "95",
+    "CLAUDE_ULTRA_COMPRESSED": "true"
+  }
+}

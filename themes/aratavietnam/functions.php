@@ -845,3 +845,22 @@ function aratavietnam_rename_tabs($tabs) {
 
 // Remove the heading from the description tab
 add_filter('woocommerce_product_description_heading', '__return_null');
+
+// AJAX handler to get image URL by ID
+function arata_get_image_url_by_id() {
+    check_ajax_referer('arata_admin_nonce', 'nonce');
+    
+    $image_id = isset($_POST['image_id']) ? intval($_POST['image_id']) : 0;
+    
+    if ($image_id > 0) {
+        $image_url = wp_get_attachment_image_url($image_id, 'medium');
+        if ($image_url) {
+            wp_send_json_success(['url' => $image_url]);
+        }
+    }
+    
+    wp_send_json_error();
+}
+add_action('wp_ajax_get_image_url_by_id', 'arata_get_image_url_by_id');
+
+

@@ -14,6 +14,10 @@ $primary_color = get_theme_mod('theme_primary_color', '#F55E25');
 $secondary_color = get_theme_mod('theme_secondary_color', '#0066A6');
 $tertiary_color = get_theme_mod('theme_tertiary_color', '#FFAB14');
 
+// Get the main background color from Customizer
+$background_color = get_theme_mod('theme_background_color', '#ffffff');
+
+
 // Get page meta fields
 $hero_subtitle = get_post_meta(get_the_ID(), 'arata_about_subtitle', true) ?: 'Chuyên gia hóa mỹ phẩm Nhật Bản tại Việt Nam';
 $hero_description = get_post_meta(get_the_ID(), 'arata_about_description', true) ?: 'Arata Vietnam tự hào là đối tác tin cậy trong lĩnh vực hóa mỹ phẩm, mang đến những sản phẩm chất lượng cao và dịch vụ chuyên nghiệp.';
@@ -53,17 +57,16 @@ if ($show_hero) {
 }
 ?>
 
-<main id="site-content" class="bg-white">
+<main id="site-content" style="background-color: <?php echo esc_attr($background_color); ?>;">
     
     <!-- Text - Image Section (Company Intro) -->
     <?php if ($about_company_intro && $show_company_intro) : ?>
-    <section class="py-16 lg:py-24 bg-gray-50">
+    <section class="py-16 lg:py-24" style="background-color: <?php echo esc_attr($background_color); ?>;">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <!-- Text Column -->
                 <div class="order-2 lg:order-1">
                     <div class="max-w-xl">
-                        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Giới thiệu công ty</h2>
                         <div class="text-gray-700 leading-relaxed text-lg">
                             <?php echo wp_kses_post($about_company_intro); ?>
                         </div>
@@ -91,7 +94,7 @@ if ($show_hero) {
 
     <!-- Image - Text Section (History) -->
     <?php if ($about_history && $show_history) : ?>
-    <section class="py-16 lg:py-24 bg-white">
+    <section class="py-16 lg:py-24" style="background-color: <?php echo esc_attr($background_color); ?>;">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <!-- Image Column -->
@@ -112,7 +115,6 @@ if ($show_hero) {
                 <!-- Text Column -->
                 <div class="order-2 lg:order-2">
                     <div class="max-w-xl">
-                        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Lịch sử & Thành tựu</h2>
                         <div class="text-gray-700 leading-relaxed text-lg">
                             <?php echo wp_kses_post($about_history); ?>
                         </div>
@@ -125,13 +127,12 @@ if ($show_hero) {
 
     <!-- Text - Image Section (Mission) -->
     <?php if ($about_mission && $show_mission) : ?>
-    <section class="py-16 lg:py-24 bg-gray-50">
+    <section class="py-16 lg:py-24" style="background-color: <?php echo esc_attr($background_color); ?>;">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <!-- Text Column -->
                 <div class="order-2 lg:order-1">
                     <div class="max-w-xl">
-                        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Sứ mệnh & Tầm nhìn</h2>
                         <div class="text-gray-700 leading-relaxed text-lg">
                             <?php echo wp_kses_post($about_mission); ?>
                         </div>
@@ -159,7 +160,7 @@ if ($show_hero) {
 
     <!-- Image - Text Section (Values & Commitment) -->
     <?php if (($about_values && $show_values) || ($about_commitment && $show_commitment)) : ?>
-    <section class="py-16 lg:py-24 bg-white">
+    <section class="py-16 lg:py-24" style="background-color: <?php echo esc_attr($background_color); ?>;">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <!-- Image Column -->
@@ -182,7 +183,6 @@ if ($show_hero) {
                     <div class="max-w-xl space-y-8">
                         <?php if ($about_values && $show_values) : ?>
                         <div>
-                            <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Giá trị cốt lõi</h2>
                             <div class="text-gray-700 leading-relaxed text-lg">
                                 <?php echo wp_kses_post($about_values); ?>
                             </div>
@@ -191,7 +191,6 @@ if ($show_hero) {
 
                         <?php if ($about_commitment && $show_commitment) : ?>
                         <div>
-                            <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Cam kết chất lượng</h2>
                             <div class="text-gray-700 leading-relaxed text-lg">
                                 <?php echo wp_kses_post($about_commitment); ?>
                             </div>
@@ -204,29 +203,10 @@ if ($show_hero) {
     </section>
     <?php endif; ?>
 
-    <!-- Main Content (WordPress Editor Content) -->
-    <?php if (have_posts()) : ?>
-    <section class="py-16 lg:py-24 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto">
-                <?php
-                while (have_posts()) {
-                    the_post();
-                    ?>
-                    <div class="prose prose-lg max-w-none">
-                        <?php the_content(); ?>
-                    </div>
-                    <?php
-                }
-                ?>
-            </div>
-        </div>
-    </section>
-    <?php endif; ?>
-
+    
     <!-- Social Links Section -->
     <?php if ($show_social_links) : ?>
-    <section class="py-16 lg:py-24 bg-white">
+    <section class="py-16 lg:py-24" style="background-color: <?php echo esc_attr($background_color); ?>;">
         <div class="container mx-auto px-4">
             <div class="text-center">
                 <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-12">Kết nối với chúng tôi</h2>

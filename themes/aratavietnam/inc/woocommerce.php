@@ -155,21 +155,16 @@ add_action('wp_ajax_arata_add_to_cart', 'aratavietnam_ajax_add_to_cart');
 add_action('wp_ajax_nopriv_arata_add_to_cart', 'aratavietnam_ajax_add_to_cart');
 
 function aratavietnam_ajax_add_to_cart() {
-    // Debug logging
-    error_log('ARATA ADD TO CART: ' . print_r($_POST, true));
-
+    
     if (!class_exists('WooCommerce')) {
         wp_send_json_error('WooCommerce not active');
         return;
     }
 
-    // Verify nonce - make it optional for now to debug
+    // Verify nonce
     $nonce = $_POST['nonce'] ?? '';
     if (!empty($nonce) && !wp_verify_nonce($nonce, 'arata_add_to_cart_nonce')) {
-        wp_send_json_error([
-            'message' => 'Security check failed',
-            'debug' => 'Nonce verification failed'
-        ]);
+        wp_send_json_error('Security check failed');
         return;
     }
 

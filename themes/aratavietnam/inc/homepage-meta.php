@@ -348,13 +348,39 @@ function arata_homepage_save_meta_box_data($post_id) {
     if (isset($_POST['slide3_video'])) {
         update_post_meta($post_id, '_slide3_video', sanitize_text_field($_POST['slide3_video']));
     }
+    
+    // Save About section images
+    for ($i = 1; $i <= 5; $i++) {
+        if (isset($_POST['about_image_' . $i])) {
+            $about_image = sanitize_text_field($_POST['about_image_' . $i]);
+            // If it's a numeric ID, convert to URL
+            if (is_numeric($about_image)) {
+                $image_url = wp_get_attachment_image_url($about_image, 'full');
+                if ($image_url) {
+                    $about_image = $image_url;
+                }
+            }
+            update_post_meta($post_id, '_about_image_' . $i, $about_image);
+        }
+    }
 }
 add_action('save_post', 'arata_homepage_save_meta_box_data');
 
 // Enqueue scripts for media uploader and tabs
 function arata_homepage_admin_scripts() {
-    wp_enqueue_media();
-    wp_enqueue_script('arata-homepage-admin-js', get_template_directory_uri() . '/assets/js/homepage-admin.js', ['jquery'], null, true);
+    $front_page_id = get_option('page_on_front');
+    $screen = get_current_screen();
+    
+    // Only load on homepage edit screen
+    if ($screen->id === 'page' && isset($_GET['post']) && (int)$_GET['post'] === (int)$front_page_id) {
+        wp_enqueue_media();
+        wp_enqueue_script('arata-homepage-admin-js', get_template_directory_uri() . '/assets/js/homepage-admin.js', ['jquery'], null, true);
+        
+        // Localize script with AJAX data
+        wp_localize_script('arata-homepage-admin-js', 'arataAdminVars', [
+            'nonce' => wp_create_nonce('arata_admin_nonce'),
+            'ajaxurl' => admin_url('admin-ajax.php')
+        ]);
     
     // Add inline script for tab functionality
     wp_add_inline_script('arata-homepage-admin-js', '
@@ -372,6 +398,7 @@ function arata_homepage_admin_scripts() {
             });
         });
     ');
+    }
 }
 add_action('admin_enqueue_scripts', 'arata_homepage_admin_scripts');
 

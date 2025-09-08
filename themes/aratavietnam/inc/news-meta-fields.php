@@ -246,18 +246,7 @@ add_action('add_meta_boxes_page', function($post) {
  * Save meta for News pages
  */
 add_action('save_post_page', function($post_id) {
-    // --- DEBUGGING START ---
-    $template = get_post_meta($post_id, '_wp_page_template', true);
-    if ($template === 'page-templates/news.php') {
-        update_option('debug_news_post_data', print_r($_POST, true));
-    }
-    // --- DEBUGGING END ---
-    // --- DEBUGGING START ---
-    if (isset($_POST['arata_news_subtitle'])) {
-        update_option('debug_news_subtitle', sanitize_text_field($_POST['arata_news_subtitle']));
-    }
-    // --- DEBUGGING END ---
-    if (!isset($_POST['arata_news_meta_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['arata_news_meta_nonce']), 'arata_news_meta_save')) {
+        if (!isset($_POST['arata_news_meta_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['arata_news_meta_nonce']), 'arata_news_meta_save')) {
         return;
     }
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) { return; }

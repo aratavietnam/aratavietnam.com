@@ -281,9 +281,3 @@ After running `npm run build`, you MUST update the hashed filenames in `function
 
 ### Docker Development
 For detailed Docker setup instructions, troubleshooting, and advanced configuration, see `docs/DOCKER-DEVELOPMENT.md`.
-
-# important-instruction-reminders
-Do what has been asked; nothing more, nothing less.
-NEVER create files unless they're absolutely necessary for achieving your goal.
-ALWAYS prefer editing an existing file to creating a new one.
-NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.

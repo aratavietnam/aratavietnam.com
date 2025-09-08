@@ -6,6 +6,7 @@
 // Get global colors
 $primary_color = get_theme_mod('arata_primary_color', '#0066A6');
 $secondary_color = get_theme_mod('arata_secondary_color', '#F55E25');
+$background_color = get_theme_mod('theme_background_color', '#ffffff');
 ?>
 
 <!-- Partners Section -->
@@ -69,6 +70,10 @@ $secondary_color = get_theme_mod('arata_secondary_color', '#F55E25');
                                         <img src="<?php echo get_the_post_thumbnail_url($partner_post->ID, 'medium'); ?>"
                                              alt="<?php echo esc_attr(get_the_title($partner_post->ID)); ?>"
                                              class="max-w-full max-h-full object-contain transition-transform duration-300 hover:scale-110" />
+                                    <?php else : ?>
+                                        <div class="w-full h-full flex items-center justify-center">
+                                            <span class="text-gray-600 font-medium text-sm text-center px-2"><?php echo esc_html(get_the_title($partner_post->ID)); ?></span>
+                                        </div>
                                     <?php endif; ?>
                                 </div>
                             <?php endforeach; ?>
@@ -82,6 +87,10 @@ $secondary_color = get_theme_mod('arata_secondary_color', '#F55E25');
                                         <img src="<?php echo get_the_post_thumbnail_url($partner_post->ID, 'medium'); ?>"
                                              alt="<?php echo esc_attr(get_the_title($partner_post->ID)); ?>"
                                              class="max-w-full max-h-full object-contain transition-transform duration-300 hover:scale-110" />
+                                    <?php else : ?>
+                                        <div class="w-full h-full flex items-center justify-center">
+                                            <span class="text-gray-600 font-medium text-sm text-center px-2"><?php echo esc_html(get_the_title($partner_post->ID)); ?></span>
+                                        </div>
                                     <?php endif; ?>
                                 </div>
                             <?php endforeach; ?>
@@ -104,6 +113,10 @@ $secondary_color = get_theme_mod('arata_secondary_color', '#F55E25');
                                         <img src="<?php echo get_the_post_thumbnail_url($partner_post->ID, 'medium'); ?>"
                                              alt="<?php echo esc_attr(get_the_title($partner_post->ID)); ?>"
                                              class="max-w-full max-h-full object-contain transition-transform duration-300 hover:scale-110" />
+                                    <?php else : ?>
+                                        <div class="w-full h-full flex items-center justify-center">
+                                            <span class="text-gray-600 font-medium text-sm text-center px-2"><?php echo esc_html(get_the_title($partner_post->ID)); ?></span>
+                                        </div>
                                     <?php endif; ?>
                                 </div>
                             <?php endforeach; ?>
@@ -117,6 +130,10 @@ $secondary_color = get_theme_mod('arata_secondary_color', '#F55E25');
                                         <img src="<?php echo get_the_post_thumbnail_url($partner_post->ID, 'medium'); ?>"
                                              alt="<?php echo esc_attr(get_the_title($partner_post->ID)); ?>"
                                              class="max-w-full max-h-full object-contain transition-transform duration-300 hover:scale-110" />
+                                    <?php else : ?>
+                                        <div class="w-full h-full flex items-center justify-center">
+                                            <span class="text-gray-600 font-medium text-sm text-center px-2"><?php echo esc_html(get_the_title($partner_post->ID)); ?></span>
+                                        </div>
                                     <?php endif; ?>
                                 </div>
                             <?php endforeach; ?>

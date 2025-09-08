@@ -1112,8 +1112,7 @@ function initDropdownMenu() {
     }
   });
 
-  // Debug: Log dropdown elements
-
+  
   dropdownItems.forEach(function (item, index) {
     const dropdown = item.querySelector('.dropdown-menu');
 

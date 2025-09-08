@@ -183,6 +183,81 @@ function about_section_images_callback($post) {
         </tr>
     </table>
 
+    <!-- Section Content -->
+    <div class="section-header">Nội dung Sections</div>
+    <table class="about-meta-table">
+        <tr>
+            <th><label for="arata_about_company_intro_content">Giới thiệu công ty</label></th>
+            <td>
+                <?php 
+                $company_intro = get_post_meta($post->ID, 'arata_about_company_intro', true);
+                wp_editor($company_intro, 'arata_about_company_intro', array(
+                    'textarea_name' => 'arata_about_company_intro',
+                    'textarea_rows' => 10,
+                    'media_buttons' => true,
+                    'teeny' => true
+                ));
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="arata_about_history_content">Lịch sử & Thành tựu</label></th>
+            <td>
+                <?php 
+                $history = get_post_meta($post->ID, 'arata_about_history', true);
+                wp_editor($history, 'arata_about_history', array(
+                    'textarea_name' => 'arata_about_history',
+                    'textarea_rows' => 10,
+                    'media_buttons' => true,
+                    'teeny' => true
+                ));
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="arata_about_mission_content">Sứ mệnh & Tầm nhìn</label></th>
+            <td>
+                <?php 
+                $mission = get_post_meta($post->ID, 'arata_about_mission', true);
+                wp_editor($mission, 'arata_about_mission', array(
+                    'textarea_name' => 'arata_about_mission',
+                    'textarea_rows' => 10,
+                    'media_buttons' => true,
+                    'teeny' => true
+                ));
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="arata_about_values_content">Giá trị cốt lõi</label></th>
+            <td>
+                <?php 
+                $values = get_post_meta($post->ID, 'arata_about_values', true);
+                wp_editor($values, 'arata_about_values', array(
+                    'textarea_name' => 'arata_about_values',
+                    'textarea_rows' => 10,
+                    'media_buttons' => true,
+                    'teeny' => true
+                ));
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="arata_about_commitment_content">Cam kết chất lượng</label></th>
+            <td>
+                <?php 
+                $commitment = get_post_meta($post->ID, 'arata_about_commitment', true);
+                wp_editor($commitment, 'arata_about_commitment', array(
+                    'textarea_name' => 'arata_about_commitment',
+                    'textarea_rows' => 10,
+                    'media_buttons' => true,
+                    'teeny' => true
+                ));
+                ?>
+            </td>
+        </tr>
+    </table>
+
     <!-- Section Visibility -->
     <div class="section-header">Hiển thị Sections</div>
     <table class="about-meta-table">
@@ -190,7 +265,7 @@ function about_section_images_callback($post) {
             <th><label for="arata_show_company_intro_new">Giới thiệu công ty</label></th>
             <td>
                 <label>
-                    <input type="checkbox" id="arata_show_company_intro_new" name="arata_show_company_intro" value="1" <?php checked($show_company_intro !== '0', true, false); ?> />
+                    <input type="checkbox" id="arata_show_company_intro_new" name="arata_show_company_intro" value="1" <?php checked($show_company_intro, '1'); ?> />
                     Hiển thị section giới thiệu công ty
                 </label>
             </td>
@@ -199,7 +274,7 @@ function about_section_images_callback($post) {
             <th><label for="arata_show_history_new">Lịch sử & Thành tựu</label></th>
             <td>
                 <label>
-                    <input type="checkbox" id="arata_show_history_new" name="arata_show_history" value="1" <?php checked($show_history !== '0', true, false); ?> />
+                    <input type="checkbox" id="arata_show_history_new" name="arata_show_history" value="1" <?php checked($show_history, '1'); ?> />
                     Hiển thị section lịch sử và thành tựu
                 </label>
             </td>
@@ -208,7 +283,7 @@ function about_section_images_callback($post) {
             <th><label for="arata_show_mission_new">Sứ mệnh & Tầm nhìn</label></th>
             <td>
                 <label>
-                    <input type="checkbox" id="arata_show_mission_new" name="arata_show_mission" value="1" <?php checked($show_mission !== '0', true, false); ?> />
+                    <input type="checkbox" id="arata_show_mission_new" name="arata_show_mission" value="1" <?php checked($show_mission, '1'); ?> />
                     Hiển thị section sứ mệnh và tầm nhìn
                 </label>
             </td>
@@ -217,7 +292,7 @@ function about_section_images_callback($post) {
             <th><label for="arata_show_values_new">Giá trị cốt lõi</label></th>
             <td>
                 <label>
-                    <input type="checkbox" id="arata_show_values_new" name="arata_show_values" value="1" <?php checked($show_values !== '0', true, false); ?> />
+                    <input type="checkbox" id="arata_show_values_new" name="arata_show_values" value="1" <?php checked($show_values, '1'); ?> />
                     Hiển thị section giá trị cốt lõi
                 </label>
             </td>
@@ -226,7 +301,7 @@ function about_section_images_callback($post) {
             <th><label for="arata_show_commitment_new">Cam kết chất lượng</label></th>
             <td>
                 <label>
-                    <input type="checkbox" id="arata_show_commitment_new" name="arata_show_commitment" value="1" <?php checked($show_commitment !== '0', true, false); ?> />
+                    <input type="checkbox" id="arata_show_commitment_new" name="arata_show_commitment" value="1" <?php checked($show_commitment, '1'); ?> />
                     Hiển thị section cam kết chất lượng
                 </label>
             </td>
@@ -235,7 +310,7 @@ function about_section_images_callback($post) {
             <th><label for="arata_show_social_links_new">Mạng xã hội</label></th>
             <td>
                 <label>
-                    <input type="checkbox" id="arata_show_social_links_new" name="arata_show_social_links" value="1" <?php checked($show_social_links !== '0', true, false); ?> />
+                    <input type="checkbox" id="arata_show_social_links_new" name="arata_show_social_links" value="1" <?php checked($show_social_links, '1'); ?> />
                     Hiển thị section liên kết mạng xã hội
                 </label>
             </td>
@@ -309,8 +384,13 @@ function save_about_new_settings($post_id) {
         'arata_show_social_links'
     ];
     foreach ($checkbox_fields as $field) {
-        $value = isset($_POST[$field]) ? '1' : '0';
-        update_post_meta($post_id, $field, $value);
+        // For unchecked checkboxes, WordPress doesn't send them in POST
+        // So we need to check if they exist in POST data
+        if (isset($_POST[$field])) {
+            update_post_meta($post_id, $field, '1');
+        } else {
+            update_post_meta($post_id, $field, '0');
+        }
     }
 
     // Save text fields
@@ -325,6 +405,20 @@ function save_about_new_settings($post_id) {
             } else {
                 update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
             }
+        }
+    }
+
+    // Save HTML content fields
+    $content_fields = [
+        'arata_about_company_intro',
+        'arata_about_history',
+        'arata_about_mission',
+        'arata_about_values',
+        'arata_about_commitment'
+    ];
+    foreach ($content_fields as $field) {
+        if (isset($_POST[$field])) {
+            update_post_meta($post_id, $field, wp_kses_post($_POST[$field]));
         }
     }
 
